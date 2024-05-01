@@ -1,13 +1,42 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Key, Mail, User } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import { signUpSchema } from "@/schemas/signUpSchema";
+import clsx from "clsx";
 
 const SignUp = () => {
   const [togglePassword, setTogglePassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setFocus,
+    formState: { errors },
+  } = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const onFormSubmit = (data: z.infer<typeof signUpSchema>) => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    setFocus("fullName");
+  }, [setFocus]);
 
   return (
     <div className="h-main-height">
@@ -42,37 +71,81 @@ const SignUp = () => {
               </p>
             </div>
 
-            <form className="flex flex-col justify-start gap-3">
-              <div className="flex items-center justify-start gap-4 border border-[#D9D8D8] text-[#7F7F7F] h-12 px-4 rounded-lg">
-                <User />
-                <input
-                  className="focus:outline-none h-full w-full"
-                  type="text"
-                  placeholder="Enter full name"
-                  required></input>
-              </div>
-
-              <div className="flex items-center justify-start gap-4 border border-[#D9D8D8] text-[#7F7F7F] h-12 px-4 rounded-lg">
-                <Mail />
-                <input
-                  className="focus:outline-none h-full w-full"
-                  type="email"
-                  placeholder="Enter your Email"
-                  required></input>
-              </div>
-
-              <div className="flex items-center justify-start gap-4 border border-[#D9D8D8] text-[#7F7F7F] h-12 px-4 rounded-lg">
-                <Key />
-                <input
-                  className="focus:outline-none h-full w-full"
-                  type={togglePassword ? "text" : "password"}
-                  placeholder="Create password"
-                  required></input>
+            <form
+              onSubmit={handleSubmit(onFormSubmit)}
+              className="flex flex-col justify-start gap-3">
+              <div>
                 <div
-                  className="cursor-pointer"
-                  onClick={() => setTogglePassword(!togglePassword)}>
-                  {togglePassword ? <EyeOff /> : <Eye />}
+                  className={clsx(
+                    "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
+                    errors.fullName
+                      ? "border-red-500 bg-red-50/40"
+                      : "border-[#D9D8D8]"
+                  )}>
+                  <User />
+                  <input
+                    className="focus:outline-none h-full w-full bg-transparent"
+                    type="text"
+                    placeholder="Enter full name"
+                    {...register("fullName", { required: true })}
+                  />
                 </div>
+                {errors.fullName && (
+                  <small className="text-xs text-red-500">
+                    {errors.fullName.message}
+                  </small>
+                )}
+              </div>
+
+              <div>
+                <div
+                  className={clsx(
+                    "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
+                    errors.email
+                      ? "border-red-500 bg-red-50/40"
+                      : "border-[#D9D8D8]"
+                  )}>
+                  <Mail />
+                  <input
+                    className="focus:outline-none h-full w-full"
+                    type="email"
+                    placeholder="Enter your Email"
+                    {...register("email", { required: true })}
+                  />
+                </div>
+                {errors.email && (
+                  <small className="text-xs text-red-500">
+                    {errors.email.message}
+                  </small>
+                )}
+              </div>
+
+              <div>
+                <div
+                  className={clsx(
+                    "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
+                    errors.password
+                      ? "border-red-500 bg-red-50/40"
+                      : "border-[#D9D8D8]"
+                  )}>
+                  <Key />
+                  <input
+                    className="focus:outline-none h-full w-full"
+                    type={togglePassword ? "text" : "password"}
+                    placeholder="Create password"
+                    {...register("password", { required: true })}
+                  />
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => setTogglePassword(!togglePassword)}>
+                    {togglePassword ? <EyeOff /> : <Eye />}
+                  </div>
+                </div>
+                {errors.password && (
+                  <small className="text-xs text-red-500">
+                    {errors.password.message}
+                  </small>
+                )}
               </div>
 
               <Button className="w-full text-xl h-12 rounded-lg">

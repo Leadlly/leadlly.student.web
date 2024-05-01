@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { getTodaysFormattedDate } from "@/helpers/utils";
 import { RightArrowIcon } from "@/components";
 import clsx from "clsx";
 import { Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type TTodaysTopic = {
   label: string;
@@ -28,28 +31,20 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TTodaysTopic[] }) => {
       <div className="w-full flex-1 px-6 overflow-y-auto custom__scrollbar">
         <ul className="w-full h-full flex flex-col justify-start">
           {todaysTopics.map((topic, i) => (
-            <div key={i} className="flex items-start justify-between">
+            <div key={i} className="flex items-center justify-between">
               <li className="flex items-start gap-2 w-full py-1">
-                <div
-                  className={clsx(
-                    "w-4 h-4 border-2 rounded bg-transparent mt-[2px] cursor-pointer"
-                  )}>
-                  <input type="checkbox" className="hidden" />
-                  <span
-                    className={clsx(
-                      "w-full h-full flex items-center justify-center",
-                      topic.completed ? "bg-green-200" : ""
-                    )}>
-                    {topic.completed && <Check width={12} color="#A36AF5" />}
-                  </span>
-                </div>
+                <Checkbox
+                  className="h-[18px] w-[18px] mt-[2px] border-[2px] border-[#787878] data-[state=checked]:bg-green-400 data-[state=checked]:text-white"
+                  checked={topic.completed}
+                  onChange={(e) => console.log("checked!")}
+                />
                 <div className="capitalize font-medium">
                   <p>{topic.label}</p>
                 </div>
               </li>
               {topic.completed && (
-                <div className="text-xs py-1 px-2 text-green-500 bg-green-400 bg-opacity-10 rounded-full">
-                  <p>complete</p>
+                <div className="text-[10px] py-[2px] px-1 text-green-500 bg-green-400/10 rounded capitalize">
+                  <p>completed</p>
                 </div>
               )}
             </div>

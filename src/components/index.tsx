@@ -24,6 +24,8 @@ import NotificationIcon from "./icons/NotificationIcon";
 import ChatIcon from "./icons/ChatIcon";
 import VideoChatIcon from "./icons/VideoChatIcon";
 import RequestMeetingIcon from "./icons/RequestMeetingIcon";
+import UpArrowIcon from "./icons/UpArrowIcon";
+import DownArrowIcon from "./icons/DownArrowIcon";
 
 export {
   Container,
@@ -50,4 +52,6 @@ export {
   ChatIcon,
   VideoChatIcon,
   RequestMeetingIcon,
+  UpArrowIcon,
+  DownArrowIcon,
 };

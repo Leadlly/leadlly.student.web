@@ -36,3 +36,24 @@ export type TSemiRadialChartProps = {
   colors: string[];
   chartLabel: string;
 };
+
+export type TLevelPointProps = {
+  cardBgColor: string;
+  iconImageSrc: string;
+  iconAltText: string;
+  iconShadowColor?: string;
+  chevronBgColor: string;
+  pointsColor: string;
+  points: number;
+  pointsText: string;
+  progressValue?: number;
+  progressIndicatorBg?: string;
+  pointsProgressText?: string;
+  pointsProgressTextColor?: string;
+  progressIconStroke?: string;
+};
+
+export type TMoodEmojisProps = {
+  mood: string;
+  mood_id: string;
+};
