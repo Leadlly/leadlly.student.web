@@ -9,17 +9,20 @@ import { Logo, NotificationIcon, Sidebar } from "@/components";
 import { userSidebarLinks } from "@/helpers/constants";
 
 import { Menu } from "lucide-react";
+import { useState } from "react";
 
 const MobileNavBar = () => {
+  const [sheetOpen, setSheetOpen] = useState(false);
+
   return (
     <nav className="px-3 py-2 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <Sheet>
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild className="cursor-pointer">
             <Menu />
           </SheetTrigger>
           <SheetContent side={"left"} className="p-0">
-            <Sidebar sidebar={userSidebarLinks} />
+            <Sidebar sidebar={userSidebarLinks} setOpen={setSheetOpen} />
           </SheetContent>
         </Sheet>
 
@@ -35,8 +38,14 @@ const MobileNavBar = () => {
         </Link>
       </div>
 
+      <div className="md:hidden capitalize text-lg font-medium text-black">
+        <p>
+          <span className="text-primary">hello,</span> john musk
+        </p>
+      </div>
+
       <div className="flex items-center gap-4">
-        <div className="border border-black w-8 h-8 rounded-full flex items-center justify-center">
+        <div className="md:border md:border-black md:w-8 md:h-8 md:rounded-full flex items-center justify-center">
           <NotificationIcon stroke="black" width="12" height="18" />
         </div>
 

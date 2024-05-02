@@ -23,7 +23,7 @@ const SubjectProgress = () => {
   return (
     <div className="h-full py-2">
       <div className="px-3 flex items-center justify-between">
-        <h4 className="text-sm font-bold">Subject Progress</h4>
+        <h4 className="text-xs md:text-sm font-bold">Subject Progress</h4>
         <ul className="flex items-center gap-1 border p-[2px] rounded-md">
           {subjectProgressMenus.map((tab) => (
             <TabNavItem

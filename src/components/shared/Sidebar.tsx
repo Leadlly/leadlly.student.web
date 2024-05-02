@@ -9,7 +9,13 @@ import clsx from "clsx";
 import { Logo } from "@/components";
 import { TSidebarLink } from "../../helpers/types";
 
-const Sidebar = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
+const Sidebar = ({
+  sidebar,
+  setOpen,
+}: {
+  sidebar: TSidebarLink[];
+  setOpen: (sheetOpen: boolean) => void;
+}) => {
   const pathname = usePathname();
   return (
     <aside className="bg-sidebar-background w-full h-full lg:w-20 xl:w-sidebar lg:h-main-height lg:rounded-xl overflow-y-hidden">
@@ -31,11 +37,12 @@ const Sidebar = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
             <Link
               href={item.href}
               key={item.href}
+              onClick={() => setOpen(false)}
               className={clsx(
                 pathname === item.href ? "bg-primary" : "",
                 "px-4 py-3 rounded-[11px] w-full flex items-center justify-start lg:justify-center xl:justify-start"
               )}>
-              <li className="flex items-center gap-3 capitalize text-[20px]">
+              <li className="flex items-center gap-3 capitalize text-base md:text-[20px]">
                 <div>
                   <item.icon
                     stroke={pathname === item.href ? "white" : "#5A10D9"}

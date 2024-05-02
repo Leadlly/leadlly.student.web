@@ -33,7 +33,7 @@ const SemiRadialChart = ({
                 value: {
                   fontSize: "18px",
                   fontWeight: "600",
-                  offsetY: 5,
+                  offsetY: 8,
                 },
               },
             },
@@ -48,7 +48,7 @@ const SemiRadialChart = ({
         }}
       />
 
-      <div className="w-full flex items-center justify-center gap-1 -mt-5">
+      <div className="w-full flex items-center justify-center gap-1">
         <span
           className={clsx(
             "w-2 h-2 rounded-sm -mt-[2px]",

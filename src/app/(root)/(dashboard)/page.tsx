@@ -36,7 +36,7 @@ const Dashboard = () => {
         <TabletUI todaysTopics={todaysTopics} />
       </div>
 
-      <div className="h-full md:hidden pt-10 lg:pt-0">
+      <div className="h-full md:hidden pt-12 sm:pt-14 lg:pt-0">
         <MobileUI todaysTopics={todaysTopics} />
       </div>
     </>

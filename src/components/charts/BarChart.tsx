@@ -54,7 +54,7 @@ const BarChart = () => {
         />
       </div>
 
-      <div className="w-36">
+      <div className="w-36 hidden md:block">
         <div className="flex items-center gap-2">
           <span className=" block w-3 h-3 rounded bg-primary"></span>
           <span className="text-xs capitalize">Revision Sessions</span>
