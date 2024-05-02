@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
 import "../globals.css";
 import StoreProvider from "@/app/StoreProvider";
-import { Container, Sidebar } from "@/components";
+import { Container, MobileNavBar, Sidebar } from "@/components";
 import { userSidebarLinks } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
 
@@ -21,10 +21,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn("font-sans antialiased", fontSans.variable)}>
+      <body
+        className={cn(
+          "font-sans antialiased custom__scrollbar",
+          fontSans.variable
+        )}>
         <StoreProvider>
+          <Container className="lg:hidden fixed z-50 bg-white shadow">
+            <MobileNavBar />
+          </Container>
           <Container className="py-3 flex items-start gap-3">
-            <Sidebar sidebar={userSidebarLinks} />
+            <div className="hidden lg:block">
+              <Sidebar sidebar={userSidebarLinks} />
+            </div>
             <main className="flex-1 h-main-height px-3">{children}</main>
           </Container>
         </StoreProvider>

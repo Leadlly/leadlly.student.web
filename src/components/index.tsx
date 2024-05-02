@@ -1,8 +1,10 @@
 import Container from "./shared/Container";
+import Logo from "./shared/Logo";
 import Header from "./shared/Header";
 import Sidebar from "./shared/Sidebar";
 import TabNavItem from "./shared/TabNavItem";
 import TabContent from "./shared/TabContent";
+import MobileNavBar from "./shared/MobileNavBar";
 
 import SemiRadialChart from "./charts/SemiRadialChart";
 import RadialBarChart from "./charts/RadialBarChart";
@@ -29,10 +31,12 @@ import DownArrowIcon from "./icons/DownArrowIcon";
 
 export {
   Container,
+  Logo,
   Header,
   Sidebar,
   TabNavItem,
   TabContent,
+  MobileNavBar,
   SemiRadialChart,
   RadialBarChart,
   BarChart,

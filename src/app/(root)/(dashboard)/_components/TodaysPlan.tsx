@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { getTodaysFormattedDate } from "@/helpers/utils";
+
 import { RightArrowIcon } from "@/components";
-import clsx from "clsx";
-import { Check } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-type TTodaysTopic = {
-  label: string;
-  completed: boolean;
-};
+import { getTodaysFormattedDate } from "@/helpers/utils";
+import { TDashboardTodaysTopic } from "@/helpers/types";
 
-const TodaysPlan = ({ todaysTopics }: { todaysTopics: TTodaysTopic[] }) => {
+const TodaysPlan = ({
+  todaysTopics,
+}: {
+  todaysTopics: TDashboardTodaysTopic[];
+}) => {
   return (
     <>
       <div className="flex items-center justify-between py-3 px-6">
@@ -29,7 +29,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TTodaysTopic[] }) => {
       </div>
 
       <div className="w-full flex-1 px-6 overflow-y-auto custom__scrollbar">
-        <ul className="w-full h-full flex flex-col justify-start">
+        <ul className="w-full h-full flex flex-col justify-start gap-4 xl:gap-0">
           {todaysTopics.map((topic, i) => (
             <div key={i} className="flex items-center justify-between">
               <li className="flex items-start gap-2 w-full py-1">

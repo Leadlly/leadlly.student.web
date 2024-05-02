@@ -1,7 +1,12 @@
 import clsx from "clsx";
 import { THeaderProps } from "@/helpers/types";
 
-const Header = ({ title, className, icon: Icon, titleSize }: THeaderProps) => {
+const Header = ({
+  title,
+  className,
+  icon: Icon,
+  titleClassName,
+}: THeaderProps) => {
   return (
     <header>
       <div
@@ -9,7 +14,7 @@ const Header = ({ title, className, icon: Icon, titleSize }: THeaderProps) => {
           "text-page-title font-semibold flex items-center justify-between",
           className
         )}>
-        <h2 className={clsx(titleSize)}>{title}</h2>
+        <h2 className={clsx(titleClassName)}>{title}</h2>
         {Icon && <div>{Icon}</div>}
       </div>
     </header>

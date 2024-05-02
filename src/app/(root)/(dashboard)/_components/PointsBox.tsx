@@ -2,7 +2,7 @@ import LevelPoints from "./LevelPoints";
 
 const PointsBox = () => {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-4 xl:gap-2">
       <LevelPoints
         cardBgColor="bg-[#00B2FF]/[0.03]"
         iconImageSrc={"/assets/images/trophy_cup.png"}
