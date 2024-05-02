@@ -14,7 +14,7 @@ const Sidebar = ({
   setOpen,
 }: {
   sidebar: TSidebarLink[];
-  setOpen: (sheetOpen: boolean) => void;
+  setOpen?: (sheetOpen: boolean) => void;
 }) => {
   const pathname = usePathname();
   return (
@@ -37,7 +37,11 @@ const Sidebar = ({
             <Link
               href={item.href}
               key={item.href}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                if (setOpen) {
+                  setOpen(false);
+                }
+              }}
               className={clsx(
                 pathname === item.href ? "bg-primary" : "",
                 "px-4 py-3 rounded-[11px] w-full flex items-center justify-start lg:justify-center xl:justify-start"
