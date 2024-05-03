@@ -19,7 +19,7 @@ const UpcomingWorkshops = () => {
           </div>
         </div>
 
-        <div className="flex items-end gap-1">
+        <div className="flex items-end justify-between gap-1">
           <div className="space-y-[2px]">
             <h4 className="text-xs font-semibold text-black">
               Study On Ocular Potential

@@ -3,12 +3,12 @@ import ConnectButton from "./ConnectButton";
 
 const ConnectWithMentor = () => {
   return (
-    <div className="px-3">
-      <h4 className="text-lg font-bold text-center py-4">
+    <div className="md:px-3">
+      <h4 className="text-xs md:text-lg font-bold md:text-center py-1 md:py-4">
         Connect with mentor
       </h4>
 
-      <div className="flex flex-col justify-start gap-3 w-full">
+      <div className="grid grid-cols-3 gap-1 md:flex md:flex-col md:justify-start md:gap-3 w-full">
         <ConnectButton
           title="Connect with mentor"
           icon={<ChatIcon stroke="black" />}

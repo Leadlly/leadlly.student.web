@@ -1,10 +1,18 @@
 "use client";
 
-const ChatIcon = ({ stroke }: { stroke: string }) => {
+const ChatIcon = ({
+  stroke,
+  width = "21",
+  height = "19",
+}: {
+  stroke: string;
+  width?: string;
+  height?: string;
+}) => {
   return (
     <svg
-      width="21"
-      height="19"
+      width={width}
+      height={height}
       viewBox="0 0 21 19"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">

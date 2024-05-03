@@ -23,7 +23,7 @@ const ProgressAnalytics = () => {
   return (
     <div className="px-3 py-2">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold">Progress Analytics</h4>
+        <h4 className="text-xs md:text-sm font-bold">Progress Analytics</h4>
         <ul className="flex items-center gap-1 border p-[2px] rounded-md">
           {progressAnalyticsMenus.map((tab) => (
             <TabNavItem

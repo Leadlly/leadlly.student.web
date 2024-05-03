@@ -13,8 +13,8 @@ const SemiRadialChart = ({
   return (
     <>
       <Charts
-        width={"100%"}
-        height={"100%"}
+        width={180}
+        height={180}
         type="radialBar"
         series={series}
         options={{
@@ -33,7 +33,7 @@ const SemiRadialChart = ({
                 value: {
                   fontSize: "18px",
                   fontWeight: "600",
-                  offsetY: 5,
+                  offsetY: 8,
                 },
               },
             },
@@ -48,7 +48,7 @@ const SemiRadialChart = ({
         }}
       />
 
-      <div className="w-full flex items-center justify-center gap-1 -mt-10">
+      <div className="w-full flex items-center justify-center gap-1">
         <span
           className={clsx(
             "w-2 h-2 rounded-sm -mt-[2px]",
