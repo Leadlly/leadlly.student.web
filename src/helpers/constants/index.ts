@@ -2,6 +2,8 @@ import {
   DashboardIcon,
   PlannerIcon,
   TrackerIcon,
+  ChatIcon,
+  ChatIcon2,
   ErrorBookIcon,
   GrowthMeterIcon,
   WorkshopIcon,
@@ -27,6 +29,11 @@ export const userSidebarLinks: TSidebarLink[] = [
     label: "tracker",
     icon: TrackerIcon,
     href: "/tracker",
+  },
+  {
+    label: "chat",
+    icon: ChatIcon,
+    href: "/chat",
   },
   {
     label: "errorbook",
