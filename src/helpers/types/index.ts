@@ -5,6 +5,15 @@ export type TContainerProps = {
   className?: string;
 };
 
+export type TLogoProps = {
+  fullLogoWidth: number;
+  fullLogoHeight: number;
+  fullLogoClassName: string;
+  smallLogoWidth: number;
+  smallLogoHeight: number;
+  smallLogoClassName: string;
+};
+
 export type TSidebarLink = {
   label: string;
   icon: React.ComponentType<{ stroke: string }>;
@@ -15,7 +24,12 @@ export type THeaderProps = {
   title: string;
   className?: string;
   icon?: React.ReactNode;
-  titleSize?: string;
+  titleClassName?: string;
+};
+
+export type TDashboardTodaysTopic = {
+  label: string;
+  completed: boolean;
 };
 
 export type TTabNavItemProps = {
@@ -35,4 +49,25 @@ export type TSemiRadialChartProps = {
   series: number[];
   colors: string[];
   chartLabel: string;
+};
+
+export type TLevelPointProps = {
+  cardBgColor: string;
+  iconImageSrc: string;
+  iconAltText: string;
+  iconShadowColor?: string;
+  chevronBgColor: string;
+  pointsColor: string;
+  points: number;
+  pointsText: string;
+  progressValue?: number;
+  progressIndicatorBg?: string;
+  pointsProgressText?: string;
+  pointsProgressTextColor?: string;
+  progressIconStroke?: string;
+};
+
+export type TMoodEmojisProps = {
+  mood: string;
+  mood_id: string;
 };

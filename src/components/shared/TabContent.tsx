@@ -29,7 +29,8 @@ const TabContent = ({ id, activeTab, children }: TTabContentProps) => {
         exit="exit"
         transition={{
           duration: 0.5,
-        }}>
+        }}
+        className="h-full">
         {children}
       </motion.div>
     </AnimatePresence>

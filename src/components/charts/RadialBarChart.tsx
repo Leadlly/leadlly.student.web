@@ -53,7 +53,7 @@ const RadialBarChart = () => {
         }}
       />
 
-      <div>
+      <div className="-ml-10">
         <div className="flex items-center gap-2">
           <span className=" block w-3 h-3 rounded bg-primary"></span>
           <span className="text-xs capitalize">Sessions</span>
