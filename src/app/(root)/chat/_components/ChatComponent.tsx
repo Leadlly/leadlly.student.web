@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import emoji from './icons/Happy.png';
 import attach from './icons/Vector_clip.png';
 import mic from './icons/Icon Frame.png';
@@ -8,7 +8,7 @@ import call from './icons/call.png';
 import dots from './icons/dots.png';
 
 interface ChatData {
-  img: string;
+  img: StaticImageData;
   title: string;
   status: string;
   messages: Array<{
