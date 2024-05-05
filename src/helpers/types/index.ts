@@ -71,3 +71,11 @@ export type TMoodEmojisProps = {
   mood: string;
   mood_id: string;
 };
+
+export type TQuizQuestionProps = {
+  question: string;
+  options: {
+    all: string[];
+    correct: string[];
+  };
+};

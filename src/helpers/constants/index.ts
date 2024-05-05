@@ -10,7 +10,7 @@ import {
   StudyRoomIcon,
 } from "@/components";
 
-import { TSidebarLink } from "../types";
+import { TQuizQuestionProps, TSidebarLink } from "../types";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {
@@ -57,5 +57,43 @@ export const userSidebarLinks: TSidebarLink[] = [
     label: "study room",
     icon: StudyRoomIcon,
     href: "/study-room",
+  },
+];
+
+export const quizQuestions: TQuizQuestionProps[] = [
+  {
+    question: "Sample question 1",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["2"],
+    },
+  },
+  {
+    question: "Sample question 2",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["1"],
+    },
+  },
+  {
+    question: "Sample question 3",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["4"],
+    },
+  },
+  {
+    question: "Sample question 4",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["3"],
+    },
+  },
+  {
+    question: "Sample question 5",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["4"],
+    },
   },
 ];
