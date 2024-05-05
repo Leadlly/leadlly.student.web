@@ -3,7 +3,6 @@ import {
   PlannerIcon,
   TrackerIcon,
   ChatIcon,
-  ChatIcon2,
   ErrorBookIcon,
   GrowthMeterIcon,
   WorkshopIcon,
