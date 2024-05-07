@@ -16,7 +16,7 @@ export type TLogoProps = {
 
 export type TSidebarLink = {
   label: string;
-  icon: React.ComponentType<{ stroke: string }>;
+  icon: React.ComponentType<{ stroke?: string }>;
   href: string;
 };
 
@@ -78,4 +78,9 @@ export type TQuizQuestionProps = {
     all: string[];
     correct: string[];
   };
+};
+
+export type TPlannerTodaysTopic = {
+  subject: string;
+  topics: string;
 };

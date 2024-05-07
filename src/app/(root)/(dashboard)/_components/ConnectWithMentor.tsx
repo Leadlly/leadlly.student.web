@@ -1,4 +1,4 @@
-import { ChatIcon, RequestMeetingIcon, VideoChatIcon } from "@/components";
+import { ChatIcon, VideoChatIcon, RequestMeetingIcon } from "@/components";
 import ConnectButton from "./ConnectButton";
 
 const ConnectWithMentor = () => {

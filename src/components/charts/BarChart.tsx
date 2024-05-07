@@ -10,7 +10,7 @@ const BarChart = () => {
         <Charts
           type="bar"
           width={"100%"}
-          height={160}
+          height={140}
           series={[
             {
               name: "Revisions",

@@ -2,7 +2,7 @@ import { LeftArrowIcon, RightArrowIcon } from "@/components";
 
 const WeeklyPlan = () => {
   return (
-    <div className="flex flex-col justify-start gap-5 h-full">
+    <div className="flex flex-col justify-start gap-5 h-full py-4">
       <div className="px-7">
         <h4 className="text-2xl font-semibold text-black">Weekly Plan</h4>
       </div>

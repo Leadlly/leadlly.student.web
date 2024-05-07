@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
 import "../globals.css";
 import StoreProvider from "@/app/StoreProvider";
-import { Container, MobileNavBar, Sidebar } from "@/components";
-import { userSidebarLinks } from "@/helpers/constants";
+import { Container, Sidebar, MobileMenu } from "@/components";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
@@ -28,13 +27,15 @@ export default function RootLayout({
         )}>
         <StoreProvider>
           <Container className="lg:hidden fixed z-50 bg-white shadow">
-            <MobileNavBar />
+            <MobileMenu />
           </Container>
           <Container className="py-3 flex items-start gap-3">
             <div className="hidden lg:block">
-              <Sidebar sidebar={userSidebarLinks} />
+              <Sidebar />
             </div>
-            <main className="flex-1 h-main-height px-3">{children}</main>
+            <main className="flex-1 h-main-height px-4 lg:px-3">
+              {children}
+            </main>
           </Container>
         </StoreProvider>
       </body>

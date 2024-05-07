@@ -106,15 +106,20 @@ const QuestionDialogBox = ({
 
         <div className="px-3 md:px-14 md:py-8 flex flex-col md:flex-row items-start gap-3">
           <div className="md:w-44 py-4 md:border-r-2 border-[#cfcfcf]">
-            <p className="text-xs md:text-base text-[#7b7b7b] font-semibold mb-4 md:mb-9">
+            <p className="text-xs md:text-base text-[#7b7b7b] font-semibold mb-2">
               Questions 1 to {questions.length}:
             </p>
 
-            <ul className="w-full flex items-center justify-center flex-wrap md:flex-col md:items-start md:justify-start gap-4 md:gap-9">
+            <ul className="w-full flex items-center justify-center flex-wrap md:flex-col md:items-start md:justify-start gap-4 md:gap-0 px-3 md:px-0">
               {questions.map((ques, index) => (
                 <li
                   key={ques.question}
-                  className="flex items-center gap-2 md:gap-3 cursor-pointer"
+                  className={clsx(
+                    "flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all delay-200 ease-in",
+                    activeQuestion === index
+                      ? "md:border-r-4 border-r-primary"
+                      : ""
+                  )}
                   onClick={() => setActiveQuestion(index)}>
                   <div
                     className={clsx(

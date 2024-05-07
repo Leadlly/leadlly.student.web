@@ -16,7 +16,7 @@ const MoodEmojiSelector = ({
 
   return (
     <div className="relative flex items-center justify-between mt-2 max-w-48 w-full mx-auto">
-      <span className="w-[6px] h-[6px] rounded-full bg-red-600"></span>
+      <span className="w-[6px] h-[6px] rounded-full bg-primary"></span>
       {moodEmojis.map((emoji) => (
         <Image
           key={emoji.mood_id}
@@ -31,10 +31,9 @@ const MoodEmojiSelector = ({
           )}
         />
       ))}
+      <span className="w-[6px] h-[6px] rounded-full bg-primary"></span>
 
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 -z-10 w-[calc(100%-2px)] h-[2px] bg-[#D9D9D9]">
-        <div className="h-full w-full bg-gradient-to-r from-red-600 from-20% via-orange-500 via-20% to-green-500"></div>
-      </div>
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 -z-10 bg-primary w-full h-[2px] bg-[#D9D9D9]"></div>
     </div>
   );
 };

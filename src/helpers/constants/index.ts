@@ -1,16 +1,24 @@
-import {
-  DashboardIcon,
-  PlannerIcon,
-  TrackerIcon,
-  ErrorBookIcon,
-  GrowthMeterIcon,
-  WorkshopIcon,
-  LibertyIcon,
-  QuizIcon,
-  StudyRoomIcon,
-} from "@/components";
-
+// import {
+//   DashboardIcon,
+//   ErrorBookIcon,
+//   GrowthMeterIcon,
+//   LibertyIcon,
+//   PlannerIcon,
+//   QuizIcon,
+//   StudyRoomIcon,
+//   TrackerIcon,
+//   WorkshopIcon,
+// } from "@/components";
+import DashboardIcon from "@/components/icons/DashboardIcon";
 import { TQuizQuestionProps, TSidebarLink } from "../types";
+import PlannerIcon from "@/components/icons/PlannerIcon";
+import TrackerIcon from "@/components/icons/TrackerIcon";
+import ErrorBookIcon from "@/components/icons/ErrorBookIcon";
+import GrowthMeterIcon from "@/components/icons/GrowthMeterIcon";
+import WorkshopIcon from "@/components/icons/WorkshopIcon";
+import LibertyIcon from "@/components/icons/LibertyIcon";
+import QuizIcon from "@/components/icons/QuizIcon";
+import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {
