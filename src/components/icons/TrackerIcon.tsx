@@ -1,6 +1,4 @@
-"use client";
-
-const TrackerIcon = ({ stroke }: { stroke: string }) => {
+const TrackerIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="20"

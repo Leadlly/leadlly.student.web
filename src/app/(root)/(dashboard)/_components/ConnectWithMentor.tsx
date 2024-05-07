@@ -1,10 +1,10 @@
-import { ChatIcon, RequestMeetingIcon, VideoChatIcon } from "@/components";
+import { ChatIcon, VideoChatIcon, RequestMeetingIcon } from "@/components";
 import ConnectButton from "./ConnectButton";
 
 const ConnectWithMentor = () => {
   return (
     <div className="md:px-3">
-      <h4 className="text-xs md:text-lg font-bold md:text-center py-1 md:py-4">
+      <h4 className="text-sm md:text-lg font-bold md:text-center py-1 md:py-4">
         Connect with mentor
       </h4>
 

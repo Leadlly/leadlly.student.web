@@ -19,46 +19,92 @@ const DesktopUI = ({
   todaysTopics: TDashboardTodaysTopic[];
 }) => {
   return (
-    <div className="h-full flex items-start gap-4">
-      <div className="flex-1 flex flex-col justify-start gap-3 xl:gap-6 h-full">
-        <Header title="Dashboard" />
-        <section className="grid grid-cols-2 gap-4 py-2 lg:overflow-y-auto custom__scrollbar">
-          <div className="border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
-            <TodaysPlan todaysTopics={todaysTopics} />
+    // <div className="h-full flex items-start gap-4">
+    //   <div className="flex-1 flex flex-col justify-start gap-3 xl:gap-6 h-full">
+    //     <Header title="Dashboard" />
+    //     <section className="grid grid-cols-2 gap-4 py-2 pr-2 lg:overflow-y-auto custom__scrollbar">
+    //       <div className="border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
+    //         <TodaysPlan todaysTopics={todaysTopics} />
+    //       </div>
+    //       <div className="border rounded-xl">
+    //         <ConnectWithMentor />
+    //       </div>
+    //       <div className="border rounded-xl ">
+    //         <SubjectProgress />
+    //       </div>
+    //       <div className="border rounded-xl">
+    //         <DailyReport />
+    //       </div>
+    //       <div className="border rounded-xl col-span-2">
+    //         <ProgressAnalytics />
+    //       </div>
+    //     </section>
+    //   </div>
+
+    //   <div className="hidden lg:w-60 xl:w-[268px] lg:flex flex-col justify-start gap-3 xl:gap-6 h-full">
+    //     <Header
+    //       title="Profile"
+    //       titleClassName="text-[32px]"
+    //       icon={<NotificationIcon stroke="black" />}
+    //     />
+
+    //   </div>
+    // </div>
+
+    <div className="h-full flex flex-col justify-start gap-3 xl:gap-6">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1">
+          <Header title="Dashboard" />
+        </div>
+        <div className="hidden lg:block lg:w-60 xl:w-[268px]">
+          <Header
+            title="Profile"
+            titleClassName="text-[32px]"
+            icon={<NotificationIcon stroke="black" />}
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
+        <section className="h-full flex flex-col justify-start gap-4 py-2 xl:w-[calc(100%-268px)]">
+          <div className="w-full grid grid-cols-2 gap-4">
+            <div className="border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
+              <TodaysPlan todaysTopics={todaysTopics} />
+            </div>
+
+            <div className="border rounded-xl">
+              <ConnectWithMentor />
+            </div>
           </div>
+
+          <div className="w-full grid grid-cols-2 gap-4">
+            <div className="border rounded-xl ">
+              <SubjectProgress />
+            </div>
+
+            <div className="border rounded-xl">
+              <DailyReport />
+            </div>
+          </div>
+
           <div className="border rounded-xl">
-            <ConnectWithMentor />
-          </div>
-          <div className="border rounded-xl ">
-            <SubjectProgress />
-          </div>
-          <div className="border rounded-xl">
-            <DailyReport />
-          </div>
-          <div className="border rounded-xl col-span-2">
             <ProgressAnalytics />
           </div>
         </section>
-      </div>
 
-      <div className="hidden lg:w-60 xl:w-[268px] lg:flex flex-col justify-start gap-3 xl:gap-6 h-full">
-        <Header
-          title="Profile"
-          titleClassName="text-[32px]"
-          icon={<NotificationIcon stroke="black" />}
-        />
+        <div className="hidden lg:w-60 xl:w-[268px] lg:block">
+          <section className="flex flex-col justify-start gap-4 py-2">
+            <ProfileBox />
 
-        <section className="flex flex-col justify-start gap-4 py-2 overflow-y-auto custom__scrollbar">
-          <ProfileBox />
+            <PointsBox />
 
-          <PointsBox />
+            <TodaysVibe />
 
-          <TodaysVibe />
+            <DailyStreakQuestions />
 
-          <DailyStreakQuestions />
-
-          <UpcomingWorkshops />
-        </section>
+            <UpcomingWorkshops />
+          </section>
+        </div>
       </div>
     </div>
   );

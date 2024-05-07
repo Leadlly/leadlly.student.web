@@ -10,7 +10,7 @@ const AreaChart = () => {
         <Charts
           type="area"
           width={"100%"}
-          height={160}
+          height={140}
           series={[
             {
               name: "Revision Session",

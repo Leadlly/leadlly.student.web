@@ -1,6 +1,4 @@
-"use client";
-
-const QuizIcon = ({ stroke }: { stroke: string }) => {
+const QuizIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="20"

@@ -4,31 +4,31 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Logo, NotificationIcon, Sidebar } from "@/components";
+import { SidebarDesktop, Logo, NotificationIcon } from "@/components";
 
 import { userSidebarLinks } from "@/helpers/constants";
 
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const MobileNavBar = () => {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
-    <nav className="px-3 py-2 flex items-center justify-between">
+    <nav className="p-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild className="cursor-pointer">
             <Menu />
           </SheetTrigger>
           <SheetContent side={"left"} className="p-0">
-            <Sidebar sidebar={userSidebarLinks} setOpen={setSheetOpen} />
+            <SidebarDesktop sidebar={userSidebarLinks} setOpen={setSheetOpen} />
           </SheetContent>
         </Sheet>
 
         <Link href={"/"}>
           <Logo
-            fullLogoWidth={90}
+            fullLogoWidth={110}
             fullLogoHeight={40}
             fullLogoClassName="hidden sm:block"
             smallLogoWidth={25}

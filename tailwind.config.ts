@@ -88,6 +88,7 @@ const config = {
       },
       boxShadow: {
         custom: "0px 17px 37px 0px rgba(165, 92, 255, 0.0)",
+        dialog: "0 0 21.5px 2px rgba(0, 0, 0, 0.29)",
       },
     },
   },
