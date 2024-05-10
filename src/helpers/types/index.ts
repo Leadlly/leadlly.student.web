@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SVGProps } from "react";
 
 export type TContainerProps = {
   children: React.ReactNode;
@@ -84,3 +84,17 @@ export type TPlannerTodaysTopic = {
   subject: string;
   topics: string;
 };
+
+export type TWeeklyPlanProps = {
+  date: Date;
+  topics: string;
+};
+
+export interface IIconProps extends SVGProps<SVGSVGElement> {}
+
+export interface FormattedDate {
+  dayOfWeek: string;
+  dayOfMonth: string;
+  month: string;
+  year: number;
+}

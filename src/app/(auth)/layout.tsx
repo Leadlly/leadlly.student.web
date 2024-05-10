@@ -5,6 +5,7 @@ import { Container } from "@/components";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
+import StoreProvider from "@/app/StoreProvider";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -20,10 +21,12 @@ export default function AuthLayout({
   return (
     <html lang="en">
       <body className={cn("font-sans antialiased", fontSans.variable)}>
-        <GoogleOAuthProvider
-          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-          <Container className="min-h-screen py-3">{children}</Container>
-        </GoogleOAuthProvider>
+        <StoreProvider>
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+            <Container className="min-h-screen py-3">{children}</Container>
+          </GoogleOAuthProvider>
+        </StoreProvider>
       </body>
     </html>
   );
