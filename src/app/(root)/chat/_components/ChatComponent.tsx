@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import Attach from '@/components/icons/AttachIcon';
 import Mic from '@/components/icons/MicIcon';
 import Send from '@/components/icons/SendIcon';
@@ -12,7 +12,7 @@ import { Smile } from 'lucide-react';
 // import dots from './icons/dots.png';
 
 interface ChatData {
-  img: string;
+  img: StaticImageData;
   title: string;
   status: string;
   messages: Array<{

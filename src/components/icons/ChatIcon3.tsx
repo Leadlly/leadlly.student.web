@@ -3,7 +3,7 @@ const ChatIcon = ({
   width = "21",
   height = "19",
 }: {
-  stroke: string;
+  stroke?: string;
   width?: string;
   height?: string;
 }) => {
