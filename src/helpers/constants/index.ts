@@ -1,14 +1,5 @@
-// import {
-//   DashboardIcon,
-//   ErrorBookIcon,
-//   GrowthMeterIcon,
-//   LibertyIcon,
-//   PlannerIcon,
-//   QuizIcon,
-//   StudyRoomIcon,
-//   TrackerIcon,
-//   WorkshopIcon,
-// } from "@/components";
+import { TSidebarLink } from "../types";
+
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import { TQuizQuestionProps, TSidebarLink } from "../types";
 import PlannerIcon from "@/components/icons/PlannerIcon";
