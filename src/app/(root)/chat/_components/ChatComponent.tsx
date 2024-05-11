@@ -63,19 +63,23 @@ const ChatComponent: React.FC<{ chatData: ChatData }> = ({ chatData }) => {
                     ))}
                 </div>
             </div>
-            <div className="flex items-center border rounded-lg p-2 mx-6 my-4 bg-white ">
-              <Smile color='rgba(0, 0, 0, 1)'/>
-      <input
-        type="text"
-        placeholder="Type a Message here!..."
-        className="flex-1 bg-transparent outline-none mx-3"
-      />
-      <Attach stroke='rgba(106, 106, 106, 1)'/>
-      <Mic stroke="rgba(106, 106, 106, 1)"/>
-      <button type="submit" className='mx-3 px-4 py-2 rounded-lg bg-purple-600'>
-        <Send stroke='rgba(150, 84, 244, 1)'/>
-      </button>
-    </div>
+            <div className="flex items-center border rounded-lg p-2 mx-6 my-4 bg-white">
+              <Smile color='rgba(0, 0, 0, 1)' className='mx-2 hover:cursor-pointer'/>
+              <input
+                type="text"
+                placeholder="Type a Message here!..."
+                className="flex-1 bg-transparent outline-none mx-3"
+              />
+              <div className='mx-2 hover:cursor-pointer'>
+                <Attach stroke='rgba(106, 106, 106, 1)'/>
+              </div>
+              <div className='mx-2 hover:cursor-pointer'>
+                <Mic stroke="rgba(106, 106, 106, 1)"/>
+              </div>
+              <button type="submit" className='mx-3 px-4 py-2 rounded-lg bg-purple-600 hover:cursor-pointer'>
+                <Send stroke='rgba(150, 84, 244, 1)'/>
+              </button>
+            </div>
         </div>
     );
 };
