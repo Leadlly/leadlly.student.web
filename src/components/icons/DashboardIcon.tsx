@@ -1,6 +1,4 @@
-"use client";
-
-const DashboardIcon = ({ stroke }: { stroke: string }) => {
+const DashboardIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="20"

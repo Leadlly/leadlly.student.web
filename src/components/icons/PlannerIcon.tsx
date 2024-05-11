@@ -1,6 +1,4 @@
-"use client";
-
-const PlannerIcon = ({ stroke }: { stroke: string }) => {
+const PlannerIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="19"

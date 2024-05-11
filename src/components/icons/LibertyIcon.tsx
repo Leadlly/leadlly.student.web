@@ -1,6 +1,4 @@
-"use client";
-
-const LibertyIcon = ({ stroke }: { stroke: string }) => {
+const LibertyIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="20"

@@ -1,6 +1,4 @@
-"use client";
-
-const GrowthMeterIcon = ({ stroke }: { stroke: string }) => {
+const GrowthMeterIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="21"

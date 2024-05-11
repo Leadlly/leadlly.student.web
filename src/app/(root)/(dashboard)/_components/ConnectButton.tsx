@@ -12,7 +12,7 @@ const ConnectButton = ({
   return (
     <button className="flex items-center justify-center md:justify-start gap-1 md:gap-6 text-base font-semibold border w-full p-1 md:py-2 md:px-3 rounded-md">
       {Icon && Icon}
-      <span className="text-[8px] md:text-base">{title}</span>
+      <span className="text-[9px] md:text-base">{title}</span>
     </button>
   );
 };

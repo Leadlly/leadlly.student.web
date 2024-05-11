@@ -20,7 +20,7 @@ const TabletUI = ({
     <div className="h-full flex flex-col justify-start gap-4">
       <Header title="Dashboard" titleClassName="text-[36px]" />
 
-      <div className="flex-1 flex flex-col justify-start gap-4 lg:px-2 lg:overflow-y-auto custom__scrollbar">
+      <div className="flex-1 flex flex-col justify-start gap-4 lg:overflow-y-auto custom__scrollbar">
         <div className="flex gap-4">
           <div className="space-y-4 w-1/2">
             <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">

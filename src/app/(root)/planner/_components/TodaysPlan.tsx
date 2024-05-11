@@ -28,11 +28,11 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TTodaysTopic[] }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto custom__scrollbar">
-        <ul className="h-full flex flex-col justify-start">
+        <ul className="h-full flex md:grid md:grid-cols-2 xl:flex flex-col justify-start">
           {todaysTopics.map((plan) => (
             <li
               key={plan.subject}
-              className="border-b border-b-[#717171] border-opacity-[0.11] last:border-none py-4 px-7">
+              className="border-b md:border-none xl:border-b border-b-[#717171] border-opacity-[0.11] last:border-none py-4 px-7">
               <h4 className="text-xl font-medium text-black">{plan.subject}</h4>
               <p className="text-sm font-normal text-[#454545]">
                 {plan.topics}

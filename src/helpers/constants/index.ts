@@ -1,17 +1,15 @@
-import {
-  DashboardIcon,
-  PlannerIcon,
-  TrackerIcon,
-  ChatIcon,
-  ErrorBookIcon,
-  GrowthMeterIcon,
-  WorkshopIcon,
-  LibertyIcon,
-  QuizIcon,
-  StudyRoomIcon,
-} from "@/components";
-
 import { TSidebarLink } from "../types";
+
+import DashboardIcon from "@/components/icons/DashboardIcon";
+import { TQuizQuestionProps, TSidebarLink } from "../types";
+import PlannerIcon from "@/components/icons/PlannerIcon";
+import TrackerIcon from "@/components/icons/TrackerIcon";
+import ErrorBookIcon from "@/components/icons/ErrorBookIcon";
+import GrowthMeterIcon from "@/components/icons/GrowthMeterIcon";
+import WorkshopIcon from "@/components/icons/WorkshopIcon";
+import LibertyIcon from "@/components/icons/LibertyIcon";
+import QuizIcon from "@/components/icons/QuizIcon";
+import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {
@@ -63,5 +61,43 @@ export const userSidebarLinks: TSidebarLink[] = [
     label: "study room",
     icon: StudyRoomIcon,
     href: "/study-room",
+  },
+];
+
+export const quizQuestions: TQuizQuestionProps[] = [
+  {
+    question: "Sample question 1",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["2"],
+    },
+  },
+  {
+    question: "Sample question 2",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["1"],
+    },
+  },
+  {
+    question: "Sample question 3",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["4"],
+    },
+  },
+  {
+    question: "Sample question 4",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["3"],
+    },
+  },
+  {
+    question: "Sample question 5",
+    options: {
+      all: ["1", "2", "3", "4"],
+      correct: ["4"],
+    },
   },
 ];

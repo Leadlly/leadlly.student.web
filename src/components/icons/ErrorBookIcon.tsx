@@ -1,6 +1,4 @@
-"use client";
-
-const ErrorBookIcon = ({ stroke }: { stroke: string }) => {
+const ErrorBookIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="17"

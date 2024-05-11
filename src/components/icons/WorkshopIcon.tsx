@@ -1,6 +1,4 @@
-"use client";
-
-const WorkshopIcon = ({ stroke }: { stroke: string }) => {
+const WorkshopIcon = ({ stroke }: { stroke?: string }) => {
   return (
     <svg
       width="21"
