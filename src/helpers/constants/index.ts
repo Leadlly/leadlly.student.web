@@ -1,14 +1,3 @@
-// import {
-//   DashboardIcon,
-//   ErrorBookIcon,
-//   GrowthMeterIcon,
-//   LibertyIcon,
-//   PlannerIcon,
-//   QuizIcon,
-//   StudyRoomIcon,
-//   TrackerIcon,
-//   WorkshopIcon,
-// } from "@/components";
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import { TQuizQuestionProps, TSidebarLink } from "../types";
 import PlannerIcon from "@/components/icons/PlannerIcon";
@@ -19,6 +8,7 @@ import WorkshopIcon from "@/components/icons/WorkshopIcon";
 import LibertyIcon from "@/components/icons/LibertyIcon";
 import QuizIcon from "@/components/icons/QuizIcon";
 import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
+import ChatIcon from "@/components/icons/ChatIcon3";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {
@@ -35,6 +25,11 @@ export const userSidebarLinks: TSidebarLink[] = [
     label: "tracker",
     icon: TrackerIcon,
     href: "/tracker",
+  },
+  {
+    label: "chat",
+    icon: ChatIcon,
+    href: "/chat",
   },
   {
     label: "errorbook",
