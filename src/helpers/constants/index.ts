@@ -19,6 +19,7 @@ import WorkshopIcon from "@/components/icons/WorkshopIcon";
 import LibertyIcon from "@/components/icons/LibertyIcon";
 import QuizIcon from "@/components/icons/QuizIcon";
 import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
+import ChatIcon from "@/components/icons/ChatIcon3";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import emoji from './icons/Happy.png';
-import attach from './icons/Vector_clip.png';
+import attach from '@/components/icons/AttachIcon';
 import mic from './icons/Icon Frame.png';
 import send from './icons/Vector 135.png';
 import call from './icons/call.png';
