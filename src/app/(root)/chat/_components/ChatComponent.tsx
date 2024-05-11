@@ -1,11 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
-import emoji from './icons/Happy.png';
-import attach from '@/components/icons/AttachIcon';
-import mic from './icons/Icon Frame.png';
-import send from './icons/Vector 135.png';
-import call from './icons/call.png';
-import dots from './icons/dots.png';
+import Attach from '@/components/icons/AttachIcon';
+import Mic from '@/components/icons/MicIcon';
+import Send from '@/components/icons/SendIcon';
+import Call from '@/components/icons/CallIcon';
+import Menu from '@/components/icons/MenuIcon';
+import { Smile } from 'lucide-react';
+// import mic from './icons/Icon Frame.png';
+// import send from './icons/Vector 135.png';
+// import call from './icons/call.png';
+// import dots from './icons/dots.png';
 
 interface ChatData {
   img: string;
@@ -35,21 +39,11 @@ const ChatComponent: React.FC<{ chatData: ChatData }> = ({ chatData }) => {
                     <div className="flex items-center">
                         <button className="text-gray-600 hover:text-gray-800 mx-5">
                           {/* Add onClick */}
-                        <Image
-                          src={call}
-                          alt='Call'
-                          width={23}
-                          height={23}
-                        />
+                        <Call stroke='rgba(0, 0, 0, 1)'/>
                         </button>
                         <button className="text-gray-600 hover:text-gray-800 ml-5">
                           {/* Add onClick */}
-                        <Image
-                          src={dots}
-                          alt='Menu'
-                          width={5}
-                          height={5}
-                        />
+                        <Menu stroke='rgba(0, 0, 0, 1)'/>
                         </button>
                     </div>
                 </div>
@@ -70,42 +64,16 @@ const ChatComponent: React.FC<{ chatData: ChatData }> = ({ chatData }) => {
                 </div>
             </div>
             <div className="flex items-center border rounded-lg p-2 mx-6 my-4 bg-white ">
-      <Image
-        src={emoji}
-        alt="Emoji"
-        className="mr-2"
-        width={30}
-        height={30}
-        // onClick={}
-      />
+              <Smile color='rgba(0, 0, 0, 1)'/>
       <input
         type="text"
         placeholder="Type a Message here!..."
         className="flex-1 bg-transparent outline-none mx-3"
       />
-      <Image
-        src={attach}
-        alt="Attachment"
-        className="mx-2"
-        width={15}
-        height={15}
-        // onClick={}
-      />
-      <Image
-        src={mic}
-        alt="Mic"
-        className="mx-2"
-        width={25}
-        height={25}
-        // onClick={}
-      />
+      <Attach stroke='rgba(106, 106, 106, 1)'/>
+      <Mic stroke="rgba(106, 106, 106, 1)"/>
       <button type="submit" className='mx-3 px-4 py-2 rounded-lg bg-purple-600'>
-        <Image
-          src={send}
-          alt="Send Message"
-          width={20}
-          height={20}
-        />
+        <Send stroke='rgba(150, 84, 244, 1)'/>
       </button>
     </div>
         </div>
