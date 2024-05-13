@@ -11,17 +11,17 @@ const ConnectWithMentor = () => {
       <div className="grid grid-cols-3 gap-1 md:flex md:flex-col md:justify-start md:gap-3 w-full">
         <ConnectButton
           title="Connect with mentor"
-          icon={<ChatIcon stroke="black" />}
+          icon={<ChatIcon className="md:w-5 md:h-5" />}
         />
 
         <ConnectButton
           title="Conference meeting"
-          icon={<VideoChatIcon stroke="black" />}
+          icon={<VideoChatIcon className="md:w-5 md:h-5" />}
         />
 
         <ConnectButton
           title="Request a meeting"
-          icon={<RequestMeetingIcon stroke="black" />}
+          icon={<RequestMeetingIcon className="md:w-5 md:h-5" />}
         />
       </div>
     </div>

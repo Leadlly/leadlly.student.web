@@ -26,14 +26,14 @@ export default function RootLayout({
           fontSans.variable
         )}>
         <StoreProvider>
-          <Container className="lg:hidden fixed z-50 bg-white shadow">
+          <Container className="md:hidden fixed z-50 bg-white shadow">
             <MobileMenu />
           </Container>
-          <Container className="py-3 flex items-start gap-3">
-            <div className="hidden lg:block">
+          <Container className="relative py-3">
+            <div className="hidden md:block md:fixed md:top-2 md:bottom-2">
               <Sidebar />
             </div>
-            <main className="flex-1 h-main-height px-4 lg:px-3">
+            <main className="md:ml-20 xl:ml-[261px] h-main-height pl-4 pr-4 md:pr-2">
               {children}
             </main>
           </Container>

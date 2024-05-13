@@ -31,7 +31,7 @@ const MobileUI = ({
         <SubjectProgress />
       </div>
 
-      <div className="border rounded-xl mb-8">
+      <div className="border rounded-xl mb-5">
         <ProgressAnalytics />
       </div>
     </div>

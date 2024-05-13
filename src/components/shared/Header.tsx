@@ -8,15 +8,13 @@ const Header = ({
   titleClassName,
 }: THeaderProps) => {
   return (
-    <header>
-      <div
-        className={clsx(
-          "text-page-title font-semibold flex items-center justify-between",
-          className
-        )}>
-        <h2 className={clsx(titleClassName)}>{title}</h2>
-        {Icon && <div>{Icon}</div>}
-      </div>
+    <header
+      className={clsx(
+        "w-full text-page-title leading-none font-semibold flex items-center justify-between",
+        className
+      )}>
+      <h2 className={clsx(titleClassName)}>{title}</h2>
+      {Icon && <div>{Icon}</div>}
     </header>
   );
 };

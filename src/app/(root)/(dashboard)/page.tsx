@@ -32,11 +32,11 @@ const Dashboard = () => {
         <DesktopUI todaysTopics={todaysTopics} />
       </div>
 
-      <div className="h-full hidden md:block xl:hidden pt-20 lg:pt-0">
+      <div className="h-full hidden md:block xl:hidden pt-20 md:pt-0">
         <TabletUI todaysTopics={todaysTopics} />
       </div>
 
-      <div className="h-full md:hidden pt-16 lg:pt-0">
+      <div className="h-full md:hidden pt-16 md:pt-0">
         <MobileUI todaysTopics={todaysTopics} />
       </div>
     </>

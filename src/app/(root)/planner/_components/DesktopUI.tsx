@@ -10,19 +10,14 @@ const DesktopUI = ({
   todaysTopics: TPlannerTodaysTopic[];
 }) => {
   return (
-    <section className="hidden xl:grid grid-cols-2 gap-6 overflow-y-auto custom__scrollbar">
+    <section className="hidden xl:grid grid-cols-2 gap-6 overflow-y-auto custom__scrollbar pr-3">
       <div className="grid grid-rows-2 gap-6">
-        <div className="rounded-xl border flex flex-col justify-start overflow-hidden">
-          <TodaysPlan todaysTopics={todaysTopics} />
-        </div>
+        <TodaysPlan todaysTopics={todaysTopics} />
 
-        <div className="rounded-xl py-4 border">
-          <RevisionZone />
-        </div>
+        <RevisionZone />
       </div>
-      <div className="border rounded-xl overflow-x-hidden overflow-y-auto custom__scrollbar">
-        <WeeklyPlan />
-      </div>
+
+      <WeeklyPlan />
     </section>
   );
 };

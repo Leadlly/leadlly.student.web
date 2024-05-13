@@ -1,5 +1,6 @@
+import { TQuizQuestionProps, TSidebarLink, TWeeklyPlanProps } from "../types";
+
 import DashboardIcon from "@/components/icons/DashboardIcon";
-import { TQuizQuestionProps, TSidebarLink } from "../types";
 import PlannerIcon from "@/components/icons/PlannerIcon";
 import TrackerIcon from "@/components/icons/TrackerIcon";
 import ErrorBookIcon from "@/components/icons/ErrorBookIcon";
@@ -8,7 +9,7 @@ import WorkshopIcon from "@/components/icons/WorkshopIcon";
 import LibertyIcon from "@/components/icons/LibertyIcon";
 import QuizIcon from "@/components/icons/QuizIcon";
 import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
-import ChatIcon from "@/components/icons/ChatIcon3";
+import ChatIcon3 from "@/components/icons/ChatIcon3";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {
@@ -28,7 +29,7 @@ export const userSidebarLinks: TSidebarLink[] = [
   },
   {
     label: "chat",
-    icon: ChatIcon,
+    icon: ChatIcon3,
     href: "/chat",
   },
   {
@@ -98,5 +99,36 @@ export const quizQuestions: TQuizQuestionProps[] = [
       all: ["1", "2", "3", "4"],
       correct: ["4"],
     },
+  },
+];
+
+export const weeklyPlan: TWeeklyPlanProps[] = [
+  {
+    date: new Date("2024-05-09T00:00:00Z"),
+    topics: "Limits, continuity, and differentiability / Magnetism",
+  },
+  {
+    date: new Date("2024-05-10T00:00:00Z"),
+    topics: "Vector Algebra/Work and Energy / Atomic Structure",
+  },
+  {
+    date: new Date("2024-05-11T00:00:00Z"),
+    topics: "Permutations Combinations / Hydrocarbons",
+  },
+  {
+    date: new Date("2024-05-12T00:00:00Z"),
+    topics: "Sequence Series / Oxygen, Halogens, and Nitrogen",
+  },
+  {
+    date: new Date("2024-05-13T00:00:00Z"),
+    topics: "Differential Equations / Alternating Currents",
+  },
+  {
+    date: new Date("2024-05-14T00:00:00Z"),
+    topics: "Coordinate Geometry / Work and Energy / Equilibrium and Chemical",
+  },
+  {
+    date: new Date("2024-05-15T00:00:00Z"),
+    topics: "Buffer Day",
   },
 ];

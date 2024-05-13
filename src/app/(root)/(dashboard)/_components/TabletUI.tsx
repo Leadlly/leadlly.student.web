@@ -20,7 +20,7 @@ const TabletUI = ({
     <div className="h-full flex flex-col justify-start gap-4">
       <Header title="Dashboard" titleClassName="text-[36px]" />
 
-      <div className="flex-1 flex flex-col justify-start gap-4 lg:overflow-y-auto custom__scrollbar">
+      <div className="flex-1 flex flex-col justify-start gap-4 md:overflow-y-auto custom__scrollbar pr-3">
         <div className="flex gap-4">
           <div className="space-y-4 w-1/2">
             <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">
@@ -37,9 +37,9 @@ const TabletUI = ({
           <div className="w-1/2 space-y-4">
             <ProfileBox />
 
-            <TodaysVibe />
-
             <PointsBox />
+
+            <TodaysVibe />
 
             <DailyStreakQuestions />
 
@@ -51,7 +51,7 @@ const TabletUI = ({
           </div>
         </div>
 
-        <div className="border rounded-xl mb-4">
+        <div className="border rounded-xl">
           <ProgressAnalytics />
         </div>
       </div>

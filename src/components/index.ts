@@ -21,6 +21,15 @@ import VideoChatIcon from "./icons/VideoChatIcon";
 import RequestMeetingIcon from "./icons/RequestMeetingIcon";
 import UpArrowIcon from "./icons/UpArrowIcon";
 import DownArrowIcon from "./icons/DownArrowIcon";
+import AttachIcon from "./icons/AttachIcon";
+import CallIcon from "./icons/CallIcon";
+import ChatIcon3 from "./icons/ChatIcon3";
+import MenuIcon from "./icons/MenuIcon";
+import MicIcon from "./icons/MicIcon";
+import SendIcon from "./icons/SendIcon";
+import OneOnOneMeetingIcon from "./icons/OneOnOneMeetingIcon";
+import ConferenceMeetingIcon from "./icons/ConferenceMeetingIcon";
+import ClockIcon from "./icons/ClockIcon";
 
 export {
   Container,
@@ -44,4 +53,13 @@ export {
   RequestMeetingIcon,
   UpArrowIcon,
   DownArrowIcon,
+  AttachIcon,
+  CallIcon,
+  ChatIcon3,
+  MenuIcon,
+  MicIcon,
+  SendIcon,
+  OneOnOneMeetingIcon,
+  ConferenceMeetingIcon,
+  ClockIcon,
 };
