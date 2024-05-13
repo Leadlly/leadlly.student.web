@@ -10,7 +10,7 @@ const DesktopUI = ({
   todaysTopics: TPlannerTodaysTopic[];
 }) => {
   return (
-    <section className="hidden xl:grid grid-cols-2 gap-6">
+    <section className="hidden xl:grid grid-cols-2 gap-6 overflow-y-auto custom__scrollbar pr-3">
       <div className="grid grid-rows-2 gap-6">
         <TodaysPlan todaysTopics={todaysTopics} />
 

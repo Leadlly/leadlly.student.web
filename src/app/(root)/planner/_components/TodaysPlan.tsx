@@ -21,9 +21,9 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TTodaysTopic[] }) => {
         </div>
         <Link
           href={"/"}
-          className="text-[#A36AF5] text-xs md:text-base leading-none font-medium flex items-center gap-4">
+          className="text-[#A36AF5] text-xs md:text-base leading-none font-medium flex items-center gap-3">
           View all
-          <RightArrowIcon stroke="#A36AF5" />
+          <RightArrowIcon className="md:w-3 md:h-3 stroke-[#A36AF5]" />
         </Link>
       </div>
 

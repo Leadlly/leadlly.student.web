@@ -18,7 +18,7 @@ const SidebarDesktop = ({
 }) => {
   const pathname = usePathname();
   return (
-    <aside className="bg-sidebar-background w-full h-full md:w-20 xl:w-sidebar md:h-main-height lg:rounded-xl overflow-y-hidden shadow-xl">
+    <aside className="bg-sidebar-background w-full h-full md:w-20 xl:w-sidebar md:h-main-height md:rounded-xl overflow-y-hidden shadow-xl">
       <div className="w-full px-[25px] py-4">
         <Link href={"/"}>
           <Logo
@@ -47,9 +47,7 @@ const SidebarDesktop = ({
                 "px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
               )}>
               <li className="flex items-center gap-3 capitalize text-base md:text-[20px]">
-                <item.icon
-                  stroke={pathname === item.href ? "white" : "#5A10D9"}
-                />
+                <item.icon active={pathname === item.href} />
                 <div
                   className={clsx(
                     "md:hidden xl:block",

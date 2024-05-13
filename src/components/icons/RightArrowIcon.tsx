@@ -8,7 +8,10 @@ const RightArrowIcon = ({ className, ...props }: IIconProps) => {
     <svg
       viewBox="0 0 7 12"
       xmlns="http://www.w3.org/2000/svg"
-      className={clsx("w-3 h-3 fill-none stroke-black stroke-2", className)}
+      className={clsx(
+        "w-[6px] h-[6px] fill-none stroke-black stroke-2",
+        className
+      )}
       {...props}>
       <path
         d="M1.46651 10.5319L5.1582 5.86192"

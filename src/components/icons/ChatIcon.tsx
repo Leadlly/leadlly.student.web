@@ -1,5 +1,3 @@
-"use client";
-
 import { IIconProps } from "@/helpers/types";
 import clsx from "clsx";
 

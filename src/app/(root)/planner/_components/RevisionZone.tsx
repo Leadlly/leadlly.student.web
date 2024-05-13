@@ -37,7 +37,7 @@ const RevisionZone = () => {
         <div className="w-full flex items-center justify-center">
           <Button className="h-7 md:h-12 flex items-center gap-2 text-sm md:text-2xl font-bold rounded-md md:rounded-xl">
             Proceed
-            <ArrowRight />
+            <ArrowRight className="w-3 h-3 md:w-5 md:h-5" />
           </Button>
         </div>
       </div>
