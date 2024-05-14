@@ -1,7 +1,8 @@
 import React from "react";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 
 import { Smile } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import {
   AttachIcon,
@@ -11,24 +12,14 @@ import {
   SendIcon,
 } from "@/components";
 import { cn } from "@/lib/utils";
+import { ChatData } from "@/helpers/types";
 
-interface ChatData {
-  img: StaticImageData;
-  title: string;
-  status: string;
-  messages: Array<{
-    sender: string;
-    text: string;
-    timestamp: string;
-  }>;
-}
-
-const ChatComponent: React.FC<{ chatData: ChatData }> = ({ chatData }) => {
+const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   return (
     <div
-      className="flex flex-col my-4 bg-purple-400 bg-opacity-10 rounded-xl overflow-hidden"
-      style={{ height: "75vh" }}>
-      <div className="bg-white py-4 px-6 border-b border-gray-200 flex items-center">
+      className="flex flex-col border bg-purple-400 bg-opacity-10 rounded-xl overflow-hidden"
+      style={{ height: "75dvh" }}>
+      <div className="bg-white p-3 md:py-4 md:px-6 border-b rounded-lg border-gray-200 flex items-center">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center">
             <div className="rounded-full bg-blue-500 w-11 h-11 flex items-center justify-center mr-4">
@@ -45,21 +36,21 @@ const ChatComponent: React.FC<{ chatData: ChatData }> = ({ chatData }) => {
               <p className="text-sm text-gray-600">{chatData.status}</p>
             </div>
           </div>
-          <div className="flex items-center">
-            <button className="text-gray-600 hover:text-gray-800 mx-5">
+          <div className="flex items-center gap-10">
+            <Button variant={"link"} className="px-0 hidden md:block">
               {/* Add onClick */}
-              <CallIcon stroke="rgba(0, 0, 0, 1)" />
-            </button>
-            <button className="text-gray-600 hover:text-gray-800 ml-5">
+              <CallIcon />
+            </Button>
+            <Button variant={"link"} className="px-0">
               {/* Add onClick */}
-              <MenuIcon stroke="rgba(0, 0, 0, 1)" />
-            </button>
+              <MenuIcon className="md:w-5 md:h-5" />
+            </Button>
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto custom__scrollbar">
+      <div className="flex-1 overflow-y-auto custom__scrollbar px-3 md:px-10 py-4">
         {/* Chat messages go here */}
-        <div className="flex flex-col p-4">
+        <div className="flex flex-col">
           {chatData.messages.map((message, index) => (
             <div
               className={cn(
@@ -84,24 +75,26 @@ const ChatComponent: React.FC<{ chatData: ChatData }> = ({ chatData }) => {
           ))}
         </div>
       </div>
-      <div className="flex items-center border rounded-lg p-2 mx-6 my-4 bg-white">
-        <Smile className="mx-2 hover:cursor-pointer" />
+      <div className="flex items-center gap-1 md:gap-3 border rounded-lg bg-white mt-2 md:mx-10 md:my-4 p-2">
+        <Button variant={"link"} className="text-black/70 px-2">
+          <Smile className="cursor-pointer w-5 h-5 md:w-6 md:h-6" />
+        </Button>
         <input
           type="text"
           placeholder="Type a Message here!..."
-          className="flex-1 bg-transparent outline-none mx-3"
+          className="flex-1 bg-transparent outline-none"
         />
-        <div className="mx-2 hover:cursor-pointer">
-          <AttachIcon stroke="rgba(106, 106, 106, 1)" />
+        <div className="flex items-center gap-4">
+          <Button variant={"link"} className="px-0">
+            <AttachIcon className="md:w-4 md:h-7" />
+          </Button>
+          <Button variant={"link"} className="px-0">
+            <MicIcon className="md:w-7 md:h-7" />
+          </Button>
+          <Button type="submit">
+            <SendIcon className="md:w-7 md:h-7" />
+          </Button>
         </div>
-        <div className="mx-2 hover:cursor-pointer">
-          <MicIcon stroke="rgba(106, 106, 106, 1)" />
-        </div>
-        <button
-          type="submit"
-          className="mx-3 px-4 py-2 rounded-lg bg-purple-600 hover:cursor-pointer">
-          <SendIcon stroke="rgba(150, 84, 244, 1)" />
-        </button>
       </div>
     </div>
   );

@@ -1,14 +1,17 @@
 "use client";
 
-import clsx from "clsx";
 import { motion } from "framer-motion";
 import { TTabNavItemProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const TabNavItem = ({
   id,
   title,
   activeTab,
   setActiveTab,
+  className,
+  activeTabClassName,
+  titleClassName,
 }: TTabNavItemProps) => {
   const handleClick = () => {
     setActiveTab(id);
@@ -16,9 +19,10 @@ const TabNavItem = ({
   return (
     <li
       onClick={handleClick}
-      className={clsx(
+      className={cn(
         "relative text-xs p-1 rounded cursor-pointer transition-all ease-in-out",
-        activeTab === id ? "text-white" : "text-black"
+        activeTab === id ? "text-white" : "text-black",
+        className
       )}>
       {activeTab === id && (
         <motion.div
@@ -27,10 +31,10 @@ const TabNavItem = ({
             type: "spring",
             duration: 0.6,
           }}
-          className="absolute inset-0 rounded bg-primary"
+          className={cn("absolute rounded bg-primary", activeTabClassName)}
         />
       )}
-      <span className="relative z-10">{title}</span>
+      <span className={cn("relative z-10", titleClassName)}>{title}</span>
     </li>
   );
 };

@@ -1,13 +1,12 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import clsx from "clsx";
-
 import { Logo } from "@/components";
-import { TSidebarLink } from "../../helpers/types";
-import React from "react";
+import { TSidebarLink } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const SidebarDesktop = ({
   sidebar,
@@ -42,14 +41,14 @@ const SidebarDesktop = ({
                   setOpen(false);
                 }
               }}
-              className={clsx(
+              className={cn(
                 pathname === item.href ? "bg-primary" : "",
                 "px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
               )}>
               <li className="flex items-center gap-3 capitalize text-base md:text-[20px]">
                 <item.icon active={pathname === item.href} />
                 <div
-                  className={clsx(
+                  className={cn(
                     "md:hidden xl:block",
                     pathname === item.href ? "text-white" : "text-primary"
                   )}>

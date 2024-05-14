@@ -13,7 +13,8 @@ import { Eye, EyeOff, Lock, User } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { signInSchema } from "@/schemas/signInSchema";
-import clsx from "clsx";
+
+import { cn } from "@/lib/utils";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -61,7 +62,7 @@ const Login = () => {
               onSubmit={handleSubmit(onFormSubmit)}>
               <div>
                 <div
-                  className={clsx(
+                  className={cn(
                     "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
                     errors.email
                       ? "border-red-500 bg-red-50/40"
@@ -86,7 +87,7 @@ const Login = () => {
 
               <div>
                 <div
-                  className={clsx(
+                  className={cn(
                     "flex items-center justify-start gap-4 border border-[#D9D8D8] text-[#7F7F7F] h-12 px-4 rounded-lg",
                     errors.password
                       ? "border-red-500 bg-red-50/40"

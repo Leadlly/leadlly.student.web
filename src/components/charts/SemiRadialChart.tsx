@@ -2,8 +2,10 @@
 
 import dynamic from "next/dynamic";
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
+
 import { TSemiRadialChartProps } from "@/helpers/types";
-import clsx from "clsx";
+
+import { cn } from "@/lib/utils";
 
 const SemiRadialChart = ({
   series = [],
@@ -50,7 +52,7 @@ const SemiRadialChart = ({
 
       <div className="w-full flex items-center justify-center gap-1">
         <span
-          className={clsx(
+          className={cn(
             "w-2 h-2 rounded-sm -mt-[2px]",
             chartLabel === "revision" ? "bg-primary" : "bg-[#56CFE1]"
           )}></span>

@@ -1,7 +1,8 @@
 import { UpArrowIcon } from "@/components";
 import { Progress } from "@/components/ui/progress";
 import { TLevelPointProps } from "@/helpers/types";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
+
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -23,7 +24,7 @@ const LevelPoints = ({
 }: TLevelPointProps) => {
   return (
     <div
-      className={clsx(
+      className={cn(
         "border rounded-md p-2 flex flex-col justify-start gap-3",
         cardBgColor
       )}>
@@ -33,19 +34,18 @@ const LevelPoints = ({
           alt={iconAltText}
           width={pointsText === "Streak" ? 11 : 14}
           height={pointsText === "Streak" ? 11 : 14}
-          className={clsx("shadow-lg", iconShadowColor)}
+          className={cn("shadow-lg", iconShadowColor)}
         />
 
         <ChevronRight
           width={12}
           height={12}
-          className={clsx("rounded-full border-none p-[2px]", chevronBgColor)}
+          className={cn("rounded-full border-none p-[2px]", chevronBgColor)}
         />
       </div>
 
       <div className="flex-1 flex flex-col justify-center items-center gap-1">
-        <h3
-          className={clsx("leading-[0.5] text-xl font-semibold", pointsColor)}>
+        <h3 className={cn("leading-[0.5] text-xl font-semibold", pointsColor)}>
           {points}
         </h3>
         <p className="text-sm font-medium text-[#6B6B6B]">{pointsText}</p>
@@ -60,7 +60,7 @@ const LevelPoints = ({
           <div className="flex items-center gap-[2px]">
             <UpArrowIcon stroke={progressIconStroke} />
             <span
-              className={clsx(
+              className={cn(
                 "text-[9px] font-bold mt-[0.5px]",
                 pointsProgressTextColor
               )}>

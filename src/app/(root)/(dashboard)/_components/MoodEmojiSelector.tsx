@@ -3,9 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-import clsx from "clsx";
-
 import { TMoodEmojisProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const MoodEmojiSelector = ({
   moodEmojis,
@@ -25,7 +24,7 @@ const MoodEmojiSelector = ({
           width={20}
           height={20}
           onClick={() => setCurrentMood(emoji.mood_id)}
-          className={clsx(
+          className={cn(
             "cursor-pointer transition-all ease-in delay-150",
             currentMood === emoji.mood_id ? "grayscale-0" : "grayscale"
           )}

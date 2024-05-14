@@ -1,11 +1,9 @@
-import clsx from "clsx";
 import { TContainerProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const Container = ({ children, className }: TContainerProps) => {
   return (
-    <div className={clsx("max-w-7xl w-full mx-auto", className)}>
-      {children}
-    </div>
+    <div className={cn("max-w-7xl w-full mx-auto", className)}>{children}</div>
   );
 };
 
