@@ -2,7 +2,7 @@ import { LeftArrowIcon, RightArrowIcon } from "@/components";
 import { Button } from "@/components/ui/button";
 import { weeklyPlan } from "@/helpers/constants";
 import { getFormattedDate, getTodaysFormattedDate } from "@/helpers/utils";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 const WeeklyPlan = () => {
   return (
@@ -35,7 +35,7 @@ const WeeklyPlan = () => {
           {weeklyPlan.map((plan, i) => (
             <li
               key={i}
-              className={clsx(
+              className={cn(
                 "w-full rounded-xl md:text-center",
                 getFormattedDate(plan.date) === getTodaysFormattedDate()
                   ? "bg-primary text-white"

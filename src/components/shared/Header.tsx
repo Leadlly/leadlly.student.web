@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import { THeaderProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const Header = ({
   title,
@@ -9,11 +9,11 @@ const Header = ({
 }: THeaderProps) => {
   return (
     <header
-      className={clsx(
+      className={cn(
         "w-full text-page-title leading-none font-semibold flex items-center justify-between",
         className
       )}>
-      <h2 className={clsx(titleClassName)}>{title}</h2>
+      <h2 className={cn(titleClassName)}>{title}</h2>
       {Icon && <div>{Icon}</div>}
     </header>
   );

@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Key, Mail, User } from "lucide-react";
 import { signUpSchema } from "@/schemas/signUpSchema";
-import clsx from "clsx";
+
+import { cn } from "@/lib/utils";
 
 const SignUp = () => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -76,7 +77,7 @@ const SignUp = () => {
               className="flex flex-col justify-start gap-3">
               <div>
                 <div
-                  className={clsx(
+                  className={cn(
                     "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
                     errors.fullName
                       ? "border-red-500 bg-red-50/40"
@@ -99,7 +100,7 @@ const SignUp = () => {
 
               <div>
                 <div
-                  className={clsx(
+                  className={cn(
                     "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
                     errors.email
                       ? "border-red-500 bg-red-50/40"
@@ -122,7 +123,7 @@ const SignUp = () => {
 
               <div>
                 <div
-                  className={clsx(
+                  className={cn(
                     "flex items-center justify-start gap-4 border text-[#7F7F7F] h-12 px-4 rounded-lg",
                     errors.password
                       ? "border-red-500 bg-red-50/40"

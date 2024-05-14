@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+
+import { cn } from "@/lib/utils";
+
 import { TQuizQuestionProps } from "@/helpers/types";
-import clsx from "clsx";
+
 import { ArrowLeft, Check, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -114,7 +116,7 @@ const QuestionDialogBox = ({
               {questions.map((ques, index) => (
                 <li
                   key={ques.question}
-                  className={clsx(
+                  className={cn(
                     "flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all delay-200 ease-in",
                     activeQuestion === index
                       ? "md:border-r-4 border-r-primary"
@@ -122,7 +124,7 @@ const QuestionDialogBox = ({
                   )}
                   onClick={() => setActiveQuestion(index)}>
                   <div
-                    className={clsx(
+                    className={cn(
                       "w-4 h-4 rounded-full border border-black -mt-[1px] flex items-center justify-center",
                       attemptedQuestion.includes(index)
                         ? "border-green-500"
@@ -155,7 +157,7 @@ const QuestionDialogBox = ({
                 {all.map((option, index) => (
                   <li
                     key={option}
-                    className={clsx(
+                    className={cn(
                       "flex items-center gap-6 text-base md:text-xl text-black font-normal border rounded-xl px-4 py-2 cursor-pointer",
                       selectedAnswerIndex === index &&
                         selectedAnswer === correct[0]
@@ -167,7 +169,7 @@ const QuestionDialogBox = ({
                     )}
                     onClick={() => onAnswerSelect(option, index)}>
                     <div
-                      className={clsx(
+                      className={cn(
                         "w-4 h-4 rounded-full border border-black cursor-pointer flex items-center justify-center",
                         selectedAnswerIndex === index &&
                           selectedAnswer === correct[0]

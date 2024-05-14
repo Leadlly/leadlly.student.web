@@ -1,12 +1,12 @@
 import { IIconProps } from "@/helpers/types";
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 const ChatIcon = ({ className, ...props }: IIconProps) => {
   return (
     <svg
       viewBox="0 0 21 19"
       xmlns="http://www.w3.org/2000/svg"
-      className={clsx("w-3 h-3 fill-none stroke-black stroke-2", className)}
+      className={cn("w-3 h-3 fill-none stroke-black stroke-2", className)}
       {...props}>
       <path
         d="M17.0769 1H3.92308C3.14783 1 2.40433 1.32565 1.85615 1.90531C1.30797 2.48496 1 3.27115 1 4.09091V11.8182C1 12.6379 1.30797 13.4241 1.85615 14.0038C2.40433 14.5834 3.14783 14.9091 3.92308 14.9091H11.9615L16.3462 18V14.9091H17.0769C17.8522 14.9091 18.5957 14.5834 19.1438 14.0038C19.692 13.4241 20 12.6379 20 11.8182V4.09091C20 3.27115 19.692 2.48496 19.1438 1.90531C18.5957 1.32565 17.8522 1 17.0769 1Z"

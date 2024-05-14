@@ -37,6 +37,42 @@ const MeetingsComponent = () => {
       endTime: "12:00pm",
       meetingType: "Conference Meeting",
     },
+    {
+      id: 3,
+      title: "Meeting on Thermodynamics",
+      description: "Thermodynamics Meeting: Principles, Apps, Diverse Fields.",
+      date: "2024-05-15",
+      startTime: "10:30am",
+      endTime: "12:00pm",
+      meetingType: "Conference Meeting",
+    },
+    {
+      id: 4,
+      title: "Meeting on Thermodynamics",
+      description: "Thermodynamics Meeting: Principles, Apps, Diverse Fields.",
+      date: "2024-05-15",
+      startTime: "10:30am",
+      endTime: "12:00pm",
+      meetingType: "Conference Meeting",
+    },
+    {
+      id: 5,
+      title: "Meeting on Thermodynamics",
+      description: "Thermodynamics Meeting: Principles, Apps, Diverse Fields.",
+      date: "2024-05-15",
+      startTime: "10:30am",
+      endTime: "12:00pm",
+      meetingType: "Conference Meeting",
+    },
+    {
+      id: 6,
+      title: "Meeting on Thermodynamics",
+      description: "Thermodynamics Meeting: Principles, Apps, Diverse Fields.",
+      date: "2024-05-15",
+      startTime: "10:30am",
+      endTime: "12:00pm",
+      meetingType: "Conference Meeting",
+    },
   ]);
 
   const [doneMeetings, setDoneMeetings] = useState([
@@ -70,66 +106,66 @@ const MeetingsComponent = () => {
   }
 
   return (
-    <div className="flex my-4">
+    <div className="flex flex-col lg:flex-row my-4">
       {/* Upcoming meetings */}
-      <div className="mx-auto py-3 border-2 rounded-xl w-3/4 mb-5">
+      <div className="py-3 border-2 rounded-xl flex-1 mb-5 h-full">
         <div className="flex mx-4 justify-between">
           <button
             className={cn(
-              "px-5 py-2 mx-12 rounded-3xl text-lg",
-              activeTab === "upcoming"
-                ? "bg-purple-300 text-black font-semibold"
-                : "text-black font-semibold"
+              "px-5 py-2 mx-12 rounded-3xl text-lg text-black font-semibold",
+              activeTab === "upcoming" ? "bg-primary/25" : ""
             )}
             onClick={() => setActiveTab("upcoming")}>
             Upcoming
           </button>
           <button
             className={cn(
-              "px-5 py-2 mx-12 rounded-3xl text-lg ml-4",
-              activeTab === "done"
-                ? "bg-purple-300 text-black font-semibold"
-                : "text-black font-semibold"
+              "px-5 py-2 mx-12 rounded-3xl text-lg ml-4 text-black font-semibold",
+              activeTab === "done" ? "bg-primary/25" : ""
             )}
             onClick={() => setActiveTab("done")}>
             Done
           </button>
         </div>
         <hr className="border-gray-300 my-3" />
-        <div>
+        <div className="max-h-[470px] lg:max-h-[700px] xl:max-h-[470px] h-full overflow-y-auto custom__scrollbar">
           {/* Upcoming Meetings Tab */}
-          <div style={{ display: activeTab === "upcoming" ? "block" : "none" }}>
+          <div
+            className="flex flex-col justify-start gap-3 h-full "
+            style={{ display: activeTab === "upcoming" ? "flex" : "none" }}>
             {upcomingMeetings.map((meeting) => (
               <div
                 key={meeting.id}
-                className="flex items-stretch gap-3 mx-4 p-2 rounded-xl border-2 shadow-lg">
+                className="flex items-stretch gap-3 mx-2 md:mx-4 p-2 rounded-xl border-2 shadow-lg">
                 <div className="bg-[#56CFE1]/[0.2] rounded-lg w-28 flex flex-col justify-center items-center">
                   <h2 className="text-lg font-semibold">
                     {formatDate(meeting.date)}
                   </h2>
                   <p className="text-gray-600 text-sm">{meeting.startTime}</p>
                 </div>
-                <div className="w-full">
+                <div className="w-full flex flex-col justify-start space-y-1">
                   <div className="w-full flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">{meeting.title}</h3>
-                    <MenuIcon stroke="black" />
+                    <h3 className="text-base md:text-lg font-semibold">
+                      {meeting.title}
+                    </h3>
+                    <MenuIcon className="md:w-5 md:h-5" />
                   </div>
-                  <p className="text-sm text-black font-semibold">
+                  <p className="text-xs md:text-sm text-black font-semibold">
                     {meeting.description}
                   </p>
-                  <p className="text-gray-600 text-sm my-1">
+                  <p className="text-gray-600 text-xs md:text-sm my-1">
                     From {meeting.startTime} to {meeting.endTime}
                   </p>
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       {meeting.meetingType.includes("One") ? (
-                        <OneOnOneMeetingIcon className="w-[14px] h-[14px]" />
+                        <OneOnOneMeetingIcon className="w-[10px] h-[10px] md:w-[14px] md:h-[14px]" />
                       ) : (
-                        <ConferenceMeetingIcon className="w-[14px] h-[14px]" />
+                        <ConferenceMeetingIcon className="w-[10px] h-[10px] md:w-[14px] md:h-[14px]" />
                       )}
                       <p
                         className={cn(
-                          "text-sm",
+                          "text-[10px] md:text-sm",
                           meeting.meetingType.includes("One")
                             ? "text-[#57D0E1]"
                             : "text-[#6399D6]"
@@ -138,8 +174,8 @@ const MeetingsComponent = () => {
                       </p>
                     </div>
                     <div className="flex items-center gap-1">
-                      <ClockIcon className="w-4 h-4" />
-                      <p className="text-sm text-primary">
+                      <ClockIcon className="w-3 h-3 md:w-4 md:h-4" />
+                      <p className="text-xs md:text-sm text-primary">
                         More {calculateDaysLeft(new Date(meeting.date))} days to
                         go
                       </p>
@@ -164,10 +200,10 @@ const MeetingsComponent = () => {
         </div>
       </div>
       {/* About meetings */}
-      <div>
-        <div className="bg-purple-400 bg-opacity-10 rounded-xl px-3 py-2 text-center mx-4">
+      <div className="lg:max-w-[360px] w-full">
+        <div className="bg-purple-400 bg-opacity-10 rounded-xl px-3 py-2 text-center md:mx-4">
           <h3 className="font-semibold">About Meetings</h3>
-          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg max-w-xs">
+          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
             <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
               <Image src={videocall} alt="VideoCall" width={25} height={25} />
             </div>
@@ -175,7 +211,7 @@ const MeetingsComponent = () => {
               Meetings align, foster, and strategize.
             </p>
           </div>
-          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg max-w-xs">
+          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
             <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
               <Image
                 src={search}
@@ -188,7 +224,7 @@ const MeetingsComponent = () => {
               Meetings enable problem-solving and exploration
             </p>
           </div>
-          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg max-w-xs">
+          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
             <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
               <Image src={manager} alt="Manage" width={30} height={30} />
             </div>
@@ -198,7 +234,7 @@ const MeetingsComponent = () => {
           </div>
         </div>
         {/* Image of office */}
-        <div className="my-6 mx-2">
+        <div className="hidden lg:flex items-center justify-center my-3">
           <Image
             src={collegues}
             alt="Collegues at office"

@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/image";
 import React, { SVGProps } from "react";
 
 export type TContainerProps = {
@@ -37,6 +38,9 @@ export type TTabNavItemProps = {
   title: string;
   activeTab: string;
   setActiveTab: (activeTab: string) => void;
+  className?: string;
+  activeTabClassName?: string;
+  titleClassName?: string;
 };
 
 export type TTabContentProps = {
@@ -99,4 +103,15 @@ export interface FormattedDate {
   dayOfMonth: string;
   month: string;
   year: number;
+}
+
+export interface ChatData {
+  img: StaticImageData;
+  title: string;
+  status: string;
+  messages: Array<{
+    sender: string;
+    text: string;
+    timestamp: string;
+  }>;
 }
