@@ -19,7 +19,7 @@ const MobileUI = ({
         <TodaysPlan todaysTopics={todaysTopics} />
       </div>
 
-      <div>
+      <div className="border rounded-xl px-3 py-2">
         <ConnectWithMentor />
       </div>
 
