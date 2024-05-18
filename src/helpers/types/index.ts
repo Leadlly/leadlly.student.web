@@ -1,4 +1,3 @@
-import { StaticImageData } from "next/image";
 import React, { SVGProps } from "react";
 
 export type TContainerProps = {
@@ -106,7 +105,7 @@ export interface FormattedDate {
 }
 
 export interface ChatData {
-  img: StaticImageData;
+  img: string;
   title: string;
   status: string;
   messages: Array<{

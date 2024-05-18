@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import videoCall from "./icons/Video Call.png";
 import Image from "next/image";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon, Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { format } from "date-fns";
+
+import { CalendarIcon, Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,6 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-import SentIcon from "@/components/icons/SentIcon";
 import {
   Select,
   SelectContent,
@@ -76,7 +76,7 @@ const RequestMeetingComponent = () => {
           <div className="flex justify-center gap-x-2 py-3">
             <Image
               className=""
-              src={videoCall}
+              src="/assets/images/video_call.png"
               alt="VideoCall"
               width={30}
               height={30}

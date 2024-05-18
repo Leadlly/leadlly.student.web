@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
+
+import { cn } from "@/lib/utils";
+import { Header, TabContent, TabNavItem } from "@/components";
+
 import ChatComponent from "./_components/ChatComponent";
 import MeetingsComponent from "./_components/MeetingsComponent";
 import RequestMeetingComponent from "./_components/RequestMeetingComponent";
-import mentorImage from "./_components/icons/Frame 476.png";
-import { Header, TabContent, TabNavItem } from "@/components";
-import { cn } from "@/lib/utils";
 
 const chatPageTabs = [
   {
@@ -59,7 +60,7 @@ const ChatPage = () => {
           <TabContent id="chat" activeTab={activeTab}>
             <ChatComponent
               chatData={{
-                img: mentorImage,
+                img: "/assets/images/mentor.png",
                 title: "Dhruvi Rawal",
                 status: "Last seen today at 11:50 PM",
                 messages: [

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { TQuizQuestionProps } from "@/helpers/types";
 
 import { ArrowLeft, Check, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const QuestionDialogBox = ({
   openQuestionDialogBox,
@@ -54,11 +54,14 @@ const QuestionDialogBox = ({
     }
   };
 
-  const handleScroll = (e: WheelEvent) => {
-    if (openQuestionDialogBox) {
-      e.preventDefault();
-    }
-  };
+  const handleScroll = useCallback(
+    (e: WheelEvent) => {
+      if (openQuestionDialogBox) {
+        e.preventDefault();
+      }
+    },
+    [openQuestionDialogBox]
+  );
 
   useEffect(() => {
     const handleScrollEvent = (e: WheelEvent) => handleScroll(e);
@@ -75,7 +78,7 @@ const QuestionDialogBox = ({
       window.removeEventListener("wheel", handleScrollEvent);
       document.body.style.overflow = "auto";
     };
-  }, [openQuestionDialogBox]);
+  }, [openQuestionDialogBox, handleScroll]);
 
   return (
     <div

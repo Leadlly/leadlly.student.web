@@ -1,6 +1,12 @@
 "use client";
 
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -339,13 +345,13 @@ const NewTopicLearnt = ({
   const chapterModalRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
   const topicModalRef: MutableRefObject<HTMLDivElement | null> = useRef(null);
 
-  const onChapterModalClose = () => {
+  const onChapterModalClose = useCallback(() => {
     setChapterModal(false);
-  };
+  }, []);
 
-  const onTopicModalClose = () => {
+  const onTopicModalClose = useCallback(() => {
     setTopicModal(false);
-  };
+  }, []);
 
   useEffect(() => {
     const handleChapterModalOutsideClick: EventListener = (e) => {
