@@ -16,7 +16,7 @@ export type TLogoProps = {
 
 export type TSidebarLink = {
   label: string;
-  icon: React.ComponentType<{ active?: boolean }>;
+  icon: React.ComponentType<{ className?: string }>;
   href: string;
 };
 
@@ -94,7 +94,7 @@ export type TWeeklyPlanProps = {
 };
 
 export interface IIconProps extends SVGProps<SVGSVGElement> {
-  active?: boolean;
+  className?: string;
 }
 
 export interface FormattedDate {

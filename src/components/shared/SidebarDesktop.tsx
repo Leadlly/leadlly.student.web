@@ -46,7 +46,17 @@ const SidebarDesktop = ({
                 "px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
               )}>
               <li className="flex items-center gap-3 capitalize text-base md:text-[20px]">
-                <item.icon active={pathname === item.href} />
+                <item.icon
+                  className={cn(
+                    pathname === item.href
+                      ? item.label !== "growth meter"
+                        ? "stroke-white"
+                        : "fill-white"
+                      : item.label !== "growth meter"
+                      ? "stroke-[#5A10D9]"
+                      : "fill-[#5A10D9]"
+                  )}
+                />
                 <div
                   className={cn(
                     "md:hidden xl:block",

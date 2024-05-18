@@ -103,7 +103,7 @@ const MeetingsComponent = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row my-4">
+    <div className="flex flex-col lg:flex-row mb-20 md:mb-0">
       {/* Upcoming meetings */}
       <div className="py-3 border-2 rounded-xl flex-1 mb-5 h-full">
         <div className="flex mx-4 justify-between">

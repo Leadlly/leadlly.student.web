@@ -58,7 +58,7 @@ const LevelPoints = ({
 
         {pointsText !== "Streak" && (
           <div className="flex items-center gap-[2px]">
-            <UpArrowIcon stroke={progressIconStroke} />
+            <UpArrowIcon fill={progressIconStroke} />
             <span
               className={cn(
                 "text-[9px] font-bold mt-[0.5px]",

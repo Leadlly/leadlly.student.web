@@ -69,9 +69,7 @@ const RequestMeetingComponent = () => {
   return (
     <div>
       {!submitted ? (
-        <div
-          className="flex flex-col gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4"
-          style={{ height: "74dvh" }}>
+        <div className="h-[66dvh] md:h-[74dvh] flex flex-col gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
           {/* Request Meet */}
           <div className="flex justify-center gap-x-2 py-3">
             <Image
@@ -189,9 +187,7 @@ const RequestMeetingComponent = () => {
           </Form>
         </div>
       ) : (
-        <div
-          className="flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat"
-          style={{ height: "74dvh" }}>
+        <div className="h-[66dvh] md:h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
           <div className="h-full flex flex-col gap-y-7 items-center justify-center">
             <div className="w-16 h-16 md:w-20 md:h-20 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
               <Check className="w-8 h-8 md:w-12 md:h-12" />

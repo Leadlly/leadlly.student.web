@@ -1,16 +1,12 @@
 import { IIconProps } from "@/helpers/types";
 import { cn } from "@/lib/utils";
 
-const PlannerIcon = ({ className, active, ...props }: IIconProps) => {
+const PlannerIcon = ({ className, ...props }: IIconProps) => {
   return (
     <svg
       viewBox="0 0 19 19"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn(
-        "w-5 h-5 fill-none stroke-2",
-        active ? "stroke-white" : "stroke-[#5A10D9]",
-        className
-      )}
+      className={cn("w-5 h-5 fill-none stroke-2", className)}
       {...props}>
       <path
         d="M16.5376 10.3991V13C16.5376 15.7614 14.2991 18 11.5376 18H6.23764C3.47622 18 1.23764 15.7614 1.23764 13V7.79824C1.23764 5.03682 3.47622 2.79825 6.23764 2.79825H8.88764"

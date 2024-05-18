@@ -1,13 +1,7 @@
-"use client";
-
+import { IIconProps } from "@/helpers/types";
 import { cn } from "@/lib/utils";
 
-const RequestMeetingIcon = ({
-  className,
-  ...props
-}: {
-  className?: string;
-}) => {
+const RequestMeetingIcon = ({ className, ...props }: IIconProps) => {
   return (
     <svg
       viewBox="0 0 20 16"

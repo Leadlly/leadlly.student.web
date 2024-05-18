@@ -16,9 +16,7 @@ import { ChatData } from "@/helpers/types";
 
 const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   return (
-    <div
-      className="flex flex-col border bg-purple-400 bg-opacity-10 rounded-xl overflow-hidden"
-      style={{ height: "74dvh" }}>
+    <div className="h-[66dvh] md:h-[74dvh] flex flex-col border bg-primary/10 rounded-xl overflow-hidden">
       <div className="bg-white p-3 md:py-4 md:px-6 border-b rounded-lg border-gray-200 flex items-center">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center">
