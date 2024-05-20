@@ -40,6 +40,7 @@ export type TTabNavItemProps = {
   className?: string;
   activeTabClassName?: string;
   titleClassName?: string;
+  layoutIdPrefix?: string;
 };
 
 export type TTabContentProps = {

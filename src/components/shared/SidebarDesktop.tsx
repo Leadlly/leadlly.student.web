@@ -3,19 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
 
-const SidebarDesktop = ({
-  sidebar,
-  setOpen,
-}: {
-  sidebar: TSidebarLink[];
-  setOpen?: (sheetOpen: boolean) => void;
-}) => {
+const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
   const pathname = usePathname();
+
   return (
     <aside className="bg-sidebar-background w-full h-full md:w-20 xl:w-sidebar md:h-main-height md:rounded-xl overflow-y-hidden shadow-xl">
       <div className="w-full px-[25px] py-4">
@@ -36,16 +32,20 @@ const SidebarDesktop = ({
             <Link
               href={item.href}
               key={item.href}
-              onClick={() => {
-                if (setOpen) {
-                  setOpen(false);
-                }
-              }}
               className={cn(
-                pathname === item.href ? "bg-primary" : "",
-                "px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
+                "relative px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
               )}>
-              <li className="flex items-center gap-3 capitalize text-base md:text-[20px]">
+              {pathname === item.href && (
+                <motion.div
+                  layoutId="sidebar_active_tab"
+                  transition={{
+                    type: "spring",
+                    duration: 0.6,
+                  }}
+                  className="absolute rounded-full xl:rounded-xl h-full bg-primary inset-0"
+                />
+              )}
+              <li className="relative z-10 flex items-center gap-3 capitalize text-base md:text-[20px]">
                 <item.icon
                   className={cn(
                     pathname === item.href

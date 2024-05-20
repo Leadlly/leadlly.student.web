@@ -13,7 +13,7 @@ const MobileUI = ({
 }) => {
   return (
     <div className="flex flex-col justify-start gap-3">
-      <Header title="Dashboard" titleClassName="text-lg" />
+      <Header title="Dashboard" titleClassName="text-xl" />
 
       <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[233px]">
         <TodaysPlan todaysTopics={todaysTopics} />

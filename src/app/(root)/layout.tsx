@@ -30,7 +30,7 @@ export default function RootLayout({
             <MobileNavBar />
           </Container>
           <Container className="relative py-3">
-            <div className="hidden md:block md:fixed md:top-2 md:bottom-2">
+            <div className="hidden md:block md:fixed md:top-3">
               <Sidebar />
             </div>
             <main className="md:ml-20 xl:ml-[261px] h-main-height pl-4 pr-4 md:pr-2">

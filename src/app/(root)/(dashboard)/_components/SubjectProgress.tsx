@@ -32,6 +32,7 @@ const SubjectProgress = () => {
               id={tab.id}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
+              layoutIdPrefix="subject_progress"
               activeTabClassName="h-full inset-0"
             />
           ))}

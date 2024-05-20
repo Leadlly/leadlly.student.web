@@ -120,9 +120,9 @@ const QuestionDialogBox = ({
                 <li
                   key={ques.question}
                   className={cn(
-                    "flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all delay-200 ease-in",
+                    "flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all duration-200 ease-in",
                     activeQuestion === index
-                      ? "md:border-r-4 border-r-primary"
+                      ? "md:border-r-[3px] border-r-primary"
                       : ""
                   )}
                   onClick={() => setActiveQuestion(index)}>

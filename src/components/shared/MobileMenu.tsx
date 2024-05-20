@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -9,13 +10,63 @@ import { userSidebarLinks } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
 
 const MobileMenu = () => {
+  const [navScrollPosition, setNavScrollPosition] = useState(0);
+  const navbarRef = useRef<HTMLUListElement>(null);
+
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (navbarRef.current) {
+        setNavScrollPosition(navbarRef.current.scrollLeft);
+      }
+    };
+
+    if (navbarRef.current) {
+      navbarRef.current.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (navbarRef.current) {
+        navbarRef.current.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
+
+  const handleMenuItemClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const clickedItem = e.currentTarget;
+    const navbarWidth = navbarRef.current?.offsetWidth || 0;
+    const clickedItemRect = clickedItem.getBoundingClientRect();
+    const isLastVisibleItem =
+      clickedItemRect.right >= navbarWidth + navScrollPosition;
+    const isFirstVisibleItem = clickedItemRect.left <= navScrollPosition;
+
+    if (navbarRef.current) {
+      if (isLastVisibleItem) {
+        const newScrollPosition = clickedItemRect.left - navbarWidth / 2;
+        navbarRef.current.scrollTo({
+          left: newScrollPosition,
+          behavior: "smooth",
+        });
+      } else if (isFirstVisibleItem) {
+        const newScrollPosition = clickedItemRect.right - navbarWidth / 2;
+        navbarRef.current.scrollTo({
+          left: newScrollPosition,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
   return (
-    <ul className="flex items-center gap-1 overflow-x-auto no-scrollbar px-3">
+    <ul
+      className="flex items-center gap-1 overflow-x-auto no-scrollbar px-3"
+      ref={navbarRef}>
       {userSidebarLinks.map((item) => (
         <Link
           href={item.href}
           key={item.href}
+          onClick={handleMenuItemClick}
           className={cn(
             "relative p-3 h-full rounded-xl",
             pathname === item.href ? "" : ""
