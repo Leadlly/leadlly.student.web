@@ -3,17 +3,26 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-import videocall from "./icons/Video Call.png";
-import search from "./icons/Search Property.png";
-import manager from "./icons/Project Manager.png";
-import collegues from "./icons/collegues.png";
+import { cn } from "@/lib/utils";
+
 import {
   ClockIcon,
   ConferenceMeetingIcon,
   MenuIcon,
   OneOnOneMeetingIcon,
+  TabNavItem,
 } from "@/components";
-import { cn } from "@/lib/utils";
+
+const meetingTabs = [
+  {
+    id: "upcoming",
+    label: "upcoming",
+  },
+  {
+    id: "done",
+    label: "done",
+  },
+];
 
 const MeetingsComponent = () => {
   // Example data for upcoming and done meetings
@@ -106,28 +115,26 @@ const MeetingsComponent = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row my-4">
+    <div className="flex flex-col lg:flex-row mb-20 md:mb-0">
       {/* Upcoming meetings */}
       <div className="py-3 border-2 rounded-xl flex-1 mb-5 h-full">
-        <div className="flex mx-4 justify-between">
-          <button
-            className={cn(
-              "px-5 py-2 mx-12 rounded-3xl text-lg text-black font-semibold",
-              activeTab === "upcoming" ? "bg-primary/25" : ""
-            )}
-            onClick={() => setActiveTab("upcoming")}>
-            Upcoming
-          </button>
-          <button
-            className={cn(
-              "px-5 py-2 mx-12 rounded-3xl text-lg ml-4 text-black font-semibold",
-              activeTab === "done" ? "bg-primary/25" : ""
-            )}
-            onClick={() => setActiveTab("done")}>
-            Done
-          </button>
-        </div>
+        <ul className="flex justify-around">
+          {meetingTabs.map((tab) => (
+            <TabNavItem
+              key={tab.id}
+              id={tab.id}
+              title={tab.label}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              layoutIdPrefix="meetings"
+              className="text-base md:text-lg lg:text-xl text-black font-medium leading-none capitalize px-6 py-2.5"
+              activeTabClassName="h-full inset-0 rounded-full bg-primary/25"
+            />
+          ))}
+        </ul>
+
         <hr className="border-gray-300 my-3" />
+
         <div className="max-h-[470px] lg:max-h-[700px] xl:max-h-[470px] h-full overflow-y-auto custom__scrollbar">
           {/* Upcoming Meetings Tab */}
           <div
@@ -205,7 +212,12 @@ const MeetingsComponent = () => {
           <h3 className="font-semibold">About Meetings</h3>
           <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
             <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
-              <Image src={videocall} alt="VideoCall" width={25} height={25} />
+              <Image
+                src="/assets/images/video_call.png"
+                alt="VideoCall"
+                width={25}
+                height={25}
+              />
             </div>
             <p className="font-semibold text-left ml-3">
               Meetings align, foster, and strategize.
@@ -214,7 +226,7 @@ const MeetingsComponent = () => {
           <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
             <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
               <Image
-                src={search}
+                src="/assets/images/search_property.png"
                 alt="Property Search"
                 width={30}
                 height={30}
@@ -226,7 +238,12 @@ const MeetingsComponent = () => {
           </div>
           <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
             <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
-              <Image src={manager} alt="Manage" width={30} height={30} />
+              <Image
+                src="/assets/images/project_manager.png"
+                alt="Manager"
+                width={30}
+                height={30}
+              />
             </div>
             <p className="font-semibold text-left ml-3">
               Meetings enhance professional growth significantly.
@@ -236,8 +253,8 @@ const MeetingsComponent = () => {
         {/* Image of office */}
         <div className="hidden lg:flex items-center justify-center my-3">
           <Image
-            src={collegues}
-            alt="Collegues at office"
+            src="/assets/images/colleagues.png"
+            alt="Colleagues at office"
             width={280}
             height={280}
           />

@@ -25,7 +25,7 @@ const MoodEmojiSelector = ({
           height={20}
           onClick={() => setCurrentMood(emoji.mood_id)}
           className={cn(
-            "cursor-pointer transition-all ease-in delay-150",
+            "cursor-pointer transition-all ease-in duration-200",
             currentMood === emoji.mood_id ? "grayscale-0" : "grayscale"
           )}
         />

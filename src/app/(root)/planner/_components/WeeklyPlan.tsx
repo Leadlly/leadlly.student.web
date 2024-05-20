@@ -19,11 +19,15 @@ const WeeklyPlan = () => {
             <p>Jan 5 - Jan 11</p>
           </div>
           <div className="flex items-center space-x-4 md:space-x-8">
-            <Button className="w-6 h-6 md:w-7 md:h-7 px-0 bg-black/5 flex items-center justify-center rounded-full">
+            <Button
+              variant={"secondary"}
+              className="w-6 h-6 md:w-7 md:h-7 px-0 flex items-center justify-center rounded-full">
               <LeftArrowIcon className="w-[8px] h-[8px] md:w-3 md:h-3" />
             </Button>
 
-            <Button className="w-6 h-6 md:w-7 md:h-7 px-0 bg-black/5 flex items-center justify-center rounded-full">
+            <Button
+              variant={"secondary"}
+              className="w-6 h-6 md:w-7 md:h-7 px-0 flex items-center justify-center rounded-full">
               <RightArrowIcon className="w-[8px] h-[8px] md:w-3 md:h-3" />
             </Button>
           </div>

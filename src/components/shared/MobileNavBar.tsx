@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -12,19 +12,19 @@ import { Menu } from "lucide-react";
 import React, { useState } from "react";
 
 const MobileNavBar = () => {
-  const [sheetOpen, setSheetOpen] = useState(false);
+  // const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
     <nav className="p-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        {/* <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild className="cursor-pointer">
             <Menu />
           </SheetTrigger>
           <SheetContent side={"left"} className="p-0">
             <SidebarDesktop sidebar={userSidebarLinks} setOpen={setSheetOpen} />
           </SheetContent>
-        </Sheet>
+        </Sheet> */}
 
         <Link href={"/"}>
           <Logo

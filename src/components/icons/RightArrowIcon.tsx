@@ -1,5 +1,3 @@
-"use client";
-
 import { IIconProps } from "@/helpers/types";
 import { cn } from "@/lib/utils";
 

@@ -1,11 +1,12 @@
-"use client";
-import React, { useState } from "react";
+import Link from "next/link";
+
+import { cn } from "@/lib/utils";
+import { Header } from "@/components";
+import { MotionDiv } from "@/components/shared/MotionDiv";
+
 import ChatComponent from "./_components/ChatComponent";
 import MeetingsComponent from "./_components/MeetingsComponent";
 import RequestMeetingComponent from "./_components/RequestMeetingComponent";
-import mentorImage from "./_components/icons/Frame 476.png";
-import { Header, TabContent, TabNavItem } from "@/components";
-import { cn } from "@/lib/utils";
 
 const chatPageTabs = [
   {
@@ -22,12 +23,12 @@ const chatPageTabs = [
   },
 ];
 
-const ChatPage = () => {
-  const [activeTab, setActiveTab] = useState("chat");
-
-  const handleTabChange = (tabName: string) => {
-    setActiveTab(tabName);
-  };
+const ChatPage = ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) => {
+  const activeChatTab = searchParams["tab"] ?? "chat";
 
   return (
     <div className="flex flex-col justify-start gap-3 md:gap-6 h-full pt-16 md:pt-0">
@@ -37,29 +38,38 @@ const ChatPage = () => {
       />
 
       <div className="flex flex-col justify-start gap-4">
-        <div className="flex bg-primary/10 rounded-md md:rounded-3xl overflow-hidden shadow-md">
+        <ul className="flex justify-center items-center bg-primary/10 rounded-md md:rounded-3xl overflow-hidden shadow-md">
           {chatPageTabs.map((tab) => (
-            <TabNavItem
+            <Link
               key={tab.id}
-              id={tab.id}
-              title={tab.title}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              className={cn(
-                "flex items-center justify-between max-w-max mx-auto w-full capitalize  text-base md:text-xl p-3 text-black",
-                activeTab === tab.id ? "text-primary" : "text-black"
+              href={`/chat?tab=${tab.id}`}
+              className="relative max-w-max mx-auto w-full py-3 px-4 md:px-8">
+              {activeChatTab === tab.id && (
+                <MotionDiv
+                  layoutId="active_chat_tab"
+                  transition={{
+                    type: "spring",
+                    duration: 0.6,
+                  }}
+                  className="absolute rounded h-1 bg-primary inset-x-0 bottom-0"
+                />
               )}
-              titleClassName="w-full text-center"
-              activeTabClassName="h-1 rounded inset-x-0 bottom-0 "
-            />
+              <li
+                className={cn(
+                  "flex items-center justify-between w-full capitalize text-base md:text-xl text-black",
+                  activeChatTab === tab.id ? "text-primary" : "text-black"
+                )}>
+                {tab.title}
+              </li>
+            </Link>
           ))}
-        </div>
+        </ul>
 
         <div className="flex-1">
-          <TabContent id="chat" activeTab={activeTab}>
+          {activeChatTab === "chat" && (
             <ChatComponent
               chatData={{
-                img: mentorImage,
+                img: "/assets/images/mentor.png",
                 title: "Dhruvi Rawal",
                 status: "Last seen today at 11:50 PM",
                 messages: [
@@ -97,15 +107,11 @@ const ChatPage = () => {
                 ],
               }}
             />
-          </TabContent>
+          )}
 
-          <TabContent id="meetings" activeTab={activeTab}>
-            <MeetingsComponent />
-          </TabContent>
+          {activeChatTab === "meetings" && <MeetingsComponent />}
 
-          <TabContent id="requestMeeting" activeTab={activeTab}>
-            <RequestMeetingComponent />
-          </TabContent>
+          {activeChatTab === "requestMeeting" && <RequestMeetingComponent />}
         </div>
       </div>
     </div>

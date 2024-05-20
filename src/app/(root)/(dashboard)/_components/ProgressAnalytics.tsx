@@ -32,6 +32,7 @@ const ProgressAnalytics = () => {
               id={tab.id}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
+              layoutIdPrefix="progress_analytics"
               activeTabClassName="h-full inset-0"
             />
           ))}

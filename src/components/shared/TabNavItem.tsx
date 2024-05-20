@@ -12,10 +12,14 @@ const TabNavItem = ({
   className,
   activeTabClassName,
   titleClassName,
+  layoutIdPrefix,
 }: TTabNavItemProps) => {
   const handleClick = () => {
     setActiveTab(id);
   };
+
+  const layoutId = `${layoutIdPrefix}_active__tab`;
+
   return (
     <li
       onClick={handleClick}
@@ -26,7 +30,7 @@ const TabNavItem = ({
       )}>
       {activeTab === id && (
         <motion.div
-          layoutId="active__tab"
+          layoutId={layoutId}
           transition={{
             type: "spring",
             duration: 0.6,

@@ -39,7 +39,7 @@ const TodaysPlan = ({
           href="/"
           className="flex items-center gap-4 text-[#A36AF5] text-sm md:text-base">
           View all
-          <RightArrowIcon stroke="#A36AF5" />
+          <RightArrowIcon className="md:w-[9px] md:h-[9px] stroke-[#A36AF5]" />
         </Link>
       </div>
 

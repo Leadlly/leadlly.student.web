@@ -7,6 +7,7 @@ import TabNavItem from "./shared/TabNavItem";
 import TabContent from "./shared/TabContent";
 import MobileNavBar from "./shared/MobileNavBar";
 import MobileMenu from "./shared/MobileMenu";
+import Input from "./shared/Input";
 
 import SemiRadialChart from "./charts/SemiRadialChart";
 import RadialBarChart from "./charts/RadialBarChart";
@@ -41,6 +42,7 @@ export {
   TabContent,
   MobileNavBar,
   MobileMenu,
+  Input,
   SemiRadialChart,
   RadialBarChart,
   BarChart,

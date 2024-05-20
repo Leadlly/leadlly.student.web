@@ -1,4 +1,3 @@
-import { StaticImageData } from "next/image";
 import React, { SVGProps } from "react";
 
 export type TContainerProps = {
@@ -17,7 +16,7 @@ export type TLogoProps = {
 
 export type TSidebarLink = {
   label: string;
-  icon: React.ComponentType<{ active?: boolean }>;
+  icon: React.ComponentType<{ className?: string }>;
   href: string;
 };
 
@@ -41,6 +40,7 @@ export type TTabNavItemProps = {
   className?: string;
   activeTabClassName?: string;
   titleClassName?: string;
+  layoutIdPrefix?: string;
 };
 
 export type TTabContentProps = {
@@ -95,7 +95,7 @@ export type TWeeklyPlanProps = {
 };
 
 export interface IIconProps extends SVGProps<SVGSVGElement> {
-  active?: boolean;
+  className?: string;
 }
 
 export interface FormattedDate {
@@ -106,7 +106,7 @@ export interface FormattedDate {
 }
 
 export interface ChatData {
-  img: StaticImageData;
+  img: string;
   title: string;
   status: string;
   messages: Array<{

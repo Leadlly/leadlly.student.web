@@ -10,9 +10,9 @@ const ConnectButton = ({
   icon: React.ReactNode;
 }) => {
   return (
-    <button className="flex items-center justify-center md:justify-start gap-1 md:gap-6 text-base font-semibold border w-full p-1 md:py-2 md:px-3 rounded-md">
+    <button className="flex items-center justify-start gap-2 md:gap-6 text-base font-semibold border w-full py-3 px-2 md:py-2 md:px-3 rounded-md">
       {Icon && Icon}
-      <span className="text-[10px] md:text-base">{title}</span>
+      <span className="text-sm md:text-base">{title}</span>
     </button>
   );
 };

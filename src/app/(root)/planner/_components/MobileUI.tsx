@@ -23,7 +23,7 @@ const MobileUI = ({
         </TabsList>
 
         <TabsContent value="todays_plan">
-          <div className="flex flex-col justify-start gap-4">
+          <div className="flex flex-col justify-start gap-4 mb-20">
             <TodaysPlan todaysTopics={todaysTopics} />
 
             <RevisionZone />
