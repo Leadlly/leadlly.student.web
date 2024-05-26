@@ -37,7 +37,7 @@ export default function RootLayout({
               {children}
             </main>
           </Container>
-          <Container className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t overflow-hidden">
+          <Container className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white shadow-[0_-1px_2px_0_rgba(0,0,0,0.1)] overflow-hidden">
             <MobileMenu />
           </Container>
         </StoreProvider>

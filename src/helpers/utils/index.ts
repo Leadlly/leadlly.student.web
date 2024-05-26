@@ -64,3 +64,24 @@ export function getFormattedDate(date: Date): string {
 
   return `${dayOfWeek} ${dayOfMonth} ${month} ${year}`;
 }
+
+export function convertDateString(inputDate: string): string {
+  // Parse the input date string
+  const date = new Date(inputDate);
+
+  // Extract the day, month, and year
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // getUTCMonth() is zero-based
+  const year = date.getUTCFullYear();
+
+  // Format the date as DD-MM-YYYY
+  return `${day}-${month}-${year}`;
+}
+
+export function capitalizeFirstLetter(sentence: string): string {
+  if (!sentence) {
+    return sentence;
+  }
+
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+}
