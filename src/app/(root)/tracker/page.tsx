@@ -4,21 +4,7 @@ import Link from "next/link";
 import MathsTracker from "./_components/MathsTracker";
 import PhysicsTracker from "./_components/PhysicsTracker";
 import ChemistryTracker from "./_components/ChemistryTracker";
-
-const trackerTabs = [
-  {
-    id: "maths",
-    subject: "maths",
-  },
-  {
-    id: "physics",
-    subject: "physics",
-  },
-  {
-    id: "chemistry",
-    subject: "chemistry",
-  },
-];
+import { trackerTabs } from "@/helpers/constants";
 
 const Tracker = ({
   searchParams,
