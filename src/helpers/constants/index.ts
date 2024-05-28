@@ -132,3 +132,18 @@ export const weeklyPlan: TWeeklyPlanProps[] = [
     topics: "Buffer Day",
   },
 ];
+
+export const trackerTabs = [
+  {
+    id: "maths",
+    subject: "maths",
+  },
+  {
+    id: "physics",
+    subject: "physics",
+  },
+  {
+    id: "chemistry",
+    subject: "chemistry",
+  },
+];

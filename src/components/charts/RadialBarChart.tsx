@@ -1,35 +1,54 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const RadialBarChart = () => {
+type RadialBarChartProps = {
+  series: number[];
+  colors: string[];
+  labels: string[];
+  dataLabel: string;
+  width: string;
+  hollowSize: string;
+  fontSize?: string;
+};
+
+const RadialBarChart = ({
+  series,
+  colors,
+  labels,
+  dataLabel,
+  width,
+  hollowSize,
+  fontSize,
+}: RadialBarChartProps) => {
   return (
-    <>
+    <div className="relative h-full">
       <Charts
         type="radialBar"
-        width={"100%"}
+        width={width}
         height={"100%"}
-        series={[70, 30]}
+        series={series}
         options={{
           chart: {
             height: "100%",
             type: "radialBar",
           },
-          colors: ["#9654F4", "#72EFDD"],
+          colors: colors,
           plotOptions: {
             radialBar: {
               hollow: {
                 margin: 5,
-                size: "45%",
+                size: hollowSize,
               },
               dataLabels: {
-                show: true,
+                show: labels.includes("No. of Questions Solved") ? false : true,
                 value: {
-                  fontSize: "18px",
+                  fontSize: fontSize ?? "18px",
                   fontWeight: 600,
                   fontFamily: "Mada,sans-serif",
-                  offsetY: 5,
+                  offsetY: 2,
                 },
                 name: {
                   show: false,
@@ -37,33 +56,48 @@ const RadialBarChart = () => {
                 total: {
                   show: true,
                   formatter: function (w) {
-                    console.log(w);
+                    const sum = w?.globals?.series.reduce(
+                      (acc: number, value: number) => acc + value,
+                      0
+                    );
 
-                    // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                    return 59 + "%";
+                    const average = sum / w?.globals?.series.length;
+
+                    const averagePercentage = Math.round((average / 100) * 100);
+
+                    return `${averagePercentage}%`;
                   },
                 },
               },
             },
           },
-          labels: ["Sessions", "Quizzes"],
+          labels: labels,
           stroke: {
             lineCap: "round",
           },
         }}
       />
 
-      <div className="-ml-10">
-        <div className="flex items-center gap-2">
-          <span className=" block w-3 h-3 rounded bg-primary"></span>
-          <span className="text-xs capitalize">Sessions</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className=" block w-3 h-3 rounded bg-[#72EFDD]"></span>
-          <span className="text-xs capitalize">Quizzes</span>
-        </div>
+      <div
+        className={cn(
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+          dataLabel === "questions" ? "-mt-3" : ""
+        )}>
+        {labels.includes("No. of Questions Solved") && (
+          <p className="text-2xl leading-none font-semibold text-center">
+            120+
+          </p>
+        )}
+        <p
+          className={cn(
+            "text-sm leading-none font-medium mt-2 capitalize",
+            dataLabel === "overall" ? "text-[10px] text-[#a9a9a9] -mt-1" : "",
+            dataLabel === "questions" ? "-mt-[1px]" : ""
+          )}>
+          {dataLabel}
+        </p>
       </div>
-    </>
+    </div>
   );
 };
 

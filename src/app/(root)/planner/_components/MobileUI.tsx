@@ -30,7 +30,7 @@ const MobileUI = ({
           </div>
         </TabsContent>
 
-        <TabsContent value="weekly_plan" className="h-[600px]">
+        <TabsContent value="weekly_plan" className="h-[600px] mb-20">
           <WeeklyPlan />
         </TabsContent>
       </Tabs>

@@ -89,6 +89,8 @@ const config = {
       boxShadow: {
         custom: "0px 17px 37px 0px rgba(165, 92, 255, 0.0)",
         dialog: "0 0 21.5px 2px rgba(0, 0, 0, 0.29)",
+        tracker_subject_overview:
+          "2px 1px 10.5px 0 rgba(151, 83, 245, 0.18), inset 0 0 32px -7px rgba(151, 83, 245, 0.18)",
       },
     },
   },

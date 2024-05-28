@@ -1,5 +1,3 @@
-"use client";
-
 import { useDispatch, useSelector, useStore } from "react-redux";
 import type { AppDispatch, RootState, AppStore } from "./store";
 

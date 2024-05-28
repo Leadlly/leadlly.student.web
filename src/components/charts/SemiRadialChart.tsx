@@ -53,7 +53,7 @@ const SemiRadialChart = ({
       <div className="w-full flex items-center justify-center gap-1">
         <span
           className={cn(
-            "w-2 h-2 rounded-sm -mt-[2px]",
+            "w-2 h-2 rounded-[2px] -mt-[2px]",
             chartLabel === "revision" ? "bg-primary" : "bg-[#56CFE1]"
           )}></span>
         <p className="text-xs capitalize">{chartLabel}</p>
