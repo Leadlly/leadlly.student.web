@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import ManageAccount from "./ManageAccount";
 
 const ProfileBox = () => {
   return (
@@ -19,11 +19,9 @@ const ProfileBox = () => {
             <span className="text-primary">Hello,</span> John Musk
           </h2>
 
-          <Link
-            href={"/profile"}
-            className="border rounded bg-white text-primary text-[10px] px-2 py-1 text-center font-medium hidden xl:inline-block">
-            Manage Account
-          </Link>
+          <div className="hidden xl:block w-full">
+            <ManageAccount />
+          </div>
         </div>
       </div>
       <div className="text-base xl:text-sm text-black font-normal space-y-2">
@@ -32,12 +30,8 @@ const ProfileBox = () => {
           propelling you towards success with unwavering determination.
         </p>
 
-        <div className="w-full flex items-center justify-center">
-          <Link
-            href={"/profile"}
-            className="border rounded-lg xl:rounded bg-white text-primary text-base px-2 py-1 text-center font-medium block xl:hidden">
-            Manage Account
-          </Link>
+        <div className="w-full flex items-center justify-center xl:hidden">
+          <ManageAccount />
         </div>
       </div>
     </div>
