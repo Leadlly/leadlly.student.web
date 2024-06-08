@@ -16,11 +16,16 @@ import Image from "next/image";
 import { useState } from "react";
 import AccountPersonalInfo from "./AccountPersonalInfo";
 import AccountSubjectOverview from "./AccountSubjectOverview";
+import AccountStudyProgress from "./AccountStudyProgress";
 
 const manageAccountTabs = [
   {
     id: "personal-info",
     label: "Personal Info",
+  },
+  {
+    id: "study-progress",
+    label: "Study Progress",
   },
   {
     id: "subject-overview",
@@ -38,7 +43,7 @@ const ManageAccount = () => {
         Manage Account
       </SheetTrigger>
       <SheetContent
-        className="min-w-full py-0 px-0 overflow-y-auto"
+        className="min-w-full py-0 px-0"
         icon={<ArrowLeftIcon className="w-4 h-4" />}
         sheetCloseClassName="left-11 2xl:left-20 border-2 rounded w-7 h-7 flex items-center justify-center">
         <Container className="h-full flex flex-col">
@@ -114,7 +119,7 @@ const ManageAccount = () => {
                   layoutIdPrefix="manage_account"
                   title={tab.label}
                   className={cn(
-                    "text-2xl font-medium",
+                    "text-2xl font-medium px-3",
                     activeTab === tab.id ? "text-primary" : "text-black"
                   )}
                   activeTabClassName="h-1 w-full bottom-0 inset-x-0"
@@ -126,6 +131,9 @@ const ManageAccount = () => {
           <div className="flex-1 px-16 py-6">
             <TabContent activeTab={activeTab} id="personal-info">
               <AccountPersonalInfo />
+            </TabContent>
+            <TabContent activeTab={activeTab} id="study-progress">
+              <AccountStudyProgress />
             </TabContent>
             <TabContent activeTab={activeTab} id="subject-overview">
               <AccountSubjectOverview />

@@ -78,7 +78,9 @@ export function convertDateString(inputDate: string): string {
   return `${day}-${month}-${year}`;
 }
 
-export function capitalizeFirstLetter(sentence: string): string {
+export function capitalizeFirstLetter(
+  sentence: string | undefined
+): string | undefined {
   if (!sentence) {
     return sentence;
   }
