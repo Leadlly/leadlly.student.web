@@ -1,5 +1,6 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ManageAccount from "./ManageAccount";
+import Link from "next/link";
 
 const ProfileBox = () => {
   return (
@@ -20,7 +21,13 @@ const ProfileBox = () => {
           </h2>
 
           <div className="hidden xl:block w-full">
-            <ManageAccount />
+            <Link href={"/manage-account"}>
+              <Button
+                variant={"outline"}
+                className="text-primary hover:text-primary/80 h-7">
+                Manage Account
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -31,7 +38,13 @@ const ProfileBox = () => {
         </p>
 
         <div className="w-full flex items-center justify-center xl:hidden">
-          <ManageAccount />
+          <Link href={"/manage-account"}>
+            <Button
+              variant={"outline"}
+              className="text-primary hover:text-primary/80">
+              Manage Account
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

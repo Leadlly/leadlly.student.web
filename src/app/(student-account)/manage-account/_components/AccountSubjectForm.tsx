@@ -62,7 +62,7 @@ const AccountSubjectForm = ({
     console.log(data);
   };
   return (
-    <div className="px-6 py-4">
+    <div className="p-6">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onFormSubmit)}

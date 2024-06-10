@@ -157,7 +157,7 @@ const AccountStudyProgress = () => {
   const [activeTab, setActiveTab] = useState("maths");
 
   return (
-    <div className="border rounded-xl h-full shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">
+    <section className="border rounded-xl h-full shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">
       <div className="bg-primary/15 px-7 py-2 flex items-center justify-between rounded-t-xl">
         <h3 className="text-2xl font-semibold">Student Study Feedback</h3>
 
@@ -194,7 +194,7 @@ const AccountStudyProgress = () => {
           Chemistry Chapters
         </TabContent>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -7,6 +7,7 @@ export interface InputProps
   icon1?: React.ReactNode;
   icon2?: React.ReactNode;
   inputWrapperClassName?: string;
+  countryCodeClassName?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -17,6 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       icon1: Icon1,
       icon2: Icon2,
       inputWrapperClassName,
+      countryCodeClassName,
       ...props
     },
     ref
@@ -24,10 +26,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          "flex items-center px-3 py-2 border border-input rounded-md h-10  bg-background",
+          "flex items-center gap-x-2 px-3 py-2 border border-input rounded-md h-10  bg-background",
           inputWrapperClassName
         )}>
         {Icon1 && Icon1}
+        {type === "tel" && (
+          <span className={cn(countryCodeClassName)}>+91</span>
+        )}
         <input
           type={type}
           className={cn(

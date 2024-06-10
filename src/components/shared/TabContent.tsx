@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, Variants } from "framer-motion";
 
 import { TTabContentProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const tabContentVariants: Variants = {
   initial: {
@@ -19,7 +20,12 @@ const tabContentVariants: Variants = {
   },
 };
 
-const TabContent = ({ id, activeTab, children }: TTabContentProps) => {
+const TabContent = ({
+  id,
+  activeTab,
+  children,
+  className,
+}: TTabContentProps) => {
   return activeTab === id ? (
     <AnimatePresence mode="wait">
       <motion.div
@@ -30,7 +36,7 @@ const TabContent = ({ id, activeTab, children }: TTabContentProps) => {
         transition={{
           duration: 0.5,
         }}
-        className="h-full">
+        className={cn("h-full", className)}>
         {children}
       </motion.div>
     </AnimatePresence>
