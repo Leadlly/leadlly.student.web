@@ -60,7 +60,7 @@ const MobileMenu = () => {
 
   return (
     <nav className="overflow-x-auto no-scrollbar" ref={navbarRef}>
-      <ul className="w-full h-[70px] flex items-center gap-1">
+      <ul className="w-full h-[70px] flex items-center justify-between">
         {userSidebarLinks.map((item, index) => (
           <Link
             href={item.href}

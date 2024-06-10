@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -19,11 +20,15 @@ const ProfileBox = () => {
             <span className="text-primary">Hello,</span> John Musk
           </h2>
 
-          <Link
-            href={"/profile"}
-            className="border rounded bg-white text-primary text-[10px] px-2 py-1 text-center font-medium hidden xl:inline-block">
-            Manage Account
-          </Link>
+          <div className="hidden xl:block w-full">
+            <Link href={"/manage-account"}>
+              <Button
+                variant={"outline"}
+                className="text-primary hover:text-primary/80 h-7">
+                Manage Account
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
       <div className="text-base xl:text-sm text-black font-normal space-y-2">
@@ -32,11 +37,13 @@ const ProfileBox = () => {
           propelling you towards success with unwavering determination.
         </p>
 
-        <div className="w-full flex items-center justify-center">
-          <Link
-            href={"/profile"}
-            className="border rounded-lg xl:rounded bg-white text-primary text-base px-2 py-1 text-center font-medium block xl:hidden">
-            Manage Account
+        <div className="w-full flex items-center justify-center xl:hidden">
+          <Link href={"/manage-account"}>
+            <Button
+              variant={"outline"}
+              className="text-primary hover:text-primary/80">
+              Manage Account
+            </Button>
           </Link>
         </div>
       </div>

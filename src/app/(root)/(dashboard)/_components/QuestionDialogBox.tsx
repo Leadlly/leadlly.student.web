@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
@@ -7,6 +9,7 @@ import { TQuizQuestionProps } from "@/helpers/types";
 
 import { ArrowLeft, Check, X } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
+import { MotionDiv } from "@/components/shared/MotionDiv";
 
 const QuestionDialogBox = ({
   openQuestionDialogBox,
@@ -104,7 +107,7 @@ const QuestionDialogBox = ({
             </p>
           </div>
 
-          <Button className="h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8 px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold">
+          <Button className="h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8] px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold">
             Submit
           </Button>
         </div>
@@ -120,10 +123,7 @@ const QuestionDialogBox = ({
                 <li
                   key={ques.question}
                   className={cn(
-                    "flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all duration-200 ease-in",
-                    activeQuestion === index
-                      ? "md:border-r-[3px] border-r-primary"
-                      : ""
+                    "relative flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all duration-200 ease-in"
                   )}
                   onClick={() => setActiveQuestion(index)}>
                   <div
@@ -140,6 +140,16 @@ const QuestionDialogBox = ({
                   <p className="text-xs md:text-base font-normal text-black leading-none">
                     Question {index + 1}
                   </p>
+                  {activeQuestion === index && (
+                    <MotionDiv
+                      layoutId="quiz_questions"
+                      transition={{
+                        type: "spring",
+                        duration: 0.6,
+                      }}
+                      className="absolute rounded-sm h-full w-1 bg-primary inset-y-0 right-0"
+                    />
+                  )}
                 </li>
               ))}
             </ul>

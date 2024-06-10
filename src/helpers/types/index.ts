@@ -46,6 +46,7 @@ export type TTabNavItemProps = {
 export type TTabContentProps = {
   id: string;
   activeTab: string;
+  className?: string;
   children: React.ReactNode;
 };
 
