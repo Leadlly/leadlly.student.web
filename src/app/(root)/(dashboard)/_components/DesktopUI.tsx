@@ -19,7 +19,7 @@ const DesktopUI = ({
   todaysTopics: TDashboardTodaysTopic[];
 }) => {
   return (
-    <div className="h-full flex flex-col justify-start gap-3 xl:gap-6">
+    <div className="relative h-full flex flex-col justify-start gap-3 xl:gap-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
           <Header title="Dashboard" />

@@ -158,11 +158,13 @@ const AccountStudyProgress = () => {
 
   return (
     <section className="border rounded-xl h-full shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">
-      <div className="bg-primary/15 px-7 py-2 flex items-center justify-between rounded-t-xl">
-        <h3 className="text-2xl font-semibold">Student Study Feedback</h3>
+      <div className="bg-primary/15 px-3 lg:px-7 py-2 flex items-center justify-between rounded-t-xl">
+        <h3 className="text-lg lg:text-2xl font-semibold">
+          Student Study Feedback
+        </h3>
 
         <div className="flex items-center gap-x-5">
-          <ul className="w-72 flex items-center justify-between p-1 bg-white rounded-md">
+          <ul className="w-52 lg:w-72 flex items-center justify-between p-1 bg-white rounded-md">
             {userSubjects.map((subject) => (
               <TabNavItem
                 key={subject.id}
@@ -171,14 +173,14 @@ const AccountStudyProgress = () => {
                 setActiveTab={setActiveTab}
                 title={subject.label}
                 layoutIdPrefix="account_subject_progress"
-                className="px-4"
-                titleClassName="text-lg font-medium"
+                className="px-2 lg:px-4"
+                titleClassName="text-sm lg:text-lg font-medium"
                 activeTabClassName="h-full w-full inset-0"
               />
             ))}
           </ul>
 
-          <EllipsisVertical className="w-7 h-7" />
+          <EllipsisVertical className="w-7 h-7 hidden lg:block" />
         </div>
       </div>
 

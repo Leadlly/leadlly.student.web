@@ -30,6 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
   CalendarDaysIcon,
+  CheckCircle2,
   Edit3,
   Globe,
   MailOpen,
@@ -44,10 +45,12 @@ type UserProps = {
     firstName: string;
     lastName: string;
     class: string;
-    phone: number;
+    phone: string;
     email: string;
     gender: string;
-    dateOfBirth: Date;
+    dateOfBirth: string;
+    isPhoneVerified: boolean;
+    isEmailVerified: boolean;
   };
 };
 
@@ -57,7 +60,7 @@ const AccountPersonalInfoSchema = z.object({
     .min(4),
   lastName: z.string({ required_error: "Please enter your first name!" }),
   class: z.string({ required_error: "Please select your class" }),
-  phone: z.number({ required_error: "Please enter your phone number" }).max(10),
+  phone: z.string({ required_error: "Please enter your phone number" }).max(10),
   email: z
     .string({ required_error: "Please enter your email" })
     .email({ message: "Invalid email address" }),
@@ -89,7 +92,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
       phone: user.phone,
       email: user.email,
       gender: user.gender,
-      dateOfBirth: user.dateOfBirth,
+      dateOfBirth: new Date(user.dateOfBirth),
     },
   });
 
@@ -104,22 +107,22 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
           className="h-full flex flex-col gap-6">
           <div className="flex-1 overflow-y-auto custom__scrollbar space-y-7 px-3">
             <div className="space-y-3">
-              <h4 className="text-[22px] font-medium text-primary">
+              <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Basic Information
               </h4>
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <FormField
                   control={form.control}
                   name="firstName"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-lg font-medium">
+                        <FormLabel className="text-base lg:text-lg font-medium">
                           First Name:
                         </FormLabel>
                         <Button
                           variant={"ghost"}
-                          className="flex items-center gap-1 text-base text-[#656565] h-0 hover:bg-transparent">
+                          className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent">
                           <Edit3 className="w-4 h-4" />
                           Edit
                         </Button>
@@ -128,7 +131,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         <Input
                           placeholder="Enter your first name"
                           icon2={<User className="w-5 h-5" />}
-                          className="text-lg font-medium capitalize"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -142,12 +145,12 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   render={({ field }) => (
                     <FormItem className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-lg font-medium">
+                        <FormLabel className="text-base lg:text-lg font-medium">
                           Last Name:
                         </FormLabel>
                         <Button
                           variant={"ghost"}
-                          className="flex items-center gap-1 text-base text-[#656565] h-0 hover:bg-transparent">
+                          className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent">
                           <Edit3 className="w-4 h-4" />
                           Edit
                         </Button>
@@ -156,7 +159,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         <Input
                           placeholder="Enter your last name"
                           icon2={<User className="w-5 h-5" />}
-                          className="text-lg font-medium capitalize"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -170,7 +173,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="class"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Class:
                       </FormLabel>
                       <Select
@@ -199,23 +202,29 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   render={({ field }) => (
                     <FormItem className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-lg font-medium">
+                        <FormLabel className="text-base lg:text-lg font-medium">
                           Phone No.:
                         </FormLabel>
-                        <Button
-                          variant={"ghost"}
-                          className="flex items-center gap-1 text-base text-[#656565] h-0 hover:bg-transparent">
-                          <Edit3 className="w-4 h-4" />
-                          Edit
-                        </Button>
+                        {user.isPhoneVerified ? (
+                          <p className="text-[#61D705] text-[10px] flex items-center gap-1 px-2">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Verified
+                          </p>
+                        ) : (
+                          <Button
+                            variant={"ghost"}
+                            className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
+                            Get OTP
+                          </Button>
+                        )}
                       </div>
                       <FormControl>
                         <Input
                           type="tel"
                           placeholder="Enter your phone no."
                           icon2={<Phone className="w-5 h-5" />}
-                          className="text-lg font-medium"
-                          countryCodeClassName="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
+                          countryCodeClassName="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -230,22 +239,28 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   render={({ field }) => (
                     <FormItem className="space-y-1">
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-lg font-medium">
+                        <FormLabel className="text-base lg:text-lg font-medium">
                           Email:
                         </FormLabel>
-                        <Button
-                          variant={"ghost"}
-                          className="flex items-center gap-1 text-base text-[#656565] h-0 hover:bg-transparent">
-                          <Edit3 className="w-4 h-4" />
-                          Edit
-                        </Button>
+                        {user.isEmailVerified ? (
+                          <p className="text-[#61D705] text-[10px] flex items-center gap-1 px-2">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Verified
+                          </p>
+                        ) : (
+                          <Button
+                            variant={"ghost"}
+                            className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
+                            Get OTP
+                          </Button>
+                        )}
                       </div>
                       <FormControl>
                         <Input
                           type="email"
                           placeholder="Enter your email"
                           icon2={<MailOpen className="w-5 h-5" />}
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -259,7 +274,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="gender"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Gender:
                       </FormLabel>
                       <Select
@@ -286,7 +301,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="dateOfBirth"
                   render={({ field }) => (
                     <FormItem className="space-y-1 flex flex-col">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Date of Birth:
                       </FormLabel>
                       <Popover>
@@ -295,7 +310,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full pl-3 text-left text-lg font-medium",
+                                "w-full pl-3 text-left text-base lg:text-lg font-medium",
                                 !field.value && "text-muted-foreground"
                               )}>
                               {field.value ? (
@@ -326,16 +341,16 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
               </div>
             </div>
             <div className="space-y-3">
-              <h4 className="text-[22px] font-medium text-primary">
+              <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Other Information
               </h4>
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <FormField
                   control={form.control}
                   name="parentName"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Parent Name (or Guardian):
                       </FormLabel>
 
@@ -343,7 +358,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         <Input
                           placeholder="Full Name"
                           icon2={<User className="w-5 h-5" />}
-                          className="text-lg font-medium capitalize"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -356,7 +371,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="parentsPhone"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Parent&apos;s Phone No.:
                       </FormLabel>
                       <FormControl>
@@ -364,8 +379,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                           type="tel"
                           placeholder="Enter Phone Number"
                           icon2={<Phone className="w-5 h-5" />}
-                          className="text-lg font-medium"
-                          countryCodeClassName="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
+                          countryCodeClassName="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -379,7 +394,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="country"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Country:
                       </FormLabel>
                       <Select
@@ -409,14 +424,14 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="address"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Address:
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter your address"
                           icon2={<Globe className="w-5 h-5" />}
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -430,13 +445,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="pinCode"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         PIN Code:
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter PIN Code"
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -447,16 +462,16 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
               </div>
             </div>
             <div className="space-y-3">
-              <h4 className="text-[22px] font-medium text-primary">
+              <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Academic Information
               </h4>
-              <div className="grid grid-cols-2 gap-x-20 gap-y-5">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-5">
                 <FormField
                   control={form.control}
                   name="competitiveExam"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Competitive Exam:
                       </FormLabel>
 
@@ -469,11 +484,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <FormControl>
                               <RadioGroupItem
                                 value="NEET"
-                                className="w-5 h-5"
-                                circleClassName="w-3 h-3"
+                                className="lg:w-5 lg:h-5"
+                                circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
-                            <FormLabel className="text-lg font-medium">
+                            <FormLabel className="text-base lg:text-lg font-medium">
                               NEET
                             </FormLabel>
                           </FormItem>
@@ -481,11 +496,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <FormControl>
                               <RadioGroupItem
                                 value="JEE"
-                                className="w-5 h-5"
-                                circleClassName="w-3 h-3"
+                                className="lg:w-5 lg:h-5"
+                                circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
-                            <FormLabel className="text-lg font-medium">
+                            <FormLabel className="text-base lg:text-lg font-medium">
                               JEE
                             </FormLabel>
                           </FormItem>
@@ -493,11 +508,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <FormControl>
                               <RadioGroupItem
                                 value="Board"
-                                className="w-5 h-5"
-                                circleClassName="w-3 h-3"
+                                className="lg:w-5 lg:h-5"
+                                circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
-                            <FormLabel className="text-lg font-medium">
+                            <FormLabel className="text-base lg:text-lg font-medium">
                               Board
                             </FormLabel>
                           </FormItem>
@@ -505,11 +520,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <FormControl>
                               <RadioGroupItem
                                 value="Other"
-                                className="w-5 h-5"
-                                circleClassName="w-3 h-3"
+                                className="lg:w-5 lg:h-5"
+                                circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
-                            <FormLabel className="text-lg font-medium">
+                            <FormLabel className="text-base lg:text-lg font-medium">
                               Other
                             </FormLabel>
                           </FormItem>
@@ -525,7 +540,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="studentSchedule"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Your Schedule:
                       </FormLabel>
                       <Select
@@ -558,13 +573,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="messageAboutCompetitiveExam"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Other:
                       </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Message about Competitive Exam"
-                          className="resize-none text-lg font-medium"
+                          className="resize-none text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -578,13 +593,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="messageAboutStudentSchedule"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Other:
                       </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Message about your Schedule"
-                          className="resize-none text-lg font-medium"
+                          className="resize-none text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -598,13 +613,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="schoolOrCollegeName"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         School/College Name:
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter School/College Name"
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -618,13 +633,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="schoolOrCollegeAddress"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         School/College Address:
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter School/College Address"
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -638,7 +653,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="coachingType"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Coaching:
                       </FormLabel>
 
@@ -651,11 +666,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <FormControl>
                               <RadioGroupItem
                                 value="online"
-                                className="w-5 h-5"
-                                circleClassName="w-3 h-3"
+                                className="lg:w-5 lg:h-5"
+                                circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
-                            <FormLabel className="text-lg font-medium">
+                            <FormLabel className="text-base lg:text-lg font-medium">
                               Online
                             </FormLabel>
                           </FormItem>
@@ -663,11 +678,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             <FormControl>
                               <RadioGroupItem
                                 value="offline"
-                                className="w-5 h-5"
-                                circleClassName="w-3 h-3"
+                                className="lg:w-5 lg:h-5"
+                                circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
-                            <FormLabel className="text-lg font-medium">
+                            <FormLabel className="text-base lg:text-lg font-medium">
                               Offline
                             </FormLabel>
                           </FormItem>
@@ -683,13 +698,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="coachingName"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Coaching Name:
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter Coaching Name"
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -703,13 +718,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                   name="coachingAddress"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
-                      <FormLabel className="text-lg font-medium">
+                      <FormLabel className="text-base lg:text-lg font-medium">
                         Coaching Address:
                       </FormLabel>
                       <FormControl>
                         <Input
                           placeholder="Enter Coaching Address"
-                          className="text-lg font-medium"
+                          className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
@@ -722,7 +737,9 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
           </div>
 
           <div className="w-full grid place-items-center">
-            <Button type="submit" className="text-lg font-semibold">
+            <Button
+              type="submit"
+              className="text-base lg:text-lg font-semibold">
               Save Changes
             </Button>
           </div>

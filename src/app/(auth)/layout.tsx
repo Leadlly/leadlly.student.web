@@ -19,15 +19,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn("font-sans antialiased", fontSans.variable)}>
-        <StoreProvider>
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-            <Container className="min-h-screen py-3">{children}</Container>
-          </GoogleOAuthProvider>
-        </StoreProvider>
-      </body>
-    </html>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+      <section className="h-main-height">{children}</section>
+    </GoogleOAuthProvider>
   );
 }

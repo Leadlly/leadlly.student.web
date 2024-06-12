@@ -25,10 +25,10 @@ const todaysTopics = [
 
 const Planner = () => {
   return (
-    <div className="flex flex-col justify-start gap-6 h-full pt-16 md:pt-0">
+    <div className="flex flex-col justify-start gap-4 h-full">
       <Header
         title="Planner"
-        titleClassName="text-xl md:text-3xl lg:text-page-title"
+        titleClassName="text-2xl md:text-3xl lg:text-page-title"
       />
 
       <DesktopUI todaysTopics={todaysTopics} />
