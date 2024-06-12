@@ -25,7 +25,7 @@ const LevelPoints = ({
   return (
     <div
       className={cn(
-        "border rounded-md p-2 flex flex-col justify-start gap-3",
+        "border rounded-md p-2 flex flex-col justify-start gap-1",
         cardBgColor
       )}>
       <div className="flex items-center justify-between">

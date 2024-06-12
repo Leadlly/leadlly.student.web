@@ -31,7 +31,7 @@ const ChatPage = ({
   const activeChatTab = searchParams["tab"] ?? "chat";
 
   return (
-    <div className="flex flex-col justify-start gap-3 md:gap-6 h-full pt-16 md:pt-0">
+    <div className="flex flex-col justify-start gap-3 md:gap-6 h-full">
       <Header
         title="Connect with mentor"
         titleClassName="text-xl md:text-3xl lg:text-page-title"

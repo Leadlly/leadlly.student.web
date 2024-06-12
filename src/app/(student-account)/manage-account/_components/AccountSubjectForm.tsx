@@ -62,20 +62,20 @@ const AccountSubjectForm = ({
     console.log(data);
   };
   return (
-    <div className="p-6">
+    <div className="p-3 lg:p-6">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onFormSubmit)}
-          className="flex items-center gap-x-10">
+          className="flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-10">
           <div className="flex-1 flex flex-col gap-y-6">
-            <div className="w-full flex items-center gap-x-16">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-20">
               <FormField
                 control={form.control}
                 name="chapterName"
                 render={({ field }) => (
-                  <FormItem className="w-1/2 flex flex-col">
-                    <div className="flex items-center gap-x-10">
-                      <FormLabel className="whitespace-nowrap text-xl font-medium mt-1">
+                  <FormItem className="flex flex-col">
+                    <div className="flex items-center  gap-2 lg:gap-10">
+                      <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                         Chapter :
                       </FormLabel>
                       <Select
@@ -106,9 +106,9 @@ const AccountSubjectForm = ({
                 control={form.control}
                 name="topicNames"
                 render={({ field }) => (
-                  <FormItem className="w-1/2 flex flex-col">
-                    <div className="flex items-center gap-x-10">
-                      <FormLabel className="whitespace-nowrap text-xl font-medium mt-1">
+                  <FormItem className="flex flex-col">
+                    <div className="flex items-center gap-[18px] lg:gap-10">
+                      <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                         Topics :
                       </FormLabel>
                       <MultiSelect
@@ -135,20 +135,23 @@ const AccountSubjectForm = ({
               name="levelOfDifficulty"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <div className="flex items-center gap-x-10">
-                    <FormLabel className="whitespace-nowrap text-xl font-medium mt-1">
+                  <div className="flex items-center gap-2 lg:gap-10">
+                    <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                       Difficulty Level :
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex items-center gap-x-20">
+                        className="flex items-center gap-x-5 lg:gap-x-20">
                         <FormItem className="flex items-center gap-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="easy" className="w-5 h-5" />
+                            <RadioGroupItem
+                              value="easy"
+                              className="lg:w-5 lg:h-5"
+                            />
                           </FormControl>
-                          <FormLabel className="text-xl font-medium">
+                          <FormLabel className="text-base lg:text-xl font-medium">
                             Easy
                           </FormLabel>
                         </FormItem>
@@ -156,18 +159,21 @@ const AccountSubjectForm = ({
                           <FormControl>
                             <RadioGroupItem
                               value="moderate"
-                              className="w-5 h-5"
+                              className="lg:w-5 lg:h-5"
                             />
                           </FormControl>
-                          <FormLabel className="text-xl font-medium">
+                          <FormLabel className="text-base lg:text-xl font-medium">
                             Moderate
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center gap-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="hard" className="w-5 h-5" />
+                            <RadioGroupItem
+                              value="hard"
+                              className="lg:w-5 lg:h-5"
+                            />
                           </FormControl>
-                          <FormLabel className="text-xl font-medium">
+                          <FormLabel className="text-base lg:text-xl font-medium">
                             Hard
                           </FormLabel>
                         </FormItem>
@@ -180,9 +186,13 @@ const AccountSubjectForm = ({
             />
           </div>
 
-          <Button type="submit" className="h-10 w-24 text-2xl font-semibold">
-            Add
-          </Button>
+          <div className="grid place-items-center">
+            <Button
+              type="submit"
+              className="h-9 lg:h-10 w-24 text-lg lg:text-2xl font-semibold">
+              Add
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

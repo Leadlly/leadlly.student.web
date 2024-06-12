@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Ellipsis } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -35,7 +36,7 @@ const UpcomingWorkshops = () => {
             <span className="text-[7px] text-black font-semibold">
               - By Doris Wilson
             </span>
-            <div className="w-5 h-5 rounded-full">
+            {/* <div className="w-5 h-5 rounded-full">
               <Image
                 src="/assets/images/teacher.jpg"
                 alt="Mentor Image"
@@ -43,7 +44,16 @@ const UpcomingWorkshops = () => {
                 height={20}
                 className="w-full h-full object-cover rounded-full"
               />
-            </div>
+            </div> */}
+            <Avatar className="w-5 h-5">
+              <AvatarImage
+                src="/assets/images/teacher.jpg"
+                alt="Mentor Image"
+              />
+              <AvatarFallback className="text-[7px] font-bold">
+                LA
+              </AvatarFallback>
+            </Avatar>
           </div>
         </div>
       </div>

@@ -14,10 +14,10 @@ const Tracker = ({
   const activeSubject = searchParams["subject"] ?? "maths";
 
   return (
-    <div className="h-full pt-16 md:pt-0 flex flex-col gap-y-4">
+    <div className="h-full flex flex-col gap-y-4">
       <Header
         title="Tracker"
-        titleClassName="text-xl md:text-3xl lg:text-page-title"
+        titleClassName="text-2xl md:text-3xl lg:text-page-title"
       />
 
       <ul className="flex items-center justify-between md:justify-start gap-5 md:gap-10 md:mt-8">

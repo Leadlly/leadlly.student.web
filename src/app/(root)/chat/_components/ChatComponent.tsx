@@ -13,22 +13,18 @@ import {
 } from "@/components";
 import { cn } from "@/lib/utils";
 import { ChatData } from "@/helpers/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   return (
-    <div className="h-[66dvh] md:h-[74dvh] flex flex-col border bg-primary/10 rounded-xl overflow-hidden">
+    <div className="h-[75dvh] flex flex-col border bg-primary/10 rounded-xl overflow-hidden">
       <div className="bg-white p-3 md:py-4 md:px-6 border-b rounded-lg border-gray-200 flex items-center">
         <div className="flex items-center justify-between w-full">
-          <div className="flex items-center">
-            <div className="rounded-full bg-blue-500 w-11 h-11 flex items-center justify-center mr-4">
-              <Image
-                src={chatData.img}
-                width={100}
-                height={100}
-                alt="User Avatar"
-                className="rounded-full"
-              />
-            </div>
+          <div className="flex items-center gap-3">
+            <Avatar className="w-11 h-11">
+              <AvatarImage src={chatData.img} alt="User Avatar" />
+              <AvatarFallback>DR</AvatarFallback>
+            </Avatar>
             <div>
               <h3 className="text-lg font-semibold">{chatData.title}</h3>
               <p className="text-sm text-gray-600">{chatData.status}</p>

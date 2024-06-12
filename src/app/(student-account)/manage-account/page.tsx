@@ -19,6 +19,7 @@ import AccountStudyProgress from "./_components/AccountStudyProgress";
 import Link from "next/link";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import AccountMentorInfo from "./_components/AccountMentorInfo";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const manageAccountTabs = [
   {
@@ -43,10 +44,12 @@ const userPersonalInfo = {
   firstName: "adil",
   lastName: "khursheed",
   class: "10th",
-  phone: 1234567890,
+  phone: "0123456789",
   email: "adil@gmail.com",
   gender: "male",
-  dateOfBirth: new Date("06-04-1996"),
+  dateOfBirth: "06-04-1996",
+  isPhoneVerified: true,
+  isEmailVerified: true,
 };
 
 const ManageAccount = ({
@@ -60,7 +63,7 @@ const ManageAccount = ({
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center gap-6 px-4">
+      <div className="flex items-center gap-6 px-4 pt-2">
         <Link
           href={"/"}
           className="border rounded-md w-8 h-8 flex items-center justify-center">
@@ -69,29 +72,26 @@ const ManageAccount = ({
         <h3 className="text-2xl font-semibold">Manage Account</h3>
       </div>
 
-      <section className="my-6 bg-primary/15 px-16 py-8 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Image
-            src={"/assets/images/student_image.png"}
-            alt="student_profile"
-            width={124}
-            height={124}
-            className="rounded-full object-contain"
-          />
+      <section className="my-6 bg-primary/15 text-center lg:text-left lg:px-16 py-4 lg:py-8 flex flex-col lg:flex-row items-center justify-between">
+        <div className="flex flex-col lg:flex-row items-center gap-6">
+          <Avatar className="w-20 h-20 lg:w-32 lg:h-32">
+            <AvatarImage src="/assets/images/student_image.png" />
+            <AvatarFallback>JM</AvatarFallback>
+          </Avatar>
 
-          <div className="space-y-5">
-            <h2 className="capitalize text-3xl font-bold">
+          <div className="space-y-3 lg:space-y-5">
+            <h2 className="capitalize text-2xl lg:text-3xl font-bold">
               <span className="text-primary">hello,</span> john musk
             </h2>
 
-            <p className="text-xl max-w-lg">
+            <p className="text-base lg:text-xl max-w-lg">
               Embrace the course as a catalyst for personal growth and
               empowerment, propelling.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-10 mt-5">
           <div>
             <Popover>
               <PopoverTrigger asChild>
@@ -126,8 +126,8 @@ const ManageAccount = ({
         </div>
       </section>
 
-      <div className="border-b-2 px-16">
-        <ul className="flex items-center gap-10">
+      <div className="border-b-2 px-2 lg:px-16">
+        <ul className="flex items-center gap-3 lg:gap-10 overflow-x-auto no-scrollbar">
           {manageAccountTabs.map((tab) => (
             <Link
               key={tab.id}
@@ -145,7 +145,7 @@ const ManageAccount = ({
               )}
               <li
                 className={cn(
-                  "flex items-center justify-between w-full capitalize text-base md:text-2xl font-medium px-3 text-black",
+                  "flex items-center justify-between w-full capitalize text-[17px] md:text-2xl font-medium px-3 text-black whitespace-nowrap",
                   activeManageAccountTab === tab.id
                     ? "text-primary"
                     : "text-black"
@@ -157,7 +157,7 @@ const ManageAccount = ({
         </ul>
       </div>
 
-      <div className="flex-1 px-16 py-6">
+      <div className="flex-1 px-2 lg:px-16 py-6">
         {activeManageAccountTab === "personal-info" && (
           <>
             <AccountPersonalInfo user={userPersonalInfo} />
