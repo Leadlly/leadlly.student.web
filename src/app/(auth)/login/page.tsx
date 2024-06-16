@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import {
+  GoogleLogin,
+  useGoogleLogin,
+  useGoogleOneTapLogin,
+} from "@react-oauth/google";
 
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 
-import { GoogleLogin } from "@react-oauth/google";
 import { Eye, EyeOff, Loader2, Lock, User } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -71,13 +76,13 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    form.setFocus("email");
-  }, [form.setFocus]);
+  const login = useGoogleLogin({
+    onSuccess: (credentialResponse) => console.log(credentialResponse),
+  });
 
   return (
     <div className="h-main-height relative">
-      <div className="mx-20">
+      <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-20">
         <Image
           src="/assets/images/leadlly_logo.svg"
           alt="Leadlly_Logo"
@@ -86,12 +91,16 @@ const Login = () => {
         />
       </div>
 
-      <div className="h-[calc(100%-40px)] flex items-center mx-20">
-        <div className="flex items-center justify-between gap-6 w-full">
-          <div className="rounded-3xl px-12 py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start gap-10">
-            <div className="text-center">
-              <h3 className="text-[52px] font-bold leading-none">Welcome</h3>
-              <p className="text-lg">We are glad to see you with us</p>
+      <div className="h-[calc(100%-56px)] flex items-center px-4 lg:mx-20">
+        <div className="flex flex-col xl:flex-row items-center justify-between lg:gap-6 w-full">
+          <div className="rounded-3xl px-5 sm:px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start gap-10">
+            <div className="text-center space-y-2">
+              <h3 className="text-2xl lg:text-[52px] font-bold leading-none">
+                Welcome
+              </h3>
+              <p className="text-base lg:text-lg">
+                We are glad to see you with us
+              </p>
             </div>
 
             <Form {...form}>
@@ -167,7 +176,7 @@ const Login = () => {
 
                 <Button
                   type="submit"
-                  className="w-full text-xl h-12"
+                  className="w-full text-lg md:text-xl h-12"
                   disabled={isLoggingIn}>
                   {isLoggingIn ? (
                     <span className="flex items-center">
@@ -179,19 +188,20 @@ const Login = () => {
                   )}
                 </Button>
 
-                <div className="w-full">
-                  <GoogleLogin
-                    onSuccess={(credentialResponse) => {
-                      console.log(credentialResponse, "Current user");
-                    }}
-                    onError={() => {
-                      console.log("Login Failed");
-                    }}
-                    useOneTap
-                    auto_select
-                    logo_alignment="center"
+                <Button
+                  type="button"
+                  variant={"outline"}
+                  onClick={() => login()}
+                  className="w-full text-lg lg:text-xl h-12 gap-2">
+                  <Image
+                    src="/assets/icons/google-icon.svg"
+                    alt="Sign in with Google"
+                    width={17}
+                    height={17}
                   />
-                </div>
+                  Sign in with Google
+                </Button>
+
                 <div className="w-full text-center">
                   <p>
                     No account yet?{" "}
@@ -203,19 +213,18 @@ const Login = () => {
               </form>
             </Form>
           </div>
-          <div>
+          <div className="relative w-56 h-56 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px]">
             <Image
               src="/assets/icons/Loginpic.png"
               alt="Login_page_photo"
-              width={500}
-              height={500}
+              fill
               className="object-contain"
             />
           </div>
         </div>
       </div>
 
-      <span className="absolute right-0 top-0 bottom-0 -z-10 w-80 rounded-tl-[40px] rounded-bl-[40px] bg-[#FCF3FF]"></span>
+      <span className="absolute bottom-0 xl:right-0 -z-20 w-full xl:w-80 h-32 sm:h-64 xl:h-full rounded-tl-[40px] rounded-tr-[40px] xl:rounded-tr-none xl:rounded-bl-[40px] bg-[#FCF3FF]"></span>
     </div>
   );
 };
