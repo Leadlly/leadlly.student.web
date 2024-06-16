@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Container, Sidebar, MobileMenu, MobileNavBar } from "@/components";
+import { Sidebar, MobileMenu } from "@/components";
 
 export const metadata: Metadata = {
   title: "Leadlly",
