@@ -4,6 +4,7 @@ import "./globals.css";
 import StoreProvider from "@/app/StoreProvider";
 import { Container } from "@/components";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <Container className="py-3">
             <main className="h-main-height">{children}</main>
           </Container>
+          <Toaster />
         </StoreProvider>
       </body>
     </html>

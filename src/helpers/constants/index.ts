@@ -147,3 +147,18 @@ export const trackerTabs = [
     subject: "chemistry",
   },
 ];
+
+export const userSubjects = [
+  {
+    id: "maths",
+    label: "Maths",
+  },
+  {
+    id: "physics",
+    label: "Physics",
+  },
+  {
+    id: "chemistry",
+    label: "Chemistry",
+  },
+];

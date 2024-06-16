@@ -131,3 +131,13 @@ export type chapterOverviewProps = {
     }[];
   }[];
 };
+
+export type subjectChaptersProps = {
+  _id: string;
+  name: string;
+  topics: {
+    _id: string;
+    name: string;
+    icon?: React.ComponentType<{ className?: string | undefined }>;
+  }[];
+};
