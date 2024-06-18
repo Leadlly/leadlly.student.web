@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 
 import { RightArrowIcon } from "@/components";
@@ -7,9 +8,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { getTodaysFormattedDate } from "@/helpers/utils";
 import { TDashboardTodaysTopic } from "@/helpers/types";
-import { useState } from "react";
-import QuestionDialogBox from "./QuestionDialogBox";
 import { quizQuestions } from "@/helpers/constants";
+
+import QuestionDialogBox from "./QuestionDialogBox";
 
 const TodaysPlan = ({
   todaysTopics,

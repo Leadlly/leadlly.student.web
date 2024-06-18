@@ -77,7 +77,42 @@ const Login = () => {
   };
 
   const login = useGoogleLogin({
-    onSuccess: (credentialResponse) => console.log(credentialResponse),
+    onSuccess: async (credentialResponse) => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/google/auth`,
+          {
+            method: "POST",
+            body: JSON.stringify(credentialResponse.access_token),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            cache: "no-store",
+          }
+        );
+
+        const data = await res.json();
+
+        toast({
+          title: "Login success",
+          description: data.message,
+        });
+
+        router.replace("/");
+      } catch (err) {
+        toast({
+          title: "Google login failed!",
+          variant: "destructive",
+        });
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Google login failed!",
+        variant: "destructive",
+      });
+    },
   });
 
   return (
