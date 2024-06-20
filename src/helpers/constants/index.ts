@@ -33,6 +33,11 @@ export const userSidebarLinks: TSidebarLink[] = [
     href: "/chat",
   },
   {
+    label: "quizzes",
+    icon: QuizIcon,
+    href: "/quizzes",
+  },
+  {
     label: "errorbook",
     icon: ErrorBookIcon,
     href: "/error-book",
@@ -51,11 +56,6 @@ export const userSidebarLinks: TSidebarLink[] = [
     label: "liberty",
     icon: LibertyIcon,
     href: "/liberty",
-  },
-  {
-    label: "quizzes",
-    icon: QuizIcon,
-    href: "/quizzes",
   },
   {
     label: "study room",
