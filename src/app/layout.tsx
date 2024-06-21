@@ -4,6 +4,8 @@ import "./globals.css";
 import StoreProvider from "@/app/StoreProvider";
 import { Container } from "@/components";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,9 +28,13 @@ export default function RootLayout({
           fontSans.variable
         )}>
         <StoreProvider>
-          <Container className="py-3">
-            <main className="h-main-height">{children}</main>
-          </Container>
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+            <Container className="py-3">
+              <main className="h-main-height">{children}</main>
+            </Container>
+            <Toaster />
+          </GoogleOAuthProvider>
         </StoreProvider>
       </body>
     </html>
