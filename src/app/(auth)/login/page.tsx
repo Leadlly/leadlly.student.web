@@ -29,6 +29,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { access } from "fs";
+import { headers } from "next/headers";
+import apiClient from "@/apiClient/apiClient";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -42,33 +45,36 @@ const Login = () => {
   });
 
   const onFormSubmit = async (data: z.infer<typeof signInSchema>) => {
+    console.log(data)
     setIsLoggingIn(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-          cache: "no-store",
-        }
-      );
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/login`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(data),
+      //     credentials: "include",
+      //     cache: "no-store",
+      //   }
+      // );
 
-      const responseData = await response.json();
+      const response = await apiClient.post('/api/auth/login', JSON.stringify(data))
+
 
       toast({
         title: "Login success",
-        description: responseData.message,
+        description: response.data.message,
       });
 
       router.replace("/");
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error, "hello")
       toast({
-        title: "Error logging in!",
+        title: error.response.data.message,
         variant: "destructive",
       });
     } finally {
@@ -79,37 +85,39 @@ const Login = () => {
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/google/auth`,
-          {
-            method: "POST",
-            body: JSON.stringify(credentialResponse.access_token),
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            cache: "no-store",
-          }
-        );
+        // const res = await axios.post(
+        //   `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/google/auth`,
+        //   { access_token: credentialResponse.access_token },
+        //   {
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //     withCredentials: true,
+        //   }
+        // );
 
-        const data = await res.json();
-
+        const res = await apiClient.post('/api/google/auth', { access_token: credentialResponse.access_token })
+  
         toast({
           title: "Login success",
-          description: data.message,
+          description: res.data.message,
         });
-
+  
         router.replace("/");
-      } catch (err) {
+      } catch (error: any) {
+        console.error("Axios error:", error);
         toast({
           title: "Google login failed!",
+          description: error.response?.data?.message || error.message,
           variant: "destructive",
         });
       }
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Google login error:", error);
       toast({
         title: "Google login failed!",
+        description: error.message,
         variant: "destructive",
       });
     },

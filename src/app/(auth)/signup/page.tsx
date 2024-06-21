@@ -39,7 +39,7 @@ const SignUp = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/auth/register`,
+        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/register`,
         {
           method: "POST",
           headers: {

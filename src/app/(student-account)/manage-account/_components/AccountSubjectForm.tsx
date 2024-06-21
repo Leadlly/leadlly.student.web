@@ -82,7 +82,7 @@ const AccountSubjectForm = ({
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/user/progress/save`,
+        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/progress/save`,
         {
           method: "POST",
           body: JSON.stringify(formattedData),

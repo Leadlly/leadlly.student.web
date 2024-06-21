@@ -47,7 +47,7 @@ const Verify = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/auth/verify`,
+        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/verify`,
         {
           method: "POST",
           headers: {
