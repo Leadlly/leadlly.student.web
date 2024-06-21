@@ -4,7 +4,6 @@ import { cookies, headers } from "next/headers";
 
 export function middleware(request: NextRequest, response: NextResponse) {
   const path = request.nextUrl.pathname;
-  console.log(process.env.NODE_ENV, "hello")
 
   const isPublicPath =
     path === "/login" ||
@@ -13,11 +12,9 @@ export function middleware(request: NextRequest, response: NextResponse) {
     path === "/forgot-password";
 
   const token = request.cookies.get("token")?.value || "";
-  console.log("token is here", token)
-  console.log("request =============> is here", request)
+
 
   if (isPublicPath && token) {
-    console.log("here...")
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
