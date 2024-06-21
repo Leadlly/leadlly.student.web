@@ -13,6 +13,7 @@ export function middleware(request: NextRequest, response: NextResponse) {
 
   const token = request.cookies.get("token")?.value || "";
 
+
   if (isPublicPath && token) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
