@@ -4,7 +4,7 @@ import "./globals.css";
 import StoreProvider from "@/app/StoreProvider";
 import { Container } from "@/components";
 import { cn } from "@/lib/utils";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
@@ -33,7 +33,7 @@ export default function RootLayout({
             <Container className="py-3">
               <main className="h-main-height">{children}</main>
             </Container>
-            <Toaster />
+            <Toaster richColors position="top-center" />
           </GoogleOAuthProvider>
         </StoreProvider>
       </body>

@@ -20,14 +20,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const SignUp = () => {
   const [togglePassword, setTogglePassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -53,16 +52,14 @@ const SignUp = () => {
 
       const responseData = await response.json();
 
-      toast({
-        title: "Registration successful.",
+      toast.success("Registration successful.", {
         description: responseData.message,
       });
 
       router.replace("/verify");
-    } catch (error) {
-      toast({
-        title: "Error registering user.",
-        variant: "destructive",
+    } catch (error: any) {
+      toast.error("Error registering user.", {
+        description: error.message,
       });
     } finally {
       setIsSubmitting(false);

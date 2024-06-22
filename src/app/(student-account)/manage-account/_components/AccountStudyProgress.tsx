@@ -8,8 +8,9 @@ import { TabContent, TabNavItem } from "@/components";
 
 import { EllipsisVertical } from "lucide-react";
 import AccountChaptersList from "./AccountChaptersList";
-import getSubjectChapters from "@/actions/actions";
 import { userSubjects } from "@/helpers/constants";
+import { getSubjectChapters } from "@/actions/question_actions";
+import { toast } from "sonner";
 
 const AccountStudyProgress = () => {
   const [activeTab, setActiveTab] = useState("maths");
@@ -17,11 +18,15 @@ const AccountStudyProgress = () => {
 
   useEffect(() => {
     const chapters = async () => {
-      const data = await getSubjectChapters(activeTab, 11);
-
-      setActiveTabChapters(data.chapters);
+      try {
+        const data = await getSubjectChapters(activeTab, 11);
+        setActiveTabChapters(data.chapters);
+      } catch (error: any) {
+        toast.error("Unable to fetch chapters!", {
+          description: error.message,
+        });
+      }
     };
-
     chapters();
   }, [activeTab]);
 

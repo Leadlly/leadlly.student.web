@@ -15,7 +15,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -35,7 +35,6 @@ const OTPFormSchema = z.object({
 const Verify = () => {
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
@@ -61,16 +60,14 @@ const Verify = () => {
 
       const responseData = await response.json();
 
-      toast({
-        title: "OTP verified successfully",
+      toast.success("OTP verified successfully", {
         description: responseData.message,
       });
 
       router.replace("/");
-    } catch (error) {
-      toast({
-        title: "Error verifying OTP.",
-        variant: "destructive",
+    } catch (error: any) {
+      toast.error("Error verifying OTP.", {
+        description: error.message,
       });
     } finally {
       setIsVerifying(false);
