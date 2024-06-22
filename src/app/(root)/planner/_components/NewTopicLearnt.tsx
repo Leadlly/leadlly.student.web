@@ -34,11 +34,15 @@ import {
 } from "@/components/ui/command";
 import { MultiSelect } from "@/components/ui/multi-select";
 
-import getSubjectChapters from "@/actions/actions";
+import {
+  getChapterTopics,
+  getSubjectChapters,
+} from "@/actions/question_actions";
 
 import { subjectChaptersProps } from "@/helpers/types";
 
 import { userSubjects } from "@/helpers/constants";
+import { toast } from "sonner";
 
 const NewTopicLearntSchema = z.object({
   chapterName: z.string({ required_error: "Please select a chapter!" }),
@@ -57,6 +61,7 @@ const NewTopicLearnt = ({
   const [activeTabChapters, setActiveTabChapters] = useState<
     subjectChaptersProps[]
   >([]);
+  const [topics, setTopics] = useState([]);
 
   const form = useForm<z.infer<typeof NewTopicLearntSchema>>({
     resolver: zodResolver(NewTopicLearntSchema),
@@ -70,13 +75,34 @@ const NewTopicLearnt = ({
 
   useEffect(() => {
     const chapters = async () => {
-      const data = await getSubjectChapters(activeSubject, 11);
+      try {
+        const data = await getSubjectChapters(activeSubject, 11);
 
-      setActiveTabChapters(data.chapters);
+        setActiveTabChapters(data.chapters);
+      } catch (error: any) {
+        toast.error("Unable to fetch chapters!", {
+          description: error.message,
+        });
+      }
     };
 
     chapters();
   }, [activeSubject]);
+
+  useEffect(() => {
+    const topics = async () => {
+      try {
+        const data = await getChapterTopics(activeSubject, selectedChapter, 11);
+        setTopics(data.topics);
+      } catch (error: any) {
+        toast.error("Unable to fetch topics!", {
+          description: error.message,
+        });
+      }
+    };
+
+    topics();
+  }, [activeSubject, selectedChapter]);
 
   return (
     <div className="w-full px-3 lg:px-7 space-y-6">
@@ -166,9 +192,7 @@ const NewTopicLearnt = ({
               <FormItem>
                 <FormControl>
                   <MultiSelect
-                    options={activeTabChapters
-                      .filter((chapter) => chapter.name === selectedChapter)
-                      .flatMap((chapter) => chapter.topics)}
+                    options={topics}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     placeholder="Select topics"

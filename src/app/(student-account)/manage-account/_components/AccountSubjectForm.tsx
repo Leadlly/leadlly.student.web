@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -30,13 +30,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { useToast } from "@/components/ui/use-toast";
 
 import { cn } from "@/lib/utils";
 
 import { subjectChaptersProps } from "@/helpers/types";
 
 import { Check, ChevronDown, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { getChapterTopics } from "@/actions/question_actions";
 
 const AccountStudyFormSchema = z.object({
   chapterName: z.string({ required_error: "Please select a chapter!" }),
@@ -56,15 +57,29 @@ const AccountSubjectForm = ({
   subjectChapters: subjectChaptersProps[];
   activeSubject: string;
 }) => {
+  const [topics, setTopics] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
-
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof AccountStudyFormSchema>>({
     resolver: zodResolver(AccountStudyFormSchema),
   });
 
   const selectedChapter = form.watch("chapterName");
+
+  useEffect(() => {
+    const topics = async () => {
+      try {
+        const data = await getChapterTopics(activeSubject, selectedChapter, 11);
+        setTopics(data.topics);
+      } catch (error: any) {
+        toast.error("Unable to fetch topics!", {
+          description: error.message,
+        });
+      }
+    };
+
+    topics();
+  }, [selectedChapter, activeSubject]);
 
   const onFormSubmit = async (data: z.infer<typeof AccountStudyFormSchema>) => {
     setIsAdding(true);
@@ -95,14 +110,12 @@ const AccountSubjectForm = ({
 
       const responseData = await response.json();
 
-      toast({
-        title: "Chapter added.",
+      toast.success("Chapter added.", {
         description: responseData.message,
       });
-    } catch (error) {
-      toast({
-        title: "Error adding chapter",
-        variant: "destructive",
+    } catch (error: any) {
+      toast.error("Error adding chapter", {
+        description: error.message,
       });
     } finally {
       setIsAdding(false);
@@ -193,11 +206,7 @@ const AccountSubjectForm = ({
                       </FormLabel>
                       <FormControl>
                         <MultiSelect
-                          options={subjectChapters
-                            .filter(
-                              (chapter) => chapter.name === selectedChapter
-                            )
-                            .flatMap((chapter) => chapter.topics)}
+                          options={topics}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                           placeholder="Select topics"

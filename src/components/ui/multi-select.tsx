@@ -149,7 +149,7 @@ export const MultiSelect = React.forwardRef<
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
-                    const option = options.find((o) => o.name === value);
+                    const option = options?.find((o) => o.name === value);
                     const IconComponent = option?.icon;
                     return (
                       <Badge
@@ -235,7 +235,7 @@ export const MultiSelect = React.forwardRef<
                   <div
                     className={cn(
                       "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                      selectedValues.length === options.length
+                      selectedValues.length === options?.length
                         ? "bg-primary text-primary-foreground"
                         : "opacity-50 [&_svg]:invisible"
                     )}>

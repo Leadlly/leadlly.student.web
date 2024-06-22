@@ -5,18 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import {
-  GoogleLogin,
-  useGoogleLogin,
-  useGoogleOneTapLogin,
-} from "@react-oauth/google";
-
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 
 import { Eye, EyeOff, Loader2, Lock, User } from "lucide-react";
+import { toast } from "sonner";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -28,16 +23,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import { access } from "fs";
-import { headers } from "next/headers";
+import GoogleLoginButton from "../_components/GoogleLoginButton";
+
 import apiClient from "@/apiClient/apiClient";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -45,87 +38,27 @@ const Login = () => {
   });
 
   const onFormSubmit = async (data: z.infer<typeof signInSchema>) => {
-    console.log(data)
     setIsLoggingIn(true);
 
     try {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/login`,
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(data),
-      //     credentials: "include",
-      //     cache: "no-store",
-      //   }
-      // );
+      const response = await apiClient.post("/api/auth/login", data);
 
-      const response = await apiClient.post('/api/auth/login', JSON.stringify(data))
-
-
-      toast({
-        title: "Login success",
-        description: response.data.message,
-      });
+      toast.success(response.data.message);
 
       router.replace("/");
     } catch (error: any) {
-      console.log(error, "hello")
-      toast({
-        title: error.response.data.message,
-        variant: "destructive",
+      console.log(error, "hello");
+      toast.error("Login Failed", {
+        description: error.message,
       });
     } finally {
       setIsLoggingIn(false);
     }
   };
 
-  const login = useGoogleLogin({
-    onSuccess: async (credentialResponse) => {
-      try {
-        // const res = await axios.post(
-        //   `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/google/auth`,
-        //   { access_token: credentialResponse.access_token },
-        //   {
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     withCredentials: true,
-        //   }
-        // );
-
-        const res = await apiClient.post('/api/google/auth', { access_token: credentialResponse.access_token })
-  
-        toast({
-          title: "Login success",
-          description: res.data.message,
-        });
-  
-        router.replace("/");
-      } catch (error: any) {
-        console.error("Axios error:", error);
-        toast({
-          title: "Google login failed!",
-          description: error.response?.data?.message || error.message,
-          variant: "destructive",
-        });
-      }
-    },
-    onError: (error: any) => {
-      console.error("Google login error:", error);
-      toast({
-        title: "Google login failed!",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
   return (
     <div className="h-main-height relative">
-      <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-20">
+      <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-24">
         <Image
           src="/assets/images/leadlly_logo.svg"
           alt="Leadlly_Logo"
@@ -136,7 +69,7 @@ const Login = () => {
 
       <div className="h-[calc(100%-56px)] flex items-center px-4 lg:mx-20">
         <div className="flex flex-col xl:flex-row items-center justify-between lg:gap-6 w-full">
-          <div className="rounded-3xl px-5 sm:px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start gap-10">
+          <div className="rounded-3xl px-5 sm:px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start space-y-4">
             <div className="text-center space-y-2">
               <h3 className="text-2xl lg:text-[52px] font-bold leading-none">
                 Welcome
@@ -230,31 +163,19 @@ const Login = () => {
                     "Login"
                   )}
                 </Button>
-
-                <Button
-                  type="button"
-                  variant={"outline"}
-                  onClick={() => login()}
-                  className="w-full text-lg lg:text-xl h-12 gap-2">
-                  <Image
-                    src="/assets/icons/google-icon.svg"
-                    alt="Sign in with Google"
-                    width={17}
-                    height={17}
-                  />
-                  Sign in with Google
-                </Button>
-
-                <div className="w-full text-center">
-                  <p>
-                    No account yet?{" "}
-                    <Link href={"/signup"} className="text-primary">
-                      Sign Up
-                    </Link>
-                  </p>
-                </div>
               </form>
             </Form>
+
+            <GoogleLoginButton />
+
+            <div className="w-full text-center">
+              <p>
+                No account yet?{" "}
+                <Link href={"/signup"} className="text-primary">
+                  Sign Up
+                </Link>
+              </p>
+            </div>
           </div>
           <div className="relative w-56 h-56 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px]">
             <Image
