@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { cookies, headers } from "next/headers";
 
-export function middleware(request: NextRequest, response: NextResponse) {
+export async function middleware(request: NextRequest, response: NextResponse) {
   const path = request.nextUrl.pathname;
-  const cookieStore = cookies();
-  const token = cookieStore.get("token");
-  console.log(token, "this is token")
+  // const cookieStore = cookies();
+  // const token = cookieStore.get("token");
 
   const isPublicPath =
     path === "/login" ||
@@ -14,7 +13,7 @@ export function middleware(request: NextRequest, response: NextResponse) {
     path === "/verify" ||
     path === "/forgot-password";
 
-  // const token = request.cookies.get("token")?.value || "";
+  const token = request.cookies.get("token")?.value || "";
 
 
   if (isPublicPath && token) {
