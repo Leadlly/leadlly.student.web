@@ -26,7 +26,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -35,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   date_of_meeting: z.date({
@@ -53,8 +53,7 @@ const RequestMeetingComponent = () => {
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     // Include the selected meeting time in the form submission data
     const formData = { ...data };
-    toast({
-      title: "You submitted the following values:",
+    toast.success("You submitted the following values:", {
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">
