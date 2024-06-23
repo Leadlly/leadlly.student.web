@@ -12,6 +12,8 @@ import DailyStreakQuestions from "./DailyStreakQuestions";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 
 import { TDashboardTodaysTopic } from "@/helpers/types";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const DesktopUI = ({
   todaysTopics,
@@ -24,12 +26,15 @@ const DesktopUI = ({
         <div className="flex-1">
           <Header title="Dashboard" />
         </div>
-        <div className="hidden lg:block lg:w-60 xl:w-[268px]">
-          <Header
+        <div className="hidden lg:w-60 xl:w-[268px] lg:flex justify-end mr-2">
+          {/* <Header
             title="Profile"
             titleClassName="text-[32px]"
             icon={<NotificationIcon stroke="black" />}
-          />
+          /> */}
+          <Link href="/subscription-plans">
+            <Button className="px-10 h-8">Upgrade</Button>
+          </Link>
         </div>
       </div>
 

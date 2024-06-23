@@ -162,3 +162,38 @@ export const userSubjects = [
     label: "Chemistry",
   },
 ];
+
+export const subscriptionPlanningBenefits = [
+  {
+    label: "goal setting & tracking",
+  },
+  {
+    label: "schedule builder",
+  },
+  {
+    label: "to-do list & reminders",
+  },
+  {
+    label: "subject, chapter & topic tracking",
+  },
+];
+
+export const subscriptionExpertBenefits = [
+  {
+    label: "connect with a mentor",
+  },
+  {
+    label: "live & on-demand workshops",
+  },
+];
+export const subscriptionLearningBenefits = [
+  {
+    label: "growth meter",
+  },
+  {
+    label: "points & levels",
+  },
+  {
+    label: "know your mistakes",
+  },
+];

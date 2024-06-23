@@ -13,11 +13,11 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     path === "/verify" ||
     path === "/forgot-password";
 
-  if (isPublicPath && user.success) {
+  if (isPublicPath && user?.success) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
-  if (!isPublicPath && !user.success) {
+  if (!isPublicPath && !user?.success) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 }
