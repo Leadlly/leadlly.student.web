@@ -10,6 +10,8 @@ import TodaysVibe from "./TodaysVibe";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 import DailyReport from "./DailyReport";
 import ProgressAnalytics from "./ProgressAnalytics";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const TabletUI = ({
   todaysTopics,
@@ -18,7 +20,13 @@ const TabletUI = ({
 }) => {
   return (
     <div className="h-full flex flex-col justify-start gap-4">
-      <Header title="Dashboard" titleClassName="text-[36px]" />
+      <div className="flex justify-between">
+        <Header title="Dashboard" titleClassName="text-[36px]" />
+
+        <Link href="/subscription-plans" className="mr-3">
+          <Button className="px-10 h-8">Upgrade</Button>
+        </Link>
+      </div>
 
       <div className="flex-1 flex flex-col justify-start gap-4 md:overflow-y-auto custom__scrollbar pr-3">
         <div className="flex gap-4">

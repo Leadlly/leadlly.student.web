@@ -36,21 +36,24 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
-const FormSchema = z.object({
+const RequestMeetingFormSchema = z.object({
   date_of_meeting: z.date({
     required_error: "A date is required to request meeting.",
   }),
   time: z.string({ required_error: "A time is required to request meeting!" }),
+  meeting_agenda: z.string({
+    required_error: "Please enter your meeting agenda",
+  }),
 });
 
 const RequestMeetingComponent = () => {
   // const [selectedMeetingTime, setSelectedMeetingTime] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
+    resolver: zodResolver(RequestMeetingFormSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = (data: z.infer<typeof RequestMeetingFormSchema>) => {
     // Include the selected meeting time in the form submission data
     const formData = { ...data };
     toast.success("You submitted the following values:", {
@@ -68,7 +71,7 @@ const RequestMeetingComponent = () => {
   return (
     <div>
       {!submitted ? (
-        <div className="h-[75dvh] flex flex-col gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
+        <div className="h-[74dvh] flex flex-col gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
           {/* Request Meet */}
           <div className="flex justify-center gap-x-2 py-3">
             <Image
@@ -172,21 +175,31 @@ const RequestMeetingComponent = () => {
                 />
               </div>
 
-              <Textarea
-                placeholder="Type your doubt here..."
-                className="resize-none"
+              <FormField
+                control={form.control}
+                name="meeting_agenda"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Type your doubt here..."
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
 
               <div className="text-center">
-                <Button type="submit" onClick={() => setSubmitted(true)}>
-                  Submit Request
-                </Button>
+                <Button type="submit">Submit Request</Button>
               </div>
             </form>
           </Form>
         </div>
       ) : (
-        <div className="h-[75dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
+        <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
           <div className="h-full flex flex-col gap-y-7 items-center justify-center">
             <div className="w-16 h-16 md:w-20 md:h-20 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
               <Check className="w-8 h-8 md:w-12 md:h-12" />

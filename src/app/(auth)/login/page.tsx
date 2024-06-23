@@ -35,6 +35,10 @@ const Login = () => {
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const onFormSubmit = async (data: z.infer<typeof signInSchema>) => {

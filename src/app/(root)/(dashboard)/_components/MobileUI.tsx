@@ -7,6 +7,8 @@ import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
 import Image from "next/image";
 import UserProfileSheet from "./UserProfileSheet";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const MobileUI = ({
   todaysTopics,
@@ -18,7 +20,9 @@ const MobileUI = ({
       <div className="flex items-center justify-between">
         <Header title="Dashboard" titleClassName="text-2xl" />
         <div className="flex items-center gap-4">
-          <NotificationIcon className="w-4 h-4" />
+          <Link href="/subscription-plans">
+            <Button className="h-7 text-xs">Upgrade</Button>
+          </Link>
           <UserProfileSheet />
         </div>
       </div>
