@@ -1,0 +1,28 @@
+
+name: Deploy Student_Web
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  # Build job
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: ${{ steps.detect-package-manager.outputs.manager }}
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: |
+          touch .env
+          echo "${{ secrets.ENV_PRODUCTION }}" > .env
+
