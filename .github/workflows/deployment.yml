@@ -9,7 +9,6 @@ on:
 
 
 jobs:
-  # Build job
   build:
     runs-on: self-hosted
     steps:
