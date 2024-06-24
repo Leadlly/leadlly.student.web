@@ -1,22 +1,26 @@
+import { getUser } from "@/actions/user_actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 
-const ProfileBox = () => {
+const ProfileBox = async () => {
+  const userData = await getUser();
+
   return (
     <div className="flex flex-col justify-center xl:justify-start xl:gap-4 border rounded-xl bg-gradient-to-b from-white/15 to-primary/15 px-5 py-3">
       <div className="flex items-center flex-col xl:flex-row gap-3 xl:gap-6">
         <Avatar className="w-16 h-16 md:hidden xl:block">
           <AvatarImage
-            src="/assets/images/student_image.png"
-            alt="student_avatar"
+            src={userData.user.avatar.url}
+            alt={`${userData.user.name}'s profile`}
           />
-          <AvatarFallback className="text-lg font-bold">JM</AvatarFallback>
+          <AvatarFallback className="text-2xl font-semibold capitalize">
+            {userData.user.name[0]}
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col justify-start gap-1 xl:gap-2">
-          <h2 className="text-xl xl:text-base font-semibold text-black whitespace-nowrap">
-            <span className="text-primary">Hello,</span> John Musk
+          <h2 className="text-xl xl:text-base font-semibold text-black whitespace-nowrap capitalize">
+            <span className="text-primary">Hello,</span> {userData.user.name}
           </h2>
 
           <div className="hidden xl:block w-full">

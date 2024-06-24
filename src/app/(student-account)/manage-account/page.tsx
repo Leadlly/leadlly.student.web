@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ArrowLeft, CalendarDaysIcon, Settings } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AccountPersonalInfo from "./_components/AccountPersonalInfo";
 import AccountSubjectOverview from "./_components/AccountSubjectOverview";
 import AccountStudyProgress from "./_components/AccountStudyProgress";
@@ -20,6 +20,20 @@ import Link from "next/link";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import AccountMentorInfo from "./_components/AccountMentorInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getUser } from "@/actions/user_actions";
+
+type UserDataProps = {
+  avatar: { public_id: string; url: string };
+  details: { mood: [] };
+  quiz: { daily: []; weekly: []; monthly: []; QOTD: []; others: [] };
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  badges: [];
+  createdAt: string;
+  __v: 0;
+};
 
 const manageAccountTabs = [
   {
@@ -58,8 +72,18 @@ const ManageAccount = ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const [date, setDate] = useState<Date>();
+  const [user, setUser] = useState<UserDataProps | null>(null);
 
   const activeManageAccountTab = searchParams["tab"] ?? "personal-info";
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const data = await getUser();
+      setUser(data.user);
+    };
+
+    getUserData();
+  }, []);
 
   return (
     <div className="h-full flex flex-col">
@@ -75,13 +99,15 @@ const ManageAccount = ({
       <section className="my-6 bg-primary/15 text-center lg:text-left lg:px-16 py-4 lg:py-8 flex flex-col lg:flex-row items-center justify-between">
         <div className="flex flex-col lg:flex-row items-center gap-6">
           <Avatar className="w-20 h-20 lg:w-32 lg:h-32">
-            <AvatarImage src="/assets/images/student_image.png" />
-            <AvatarFallback>JM</AvatarFallback>
+            <AvatarImage src={user?.avatar.url} />
+            <AvatarFallback className="text-3xl font-semibold capitalize">
+              {user?.name[0]}
+            </AvatarFallback>
           </Avatar>
 
           <div className="space-y-3 lg:space-y-5">
             <h2 className="capitalize text-2xl lg:text-3xl font-bold">
-              <span className="text-primary">hello,</span> john musk
+              <span className="text-primary">hello,</span> {user?.name}
             </h2>
 
             <p className="text-base lg:text-xl max-w-lg">
