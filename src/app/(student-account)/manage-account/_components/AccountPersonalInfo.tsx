@@ -1,5 +1,6 @@
 "use client";
 
+import apiClient from "@/apiClient/apiClient";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -38,11 +39,12 @@ import {
   User,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 type UserProps = {
   user: {
-    firstName: string;
+    name: string;
     lastName: string;
     class: string;
     phone: string;
@@ -55,7 +57,7 @@ type UserProps = {
 };
 
 const AccountPersonalInfoSchema = z.object({
-  firstName: z
+  name: z
     .string({ required_error: "Please enter your first name!" })
     .min(4),
   lastName: z.string({ required_error: "Please enter your first name!" }),
@@ -67,7 +69,7 @@ const AccountPersonalInfoSchema = z.object({
   gender: z.string({ required_error: "Please select your gender" }),
   dateOfBirth: z.date({ required_error: "Please enter your date of birth" }),
   parentName: z.string().optional(),
-  parentsPhone: z.number().max(10).optional(),
+  parentsPhone: z.string().max(10).optional(),
   country: z.string().optional(),
   address: z.string().optional(),
   pinCode: z.number().optional(),
@@ -86,7 +88,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
   const form = useForm<z.infer<typeof AccountPersonalInfoSchema>>({
     resolver: zodResolver(AccountPersonalInfoSchema),
     defaultValues: {
-      firstName: user.firstName,
+      name: user.name,
       lastName: user.lastName,
       class: user.class,
       phone: user.phone,
@@ -96,9 +98,27 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof AccountPersonalInfoSchema>) => {
-    console.log(data);
+  const onSubmit = async (
+    data: z.infer<typeof AccountPersonalInfoSchema>
+  ) => {
+    console.log("Submitting data:", data);
+
+    try {
+      const response = await apiClient.post(
+        "/api/user/studentPersonalInfo",
+        data
+      );
+
+      console.log("Response:", response.data);
+      toast.success(response.data.message);
+    } catch (error: any) {
+      console.error("Error:", error);
+      toast.error("Save failed", {
+        description: error.message || "Unknown error occurred",
+      });
+    }
   };
+
   return (
     <>
       <Form {...form}>
@@ -113,7 +133,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <FormField
                   control={form.control}
-                  name="firstName"
+                  name="name"
                   render={({ field }) => (
                     <FormItem className="space-y-1">
                       <div className="flex items-center justify-between">
