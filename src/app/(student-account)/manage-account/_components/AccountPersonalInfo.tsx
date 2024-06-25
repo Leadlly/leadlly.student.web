@@ -1,5 +1,6 @@
 "use client";
 
+import apiClient from "@/apiClient/apiClient";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -38,6 +39,7 @@ import {
   User,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 type UserProps = {
@@ -97,7 +99,22 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
   });
 
   const onSubmit = async (data: z.infer<typeof AccountPersonalInfoSchema>) => {
-    console.log(data);
+      console.log("Submitting data:", data);
+  
+      try {
+        const response = await apiClient.post(
+          "/api/user/studentPersonalInfo",
+          data
+        );
+  
+        console.log("Response:", response.data);
+        toast.success(response.data.message);
+      } catch (error: any) {
+        console.error("Error:", error);
+        toast.error("Save failed", {
+          description: error.message || "Unknown error occurred",
+        });
+      }
   };
   return (
     <>
