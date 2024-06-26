@@ -2,25 +2,25 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-//   const path = request.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
 
-//   const token = getTokenFromStorage(request); 
+  const token = getTokenFromStorage(request); 
 
-//   const isPublicPath =
-//     path === "/login" ||
-//     path === "/signup" ||
-//     path === "/verify" ||
-//     path === "/forgot-password";
+  const isPublicPath =
+    path === "/login" ||
+    path === "/signup" ||
+    path === "/verify" ||
+    path === "/forgot-password";
 
-//   if (token && isPublicPath) {
-//     return NextResponse.redirect(new URL("/", request.nextUrl));
-//   }
+  if (token && isPublicPath) {
+    return NextResponse.redirect(new URL("/", request.nextUrl));
+  }
 
-//   if (!token && !isPublicPath) {
-//     return NextResponse.redirect(new URL("/login", request.nextUrl));
-//   }
+  if (!token && !isPublicPath) {
+    return NextResponse.redirect(new URL("/login", request.nextUrl));
+  }
 
-//   return NextResponse.next();
+  return NextResponse.next();
 }
 
 function getTokenFromStorage(request: NextRequest) {
