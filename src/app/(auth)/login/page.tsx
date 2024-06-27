@@ -26,12 +26,16 @@ import { Input } from "@/components/ui/input";
 import GoogleLoginButton from "../_components/GoogleLoginButton";
 
 import apiClient from "@/apiClient/apiClient";
+import { useAppDispatch } from "@/redux/hooks";
+import { getUser } from "@/actions/user_actions";
+import { userData } from "@/redux/slices/userSlice";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -47,11 +51,16 @@ const Login = () => {
     try {
       const response = await apiClient.post("/api/auth/login", data);
 
-      toast.success(response.data.message);
+      if (response.status === 200) {
+        const userDataInfo = await getUser();
+        dispatch(userData(userDataInfo.user));
+        toast.success(response.data.message);
 
-      router.replace("/");
+        router.replace("/");
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error: any) {
-      console.log(error, "hello");
       toast.error("Login Failed", {
         description: error.message,
       });

@@ -20,7 +20,6 @@ export const buySubscription = async (duration: string) => {
     );
 
     const data = await res.json();
-    console.log(data);
 
     return data.subscription;
   } catch (error: unknown) {

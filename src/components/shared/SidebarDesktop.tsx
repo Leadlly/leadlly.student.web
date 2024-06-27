@@ -8,6 +8,9 @@ import { motion } from "framer-motion";
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { LogOut } from "lucide-react";
+import LogoutButton from "./LogoutButton";
 
 const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
   const pathname = usePathname();
@@ -26,7 +29,7 @@ const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
           />
         </Link>
       </div>
-      <ul className="flex flex-col justify-start items-start md:items-center xl:items-start gap-2 h-full lg:h-[calc(100dvh-97px)] overflow-x-hidden overflow-y-auto custom__scrollbar px-[25px] md:px-3 xl:px-[25px] py-3">
+      <ul className="flex flex-col justify-start items-start md:items-center xl:items-start gap-2 h-[calc(100dvh-97px)] overflow-x-hidden overflow-y-auto custom__scrollbar px-[25px] md:px-3 xl:px-[25px] py-3">
         {sidebar.map((item) => {
           return (
             <Link
@@ -68,6 +71,8 @@ const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
             </Link>
           );
         })}
+
+        <LogoutButton />
       </ul>
     </aside>
   );

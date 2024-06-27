@@ -11,12 +11,10 @@ import PlanPriceBox from "./_components/PlanPriceBox";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import Script from "next/script";
 
 const SubscriptionPlans = () => {
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <section>
         <div className="px-3 lg:px-5 py-2 mb-6 flex items-center gap-5">
           <Link href="/">

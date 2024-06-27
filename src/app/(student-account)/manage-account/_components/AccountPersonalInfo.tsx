@@ -1,7 +1,9 @@
 "use client";
 
+import { studentPersonalInfo } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { CalendarDatePicker } from "@/components/ui/calendar_date_picker";
 import {
   Form,
   FormControl,
@@ -26,78 +28,92 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useAppDispatch } from "@/redux/hooks";
+import { UserProps, userData } from "@/redux/slices/userSlice";
+import { AccountPersonalInfoSchema } from "@/schemas/accountPersonalInfoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
   CalendarDaysIcon,
-  CheckCircle2,
   Edit3,
   Globe,
+  Loader2,
   MailOpen,
   Phone,
   User,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
-type UserProps = {
-  user: {
-    firstName: string;
-    lastName: string;
-    class: string;
-    phone: string;
-    email: string;
-    gender: string;
-    dateOfBirth: string;
-    isPhoneVerified: boolean;
-    isEmailVerified: boolean;
-  };
-};
-
-const AccountPersonalInfoSchema = z.object({
-  firstName: z
-    .string({ required_error: "Please enter your first name!" })
-    .min(4),
-  lastName: z.string({ required_error: "Please enter your first name!" }),
-  class: z.string({ required_error: "Please select your class" }),
-  phone: z.string({ required_error: "Please enter your phone number" }).max(10),
-  email: z
-    .string({ required_error: "Please enter your email" })
-    .email({ message: "Invalid email address" }),
-  gender: z.string({ required_error: "Please select your gender" }),
-  dateOfBirth: z.date({ required_error: "Please enter your date of birth" }),
-  parentName: z.string().optional(),
-  parentsPhone: z.number().max(10).optional(),
-  country: z.string().optional(),
-  address: z.string().optional(),
-  pinCode: z.number().optional(),
-  competitiveExam: z.enum(["NEET", "JEE", "Board", "Other"]).optional(),
-  studentSchedule: z.string().optional(),
-  messageAboutCompetitiveExam: z.string().optional(),
-  messageAboutStudentSchedule: z.string().optional(),
-  schoolOrCollegeName: z.string().optional(),
-  schoolOrCollegeAddress: z.string().optional(),
-  coachingType: z.enum(["online", "offline"]).optional(),
-  coachingName: z.string().optional(),
-  coachingAddress: z.string().optional(),
-});
-
 const AccountPersonalInfo = ({ user }: UserProps) => {
+  const [isSaving, setIsSaving] = useState(false);
+
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const form = useForm<z.infer<typeof AccountPersonalInfoSchema>>({
     resolver: zodResolver(AccountPersonalInfoSchema),
     defaultValues: {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      class: user.class,
-      phone: user.phone,
-      email: user.email,
-      gender: user.gender,
-      dateOfBirth: new Date(user.dateOfBirth),
+      firstName: user?.firstname ? user.firstname : "",
+      lastName: user?.lastname ? user.lastname : "",
+      phone: user?.phone?.personal ? String(user.phone.personal) : "",
+      email: user?.email ? user.email : "",
+      parentName: user?.parent.name ? user.parent.name : "",
+      parentsPhone: user?.parent.phone ? String(user.parent.phone) : "",
+      address: user?.address.addressLine ? user.address.addressLine : "",
+      pinCode: user?.address.pincode ? String(user.address.pincode) : "",
+      schoolOrCollegeName: user?.academic.schoolOrCollegeName
+        ? user.academic.schoolOrCollegeName
+        : "",
+      schoolOrCollegeAddress: user?.academic.schoolOrCollegeAddress
+        ? user.academic.schoolOrCollegeAddress
+        : "",
+      coachingName: user?.academic.coachingName
+        ? user.academic.coachingName
+        : "",
+      coachingAddress: user?.academic.coachingAddress
+        ? user.academic.coachingAddress
+        : "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof AccountPersonalInfoSchema>) => {
-    console.log(data);
+    const formattedPersonalData = {
+      class: Number(data.class),
+      dateOfBirth: data.dateOfBirth
+        ? new Date(data.dateOfBirth.from).toLocaleString("en-US", {
+            timeZone: "Asia/Kolkata",
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+          })
+        : "",
+      phone: Number(data.phone),
+      parentsPhone: Number(data.parentsPhone),
+      pinCode: Number(data.pinCode),
+    };
+
+    setIsSaving(true);
+
+    try {
+      const res = await studentPersonalInfo({
+        ...data,
+        ...formattedPersonalData,
+      });
+
+      dispatch(userData(res.user));
+
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error("Your info submission failed!", {
+        description: error.message,
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
   return (
     <>
@@ -110,7 +126,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
               <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Basic Information
               </h4>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 <FormField
                   control={form.control}
                   name="firstName"
@@ -178,17 +194,21 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                        defaultValue={
+                          user?.about.standard
+                            ? String(user?.about.standard)
+                            : field.value
+                        }>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="text-base lg:text-lg font-medium">
                             <SelectValue placeholder="Select your class" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="9th">9th</SelectItem>
-                          <SelectItem value="10th">10th</SelectItem>
-                          <SelectItem value="11th">11th</SelectItem>
-                          <SelectItem value="12th">12th</SelectItem>
+                          <SelectItem value="9">9th</SelectItem>
+                          <SelectItem value="10">10th</SelectItem>
+                          <SelectItem value="11">11th</SelectItem>
+                          <SelectItem value="12">12th</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -205,18 +225,18 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         <FormLabel className="text-base lg:text-lg font-medium">
                           Phone No.:
                         </FormLabel>
-                        {user.isPhoneVerified ? (
+                        {/* {user.isPhoneVerified ? (
                           <p className="text-[#61D705] text-[10px] flex items-center gap-1 px-2">
                             <CheckCircle2 className="w-3 h-3" />
                             Verified
                           </p>
-                        ) : (
-                          <Button
-                            variant={"ghost"}
-                            className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
-                            Get OTP
-                          </Button>
-                        )}
+                        ) : ( */}
+                        <Button
+                          variant={"ghost"}
+                          className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
+                          Get OTP
+                        </Button>
+                        {/* )} */}
                       </div>
                       <FormControl>
                         <Input
@@ -242,18 +262,18 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         <FormLabel className="text-base lg:text-lg font-medium">
                           Email:
                         </FormLabel>
-                        {user.isEmailVerified ? (
+                        {/* {user.isEmailVerified ? (
                           <p className="text-[#61D705] text-[10px] flex items-center gap-1 px-2">
                             <CheckCircle2 className="w-3 h-3" />
                             Verified
                           </p>
-                        ) : (
-                          <Button
-                            variant={"ghost"}
-                            className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
-                            Get OTP
-                          </Button>
-                        )}
+                        ) : ( */}
+                        <Button
+                          variant={"ghost"}
+                          className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
+                          Get OTP
+                        </Button>
+                        {/* )} */}
                       </div>
                       <FormControl>
                         <Input
@@ -279,9 +299,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                        defaultValue={
+                          user?.about.gender ? user?.about.gender : field.value
+                        }>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="capitalize text-base lg:text-lg font-medium">
                             <SelectValue placeholder="Select your gender" />
                           </SelectTrigger>
                         </FormControl>
@@ -304,36 +326,24 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       <FormLabel className="text-base lg:text-lg font-medium">
                         Date of Birth:
                       </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full pl-3 text-left text-base lg:text-lg font-medium",
-                                !field.value && "text-muted-foreground"
-                              )}>
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarDaysIcon className="ml-auto h-5 w-5 opacity-80" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) =>
-                              date > new Date() || date < new Date("1900-01-01")
-                            }
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      <FormControl>
+                        <CalendarDatePicker
+                          date={
+                            user?.about.dateOfBirth
+                              ? { from: new Date(user.about.dateOfBirth) }
+                              : field.value
+                          }
+                          onDateSelect={({ from, to }) => {
+                            form.setValue("dateOfBirth", { from, to });
+                          }}
+                          variant="outline"
+                          numberOfMonths={1}
+                          className="text-base lg:text-lg font-medium"
+                          placeholder="Pick your D.O.B"
+                          yearsRange={35}
+                        />
+                      </FormControl>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -344,7 +354,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
               <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Other Information
               </h4>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 <FormField
                   control={form.control}
                   name="parentName"
@@ -399,19 +409,18 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                        defaultValue={
+                          user?.address.country
+                            ? user.address.country
+                            : field.value
+                        }>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="text-base lg:text-lg font-medium">
                             <SelectValue placeholder="Select your country name" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="India">India</SelectItem>
-                          <SelectItem value="USA">USA</SelectItem>
-                          <SelectItem value="Germany">Germany</SelectItem>
-                          <SelectItem value="South-Africa">
-                            South Africa
-                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -478,7 +487,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={
+                            user?.academic.examName
+                              ? user.academic.examName
+                              : field.value
+                          }
                           className="flex items-center gap-x-5">
                           <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                             <FormControl>
@@ -545,9 +558,13 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                        defaultValue={
+                          user?.academic.schedule
+                            ? user.academic.schedule
+                            : field.value
+                        }>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="text-base lg:text-lg font-medium">
                             <SelectValue placeholder="Ex: Coaching + College + Self Study" />
                           </SelectTrigger>
                         </FormControl>
@@ -559,7 +576,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             Coaching + College
                           </SelectItem>
                           <SelectItem value="college+self-study">
-                            college + Self Study
+                            College + Self Study
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -660,7 +677,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={
+                            user?.academic.coachingMode
+                              ? user.academic.coachingMode
+                              : field.value
+                          }
                           className="flex items-center gap-x-5">
                           <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                             <FormControl>
@@ -739,8 +760,15 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
           <div className="w-full grid place-items-center">
             <Button
               type="submit"
-              className="text-base lg:text-lg font-semibold">
-              Save Changes
+              className="text-base lg:text-lg font-semibold"
+              disabled={isSaving}>
+              {isSaving ? (
+                <span className="flex items-center">
+                  <Loader2 className="mr-2 w-5 h-5 animate-spin" /> Saving
+                </span>
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </div>
         </form>
