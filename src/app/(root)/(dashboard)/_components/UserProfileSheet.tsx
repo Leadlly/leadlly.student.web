@@ -13,17 +13,28 @@ import TodaysVibe from "./TodaysVibe";
 import DailyStreakQuestions from "./DailyStreakQuestions";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
+import { UserDataProps } from "@/helpers/types";
+import { toast } from "sonner";
+import { getUser } from "@/actions/user_actions";
+import { useAppSelector } from "@/redux/hooks";
 
 const UserProfileSheet = () => {
+  const user = useAppSelector((state) => state.user.user);
   return (
     <Sheet>
       <SheetTrigger>
         <Avatar className="w-10 h-10">
           <AvatarImage
-            src={"/assets/images/student_image.png"}
-            alt="Student Profile"
+            src={user?.avatar?.url}
+            alt={`${user?.firstname}'s profile image`}
           />
-          <AvatarFallback className="text-sm font-bold">JM</AvatarFallback>
+          <AvatarFallback className="text-sm font-bold capitalize">
+            {user?.firstname[0]}
+            <span className="capitalize">
+              {user?.lastname ? user.lastname[0] : ""}
+            </span>
+          </AvatarFallback>
         </Avatar>
       </SheetTrigger>
       <SheetContent

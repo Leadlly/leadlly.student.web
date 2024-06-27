@@ -1,19 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import PaymentButton from "./PaymentButton";
+import { getUser } from "@/actions/user_actions";
 
 type PlanPriceProps = {
   title: string;
-  time_span: string;
-  price: number;
+  duration: string;
+  amount: number;
   className?: string;
 };
 
-const PlanPriceBox = ({
+const PlanPriceBox = async ({
   title,
-  time_span,
-  price,
+  duration,
+  amount,
   className,
 }: PlanPriceProps) => {
+  const userData = await getUser();
   return (
     <div
       className={cn(
@@ -32,23 +35,24 @@ const PlanPriceBox = ({
 
         <div className="text-center">
           <p className="text-3xl lg:text-4xl font-semibold capitalize">
-            {time_span}
+            {Number(duration) < 12
+              ? duration
+              : Math.floor(Number(duration) / 12)}{" "}
+            {Number(duration) < 12
+              ? "months"
+              : `year${Math.floor(Number(duration) / 12) === 1 ? "" : "s"}`}
           </p>
           <p className="text-lg lg:text-xl font-semibold text-[#6d6a6a]">
-            {price}/- per month
+            {amount}/- per month
           </p>
         </div>
 
         <div className="grid place-items-center">
-          <Button
-            size={"sm"}
-            className={cn(
-              "h-9 lg:text-lg font-medium px-10",
-              title === "professional plan" &&
-                "bg-white text-primary hover:bg-white/40"
-            )}>
-            Choose Plan
-          </Button>
+          <PaymentButton
+            duration={duration}
+            title={title}
+            user={userData.user}
+          />
         </div>
       </div>
     </div>

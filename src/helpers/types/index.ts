@@ -142,3 +142,104 @@ export type subjectChaptersProps = {
     icon?: React.ComponentType<{ className?: string | undefined }>;
   }[];
 };
+
+export type UserDataProps = {
+  firstname: string;
+  lastname?: string;
+  email: string;
+  phone?: {
+    personal?: number;
+    other?: number;
+  };
+  avatar?: {
+    public_id?: string;
+    url?: string;
+  };
+  parent: {
+    name?: string;
+    phone?: string;
+  };
+  address: {
+    country?: string;
+    addressLine?: string;
+    pincode?: number;
+  };
+  academic: {
+    examName?: string;
+    schedule?: string;
+    coachingMode?: string;
+    coachingName?: string;
+    coachingAddress?: string;
+    schoolOrCollegeName?: string;
+    schoolOrCollegeAddress?: string;
+  };
+  about: {
+    standard: number;
+    dateOfBirth?: string;
+    gender: string;
+  };
+  role?: string;
+  details?: {
+    level?: number;
+    points?: number;
+    streak?: number;
+    mood?: Array<{
+      day: String;
+      emoji: String;
+    }>;
+  };
+  badges?: Array<{
+    name: string;
+    url: string;
+  }>;
+  points?: number;
+  subscription: {
+    type?: string;
+    id?: string;
+    status?: string;
+    dateOfActivation?: Date;
+  };
+  quiz?: {
+    minor?: any[];
+    major?: any[];
+  };
+};
+
+export type OTPProps = {
+  otp: string;
+};
+
+export type SignUpDataProps = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type SignInDataProps = {
+  email: string;
+  password: string;
+};
+
+export type StudentPersonalInfoProps = {
+  address?: string;
+  class?: number;
+  coachingAddress?: string;
+  coachingName?: string;
+  coachingType?: string;
+  competitiveExam?: string;
+  country?: string;
+  dateOfBirth?: string;
+  email?: string;
+  firstName?: string;
+  gender?: string;
+  lastName?: string;
+  messageAboutCompetitiveExam?: string;
+  messageAboutStudentSchedule?: string;
+  parentName?: string;
+  parentsPhone?: number;
+  phone?: number;
+  pinCode?: number;
+  schoolOrCollegeAddress?: string;
+  schoolOrCollegeName?: string;
+  studentSchedule?: string;
+};

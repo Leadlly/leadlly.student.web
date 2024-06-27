@@ -1,14 +1,14 @@
-import { Header, NotificationIcon } from "@/components";
+import { Header } from "@/components";
 import { TDashboardTodaysTopic } from "@/helpers/types";
 import TodaysPlan from "./TodaysPlan";
 import ConnectWithMentor from "./ConnectWithMentor";
 import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
-import Image from "next/image";
 import UserProfileSheet from "./UserProfileSheet";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import LogoutButton from "@/components/shared/LogoutButton";
 
 const MobileUI = ({
   todaysTopics,
@@ -24,6 +24,7 @@ const MobileUI = ({
             <Button className="h-7 text-xs">Upgrade</Button>
           </Link>
           <UserProfileSheet />
+          <LogoutButton />
         </div>
       </div>
 

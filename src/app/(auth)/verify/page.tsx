@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/input-otp";
 import { toast } from "sonner";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
@@ -25,6 +25,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Loader2 } from "lucide-react";
+import { getUser, resendOtp } from "@/actions/user_actions";
+import ResendOtpButton from "./_components/ResendOtpButton";
+import apiClient from "@/apiClient/apiClient";
+import { useAppDispatch } from "@/redux/hooks";
+import { userData } from "@/redux/slices/userSlice";
 
 const OTPFormSchema = z.object({
   otp: z
@@ -36,6 +41,7 @@ const Verify = () => {
   const [isVerifying, setIsVerifying] = useState(false);
 
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
     resolver: zodResolver(OTPFormSchema),
@@ -45,79 +51,78 @@ const Verify = () => {
     setIsVerifying(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/verify`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-          cache: "no-store",
-        }
-      );
+      const response = await apiClient.post("/api/auth/verify", data);
 
-      const responseData = await response.json();
+      if (response.status === 200) {
+        const userDataInfo = await getUser();
+        dispatch(userData(userDataInfo.user));
 
-      toast.success("OTP verified successfully", {
-        description: responseData.message,
-      });
+        toast.success("Account verified successfully", {
+          description: response.data.message,
+        });
 
-      router.replace("/");
+        router.replace("/");
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error: any) {
-      toast.error("Error verifying OTP.", {
+      toast.error("Account verification failed!", {
         description: error.message,
       });
     } finally {
       setIsVerifying(false);
     }
   };
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onOTPSubmit)}
-        className="w-full flex flex-col justify-center items-center space-y-6">
-        <FormField
-          control={form.control}
-          name="otp"
-          render={({ field }) => (
-            <FormItem className="text-center">
-              <FormLabel>One-Time Password</FormLabel>
-              <FormControl>
-                <InputOTP
-                  maxLength={6}
-                  {...field}
-                  containerClassName="justify-center">
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </FormControl>
-              <FormDescription>
-                Please enter the one-time password sent to your phone.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <Button type="submit" disabled={isVerifying}>
-          {isVerifying ? (
-            <span className="flex items-center">
-              <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Verifying
-            </span>
-          ) : (
-            "Submit"
-          )}
-        </Button>
-      </form>
-    </Form>
+  return (
+    <section className="flex flex-col items-center">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onOTPSubmit)}
+          className="w-full flex flex-col justify-center items-center space-y-6">
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem className="text-center">
+                <FormLabel>One-Time Password</FormLabel>
+                <FormControl>
+                  <InputOTP
+                    maxLength={6}
+                    {...field}
+                    containerClassName="justify-center">
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </FormControl>
+                <FormDescription>
+                  Please enter the one-time password sent to your email.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" disabled={isVerifying}>
+            {isVerifying ? (
+              <span className="flex items-center">
+                <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Verifying
+              </span>
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </form>
+      </Form>
+
+      <ResendOtpButton />
+    </section>
   );
 };
 

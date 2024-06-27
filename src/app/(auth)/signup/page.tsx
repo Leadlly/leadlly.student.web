@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import GoogleLoginButton from "../_components/GoogleLoginButton";
+import { signUpUser } from "@/actions/user_actions";
 
 const SignUp = () => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -37,26 +39,15 @@ const SignUp = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-          cache: "no-store",
-        }
-      );
+      const responseData = await signUpUser(data);
 
-      const responseData = await response.json();
+      if (responseData.success) {
+        toast.success(responseData.message);
 
-      toast.success("Registration successful.", {
-        description: responseData.message,
-      });
-
-      router.replace("/verify");
+        router.replace("/verify");
+      } else {
+        toast.error(responseData.message);
+      }
     } catch (error: any) {
       toast.error("Error registering user.", {
         description: error.message,
@@ -68,7 +59,7 @@ const SignUp = () => {
 
   return (
     <div className="h-main-height ">
-      <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-20">
+      <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-20 mb-5 sm:mb-0">
         <Image
           src="/assets/images/leadlly_logo.svg"
           alt="Leadlly_Logo"
@@ -87,7 +78,7 @@ const SignUp = () => {
               className="object-contain"
             />
           </div>
-          <div className="rounded-3xl px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start gap-10">
+          <div className="rounded-3xl px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start space-y-4">
             <div className="text-center space-y-2">
               <h3 className="text-2xl lg:text-4xl font-bold leading-none">
                 Create an account
@@ -187,7 +178,9 @@ const SignUp = () => {
               </form>
             </Form>
 
-            <p className="w-full text-center text-base md:text-lg -mt-5">
+            <GoogleLoginButton />
+
+            <p className="w-full text-center text-base md:text-lg">
               Already have an account?{" "}
               <Link href={"/login"} className="text-primary">
                 Login
