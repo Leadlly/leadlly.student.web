@@ -14,8 +14,11 @@ const ResendOtpButton = () => {
   const resendOTPHandler = async () => {
     setIsResendingOTP(true);
 
+    const email = localStorage.getItem("email")
+    
+
     try {
-      const data = await resendOtp();
+      const data = await resendOtp(email!);
       if (data.success) {
         toast.success(data.message);
       } else {
