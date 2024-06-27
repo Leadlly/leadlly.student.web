@@ -50,8 +50,9 @@ const Verify = () => {
   const onOTPSubmit = async (data: z.infer<typeof OTPFormSchema>) => {
     setIsVerifying(true);
 
+    const email = localStorage.getItem("email")
     try {
-      const response = await apiClient.post("/api/auth/verify", data);
+      const response = await apiClient.post("/api/auth/verify", {otp: data.otp, email});
 
       if (response.status === 200) {
         const userDataInfo = await getUser();
@@ -61,6 +62,7 @@ const Verify = () => {
           description: response.data.message,
         });
 
+        localStorage.removeItem("email")
         router.replace("/");
       } else {
         toast.error(response.data.message);
