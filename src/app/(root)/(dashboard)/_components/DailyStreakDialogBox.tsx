@@ -68,15 +68,7 @@ const DailyStreakDialogBox = ({
             <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
           </div>
 
-          <div className="flex-1 flex items-center gap-2 md:gap-5">
-            <Progress
-              value={(attemptedQuestion.length / questions.length) * 100}
-              className="h-2"
-            />
-            <p className="text-xs md:text-lg font-bold">
-              {attemptedQuestion.length}/{questions.length}
-            </p>
-          </div>
+        
 
           <Button className="h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8] px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold">
             Submit
