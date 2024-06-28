@@ -75,6 +75,7 @@ export type TLevelPointProps = {
 export type TMoodEmojisProps = {
   mood: string;
   mood_id: string;
+  moodImg:string
 };
 
 export type TQuizQuestionProps = {

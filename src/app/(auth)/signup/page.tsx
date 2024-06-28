@@ -43,7 +43,7 @@ const SignUp = () => {
 
       if (responseData.success) {
         toast.success(responseData.message);
-
+        localStorage.setItem("email", data.email)
         router.replace("/verify");
       } else {
         toast.error(responseData.message);

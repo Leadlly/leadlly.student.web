@@ -8,6 +8,7 @@ import {
 } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
+import apiClient from "@/apiClient/apiClient";
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
@@ -36,21 +37,11 @@ export const signUpUser = async (data: SignUpDataProps) => {
   }
 };
 
-export const resendOtp = async () => {
+export const resendOtp = async (email: string) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/resend`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const res = await apiClient.post('/api/auth/resend', {email});
 
-    const data = await res.json();
+    const data = res.data;
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {

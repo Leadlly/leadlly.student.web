@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getUser } from "./actions/user_actions";
 
-export async function middleware(request: NextRequest, response: NextResponse) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  const user = await getUser();
+  const token = getTokenFromStorage(request); 
 
   const isPublicPath =
     path.startsWith("/login") ||
@@ -14,13 +13,21 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     path.startsWith("/forgot-password") ||
     path.startsWith("/resetpassword");
 
-  if (isPublicPath && user?.success) {
+  if (token && isPublicPath) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
-  if (!isPublicPath && !user?.success) {
+  if (!token && !isPublicPath) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
+
+  return NextResponse.next();
+}
+
+function getTokenFromStorage(request: NextRequest) {
+  const cookies = request.cookies;
+  const token = cookies.get("token");
+  return token;
 }
 
 export const config = {
