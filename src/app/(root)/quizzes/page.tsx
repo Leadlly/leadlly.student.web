@@ -62,7 +62,7 @@ const Quizzes = ({
           ))}
         </ul>
 
-        <div className="flex">
+        <div className="flex flex-col ">
           {activeQuizTab === "unattempted" && <Unattempted/>}
           {activeQuizTab === "attempted" && <Attempted/>}
         </div>
