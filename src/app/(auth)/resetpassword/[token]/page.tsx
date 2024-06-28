@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export const ResetPasswordSchema = z.object({
+const ResetPasswordSchema = z.object({
   password: z.string({ required_error: "Please enter your new password." }),
   confirmPassword: z.string({
     required_error: "Please confirm your password!",
@@ -47,15 +47,14 @@ const ResetPassword = () => {
   const password = form.watch("password");
   const confirmPassword = form.watch("confirmPassword");
 
-  useEffect(() => {
-    if (password !== confirmPassword) {
-      setPasswordError("Passwords do not match!");
-      return;
-    }
-  }, [password, confirmPassword]);
-
   const onFormSubmit = async (data: z.infer<typeof ResetPasswordSchema>) => {
     setIsResettingPassword(true);
+
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match!");
+      setIsResettingPassword(false);
+      return;
+    }
 
     try {
       const res = await resetPassword(

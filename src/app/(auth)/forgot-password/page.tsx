@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, User } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ import { toast } from "sonner";
 
 import * as z from "zod";
 
-export const ForgotPasswordSchema = z.object({
+const ForgotPasswordSchema = z.object({
   email: z
     .string({ required_error: "Please enter your email." })
     .email({ message: "Invalid email address!" }),
