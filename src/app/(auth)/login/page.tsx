@@ -51,15 +51,12 @@ const Login = () => {
     try {
       const response = await apiClient.post("/api/auth/login", data);
 
-      if (response.status === 200) {
-        const userDataInfo = await getUser();
-        dispatch(userData(userDataInfo.user));
-        toast.success(response.data.message);
+      const userDataInfo = await getUser();
+      await dispatch(userData(userDataInfo.user));
 
-        router.replace("/");
-      } else {
-        toast.error(response.data.message);
-      }
+      toast.success(response.data.message);
+
+      router.replace("/");
     } catch (error: any) {
       toast.error("Login Failed", {
         description: error.message,
@@ -169,8 +166,8 @@ const Login = () => {
                   disabled={isLoggingIn}>
                   {isLoggingIn ? (
                     <span className="flex items-center">
-                      <Loader2 className="w-6 h-6 animate-spin mr-2" />{" "}
-                      LoggingIn
+                      <Loader2 className="w-6 h-6 animate-spin mr-2" /> Signing
+                      in
                     </span>
                   ) : (
                     "Login"

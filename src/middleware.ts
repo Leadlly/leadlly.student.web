@@ -8,10 +8,11 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   const user = await getUser();
 
   const isPublicPath =
-    path === "/login" ||
-    path === "/signup" ||
-    path === "/verify" ||
-    path === "/forgot-password";
+    path.startsWith("/login") ||
+    path.startsWith("/signup") ||
+    path.startsWith("/verify") ||
+    path.startsWith("/forgot-password") ||
+    path.startsWith("/resetpassword");
 
   if (isPublicPath && user?.success) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
