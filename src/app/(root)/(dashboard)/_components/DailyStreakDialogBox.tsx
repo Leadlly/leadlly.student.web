@@ -101,21 +101,7 @@ const DailyStreakDialogBox = ({
             ))}
           </div>
 
-          <div className="flex justify-center mb-4 border border-gray-300 rounded-md p-1 max-w-xs mx-auto">
-            {questions.map((ques, index) => (
-              <button
-                key={ques.question}
-                className={cn(
-                  "text-sm py-2 px-4 rounded-md mx-1",
-                  activeQuestion === index
-                    ? "bg-primary text-white"
-                    : "bg-white text-gray-500"
-                )}
-                onClick={() => setActiveQuestion(index)}>
-                Q{index + 1}
-              </button>
-            ))}
-          </div>
+         
 
           <div className="flex-1 flex flex-col">
             <div className="px-4 md:px-7 mb-4">
