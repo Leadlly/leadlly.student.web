@@ -1,6 +1,11 @@
 "use server";
 
-import { SignUpDataProps, StudentPersonalInfoProps } from "@/helpers/types";
+import {
+  ForgotPasswordProps,
+  ResetPasswordProps,
+  SignUpDataProps,
+  StudentPersonalInfoProps,
+} from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
 import apiClient from "@/apiClient/apiClient";
@@ -43,6 +48,65 @@ export const resendOtp = async (email: string) => {
       throw new Error(`Error re-sending OTP: ${error.message}`);
     } else {
       throw new Error("An unknown error occurred while re-sending OTP!");
+    }
+  }
+};
+
+export const forgotPassword = async (data: ForgotPasswordProps) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/forgetpassword`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(
+        `Error sending password resetting link: ${error.message}`
+      );
+    } else {
+      throw new Error(
+        "An unknown error occurred while sending password resetting link!"
+      );
+    }
+  }
+};
+
+export const resetPassword = async (
+  data: ResetPasswordProps,
+  token: string
+) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/resetpassword/${token}`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error resetting password: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while resetting password!");
     }
   }
 };

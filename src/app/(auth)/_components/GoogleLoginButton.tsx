@@ -1,5 +1,10 @@
+"use client";
+
+import { getUser } from "@/actions/user_actions";
 import apiClient from "@/apiClient/apiClient";
 import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/redux/hooks";
+import { userData } from "@/redux/slices/userSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,6 +12,7 @@ import { toast } from "sonner";
 
 const GoogleLoginButton = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
@@ -14,6 +20,9 @@ const GoogleLoginButton = () => {
         const res = await apiClient.post("/api/google/auth", {
           access_token: credentialResponse.access_token,
         });
+
+        const userInfo = await getUser();
+        dispatch(userData(userInfo.user));
 
         toast.success("Login success", {
           description: res.data.message,

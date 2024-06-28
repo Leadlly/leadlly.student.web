@@ -220,6 +220,14 @@ export type SignInDataProps = {
   password: string;
 };
 
+export type ForgotPasswordProps = {
+  email: string;
+};
+
+export type ResetPasswordProps = {
+  password: string;
+};
+
 export type StudentPersonalInfoProps = {
   address?: string;
   class?: number;
