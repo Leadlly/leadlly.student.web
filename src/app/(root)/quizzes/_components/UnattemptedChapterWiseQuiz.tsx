@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import UnattemptedChapterQuiz from './UnattemptedChapterQuiz';
 
 type Subject = {
@@ -23,14 +23,14 @@ const UnattemptedChapterWiseQuizzes = ({ quizzes }: UnattemptedChapterWiseQuizze
 
 	const subjects = ['All', 'Maths', 'Physics', 'Chemistry'];
 
-	const filteredQuizzes =
-		selectedSubject === 'All'
+	const filteredQuizzes = useMemo(() => {
+		return selectedSubject === 'All'
 			? quizzes
 			: quizzes.filter((quiz) => quiz.subject.name === selectedSubject);
+	}, [selectedSubject,quizzes]);
 
 	return (
-		<div >
-			
+		<div>
 			<div className='flex  justify-start gap-2 pl-[10%] py-2'>
 				{subjects.map((subject) => (
 					<button

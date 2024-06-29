@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 interface Subject {
 	name: string;
 	color: string;
@@ -31,10 +32,10 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
 
 		// Calculate the difference in milliseconds
 		const differenceInMs = meetingDate.getTime() - currentDate.getTime();
-		
+
 		// Convert milliseconds to days
 		const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
-		return daysLeft ;
+		return daysLeft;
 	}
 	const daysLeft = calculateDaysLeft(new Date(quiz.endDate));
 
@@ -53,7 +54,9 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
 					) : daysLeft <= 1 ? (
 						<p className='text-xs md:text-sm text-orange-600'>Quiz closes soon</p>
 					) : (
-						<p className='text-xs md:text-sm text-primary'>Remaining {daysLeft} days to Take Quiz</p>
+						<p className='text-xs md:text-sm text-primary'>
+							Remaining {daysLeft} days to Take Quiz
+						</p>
 					)}
 				</div>
 				<div className='flex justify-between space-y-1 space-x-4 items-end'>
@@ -74,7 +77,11 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
 					{/* Right Side */}
 					<div>
 						<p className='text-gray-600 my-1'>{quiz.questions} Quiz Questions</p>
-						<Button>Attempt Now</Button>
+						{daysLeft > 0 && (
+							<Link href={`/quiz/${quiz.id}/attempt`}>
+								<Button>Attempt Now</Button>
+							</Link>
+						)}
 					</div>
 				</div>
 				<div className='flex justify-between items-center'></div>
