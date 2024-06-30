@@ -251,3 +251,21 @@ export type StudentPersonalInfoProps = {
   schoolOrCollegeName?: string;
   studentSchedule?: string;
 };
+
+
+export interface Option {
+  name: string;
+  tag: string;
+  images?: string | null;
+  _id: string;
+}
+
+export interface Question {
+  _id: string;
+  question: string;
+  options: Option[];
+}
+
+export interface Questions {
+  [key: string]: Question | undefined;
+}

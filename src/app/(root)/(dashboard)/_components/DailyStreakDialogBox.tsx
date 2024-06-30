@@ -1,44 +1,39 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-
 import { cn } from "@/lib/utils";
-
-import { TQuizQuestionProps } from "@/helpers/types";
-
 import { ArrowLeft, Check, X } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
-import { MotionDiv } from "@/components/shared/MotionDiv";
+import React, { useState } from "react";
 import Modal from "@/components/shared/Modal";
+import { Questions, Option } from "@/helpers/types/index";
 
 const DailyStreakDialogBox = ({
   setOpenQuestionDialogBox,
   questions,
-  topic,
 }: {
   openQuestionDialogBox: boolean;
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
-  questions: TQuizQuestionProps[];
-  topic: string;
+  questions: Questions;
 }) => {
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [attemptedQuestion, setAttemptedQuestion] = useState<number[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
-    null
-  );
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("Maths");
 
-  const {
-    question,
-    options: { all, correct },
-  } = questions[activeQuestion];
+  const questionData = questions[activeTab.toLowerCase()];
+
+  if (!questionData) return null;
+
+  const { question, options } = questionData;
+
+  const allOptions = options.map((option: Option) => option.name);
+  const correctOptions = options.filter((option: Option) => option.tag === "Correct").map((option: Option) => option.name);
 
   const onAnswerSelect = (answer: string, index: number) => {
     setSelectedAnswerIndex(index);
 
-    if (answer === correct[0]) {
+    if (correctOptions.includes(answer)) {
       setSelectedAnswer(answer);
     } else {
       setSelectedAnswer("");
@@ -53,9 +48,10 @@ const DailyStreakDialogBox = ({
     setSelectedAnswerIndex(null);
     setSelectedAnswer("");
 
-    if (activeQuestion !== questions.length - 1) {
-      setActiveQuestion((prev) => prev + 1);
-    }
+    const tabs = ["Maths", "Physics", "Chemistry"];
+    const currentIndex = tabs.indexOf(activeTab);
+    const nextIndex = (currentIndex + 1) % tabs.length;
+    setActiveTab(tabs[nextIndex]);
   };
 
   return (
@@ -68,15 +64,13 @@ const DailyStreakDialogBox = ({
             <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
           </div>
 
-        
-
           <Button className="h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8] px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold">
             Submit
           </Button>
         </div>
 
         <div className="p-3 md:p-8 flex-1 flex flex-col">
-        <div className="flex items-center justify-around gap-4 mb-4 border-b-2 border-gray-300">
+          <div className="flex items-center justify-around gap-4 mb-4 border-b-2 border-gray-300">
             {["Maths", "Physics", "Chemistry"].map((tab) => (
               <button
                 key={tab}
@@ -93,26 +87,23 @@ const DailyStreakDialogBox = ({
             ))}
           </div>
 
-         
-
           <div className="flex-1 flex flex-col">
             <div className="px-4 md:px-7 mb-4">
-              <p className="text-base md:text-xl text-black font-medium mb-4">
-                <span>{activeQuestion + 1}. </span>
-                {question}
+            <p className="text-base md:text-xl flex flex-row text-black font-medium mb-4">
+                <span className="mr-2"> Q.</span><span dangerouslySetInnerHTML={{ __html: question }} />
               </p>
 
               <ul className="flex flex-col gap-2">
-                {all.map((option, index) => (
+                {allOptions.map((option: string, index: number) => (
                   <li
                     key={option}
                     className={cn(
                       "flex items-center gap-6 text-base md:text-xl text-black font-normal px-4 py-2 cursor-pointer",
                       selectedAnswerIndex === index &&
-                        selectedAnswer === correct[0]
+                        correctOptions.includes(option)
                         ? "border-primary bg-primary/10"
                         : selectedAnswerIndex === index &&
-                          selectedAnswer !== correct[0]
+                          !correctOptions.includes(option)
                         ? "border-red-500 bg-red-500/10"
                         : ""
                     )}
@@ -121,24 +112,24 @@ const DailyStreakDialogBox = ({
                       className={cn(
                         "w-5 h-5 rounded-full border border-black cursor-pointer flex items-center justify-center",
                         selectedAnswerIndex === index &&
-                          selectedAnswer === correct[0]
+                          correctOptions.includes(option)
                           ? "bg-primary border-none"
                           : selectedAnswerIndex === index &&
-                            selectedAnswer !== correct[0]
+                            !correctOptions.includes(option)
                           ? "bg-red-500 border-none"
                           : ""
                       )}>
                       {selectedAnswerIndex === index &&
-                        selectedAnswer === correct[0] && (
+                        correctOptions.includes(option) && (
                           <Check className="w-3 h-3 text-white font-medium" />
                         )}
 
                       {selectedAnswerIndex === index &&
-                        selectedAnswer !== correct[0] && (
+                        !correctOptions.includes(option) && (
                           <X className="w-3 h-3 text-white font-medium" />
                         )}
                     </div>
-                    <span>{option}</span>
+                    <span dangerouslySetInnerHTML={{ __html: option }} />
                   </li>
                 ))}
               </ul>
@@ -147,11 +138,12 @@ const DailyStreakDialogBox = ({
               <Button
                 type="button"
                 className="h-7 md:h-9 px-4 md:px-6 text-base md:text-xl font-semibold"
-                disabled={activeQuestion === questions.length - 1}
-                onClick={handleNextQuestion}>
+                onClick={handleNextQuestion}
+                disabled={activeTab === "Chemistry"}>
                 Next
               </Button>
             </div>
+
           </div>
         </div>
       </div>
