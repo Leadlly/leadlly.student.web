@@ -75,7 +75,7 @@ export type TLevelPointProps = {
 export type TMoodEmojisProps = {
   mood: string;
   mood_id: string;
-  moodImg:string
+  moodImg: string;
 };
 
 export type TQuizQuestionProps = {
@@ -147,10 +147,12 @@ export type UserDataProps = {
   firstname: string;
   lastname?: string;
   email: string;
-  phone?: {
+  phone: {
     personal?: number;
     other?: number;
   };
+
+  password: string;
   avatar?: {
     public_id?: string;
     url?: string;
@@ -165,7 +167,9 @@ export type UserDataProps = {
     pincode?: number;
   };
   academic: {
-    examName?: string;
+    standard: number;
+    competitiveExam?: string;
+    subjects?: [];
     schedule?: string;
     coachingMode?: string;
     coachingName?: string;
@@ -174,7 +178,6 @@ export type UserDataProps = {
     schoolOrCollegeAddress?: string;
   };
   about: {
-    standard: number;
     dateOfBirth?: string;
     gender: string;
   };
@@ -198,11 +201,19 @@ export type UserDataProps = {
     id?: string;
     status?: string;
     dateOfActivation?: Date;
+    freeTrialAvailed?: boolean;
+  };
+  refund: {
+    type?: string;
+    subscriptionType?: string;
+    status?: string;
+    amount?: string;
   };
   quiz?: {
     minor?: any[];
     major?: any[];
   };
+  createdAt?: Date; // Optional as it has a default value
 };
 
 export type OTPProps = {

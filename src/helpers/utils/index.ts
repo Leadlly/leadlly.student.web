@@ -87,3 +87,18 @@ export function capitalizeFirstLetter(
 
   return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 }
+
+export const formatTime = (seconds: number) => {
+  const days = Math.floor(seconds / (24 * 60 * 60))
+    .toString()
+    .padStart(2, "0");
+  const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60))
+    .toString()
+    .padStart(2, "0");
+  const minutes = Math.floor((seconds % (60 * 60)) / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = (seconds % 60).toString().padStart(2, "0");
+
+  return `${days}d : ${hours}h : ${minutes}m : ${secs}s`;
+};

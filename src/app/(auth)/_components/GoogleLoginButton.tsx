@@ -28,7 +28,11 @@ const GoogleLoginButton = () => {
           description: res.data.message,
         });
 
-        router.replace("/");
+        if (res.status === 201) {
+          router.replace("/initial-info");
+        } else {
+          router.replace("/");
+        }
       } catch (error: any) {
         console.error("Axios error:", error);
         toast.error("Google login failed!", {

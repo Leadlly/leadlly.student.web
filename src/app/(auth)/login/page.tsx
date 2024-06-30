@@ -52,7 +52,7 @@ const Login = () => {
       const response = await apiClient.post("/api/auth/login", data);
 
       const userDataInfo = await getUser();
-      await dispatch(userData(userDataInfo.user));
+      dispatch(userData(userDataInfo.user));
 
       toast.success(response.data.message);
 
