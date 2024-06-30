@@ -14,6 +14,7 @@ import UpcomingWorkshops from "./UpcomingWorkshops";
 import { TDashboardTodaysTopic } from "@/helpers/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
 const DesktopUI = ({
   todaysTopics,
@@ -32,9 +33,7 @@ const DesktopUI = ({
             titleClassName="text-[32px]"
             icon={<NotificationIcon stroke="black" />}
           /> */}
-          <Link href="/subscription-plans">
-            <Button className="px-10 h-8">Upgrade</Button>
-          </Link>
+          <UpgradeSubscriptionButton />
         </div>
       </div>
 
