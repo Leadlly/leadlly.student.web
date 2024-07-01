@@ -1,6 +1,6 @@
 "use client";
 
-import { buySubscription } from "@/actions/payment_actions";
+import { buySubscription } from "@/actions/subscription_actions";
 import { Button } from "@/components/ui/button";
 import { UserDataProps } from "@/helpers/types";
 import { cn } from "@/lib/utils";

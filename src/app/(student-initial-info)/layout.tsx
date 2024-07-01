@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Leadlly | Manage Account",
+  title: "Leadlly | Initial Info",
   description:
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
 };
 
-export default function ManageAccountLayout({
+export default function InitialInfoLayout({
   children,
 }: {
   children: React.ReactNode;

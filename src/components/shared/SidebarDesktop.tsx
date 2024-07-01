@@ -63,7 +63,7 @@ const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
                 <div
                   className={cn(
                     "md:hidden xl:block",
-                    pathname === item.href ? "text-white" : "text-primary"
+                    pathname === item.href ? "text-white" : "text-[#5A10D9]"
                   )}>
                   {item.label}
                 </div>

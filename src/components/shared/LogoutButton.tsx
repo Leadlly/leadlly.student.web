@@ -33,7 +33,7 @@ const LogoutButton = () => {
     <Button
       onClick={logoutHandler}
       variant={"ghost"}
-      className="mt-auto w-full justify-start gap-3 text-primary rounded-full xl:rounded-xl text-base md:text-[20px] hover:text-white hover:bg-primary py-3">
+      className="mt-auto w-full justify-start gap-3 text-[#5A10D9] rounded-full xl:rounded-xl text-base md:text-[20px] font-normal hover:text-white hover:bg-primary py-3 px-2 md:px-4">
       <LogOut className="w-4 h-4 md:w-5 md:h-5" />
       <span className="hidden xl:block">Logout</span>
     </Button>

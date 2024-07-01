@@ -9,6 +9,7 @@ import UserProfileSheet from "./UserProfileSheet";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import LogoutButton from "@/components/shared/LogoutButton";
+import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
 const MobileUI = ({
   todaysTopics,
@@ -19,10 +20,8 @@ const MobileUI = ({
     <div className="flex flex-col justify-start gap-3">
       <div className="flex items-center justify-between">
         <Header title="Dashboard" titleClassName="text-2xl" />
-        <div className="flex items-center gap-4">
-          <Link href="/subscription-plans">
-            <Button className="h-7 text-xs">Upgrade</Button>
-          </Link>
+        <div className="flex items-center gap-2">
+          <UpgradeSubscriptionButton />
           <UserProfileSheet />
           <LogoutButton />
         </div>

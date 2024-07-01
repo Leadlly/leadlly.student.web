@@ -195,12 +195,16 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={
-                          user?.about.standard
-                            ? String(user?.about.standard)
+                          user?.academic.standard
+                            ? String(user?.academic.standard)
                             : field.value
                         }>
                         <FormControl>
-                          <SelectTrigger className="text-base lg:text-lg font-medium">
+                          <SelectTrigger
+                            className={cn(
+                              "text-base lg:text-lg font-medium",
+                              !field.value && "text-muted-foreground"
+                            )}>
                             <SelectValue placeholder="Select your class" />
                           </SelectTrigger>
                         </FormControl>
@@ -303,7 +307,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                           user?.about.gender ? user?.about.gender : field.value
                         }>
                         <FormControl>
-                          <SelectTrigger className="capitalize text-base lg:text-lg font-medium">
+                          <SelectTrigger
+                            className={cn(
+                              "capitalize text-base lg:text-lg font-medium",
+                              !field.value && "text-muted-foreground"
+                            )}>
                             <SelectValue placeholder="Select your gender" />
                           </SelectTrigger>
                         </FormControl>
@@ -415,7 +423,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             : field.value
                         }>
                         <FormControl>
-                          <SelectTrigger className="text-base lg:text-lg font-medium">
+                          <SelectTrigger
+                            className={cn(
+                              "text-base lg:text-lg font-medium",
+                              !field.value && "text-muted-foreground"
+                            )}>
                             <SelectValue placeholder="Select your country name" />
                           </SelectTrigger>
                         </FormControl>
@@ -488,8 +500,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={
-                            user?.academic.examName
-                              ? user.academic.examName
+                            user?.academic.competitiveExam
+                              ? user.academic.competitiveExam
                               : field.value
                           }
                           className="flex items-center gap-x-5">
@@ -564,7 +576,11 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                             : field.value
                         }>
                         <FormControl>
-                          <SelectTrigger className="text-base lg:text-lg font-medium">
+                          <SelectTrigger
+                            className={cn(
+                              "text-base lg:text-lg font-medium",
+                              !field.value && "text-muted-foreground"
+                            )}>
                             <SelectValue placeholder="Ex: Coaching + College + Self Study" />
                           </SelectTrigger>
                         </FormControl>

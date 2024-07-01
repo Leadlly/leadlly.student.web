@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/input-otp";
 import { toast } from "sonner";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useForm } from "react-hook-form";
@@ -25,11 +25,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Loader2 } from "lucide-react";
-import { getUser, resendOtp } from "@/actions/user_actions";
 import ResendOtpButton from "./_components/ResendOtpButton";
 import apiClient from "@/apiClient/apiClient";
-import { useAppDispatch } from "@/redux/hooks";
-import { userData } from "@/redux/slices/userSlice";
+import Image from "next/image";
 
 const OTPFormSchema = z.object({
   otp: z
@@ -41,7 +39,6 @@ const Verify = () => {
   const [isVerifying, setIsVerifying] = useState(false);
 
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
     resolver: zodResolver(OTPFormSchema),
@@ -50,20 +47,20 @@ const Verify = () => {
   const onOTPSubmit = async (data: z.infer<typeof OTPFormSchema>) => {
     setIsVerifying(true);
 
-    const email = localStorage.getItem("email")
+    const email = localStorage.getItem("email");
     try {
-      const response = await apiClient.post("/api/auth/verify", {otp: data.otp, email});
+      const response = await apiClient.post("/api/auth/verify", {
+        otp: data.otp,
+        email,
+      });
 
       if (response.status === 200) {
-        const userDataInfo = await getUser();
-        dispatch(userData(userDataInfo.user));
-
         toast.success("Account verified successfully", {
           description: response.data.message,
         });
 
-        localStorage.removeItem("email")
-        router.replace("/");
+        localStorage.removeItem("email");
+        router.replace("/initial-info");
       } else {
         toast.error(response.data.message);
       }
@@ -77,53 +74,70 @@ const Verify = () => {
   };
 
   return (
-    <section className="flex flex-col items-center">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onOTPSubmit)}
-          className="w-full flex flex-col justify-center items-center space-y-6">
-          <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem className="text-center">
-                <FormLabel>One-Time Password</FormLabel>
-                <FormControl>
-                  <InputOTP
-                    maxLength={6}
-                    {...field}
-                    containerClassName="justify-center">
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </FormControl>
-                <FormDescription>
-                  Please enter the one-time password sent to your email.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <section className="w-full h-full px-3 space-y-4">
+      <div className="w-full">
+        <Image
+          src={"/assets/images/leadlly_logo.svg"}
+          alt="Leadlly"
+          width={130}
+          height={60}
+        />
+      </div>
+      <div className="w-full h-[calc(100dvh-65px)] flex items-center justify-center">
+        <div className="max-w-lg w-full p-10 rounded-xl shadow-2xl flex flex-col items-center justify-center border">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onOTPSubmit)}
+              className="w-full flex flex-col justify-center items-center space-y-6">
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem className="text-center">
+                    <FormLabel className="text-base lg:text-lg font-medium">
+                      One-Time Password
+                    </FormLabel>
+                    <FormControl>
+                      <InputOTP
+                        maxLength={6}
+                        {...field}
+                        containerClassName="justify-center">
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} className="text-base" />
+                          <InputOTPSlot index={1} className="text-base" />
+                          <InputOTPSlot index={2} className="text-base" />
+                          <InputOTPSlot index={3} className="text-base" />
+                          <InputOTPSlot index={4} className="text-base" />
+                          <InputOTPSlot index={5} className="text-base" />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </FormControl>
+                    <FormDescription>
+                      Please enter the one-time password sent to your email.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <Button type="submit" disabled={isVerifying}>
-            {isVerifying ? (
-              <span className="flex items-center">
-                <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Verifying
-              </span>
-            ) : (
-              "Submit"
-            )}
-          </Button>
-        </form>
-      </Form>
-
-      <ResendOtpButton />
+              <Button
+                type="submit"
+                disabled={isVerifying}
+                size={"lg"}
+                className="text-sm lg:text-base font-medium">
+                {isVerifying ? (
+                  <span className="flex items-center">
+                    <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Verifying
+                  </span>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            </form>
+          </Form>
+          <ResendOtpButton />
+        </div>
+      </div>
     </section>
   );
 };

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
 };
 
-export default function RootLayout({
+export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
