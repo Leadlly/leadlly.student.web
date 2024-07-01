@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { getTextColor } from '@/helpers/constants/efficiency';
+import { cn } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 
 interface Subject {
 	name: string;
@@ -13,8 +16,8 @@ interface AttemptedQuizProps {
 	description: string;
 	subject: Subject;
 	questions: number;
-	date: string; 
-	efficiency:number;
+	date: string;
+	efficiency: number;
 }
 
 type Props = { quiz: AttemptedQuizProps };
@@ -48,12 +51,15 @@ const AttemptedQuiz = ({ quiz }: Props) => {
 					</div>
 					{/* Right Side */}
 					<div className='text-right'>
-						<p className='text-green-600 text-xs md:text-sm my-1'>
+						<p className={cn(' text-xs md:text-sm my-1', getTextColor(quiz.efficiency))}>
 							Completed Test with {quiz.efficiency}% Efficiency
 						</p>
-						<Button className='mt-2 bg-white border-black text-black hover:bg-slate-100 border-2 font-medium'>
-							View Details <ChevronRight size={20} />
-						</Button>
+						<Link href={`quiz/${quiz.id}/report`}>
+							{' '}
+							<Button className='mt-2 bg-white border-black text-black hover:bg-slate-100 border-2 font-medium'>
+								View Details <ChevronRight size={20} />
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>
