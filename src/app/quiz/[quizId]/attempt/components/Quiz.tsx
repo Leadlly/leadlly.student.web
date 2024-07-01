@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Question from './Question';
 import Options from './Options';
 import Pagination from './Pagination';
-import { Button } from '@/components/ui/button';
+import SubmitDialog from './SubmitDialog';
 
 interface QuestionType {
 	question: string;
@@ -294,7 +294,7 @@ const questions: QuestionType[] = [
 	// Add more questions to make it at least 30
 ];
 
-const Quiz: React.FC = () => {
+const Quiz = ({quizId}:{quizId:string}) => {
 	const [currentQuestion, setCurrentQuestion] = useState(0);
 	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [score, setScore] = useState(0);
@@ -303,7 +303,6 @@ const Quiz: React.FC = () => {
 	);
 
 	const handleOptionChange = (index: number, questionNumber: number) => {
-		setSelectedOption(index);
 		setAnsweredQuestions((prev) => {
 			const newPrev = [...prev];
 			if (index in [0, 1, 2, 3, 4]) newPrev[questionNumber] = index as 0 | 1 | 3 | 2 | 4;
@@ -323,7 +322,7 @@ const Quiz: React.FC = () => {
 	};
 	useEffect(() => {
 		setSelectedOption(answeredQuestions[currentQuestion]);
-	}, [currentQuestion]);
+	}, [currentQuestion,answeredQuestions]);
 	return (
 		<>
 			<div className='flex flex-col justify-center gap-7 items-center px-5'>
@@ -337,7 +336,7 @@ const Quiz: React.FC = () => {
 						<span className='text-[#9654F4]'>{answeredQuestions.filter(Boolean).length}</span>/
 						{questions.length}
 					</span>
-					<Button className='font-normal px-3 py-1 text-xl '>Submit</Button>
+					<SubmitDialog quizId={quizId}/>
 				</div>
 				<Pagination
 					totalQuestions={questions.length}

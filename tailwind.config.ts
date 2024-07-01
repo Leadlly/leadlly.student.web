@@ -110,6 +110,9 @@ const config = {
 				tracker_subject_overview:
 					'2px 1px 10.5px 0 rgba(151, 83, 245, 0.18), inset 0 0 32px -7px rgba(151, 83, 245, 0.18)',
 				question: ' 0px 0px 26.7px -10px #00000033',
+				'custom-back': 'inset 1.68px 3.37px 5.31px 0 rgba(0, 0, 0, 0.1)',
+				'section':' 0px 1px 24.8px -9px #00000038',
+				'card':'0px 1.15px 21.31px 0px #FF990012'
 			},
 		},
 	},

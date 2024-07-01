@@ -197,3 +197,10 @@ export const subscriptionLearningBenefits = [
     label: "know your mistakes",
   },
 ];
+export interface EfficiencyOption {
+	min?: number;
+	max?: number;
+	label: string;
+	progressBarColor: string;
+	textColor: string;
+}

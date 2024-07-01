@@ -88,10 +88,13 @@
   }
 
   .custom__scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(90, 16, 217, 10%);
+    background: transparent;
     border-radius: 100vh;
   }
-
+.custom__scrollbar:hover {&::-webkit-scrollbar-thumb {
+    background-color: rgba(90, 16, 217, 10%);
+    border-radius: 100vh;
+  }}
   .custom__scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(90, 16, 217, 15%);
   }
