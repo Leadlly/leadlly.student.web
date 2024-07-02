@@ -109,8 +109,6 @@ const StudentInitialInfoForm = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="9">9th</SelectItem>
-                      <SelectItem value="10">10th</SelectItem>
                       <SelectItem value="11">11th</SelectItem>
                       <SelectItem value="12">12th</SelectItem>
                     </SelectContent>
