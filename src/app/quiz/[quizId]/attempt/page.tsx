@@ -1,10 +1,7 @@
-import Quiz from "./components/Quiz"
+import Quiz from './components/Quiz';
 
-type Props = {}
-const page = (props: Props) => {
-  return (
-    
-    <Quiz/>
-  )
-}
-export default page
+type Props = { params: { quizId: string } };
+const page = ({params:{quizId}}: Props) => {
+	return <Quiz quizId={quizId}/>;
+};
+export default page;
