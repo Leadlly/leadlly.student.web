@@ -1,11 +1,12 @@
 "use client";
 
 import { getUser } from "@/actions/user_actions";
-import apiClient from "@/apiClient/apiClient";
+
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -17,9 +18,15 @@ const GoogleLoginButton = () => {
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
-        const res = await apiClient.post("/api/google/auth", {
-          access_token: credentialResponse.access_token,
-        });
+        const res = await axios.post("/api/google/auth", {
+          access_token: credentialResponse.access_token
+        },{
+          withCredentials: true, 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
         const userInfo = await getUser();
         dispatch(userData(userInfo.user));

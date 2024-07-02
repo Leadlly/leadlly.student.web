@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    const response = await apiClient.post('/api/auth/login', body);
+    const response = await apiClient.post('/api/google/auth', body);
     
     const { token, ...userData } = response.data;
     
