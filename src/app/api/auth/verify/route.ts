@@ -7,8 +7,7 @@ export async function POST(req: NextRequest) {
   try {
 
     const body = await req.json();
-
-    const response = await apiClient.post('/api/auth/login', body);
+    const response = await apiClient.post('/api/auth/verify', body);
     
     const { token, ...userData } = response.data;
     
