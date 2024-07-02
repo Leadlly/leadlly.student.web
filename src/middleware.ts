@@ -54,6 +54,7 @@ export async function middleware(request: NextRequest) {
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
+  // console.log("====cookies are coming herer =======>",cookies, "===========>")
   const token = cookies.get("token");
   return token;
 }
