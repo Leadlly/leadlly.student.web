@@ -40,53 +40,62 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
 	const daysLeft = calculateDaysLeft(new Date(quiz.endDate));
 
 	return (
-		<div
-			key={quiz.id}
-			className='flex items-stretch gap-3 mx-2 md:mx-4 p-3 rounded-xl border-2 shadow-lg'
-		>
-			<div className='w-full flex flex-col justify-start space-y-1'>
-				<div className='w-full flex items-center justify-between'>
-					<h1 className='text-base md:text-2xl font-semibold'>
-						{formatDate(quiz.startDate)} - {formatDate(quiz.endDate)}
-					</h1>
-					{daysLeft <= 0 ? (
-						<p className='text-xs md:text-sm text-red-800 font-medium'>Quiz closed</p>
-					) : daysLeft <= 1 ? (
-						<p className='text-xs md:text-sm text-orange-600'>Quiz closes soon</p>
-					) : (
-						<p className='text-xs md:text-sm text-primary'>
-							Remaining {daysLeft} days to Take Quiz
-						</p>
-					)}
-				</div>
-				<div className='flex justify-between space-y-1 space-x-4 items-end'>
-					{/* Left Side */}
-					<div className='w-full md:w-2/3'>
-						<p className='text-gray-600 text-xs md:text-sm my-1'>{quiz.description}</p>
-						<div className='mt-5 mb-1'>
-							{quiz.subjects.map((subject, index) => (
-								<Label
-									key={index}
-									className={`text-white py-1 px-2 mx-1 rounded ${subject.color}`}
-								>
-									{subject.name}
-								</Label>
-							))}
-						</div>
-					</div>
-					{/* Right Side */}
-					<div>
-						<p className='text-gray-600 my-1'>{quiz.questions} Quiz Questions</p>
-						{daysLeft > 0 && (
-							<Link href={`/quiz/${quiz.id}/attempt`}>
-								<Button>Attempt Now</Button>
-							</Link>
-						)}
-					</div>
-				</div>
-				<div className='flex justify-between items-center'></div>
-			</div>
-		</div>
-	);
+    <div
+      key={quiz.id}
+      className="flex items-stretch gap-3 mx-2 md:mx-4 p-3 rounded-xl border-2 shadow-lg"
+    >
+      <div className="w-full flex flex-col justify-start space-y-1">
+        <div className="w-full flex items-center justify-between">
+          <h1 className="text-base md:text-2xl font-semibold">
+            {formatDate(quiz.startDate)} - {formatDate(quiz.endDate)}
+          </h1>
+          {daysLeft <= 0 ? (
+            <p className="text-xs md:text-sm text-red-800 font-medium">
+              Quiz closed
+            </p>
+          ) : daysLeft <= 1 ? (
+            <p className="text-xs md:text-sm text-orange-600">
+              Quiz closes soon
+            </p>
+          ) : (
+            <p className="text-xs md:text-sm text-primary">
+              Remaining {daysLeft} days to Take Quiz
+            </p>
+          )}
+        </div>
+        <div className="flex justify-between space-y-1 space-x-4 items-end">
+          {/* Left Side */}
+          <div className="w-full md:w-2/3">
+            <p className="text-gray-600 text-xs md:text-sm my-1">
+              {quiz.description}
+            </p>
+            <div className="mt-5 mb-1">
+              {quiz.subjects.map((subject, index) => (
+                <Label
+                  key={index}
+                  className={`text-white text-xs md:text-base  py-1 px-2 mx-1 rounded ${subject.color}`}
+                >
+                  {subject.name}
+                </Label>
+              ))}
+            </div>
+          </div>
+          {/* Right Side */}
+          <div>
+            <p className="text-gray-600 my-1 text-xs md:text-base">
+              {quiz.questions} Quiz Questions
+            </p>
+            {daysLeft > 0 && (
+              <Link href={`/quiz/${quiz.id}/attempt`}>
+                <Button className=" text-xs md:text-base max-md:px-2 max-md:py-1 max-md:h-7  font-normal">
+                  Attempt Now
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 export default UnattemptedWeekQuiz;

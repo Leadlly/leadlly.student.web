@@ -54,24 +54,24 @@ export async function middleware(request: NextRequest) {
   }
 
   // initial study data middleware
-  if (
-    token &&
-    !isPublicPath &&
-    path !== "/trial-subscription" &&
-    path !== "/initial-info"
-  ) {
-    const isInitialPlannerData = !!plannerData.success;
+  // if (
+  //   token &&
+  //   !isPublicPath &&
+  //   path !== "/trial-subscription" &&
+  //   path !== "/initial-info"
+  // ) {
+  //   const isInitialPlannerData = !!plannerData.success;
 
-    if (!isInitialPlannerData && path !== "/initial-study-data") {
-      return NextResponse.redirect(
-        new URL("/initial-study-data", request.nextUrl)
-      );
-    }
+  //   if (!isInitialPlannerData && path !== "/initial-study-data") {
+  //     return NextResponse.redirect(
+  //       new URL("/initial-study-data", request.nextUrl)
+  //     );
+  //   }
 
-    if (isInitialPlannerData && path === "/initial-study-data") {
-      return NextResponse.redirect(new URL("/", request.nextUrl));
-    }
-  }
+  //   if (isInitialPlannerData && path === "/initial-study-data") {
+  //     return NextResponse.redirect(new URL("/", request.nextUrl));
+  //   }
+  // }
 
   return NextResponse.next();
 }
