@@ -38,24 +38,17 @@ import { subjectChaptersProps } from "@/helpers/types";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getChapterTopics } from "@/actions/question_actions";
-
-const AccountStudyFormSchema = z.object({
-  chapterName: z.string({ required_error: "Please select a chapter!" }),
-  topicNames: z
-    .string({ required_error: "Please select at least one topic" })
-    .array()
-    .nonempty({ message: "Please select at least one topic" }),
-  levelOfDifficulty: z.enum(["easy", "moderate", "hard"], {
-    required_error: "Please select a difficulty level!",
-  }),
-});
+import { saveStudyData } from "@/actions/studyData_actions";
+import { AccountStudyFormSchema } from "@/schemas/accountStudyFormSchema";
 
 const AccountSubjectForm = ({
   subjectChapters,
   activeSubject,
+  userStandard,
 }: {
   subjectChapters: subjectChaptersProps[];
   activeSubject: string;
+  userStandard: number;
 }) => {
   const [topics, setTopics] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -69,7 +62,11 @@ const AccountSubjectForm = ({
   useEffect(() => {
     const topics = async () => {
       try {
-        const data = await getChapterTopics(activeSubject, selectedChapter, 11);
+        const data = await getChapterTopics(
+          activeSubject,
+          selectedChapter,
+          userStandard
+        );
         setTopics(data.topics);
       } catch (error: any) {
         toast.error("Unable to fetch topics!", {
@@ -92,27 +89,17 @@ const AccountSubjectForm = ({
         level: data.levelOfDifficulty,
       },
       subject: activeSubject,
-      standard: 11,
+      standard: userStandard,
     };
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/progress/save`,
-        {
-          method: "POST",
-          body: JSON.stringify(formattedData),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
-
-      const responseData = await response.json();
+      const responseData = await saveStudyData(formattedData);
 
       toast.success("Chapter added.", {
         description: responseData.message,
       });
+
+      form.reset();
     } catch (error: any) {
       toast.error("Error adding chapter", {
         description: error.message,
@@ -126,7 +113,8 @@ const AccountSubjectForm = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onFormSubmit)}
-          className="flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-10">
+          className="flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-10"
+        >
           <div className="flex-1 flex flex-col gap-y-6">
             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-20">
               <FormField
@@ -147,7 +135,8 @@ const AccountSubjectForm = ({
                               className={cn(
                                 "w-full justify-between",
                                 !field.value && "text-muted-foreground"
-                              )}>
+                              )}
+                            >
                               {field.value
                                 ? subjectChapters.find(
                                     (chapter) => chapter.name === field.value
@@ -172,7 +161,8 @@ const AccountSubjectForm = ({
                                         "chapterName",
                                         chapter.name
                                       );
-                                    }}>
+                                    }}
+                                  >
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
@@ -234,7 +224,8 @@ const AccountSubjectForm = ({
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex items-center gap-x-5 lg:gap-x-20">
+                        className="flex items-center gap-x-5 lg:gap-x-20"
+                      >
                         <FormItem className="flex items-center gap-x-2 space-y-0">
                           <FormControl>
                             <RadioGroupItem
@@ -281,7 +272,8 @@ const AccountSubjectForm = ({
             <Button
               type="submit"
               className="h-9 lg:h-10 w-24 text-lg lg:text-2xl font-semibold"
-              disabled={isAdding}>
+              disabled={isAdding}
+            >
               {isAdding ? (
                 <span className="flex items-center text-base">
                   <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Adding

@@ -79,20 +79,27 @@ export type TMoodEmojisProps = {
 };
 
 export type TQuizQuestionProps = {
+  chapter: string[];
+  createdAt: string;
+  createdBy: string;
+  images: [];
+  level: string;
+  options: Array<{
+    name: string;
+    tag: string;
+    images: string | null;
+    _id: string;
+  }>;
   question: string;
-  options: {
-    all: string[];
-    correct: string[];
-  };
+  standard: number;
+  subject: string;
+  subtopics: [];
+  topics: string[];
+  _id: string;
 };
 
 export type TPlannerTodaysTopic = {
   subject: string;
-  topics: string;
-};
-
-export type TWeeklyPlanProps = {
-  date: Date;
   topics: string;
 };
 
@@ -216,6 +223,10 @@ export type UserDataProps = {
   createdAt?: Date; // Optional as it has a default value
 };
 
+export type UserProps = {
+  user: UserDataProps | null;
+};
+
 export type OTPProps = {
   otp: string;
 };
@@ -263,7 +274,6 @@ export type StudentPersonalInfoProps = {
   studentSchedule?: string;
 };
 
-
 export interface Option {
   name: string;
   tag: string;
@@ -280,3 +290,46 @@ export interface Question {
 export interface Questions {
   [key: string]: Question | undefined;
 }
+
+export type TBackRevisionProps = {
+  topic: {
+    name: string;
+    studiedAt: [
+      {
+        date: string;
+        _id: string;
+      },
+    ];
+  };
+  chapter: {
+    name: string;
+    level: string;
+    studiedAt: [];
+  };
+  _id: string;
+  user: string;
+  tag: string;
+  subject: string;
+  standard: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TDayProps = {
+  date: string;
+  day: string;
+  continuousRevisionTopics: any[];
+  backRevisionTopics: TBackRevisionProps[];
+  questions: any[];
+  _id: string;
+};
+
+export type PlannerDataProps = {
+  data: {
+    student: string;
+    startDate: string;
+    endDate: string;
+    days: TDayProps[];
+    createdAt: string;
+  };
+};

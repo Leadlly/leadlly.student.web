@@ -8,18 +8,23 @@ import { TabContent, TabNavItem } from "@/components";
 
 import { EllipsisVertical } from "lucide-react";
 import AccountChaptersList from "./AccountChaptersList";
-import { userSubjects } from "@/helpers/constants";
+// import { userSubjects } from "@/helpers/constants";
 import { getSubjectChapters } from "@/actions/question_actions";
 import { toast } from "sonner";
+import { useAppSelector } from "@/redux/hooks";
 
 const AccountStudyProgress = () => {
   const [activeTab, setActiveTab] = useState("maths");
   const [activeTabChapters, setActiveTabChapters] = useState([]);
 
+  const userData = useAppSelector((state) => state.user.user);
+  const userSubjects = userData?.academic.subjects;
+  const userStandard = userData?.academic.standard;
+
   useEffect(() => {
     const chapters = async () => {
       try {
-        const data = await getSubjectChapters(activeTab, 11);
+        const data = await getSubjectChapters(activeTab, userStandard!);
         setActiveTabChapters(data.chapters);
       } catch (error: any) {
         toast.error("Unable to fetch chapters!", {
@@ -39,16 +44,16 @@ const AccountStudyProgress = () => {
 
         <div className="flex items-center gap-x-5">
           <ul className="flex items-center justify-between p-1 bg-white rounded-md">
-            {userSubjects.map((subject) => (
+            {userSubjects?.map((subject, index) => (
               <TabNavItem
-                key={subject.id}
-                id={subject.id}
+                key={index}
+                id={subject}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                title={subject.label}
+                title={subject}
                 layoutIdPrefix="account_subject_progress"
                 className="px-2 lg:px-4"
-                titleClassName="text-sm lg:text-lg font-medium"
+                titleClassName="text-sm lg:text-lg font-medium capitalize"
                 activeTabClassName="h-full w-full inset-0"
               />
             ))}
@@ -63,6 +68,7 @@ const AccountStudyProgress = () => {
           <AccountSubjectForm
             subjectChapters={activeTabChapters}
             activeSubject={"maths"}
+            userStandard={userStandard!}
           />
           <AccountChaptersList />
         </TabContent>
@@ -70,6 +76,7 @@ const AccountStudyProgress = () => {
           <AccountSubjectForm
             subjectChapters={activeTabChapters}
             activeSubject={"physics"}
+            userStandard={userStandard!}
           />
           <AccountChaptersList />
         </TabContent>
@@ -77,6 +84,7 @@ const AccountStudyProgress = () => {
           <AccountSubjectForm
             subjectChapters={activeTabChapters}
             activeSubject={"chemistry"}
+            userStandard={userStandard!}
           />
           <AccountChaptersList />
         </TabContent>

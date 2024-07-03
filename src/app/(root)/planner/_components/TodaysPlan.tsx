@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTodaysFormattedDate } from "@/helpers/utils";
+import { getTodaysDay, getTodaysFormattedDate } from "@/helpers/utils";
 import { RightArrowIcon } from "@/components";
 
 type TTodaysTopic = {
@@ -9,14 +9,14 @@ type TTodaysTopic = {
 
 const TodaysPlan = ({ todaysTopics }: { todaysTopics: TTodaysTopic[] }) => {
   return (
-    <div className="rounded-xl border flex flex-col justify-start max-h-[250px] md:max-h-[411px] xl:max-h-[371px] overflow-hidden">
+    <div className="rounded-xl border flex flex-col justify-start overflow-hidden">
       <div className="flex items-center justify-between px-7 py-4 bg-sidebar-background rounded-t-xl">
         <div className="flex flex-col justify-start gap-1">
           <h4 className="text-base md:text-2xl leading-none font-semibold text-black">
             Today&apos;s Plan
           </h4>
           <p className="text-xs font-semibold text-[#9E9C9C]">
-            {getTodaysFormattedDate()}
+            {getTodaysDay()} {getTodaysFormattedDate()}
           </p>
         </div>
         <Link

@@ -2,38 +2,30 @@
 
 import { useState } from "react";
 import { SemiRadialChart, TabContent, TabNavItem } from "@/components";
-
-const subjectProgressMenus = [
-  {
-    title: "Maths",
-    id: "maths",
-  },
-  {
-    title: "Physics",
-    id: "physics",
-  },
-  {
-    title: "Chemistry",
-    id: "chemistry",
-  },
-];
+import { useAppSelector } from "@/redux/hooks";
 
 const SubjectProgress = () => {
   const [activeTab, setActiveTab] = useState("maths");
+
+  const userSubjects = useAppSelector(
+    (state) => state.user.user?.academic.subjects
+  );
+
   return (
     <div className="h-full py-2">
       <div className="px-3 flex items-center justify-between">
         <h4 className="text-xs md:text-sm font-bold">Subject Progress</h4>
         <ul className="flex items-center gap-1 border p-[2px] rounded-md">
-          {subjectProgressMenus.map((tab) => (
+          {userSubjects?.map((tab, i) => (
             <TabNavItem
-              key={tab.id}
-              title={tab.title}
-              id={tab.id}
+              key={i}
+              title={tab}
+              id={tab}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               layoutIdPrefix="subject_progress"
               activeTabClassName="h-full inset-0"
+              titleClassName="capitalize"
             />
           ))}
         </ul>

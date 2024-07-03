@@ -49,32 +49,35 @@ const Login = () => {
     setIsLoggingIn(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
+      const userDataInfo = await getUser();
 
+      dispatch(userData(userDataInfo?.user));
       if (response.ok) {
-        const userDataInfo = await getUser();
-        dispatch(userData(userDataInfo.user));
-
         const responseData = await response.json();
         toast.success(responseData.message);
 
-        router.replace('/');
+        router.replace("/");
       } else {
         const errorData = await response.json();
-        toast.error('Login Failed', {
+        toast.error("Login Failed", {
           description: errorData.message,
         });
       }
     } catch (error: any) {
+      console.log(error);
+
       toast.error("Login Failed", {
-        description: error.message,
+        description: error.response
+          ? error.response?.data.message
+          : error.message,
       });
     } finally {
       setIsLoggingIn(false);
@@ -107,7 +110,8 @@ const Login = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onFormSubmit)}
-                className="space-y-4">
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="email"
@@ -140,9 +144,8 @@ const Login = () => {
                           icon2={
                             <div
                               className="cursor-pointer"
-                              onClick={() =>
-                                setTogglePassword(!togglePassword)
-                              }>
+                              onClick={() => setTogglePassword(!togglePassword)}
+                            >
                               {togglePassword ? (
                                 <EyeOff className="w-5 h-5 opacity-70" />
                               ) : (
@@ -178,7 +181,8 @@ const Login = () => {
                 <Button
                   type="submit"
                   className="w-full text-lg md:text-xl h-12"
-                  disabled={isLoggingIn}>
+                  disabled={isLoggingIn}
+                >
                   {isLoggingIn ? (
                     <span className="flex items-center">
                       <Loader2 className="w-6 h-6 animate-spin mr-2" /> Signing

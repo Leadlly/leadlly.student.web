@@ -3,7 +3,10 @@
 import { getCookie } from "./cookie_actions";
 
 //====== Fetching Chapters ======//
-export const getSubjectChapters = async (subject: string, standard: number) => {
+export const getSubjectChapters = async (
+  subject: string | string[],
+  standard: number
+) => {
   const token = await getCookie("token");
 
   try {
@@ -33,7 +36,7 @@ export const getSubjectChapters = async (subject: string, standard: number) => {
 
 //====== Fetching Topics ======//
 export const getChapterTopics = async (
-  subject: string,
+  subject: string | string[],
   chapterName: string,
   standard: number
 ) => {

@@ -8,12 +8,18 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import NewTopicLearnt from "./NewTopicLearnt";
+import { useAppSelector } from "@/redux/hooks";
 
 const RevisionZone = () => {
   const [newTopicLearnt, setNewTopicLearnt] = useState(false);
+
+  const userData = useAppSelector((state) => state.user.user);
+  const userSubjects = userData?.academic.subjects;
+  const userStandard = userData?.academic.standard;
+
   return (
     <>
-      <div className="flex items-center justify-center h-full rounded-xl py-4 border md:max-h-[411px] xl:max-h-[303px]">
+      <div className="flex items-center justify-center h-full rounded-xl py-4 border">
         {!newTopicLearnt ? (
           <div className="w-full px-3 lg:px-7">
             <div className="flex items-start justify-between">
@@ -56,7 +62,11 @@ const RevisionZone = () => {
             </div>
           </div>
         ) : (
-          <NewTopicLearnt setNewTopicLearnt={setNewTopicLearnt} />
+          <NewTopicLearnt
+            setNewTopicLearnt={setNewTopicLearnt}
+            userStandard={userStandard!}
+            userSubjects={userSubjects!}
+          />
         )}
       </div>
     </>

@@ -11,7 +11,7 @@ export default function StoreProvider({
   user,
 }: {
   children: React.ReactNode;
-  user: UserDataProps;
+  user: UserDataProps | null;
 }) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {

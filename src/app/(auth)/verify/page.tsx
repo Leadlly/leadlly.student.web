@@ -75,7 +75,7 @@ const Verify = () => {
       }
     } catch (error: any) {
       toast.error("Account verification failed!", {
-        description: error.message,
+        description: error.response.data.message,
       });
     } finally {
       setIsVerifying(false);
@@ -97,7 +97,8 @@ const Verify = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onOTPSubmit)}
-              className="w-full flex flex-col justify-center items-center space-y-6">
+              className="w-full flex flex-col justify-center items-center space-y-6"
+            >
               <FormField
                 control={form.control}
                 name="otp"
@@ -110,7 +111,8 @@ const Verify = () => {
                       <InputOTP
                         maxLength={6}
                         {...field}
-                        containerClassName="justify-center">
+                        containerClassName="justify-center"
+                      >
                         <InputOTPGroup>
                           <InputOTPSlot index={0} className="text-base" />
                           <InputOTPSlot index={1} className="text-base" />
@@ -133,7 +135,8 @@ const Verify = () => {
                 type="submit"
                 disabled={isVerifying}
                 size={"lg"}
-                className="text-sm lg:text-base font-medium">
+                className="text-sm lg:text-base font-medium"
+              >
                 {isVerifying ? (
                   <span className="flex items-center">
                     <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Verifying

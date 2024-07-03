@@ -1,5 +1,4 @@
 import { Header } from "@/components";
-import { TDashboardTodaysTopic } from "@/helpers/types";
 import TodaysPlan from "./TodaysPlan";
 import ConnectWithMentor from "./ConnectWithMentor";
 import SubjectProgress from "./SubjectProgress";
@@ -12,11 +11,7 @@ import DailyReport from "./DailyReport";
 import ProgressAnalytics from "./ProgressAnalytics";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
-const TabletUI = ({
-  todaysTopics,
-}: {
-  todaysTopics: TDashboardTodaysTopic[];
-}) => {
+const TabletUI = () => {
   return (
     <div className="h-full flex flex-col justify-start gap-4">
       <div className="flex justify-between">
@@ -29,7 +24,7 @@ const TabletUI = ({
         <div className="flex gap-4">
           <div className="space-y-4 w-1/2">
             <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">
-              <TodaysPlan todaysTopics={todaysTopics} />
+              <TodaysPlan />
             </div>
             <div className="border rounded-xl h-[240px]">
               <ConnectWithMentor />

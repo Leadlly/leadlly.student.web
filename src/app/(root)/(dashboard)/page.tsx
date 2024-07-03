@@ -29,15 +29,15 @@ const Dashboard = () => {
   return (
     <>
       <div className="hidden xl:block h-full">
-        <DesktopUI todaysTopics={todaysTopics} />
+        <DesktopUI />
       </div>
 
       <div className="h-full hidden md:block xl:hidden md:pb-4">
-        <TabletUI todaysTopics={todaysTopics} />
+        <TabletUI />
       </div>
 
       <div className="h-full md:hidden">
-        <MobileUI todaysTopics={todaysTopics} />
+        <MobileUI />
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import { ArrowLeft, Check, X } from "lucide-react";
 import React, { useState } from "react";
 import Modal from "@/components/shared/Modal";
 import { Questions, Option } from "@/helpers/types/index";
+import { sanitizedHtml } from "@/helpers/utils";
 
 const DailyStreakDialogBox = ({
   setOpenQuestionDialogBox,
@@ -60,7 +61,8 @@ const DailyStreakDialogBox = ({
         <div className="bg-primary/[0.3] rounded-b-xl flex items-center justify-between gap-5 md:gap-28 px-5 md:px-12 h-20">
           <div
             className="w-6 h-6 md:w-10 md:h-10 rounded-md bg-white flex items-center justify-center border border-gray-300 cursor-pointer"
-            onClick={() => setOpenQuestionDialogBox(false)}>
+            onClick={() => setOpenQuestionDialogBox(false)}
+          >
             <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
           </div>
 
@@ -89,8 +91,9 @@ const DailyStreakDialogBox = ({
 
           <div className="flex-1 flex flex-col">
             <div className="px-4 md:px-7 mb-4">
-            <p className="text-base md:text-xl flex flex-row text-black font-medium mb-4">
-                <span className="mr-2"> Q.</span><span dangerouslySetInnerHTML={{ __html: question }} />
+              <p className="text-base md:text-xl flex flex-row text-black font-medium mb-4">
+                <span className="mr-2"> Q.</span>
+                <span dangerouslySetInnerHTML={{ __html: question }} />
               </p>
 
               <ul className="flex flex-col gap-2">
@@ -103,11 +106,12 @@ const DailyStreakDialogBox = ({
                         correctOptions.includes(option)
                         ? "border-primary bg-primary/10"
                         : selectedAnswerIndex === index &&
-                          !correctOptions.includes(option)
-                        ? "border-red-500 bg-red-500/10"
-                        : ""
+                            !correctOptions.includes(option)
+                          ? "border-red-500 bg-red-500/10"
+                          : ""
                     )}
-                    onClick={() => onAnswerSelect(option, index)}>
+                    onClick={() => onAnswerSelect(option, index)}
+                  >
                     <div
                       className={cn(
                         "w-5 h-5 rounded-full border border-black cursor-pointer flex items-center justify-center",
@@ -115,10 +119,11 @@ const DailyStreakDialogBox = ({
                           correctOptions.includes(option)
                           ? "bg-primary border-none"
                           : selectedAnswerIndex === index &&
-                            !correctOptions.includes(option)
-                          ? "bg-red-500 border-none"
-                          : ""
-                      )}>
+                              !correctOptions.includes(option)
+                            ? "bg-red-500 border-none"
+                            : ""
+                      )}
+                    >
                       {selectedAnswerIndex === index &&
                         correctOptions.includes(option) && (
                           <Check className="w-3 h-3 text-white font-medium" />
@@ -129,7 +134,11 @@ const DailyStreakDialogBox = ({
                           <X className="w-3 h-3 text-white font-medium" />
                         )}
                     </div>
-                    <span dangerouslySetInnerHTML={{ __html: option }} />
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizedHtml(option),
+                      }}
+                    />
                   </li>
                 ))}
               </ul>
@@ -139,11 +148,11 @@ const DailyStreakDialogBox = ({
                 type="button"
                 className="h-7 md:h-9 px-4 md:px-6 text-base md:text-xl font-semibold"
                 onClick={handleNextQuestion}
-                disabled={activeTab === "Chemistry"}>
+                disabled={activeTab === "Chemistry"}
+              >
                 Next
               </Button>
             </div>
-
           </div>
         </div>
       </div>

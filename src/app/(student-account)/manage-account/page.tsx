@@ -29,37 +29,7 @@ import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
 import { useAppSelector } from "@/redux/hooks";
-
-const manageAccountTabs = [
-  {
-    id: "personal-info",
-    label: "Personal Info",
-  },
-  {
-    id: "study-progress",
-    label: "Study Progress",
-  },
-  {
-    id: "subject-overview",
-    label: "Subject Overview",
-  },
-  {
-    id: "your-mentor",
-    label: "Your Mentor",
-  },
-];
-
-const userPersonalInfo = {
-  firstName: "adil",
-  lastName: "khursheed",
-  class: "10th",
-  phone: "0123456789",
-  email: "adil@gmail.com",
-  gender: "male",
-  dateOfBirth: "06-04-1996",
-  isPhoneVerified: true,
-  isEmailVerified: true,
-};
+import { manageAccountTabs } from "@/helpers/constants";
 
 const ManageAccount = ({
   searchParams,
@@ -187,11 +157,11 @@ const ManageAccount = ({
           </>
         )}
 
-        {activeManageAccountTab === "subject-overview" && (
+        {/* {activeManageAccountTab === "subject-overview" && (
           <>
             <AccountSubjectOverview />
           </>
-        )}
+        )} */}
 
         {activeManageAccountTab === "your-mentor" && (
           <>
