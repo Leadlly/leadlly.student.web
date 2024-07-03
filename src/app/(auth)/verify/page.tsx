@@ -28,6 +28,7 @@ import { Loader2 } from "lucide-react";
 import ResendOtpButton from "./_components/ResendOtpButton";
 import apiClient from "@/apiClient/apiClient";
 import Image from "next/image";
+import axios from "axios";
 
 const OTPFormSchema = z.object({
   otp: z
@@ -49,20 +50,28 @@ const Verify = () => {
 
     const email = localStorage.getItem("email");
     try {
-      const response = await apiClient.post("/api/auth/verify", {
-        otp: data.otp,
-        email,
+      const response = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          otp: data.otp,
+          email,
+        }),
       });
 
-      if (response.status === 200) {
+      if (response.ok) {
+        const responseData = await response.json();
         toast.success("Account verified successfully", {
-          description: response.data.message,
+          description: responseData.message,
         });
 
         localStorage.removeItem("email");
         router.replace("/initial-info");
       } else {
-        toast.error(response.data.message);
+        const errorData = await response.json();
+        toast.error(errorData.message);
       }
     } catch (error: any) {
       toast.error("Account verification failed!", {
