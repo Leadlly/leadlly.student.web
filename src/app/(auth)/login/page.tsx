@@ -49,10 +49,10 @@ const Login = () => {
     setIsLoggingIn(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
@@ -60,14 +60,14 @@ const Login = () => {
       const userDataInfo = await getUser();
 
       dispatch(userData(userDataInfo?.user));
-
+      if (response.ok) {
         const responseData = await response.json();
         toast.success(responseData.message);
 
-        router.replace('/');
+        router.replace("/");
       } else {
         const errorData = await response.json();
-        toast.error('Login Failed', {
+        toast.error("Login Failed", {
           description: errorData.message,
         });
       }
