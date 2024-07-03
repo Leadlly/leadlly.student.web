@@ -1,4 +1,4 @@
-import { TQuizQuestionProps, TSidebarLink, TWeeklyPlanProps } from "../types";
+import { TSidebarLink } from "../types";
 
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import PlannerIcon from "@/components/icons/PlannerIcon";
@@ -64,102 +64,22 @@ export const userSidebarLinks: TSidebarLink[] = [
   },
 ];
 
-export const quizQuestions: TQuizQuestionProps[] = [
+export const manageAccountTabs = [
   {
-    question: "Sample question 1",
-    options: {
-      all: ["1", "2", "3", "4"],
-      correct: ["2"],
-    },
+    id: "personal-info",
+    label: "Personal Info",
   },
   {
-    question: "Sample question 2",
-    options: {
-      all: ["1", "2", "3", "4"],
-      correct: ["1"],
-    },
+    id: "study-progress",
+    label: "Study Progress",
   },
+  // {
+  //   id: "subject-overview",
+  //   label: "Subject Overview",
+  // },
   {
-    question: "Sample question 3",
-    options: {
-      all: ["1", "2", "3", "4"],
-      correct: ["4"],
-    },
-  },
-  {
-    question: "Sample question 4",
-    options: {
-      all: ["1", "2", "3", "4"],
-      correct: ["3"],
-    },
-  },
-  {
-    question: "Sample question 5",
-    options: {
-      all: ["1", "2", "3", "4"],
-      correct: ["4"],
-    },
-  },
-];
-
-export const weeklyPlan: TWeeklyPlanProps[] = [
-  {
-    date: new Date("2024-05-09T00:00:00Z"),
-    topics: "Limits, continuity, and differentiability / Magnetism",
-  },
-  {
-    date: new Date("2024-05-10T00:00:00Z"),
-    topics: "Vector Algebra/Work and Energy / Atomic Structure",
-  },
-  {
-    date: new Date("2024-05-11T00:00:00Z"),
-    topics: "Permutations Combinations / Hydrocarbons",
-  },
-  {
-    date: new Date("2024-05-12T00:00:00Z"),
-    topics: "Sequence Series / Oxygen, Halogens, and Nitrogen",
-  },
-  {
-    date: new Date("2024-05-13T00:00:00Z"),
-    topics: "Differential Equations / Alternating Currents",
-  },
-  {
-    date: new Date("2024-05-14T00:00:00Z"),
-    topics: "Coordinate Geometry / Work and Energy / Equilibrium and Chemical",
-  },
-  {
-    date: new Date("2024-05-15T00:00:00Z"),
-    topics: "Buffer Day",
-  },
-];
-
-export const trackerTabs = [
-  {
-    id: "maths",
-    subject: "maths",
-  },
-  {
-    id: "physics",
-    subject: "physics",
-  },
-  {
-    id: "chemistry",
-    subject: "chemistry",
-  },
-];
-
-export const userSubjects = [
-  {
-    id: "maths",
-    label: "Maths",
-  },
-  {
-    id: "physics",
-    label: "Physics",
-  },
-  {
-    id: "chemistry",
-    label: "Chemistry",
+    id: "your-mentor",
+    label: "Your Mentor",
   },
 ];
 

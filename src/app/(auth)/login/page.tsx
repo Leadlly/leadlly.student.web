@@ -52,14 +52,19 @@ const Login = () => {
       const response = await apiClient.post("/api/auth/login", data);
 
       const userDataInfo = await getUser();
-      dispatch(userData(userDataInfo.user));
+
+      dispatch(userData(userDataInfo?.user));
 
       toast.success(response.data.message);
 
       router.replace("/");
     } catch (error: any) {
+      console.log(error);
+
       toast.error("Login Failed", {
-        description: error.message,
+        description: error.response
+          ? error.response?.data.message
+          : error.message,
       });
     } finally {
       setIsLoggingIn(false);
@@ -92,7 +97,8 @@ const Login = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onFormSubmit)}
-                className="space-y-4">
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="email"
@@ -125,9 +131,8 @@ const Login = () => {
                           icon2={
                             <div
                               className="cursor-pointer"
-                              onClick={() =>
-                                setTogglePassword(!togglePassword)
-                              }>
+                              onClick={() => setTogglePassword(!togglePassword)}
+                            >
                               {togglePassword ? (
                                 <EyeOff className="w-5 h-5 opacity-70" />
                               ) : (
@@ -163,7 +168,8 @@ const Login = () => {
                 <Button
                   type="submit"
                   className="w-full text-lg md:text-xl h-12"
-                  disabled={isLoggingIn}>
+                  disabled={isLoggingIn}
+                >
                   {isLoggingIn ? (
                     <span className="flex items-center">
                       <Loader2 className="w-6 h-6 animate-spin mr-2" /> Signing

@@ -11,16 +11,9 @@ import TodaysVibe from "./TodaysVibe";
 import DailyStreakQuestions from "./DailyStreakQuestions";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 
-import { TDashboardTodaysTopic } from "@/helpers/types";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
-const DesktopUI = ({
-  todaysTopics,
-}: {
-  todaysTopics: TDashboardTodaysTopic[];
-}) => {
+const DesktopUI = () => {
   return (
     <div className="relative h-full flex flex-col justify-start gap-3 xl:gap-6">
       <div className="flex items-center justify-between gap-4">
@@ -41,7 +34,7 @@ const DesktopUI = ({
         <section className="h-full flex flex-col justify-start gap-4 py-2 xl:w-[calc(100%-268px)]">
           <div className="w-full grid grid-cols-2 gap-4">
             <div className="border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
-              <TodaysPlan todaysTopics={todaysTopics} />
+              <TodaysPlan />
             </div>
 
             <div className="border rounded-xl">

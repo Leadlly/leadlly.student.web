@@ -17,10 +17,6 @@ const todaysTopics = [
     subject: "Chemistry",
     topics: "Chemical Bonding and  Atomic Structure.",
   },
-  {
-    subject: "Geography",
-    topics: "Chemical Bonding and  Atomic Structure.",
-  },
 ];
 
 const Planner = () => {

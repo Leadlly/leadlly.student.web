@@ -1,21 +1,14 @@
 import { Header } from "@/components";
-import { TDashboardTodaysTopic } from "@/helpers/types";
 import TodaysPlan from "./TodaysPlan";
 import ConnectWithMentor from "./ConnectWithMentor";
 import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
 import UserProfileSheet from "./UserProfileSheet";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import LogoutButton from "@/components/shared/LogoutButton";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
-const MobileUI = ({
-  todaysTopics,
-}: {
-  todaysTopics: TDashboardTodaysTopic[];
-}) => {
+const MobileUI = () => {
   return (
     <div className="flex flex-col justify-start gap-3">
       <div className="flex items-center justify-between">
@@ -28,7 +21,7 @@ const MobileUI = ({
       </div>
 
       <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[233px]">
-        <TodaysPlan todaysTopics={todaysTopics} />
+        <TodaysPlan />
       </div>
 
       <div className="border rounded-xl px-3 py-2">

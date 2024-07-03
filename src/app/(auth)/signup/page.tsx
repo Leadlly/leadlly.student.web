@@ -43,7 +43,7 @@ const SignUp = () => {
 
       if (responseData.success) {
         toast.success(responseData.message);
-        localStorage.setItem("email", data.email)
+        localStorage.setItem("email", data.email);
         router.replace("/verify");
       } else {
         toast.error(responseData.message);
@@ -92,7 +92,8 @@ const SignUp = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onFormSubmit)}
-                className="space-y-4">
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -142,9 +143,8 @@ const SignUp = () => {
                           icon2={
                             <div
                               className="cursor-pointer"
-                              onClick={() =>
-                                setTogglePassword(!togglePassword)
-                              }>
+                              onClick={() => setTogglePassword(!togglePassword)}
+                            >
                               {togglePassword ? (
                                 <EyeOff className="w-5 h-5 opacity-70" />
                               ) : (
@@ -165,7 +165,8 @@ const SignUp = () => {
                 <Button
                   type="submit"
                   className="w-full text-xl h-12 rounded-lg"
-                  disabled={isSubmitting}>
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <span className="flex items-center">
                       <Loader2 className="mr-2 w-5 h-5 animate-spin" /> Signing

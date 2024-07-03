@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
 
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Loader2 } from "lucide-react";
 
 import { LeftArrowIcon, MenuIcon } from "@/components";
 import { Button } from "@/components/ui/button";
@@ -41,27 +41,33 @@ import {
 
 import { subjectChaptersProps } from "@/helpers/types";
 
-import { userSubjects } from "@/helpers/constants";
 import { toast } from "sonner";
+import { saveStudyData } from "@/actions/studyData_actions";
 
 const NewTopicLearntSchema = z.object({
   chapterName: z.string({ required_error: "Please select a chapter!" }),
   topicNames: z
     .string({ required_error: "Please select at least one topic" })
     .array()
-    .nonempty({ message: "Please select at least one topic" }),
+    .min(1, { message: "Please select at least one topic" })
+    .default([]),
 });
 
 const NewTopicLearnt = ({
   setNewTopicLearnt,
+  userSubjects,
+  userStandard,
 }: {
   setNewTopicLearnt: (newTopicLearnt: boolean) => void;
+  userSubjects: string[];
+  userStandard: number;
 }) => {
   const [activeSubject, setActiveSubject] = useState("maths");
   const [activeTabChapters, setActiveTabChapters] = useState<
     subjectChaptersProps[]
   >([]);
   const [topics, setTopics] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof NewTopicLearntSchema>>({
     resolver: zodResolver(NewTopicLearntSchema),
@@ -70,13 +76,35 @@ const NewTopicLearnt = ({
   const selectedChapter = form.watch("chapterName");
 
   const onSubmit = async (data: z.infer<typeof NewTopicLearntSchema>) => {
-    console.log(data);
+    setIsSubmitting(true);
+
+    const formattedData = {
+      tag: "continuous_revision",
+      topics: data.topicNames.map((topic) => ({ name: topic })),
+      chapter: {
+        name: data.chapterName,
+      },
+      subject: activeSubject,
+      standard: userStandard,
+    };
+
+    try {
+      const responseData = await saveStudyData(formattedData);
+
+      toast.success(responseData.message);
+
+      form.reset();
+    } catch (error: any) {
+      toast.error(error?.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
     const chapters = async () => {
       try {
-        const data = await getSubjectChapters(activeSubject, 11);
+        const data = await getSubjectChapters(activeSubject, userStandard);
 
         setActiveTabChapters(data.chapters);
       } catch (error: any) {
@@ -92,7 +120,11 @@ const NewTopicLearnt = ({
   useEffect(() => {
     const topics = async () => {
       try {
-        const data = await getChapterTopics(activeSubject, selectedChapter, 11);
+        const data = await getChapterTopics(
+          activeSubject,
+          selectedChapter,
+          userStandard
+        );
         setTopics(data.topics);
       } catch (error: any) {
         toast.error("Unable to fetch topics!", {
@@ -108,17 +140,21 @@ const NewTopicLearnt = ({
     <div className="w-full px-3 lg:px-7 space-y-6">
       <div className="w-full flex items-center justify-between">
         <ul className="flex items-center gap-4">
-          {userSubjects.map((item) => (
+          {userSubjects.map((item, index) => (
             <li
-              key={item.id}
+              key={index}
               className={cn(
                 "capitalize font-semibold text-[#6a6a6a] border px-3 py-1 rounded-lg cursor-pointer",
-                activeSubject === item.id
+                activeSubject === item
                   ? "bg-primary/10 border-primary text-black"
                   : ""
               )}
-              onClick={() => setActiveSubject(item.label)}>
-              {item.label}
+              onClick={() => {
+                setActiveSubject(item);
+                form.setValue("chapterName", "");
+                form.setValue("topicNames", []);
+              }}>
+              {item}
             </li>
           ))}
         </ul>
@@ -215,7 +251,15 @@ const NewTopicLearnt = ({
               Back
             </Button>
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <span className="flex items-center text-sm">
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting
+                </span>
+              ) : (
+                "Submit"
+              )}
+            </Button>
           </div>
         </form>
       </Form>

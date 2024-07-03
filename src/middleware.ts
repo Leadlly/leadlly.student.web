@@ -1,12 +1,14 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getUser } from "./actions/user_actions";
+import { getPlanner } from "./actions/planner_actions";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   const token = getTokenFromStorage(request);
   const userData = await getUser();
+  const plannerData = await await getPlanner();
 
   const isPublicPath =
     path.startsWith("/login") ||
@@ -23,6 +25,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 
+  // initial personal info middleware
   if (token && !isPublicPath) {
     const hasSubmittedInitialInfo = !!userData.user?.academic.standard;
 
@@ -35,6 +38,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // free trial activation middleware
   if (token && !isPublicPath && path !== "/initial-info") {
     const isSubscribed = !!userData.user?.subscription.freeTrialAvailed;
 
@@ -45,6 +49,26 @@ export async function middleware(request: NextRequest) {
     }
 
     if (isSubscribed && path === "/trial-subscription") {
+      return NextResponse.redirect(new URL("/", request.nextUrl));
+    }
+  }
+
+  // initial study data middleware
+  if (
+    token &&
+    !isPublicPath &&
+    path !== "/trial-subscription" &&
+    path !== "/initial-info"
+  ) {
+    const isInitialPlannerData = !!plannerData.success;
+
+    if (!isInitialPlannerData && path !== "/initial-study-data") {
+      return NextResponse.redirect(
+        new URL("/initial-study-data", request.nextUrl)
+      );
+    }
+
+    if (isInitialPlannerData && path === "/initial-study-data") {
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   }
@@ -80,6 +104,7 @@ export const config = {
     "/paymentfailed",
     "/paymentsuccess",
     "/initial-info",
+    "/initial-study-data",
     "/trial-subscription",
   ],
 };

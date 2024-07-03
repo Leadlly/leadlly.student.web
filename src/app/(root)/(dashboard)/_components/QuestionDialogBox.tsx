@@ -12,6 +12,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import Modal from "@/components/shared/Modal";
 
+import DOMPurify from "dompurify";
+import { sanitizedHtml } from "@/helpers/utils";
+
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
   questions,
@@ -29,15 +32,14 @@ const QuestionDialogBox = ({
     null
   );
 
-  const {
-    question,
-    options: { all, correct },
-  } = questions[activeQuestion];
+  console.log(questions);
 
-  const onAnswerSelect = (answer: string, index: number) => {
+  const { question, options } = questions[activeQuestion];
+
+  const onAnswerSelect = (answer: string, optionTag: string, index: number) => {
     setSelectedAnswerIndex(index);
 
-    if (answer === correct[0]) {
+    if (optionTag === "Correct") {
       setSelectedAnswer(answer);
     } else {
       setSelectedAnswer("");
@@ -62,7 +64,8 @@ const QuestionDialogBox = ({
       <div className="h-20 bg-primary/[0.2] rounded-b-xl flex items-center justify-between gap-5 md:gap-28 px-5 md:px-12">
         <div
           className="w-6 h-6 md:w-10 md:h-10 rounded-md bg-white flex items-center justify-center border border-gray-300 cursor-pointer"
-          onClick={() => setOpenQuestionDialogBox(false)}>
+          onClick={() => setOpenQuestionDialogBox(false)}
+        >
           <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
         </div>
 
@@ -81,8 +84,8 @@ const QuestionDialogBox = ({
         </Button>
       </div>
 
-      <div className="px-3 md:px-14 md:py-8 flex flex-col md:flex-row items-start gap-3">
-        <div className="md:w-44 py-4 md:border-r-2 border-[#cfcfcf]">
+      <div className="px-3 md:px-14 flex flex-col md:flex-row items-start gap-3">
+        {/* <div className="md:w-44 py-4 md:border-r-2 border-[#cfcfcf]">
           <p className="text-xs md:text-base text-[#7b7b7b] font-semibold mb-2">
             Questions 1 to {questions.length}:
           </p>
@@ -94,12 +97,14 @@ const QuestionDialogBox = ({
                 className={cn(
                   "relative flex items-center gap-1 md:gap-3 cursor-pointer py-2 md:py-4 md:w-full transition-all duration-200 ease-in"
                 )}
-                onClick={() => setActiveQuestion(index)}>
+                onClick={() => setActiveQuestion(index)}
+              >
                 <div
                   className={cn(
                     "w-4 h-4 rounded-full border border-black -mt-[1px] flex items-center justify-center",
                     attemptedQuestion.includes(index) ? "border-green-500" : ""
-                  )}>
+                  )}
+                >
                   {attemptedQuestion.includes(index) && (
                     <div className="w-[10px] h-[10px] rounded-full bg-green-500"></div>
                   )}
@@ -120,56 +125,91 @@ const QuestionDialogBox = ({
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
-        <div className="w-full flex-1">
+        <div className="w-full space-y-5 pb-5">
           <h3 className="text-center text-xl md:text-3xl font-semibold text-black">
             Quiz on <span className="capitalize">{topic}</span>
           </h3>
 
-          <div className="px-4 md:px-7 my-7">
-            <p className="text-base md:text-xl text-black font-medium mb-2">
+          <div className="flex items-center justify-center w-full">
+            <ul className="flex items-center gap-3 border-2 p-1 rounded-md">
+              {questions.map((ques, index) => (
+                <li
+                  key={ques._id}
+                  className={cn(
+                    "relative px-4 py-1 text-base md:text-lg font-medium cursor-pointer",
+                    activeQuestion === index && "text-white"
+                  )}
+                  onClick={() => setActiveQuestion(index)}
+                >
+                  Q{index + 1}
+                  {activeQuestion === index && (
+                    <MotionDiv
+                      layoutId="quiz_questions"
+                      transition={{
+                        type: "spring",
+                        duration: 0.6,
+                      }}
+                      className="absolute rounded-sm h-full w-full bg-primary inset-0 -z-10"
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:px-7">
+            <p className="text-base md:text-xl text-black font-medium mb-2 flex gap-2.5">
               <span>{activeQuestion + 1}. </span>
-              {question}
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: sanitizedHtml(question),
+                }}
+              />
             </p>
 
             <ul className="flex flex-col justify-start gap-2 px-3 md:px-5">
-              {all.map((option, index) => (
+              {options.map((option, index) => (
                 <li
-                  key={option}
+                  key={option._id}
                   className={cn(
                     "flex items-center gap-6 text-base md:text-xl text-black font-normal border rounded-xl px-4 py-2 cursor-pointer",
-                    selectedAnswerIndex === index &&
-                      selectedAnswer === correct[0]
+                    selectedAnswerIndex === index && option.tag === "Correct"
                       ? "border-primary bg-primary/10"
                       : selectedAnswerIndex === index &&
-                        selectedAnswer !== correct[0]
-                      ? "border-red-500 bg-red-500/10"
-                      : ""
+                          option.tag === "Incorrect"
+                        ? "border-red-500 bg-red-500/10"
+                        : ""
                   )}
-                  onClick={() => onAnswerSelect(option, index)}>
+                  onClick={() => onAnswerSelect(option.name, option.tag, index)}
+                >
                   <div
                     className={cn(
                       "w-4 h-4 rounded-full border border-black cursor-pointer flex items-center justify-center",
-                      selectedAnswerIndex === index &&
-                        selectedAnswer === correct[0]
+                      selectedAnswerIndex === index && option.tag === "Correct"
                         ? "bg-primary border-none"
                         : selectedAnswerIndex === index &&
-                          selectedAnswer !== correct[0]
-                        ? "bg-red-500 border-none"
-                        : ""
-                    )}>
+                            option.tag === "Incorrect"
+                          ? "bg-red-500 border-none"
+                          : ""
+                    )}
+                  >
                     {selectedAnswerIndex === index &&
-                      selectedAnswer === correct[0] && (
+                      option.tag === "Correct" && (
                         <Check className="w-3 h-3 text-white font-medium" />
                       )}
 
                     {selectedAnswerIndex === index &&
-                      selectedAnswer !== correct[0] && (
+                      option.tag === "Incorrect" && (
                         <X className="w-3 h-3 text-white font-medium" />
                       )}
                   </div>
-                  <span>{option}</span>
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizedHtml(option.name),
+                    }}
+                  />
                 </li>
               ))}
             </ul>
@@ -179,7 +219,8 @@ const QuestionDialogBox = ({
               type="button"
               className="h-7 md:h-9 px-4 md:px-6 text-base md:text-xl font-semibold"
               disabled={activeQuestion === questions.length - 1}
-              onClick={handleNextQuestion}>
+              onClick={handleNextQuestion}
+            >
               Next
             </Button>
           </div>

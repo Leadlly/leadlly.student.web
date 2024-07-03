@@ -39,7 +39,7 @@ export const signUpUser = async (data: SignUpDataProps) => {
 
 export const resendOtp = async (email: string) => {
   try {
-    const res = await apiClient.post('/api/auth/resend', {email});
+    const res = await apiClient.post("/api/auth/resend", { email });
 
     const data = res.data;
     return data;
@@ -123,6 +123,7 @@ export const getUser = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
+        cache: "force-cache",
         next: {
           tags: ["userData"],
         },
