@@ -22,11 +22,16 @@ export const getPlanner = async () => {
       }
     );
 
+    console.log("this is planner data", res)
+
     const responseData = await res.json();
+
+    console.log(responseData, "HIHII")
 
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
+      console.log("here is the error", error)
       throw new Error(`Error fetching planner data: ${error.message}`);
     } else {
       throw new Error("An unknown error occurred while fetching planner data!");
