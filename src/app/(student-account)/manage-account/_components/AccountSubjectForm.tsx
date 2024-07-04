@@ -76,7 +76,7 @@ const AccountSubjectForm = ({
     };
 
     topics();
-  }, [selectedChapter, activeSubject]);
+  }, [selectedChapter, activeSubject, userStandard]);
 
   const onFormSubmit = async (data: z.infer<typeof AccountStudyFormSchema>) => {
     setIsAdding(true);

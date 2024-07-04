@@ -115,7 +115,7 @@ const NewTopicLearnt = ({
     };
 
     chapters();
-  }, [activeSubject]);
+  }, [activeSubject, userStandard]);
 
   useEffect(() => {
     const topics = async () => {
@@ -134,7 +134,7 @@ const NewTopicLearnt = ({
     };
 
     topics();
-  }, [activeSubject, selectedChapter]);
+  }, [activeSubject, selectedChapter, userStandard]);
 
   return (
     <div className="w-full px-3 lg:px-7 space-y-6">
@@ -153,7 +153,8 @@ const NewTopicLearnt = ({
                 setActiveSubject(item);
                 form.setValue("chapterName", "");
                 form.setValue("topicNames", []);
-              }}>
+              }}
+            >
               {item}
             </li>
           ))}
@@ -177,7 +178,8 @@ const NewTopicLearnt = ({
                         className={cn(
                           "w-full justify-between",
                           !field.value && "text-muted-foreground"
-                        )}>
+                        )}
+                      >
                         {field.value
                           ? activeTabChapters.find(
                               (chapter) => chapter.name === field.value
@@ -199,7 +201,8 @@ const NewTopicLearnt = ({
                               key={chapter._id}
                               onSelect={() => {
                                 form.setValue("chapterName", chapter.name);
-                              }}>
+                              }}
+                            >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
@@ -246,7 +249,8 @@ const NewTopicLearnt = ({
             <Button
               variant={"outline"}
               className="gap-x-2"
-              onClick={() => setNewTopicLearnt(false)}>
+              onClick={() => setNewTopicLearnt(false)}
+            >
               <LeftArrowIcon className="w-2 h-2" />
               Back
             </Button>

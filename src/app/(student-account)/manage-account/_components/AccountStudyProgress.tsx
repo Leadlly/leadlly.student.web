@@ -33,7 +33,7 @@ const AccountStudyProgress = () => {
       }
     };
     chapters();
-  }, [activeTab]);
+  }, [activeTab, userStandard]);
 
   return (
     <section className="border rounded-xl h-full shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">

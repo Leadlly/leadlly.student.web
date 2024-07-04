@@ -32,8 +32,6 @@ const QuestionDialogBox = ({
     null
   );
 
-  console.log(questions);
-
   const { question, options } = questions[activeQuestion];
 
   const onAnswerSelect = (answer: string, optionTag: string, index: number) => {

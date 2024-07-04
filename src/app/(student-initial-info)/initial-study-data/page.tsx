@@ -84,16 +84,31 @@ const InitialStudyData = ({
     };
 
     try {
+      console.log(formattedData);
+
       const responseData = await saveStudyData(formattedData);
-      await createPlanner();
+      console.log(responseData);
 
-      toast.success("Chapter added.", {
-        description: responseData.message,
-      });
+      if (responseData?.data.length > 0) {
+        toast.success("Data saved.", {
+          description: responseData.message,
+        });
 
-      router.replace("/");
+        const plannerData = await createPlanner();
+        console.log("inside responseData!");
+        console.log(plannerData);
+
+        if (plannerData.success) {
+          toast.success(plannerData.message);
+          console.log("inside plannerData");
+
+          router.replace("/");
+        }
+      } else {
+        toast.error("Data not saved!");
+      }
     } catch (error: any) {
-      toast.error("Error adding chapter", {
+      toast.error("Error saving data", {
         description: error.message,
       });
     } finally {
@@ -118,7 +133,7 @@ const InitialStudyData = ({
     };
 
     chapters();
-  }, [activeSubject]);
+  }, [activeSubject, userAcademic?.standard]);
 
   useEffect(() => {
     const topics = async () => {
@@ -137,7 +152,7 @@ const InitialStudyData = ({
     };
 
     topics();
-  }, [activeSubject, selectedChapter]);
+  }, [activeSubject, selectedChapter, userAcademic?.standard]);
   return (
     <section className="flex flex-col px-3 h-full w-full">
       <div>
@@ -149,9 +164,9 @@ const InitialStudyData = ({
         />
       </div>
       <div className="flex-1 grid place-items-center w-full">
-        <div className="max-w-3xl w-full rounded-xl shadow-2xl p-3 lg:p-6 space-y-10">
+        <div className="max-w-3xl w-full rounded-xl shadow-2xl px-3 py-10 sm:px-10 lg:p-6 space-y-10">
           <div className="w-full text-center">
-            <h1 className="text-3xl font-semibold">
+            <h1 className="text-xl md:text-3xl font-semibold">
               Tell us about your learnings
             </h1>
           </div>
@@ -194,14 +209,14 @@ const InitialStudyData = ({
               onSubmit={form.handleSubmit(onFormSubmit)}
               className="w-full flex flex-col items-center gap-5 lg:gap-10"
             >
-              <div className="flex-1 flex flex-col gap-y-3">
+              <div className="w-full flex flex-col gap-y-3">
                 <div className="w-full flex flex-col gap-3">
                   <FormField
                     control={form.control}
                     name="chapterName"
                     render={({ field }) => (
                       <FormItem className="w-full flex flex-col">
-                        <div className="flex items-center  gap-2 lg:gap-10">
+                        <div className="flex flex-col sm:flex-row sm:items-center  gap-2 lg:gap-10">
                           <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                             Chapter :
                           </FormLabel>
@@ -270,7 +285,7 @@ const InitialStudyData = ({
                     name="topicNames"
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <div className="flex items-center gap-[18px] lg:gap-[53px]">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-[18px] lg:gap-[53px]">
                           <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                             Topics :
                           </FormLabel>
@@ -296,7 +311,7 @@ const InitialStudyData = ({
                   name="levelOfDifficulty"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <div className="flex items-start sm:items-center gap-2 lg:gap-10">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-10">
                         <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                           Difficulty Level :
                         </FormLabel>
