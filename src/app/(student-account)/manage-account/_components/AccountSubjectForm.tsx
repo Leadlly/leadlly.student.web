@@ -45,10 +45,12 @@ const AccountSubjectForm = ({
   subjectChapters,
   activeSubject,
   userStandard,
+  onResetForm,
 }: {
   subjectChapters: subjectChaptersProps[];
   activeSubject: string;
   userStandard: number;
+  onResetForm: (resetFunction: () => void) => void;
 }) => {
   const [topics, setTopics] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -78,6 +80,10 @@ const AccountSubjectForm = ({
     topics();
   }, [selectedChapter, activeSubject, userStandard]);
 
+  useEffect(() => {
+    onResetForm(() => form.reset());
+  }, [onResetForm, form.reset]);
+
   const onFormSubmit = async (data: z.infer<typeof AccountStudyFormSchema>) => {
     setIsAdding(true);
 
@@ -95,9 +101,13 @@ const AccountSubjectForm = ({
     try {
       const responseData = await saveStudyData(formattedData);
 
-      toast.success("Chapter added.", {
-        description: responseData.message,
-      });
+      if (responseData.data.length > 0) {
+        toast.success(responseData.message, {
+          description: "Chapter added successfully",
+        });
+      } else {
+        toast.error("Chapter already saved!");
+      }
 
       form.reset();
     } catch (error: any) {

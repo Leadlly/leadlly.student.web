@@ -9,7 +9,7 @@ type StudyDataProps = {
     name: string;
     level?: string;
   };
-  subject: string | string[];
+  subject: string;
   standard: number;
 };
 

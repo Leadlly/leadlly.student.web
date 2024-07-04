@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AccountSubjectForm from "./AccountSubjectForm";
 
@@ -12,10 +12,19 @@ import AccountChaptersList from "./AccountChaptersList";
 import { getSubjectChapters } from "@/actions/question_actions";
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
+import { MotionDiv } from "@/components/shared/MotionDiv";
+import { cn } from "@/lib/utils";
 
 const AccountStudyProgress = () => {
   const [activeTab, setActiveTab] = useState("maths");
   const [activeTabChapters, setActiveTabChapters] = useState([]);
+  const [resetForm, setResetForm] = useState<() => void>(() => {
+    return () => {};
+  });
+
+  const handleResetForm = useCallback((resetFunction: () => void) => {
+    setResetForm(() => resetFunction);
+  }, []);
 
   const userData = useAppSelector((state) => state.user.user);
   const userSubjects = userData?.academic.subjects;
@@ -44,18 +53,30 @@ const AccountStudyProgress = () => {
 
         <div className="flex items-center gap-x-5">
           <ul className="flex items-center justify-between p-1 bg-white rounded-md">
-            {userSubjects?.map((subject, index) => (
-              <TabNavItem
-                key={index}
-                id={subject}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                title={subject}
-                layoutIdPrefix="account_subject_progress"
-                className="px-2 lg:px-4"
-                titleClassName="text-sm lg:text-lg font-medium capitalize"
-                activeTabClassName="h-full w-full inset-0"
-              />
+            {userSubjects?.map((subject) => (
+              <li
+                key={subject}
+                className={cn(
+                  "relative text-base md:text-lg capitalize font-medium px-3 py-1 cursor-pointer z-30",
+                  activeTab === subject && "text-white"
+                )}
+                onClick={() => {
+                  setActiveTab(subject);
+                  resetForm();
+                }}
+              >
+                {subject}
+                {activeTab === subject && (
+                  <MotionDiv
+                    layoutId="active_chat_tab"
+                    transition={{
+                      type: "spring",
+                      duration: 0.6,
+                    }}
+                    className="absolute rounded h-full w-full -z-10 bg-primary inset-0"
+                  />
+                )}
+              </li>
             ))}
           </ul>
 
@@ -64,15 +85,16 @@ const AccountStudyProgress = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto custom__scrollbar">
-        <TabContent id="maths" activeTab={activeTab}>
+        <TabContent id={activeTab} activeTab={activeTab}>
           <AccountSubjectForm
             subjectChapters={activeTabChapters}
-            activeSubject={"maths"}
+            activeSubject={activeTab}
             userStandard={userStandard!}
+            onResetForm={handleResetForm}
           />
           <AccountChaptersList />
         </TabContent>
-        <TabContent id="physics" activeTab={activeTab}>
+        {/* <TabContent id="physics" activeTab={activeTab}>
           <AccountSubjectForm
             subjectChapters={activeTabChapters}
             activeSubject={"physics"}
@@ -87,7 +109,7 @@ const AccountStudyProgress = () => {
             userStandard={userStandard!}
           />
           <AccountChaptersList />
-        </TabContent>
+        </TabContent> */}
       </div>
     </section>
   );

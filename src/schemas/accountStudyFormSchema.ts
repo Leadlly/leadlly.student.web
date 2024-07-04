@@ -7,7 +7,7 @@ export const AccountStudyFormSchema = z.object({
     .array()
     .min(1, { message: "Please select at least one topic" })
     .default([]),
-  levelOfDifficulty: z.enum(["easy", "moderate", "hard"], {
-    required_error: "Please select a difficulty level!",
+  levelOfDifficulty: z.string({
+    required_error: "Please select a difficulty level.",
   }),
 });
