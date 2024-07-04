@@ -78,7 +78,7 @@ export async function middleware(request: NextRequest) {
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
-  // console.log("====cookies are coming herer =======>",cookies, "===========>")
+  // console.log("====cookies are coming here =======>",cookies, "===========>")
   const token = cookies.get("token");
   return token;
 }
@@ -105,7 +105,7 @@ export const config = {
     "/paymentfailed",
     "/paymentsuccess",
     "/initial-info",
-    "/initial-study-data",
     "/trial-subscription",
+    "/initial-study-data",
   ],
 };

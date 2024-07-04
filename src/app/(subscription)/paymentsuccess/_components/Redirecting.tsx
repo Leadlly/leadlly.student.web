@@ -20,7 +20,7 @@ const Redirecting = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [timeLeft]);
+  }, [timeLeft, router]);
   return (
     <p className="text-sm text-primary font-medium">
       Redirecting in {timeLeft}s.

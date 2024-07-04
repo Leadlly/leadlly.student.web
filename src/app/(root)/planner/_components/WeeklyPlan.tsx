@@ -69,11 +69,15 @@ const WeeklyPlan = async () => {
                 <span>{getFormattedDate(new Date(plan.date))}</span>
               </p>
               <p className="w-full py-2 text-xs md:text-base px-4 truncate overflow-hidden">
-                {plan.backRevisionTopics
-                  .map((topics: TBackRevisionProps) =>
-                    capitalizeFirstLetter(topics.topic.name)
-                  )
-                  .join(" / ")}
+                {plan.backRevisionTopics.length > 0 ? (
+                  plan.backRevisionTopics
+                    .map((topics: TBackRevisionProps) =>
+                      capitalizeFirstLetter(topics.topic.name)
+                    )
+                    .join(" / ")
+                ) : (
+                  <>No topics</>
+                )}
               </p>
             </li>
           ))}

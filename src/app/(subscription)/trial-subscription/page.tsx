@@ -25,7 +25,7 @@ const TrialSubscription = () => {
 
       toast.success(res?.message);
 
-      router.replace("/");
+      router.replace("/initial-study-data");
     } catch (error: any) {
       toast.error(error?.message);
     } finally {
@@ -38,7 +38,8 @@ const TrialSubscription = () => {
         onClick={onClickHandler}
         size="lg"
         className="text-base md:text-lg"
-        disabled={isActivating}>
+        disabled={isActivating}
+      >
         {isActivating ? (
           <span className="flex items-center">
             <Loader2 className="mr-2 w-5 h-5 animate-spin" />

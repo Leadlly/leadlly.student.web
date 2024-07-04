@@ -41,7 +41,7 @@ const TrialPeriodTimer = () => {
     }, 1000);
 
     return () => clearInterval(timerInterval);
-  }, [freeTrialActivationDate]);
+  }, [freeTrialActivationDate, router]);
 
   return <p className="text-[10px] leading-tight">{formatTime(timeLeft!)}</p>;
 };

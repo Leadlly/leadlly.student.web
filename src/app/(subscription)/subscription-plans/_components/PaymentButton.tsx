@@ -63,7 +63,7 @@ const PaymentButton = ({
 
       openRazorpayPopUp();
     }
-  }, [subscriptionId]);
+  }, [subscriptionId, user.firstname, user.email]);
   return (
     <>
       <Script
@@ -78,7 +78,8 @@ const PaymentButton = ({
             "bg-white text-primary hover:bg-white/40"
         )}
         onClick={subscribeHandler}
-        disabled={isLoading}>
+        disabled={isLoading}
+      >
         {isLoading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
