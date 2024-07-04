@@ -16,10 +16,6 @@ export const getPlanner = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["plannerData"],
-        },
       }
     );
 
