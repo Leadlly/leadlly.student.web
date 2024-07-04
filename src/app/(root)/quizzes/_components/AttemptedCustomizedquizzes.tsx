@@ -13,7 +13,7 @@ interface ChapterQuiz {
 	description: string;
 	subject: Subject;
 	questions: number;
-	date: string;
+	completedDate: string;
 	efficiency: number;
 }
 

@@ -325,13 +325,13 @@ const Quiz = ({quizId}:{quizId:string}) => {
 	}, [currentQuestion,answeredQuestions]);
 	return (
 		<>
-			<div className='flex flex-col justify-center gap-7 items-center px-5'>
+			<div className='flex flex-col justify-center gap-3 sm:gap-7 items-center px-5'>
 				<div className='w-full flex flex-col justify-center items-center gap-4'>
-					<h1 className='text-4xl font-semibold '>Weekly Quiz</h1>
-					<h2 className='text-[#737373] text-2xl'>(Jan 05 - Jan 11) </h2>
+					<h1 className='text-3xl md:text-4xl lg:text-page-title font-semibold'>Weekly Quiz</h1>
+					<h2 className='text-[#737373] text-xl md:text-2xl'>(Jan 05 - Jan 11) </h2>
 				</div>
 				<div className='bg-[#9654F42E] rounded-[10px] p-4 w-full flex justify-between items-center'>
-					<span className='font-semibold text-[#636363] text-2xl'>
+					<span className='font-semibold text-[#636363] text-base md:text-2xl'>
 						Answered:{' '}
 						<span className='text-[#9654F4]'>{answeredQuestions.filter(Boolean).length}</span>/
 						{questions.length}
@@ -344,8 +344,8 @@ const Quiz = ({quizId}:{quizId:string}) => {
 					onPageChange={handlePageChange}
 					answeredQuestions={answeredQuestions}
 				/>
-				<div className='w-full border-2 border-[#CFCFCF]  rounded-[10px]'>
-					<div className='p-7'>
+				<div className='w-full sm:border-2 sm:border-[#CFCFCF]  rounded-[10px]'>
+					<div className='sm:p-7'>
 						<h4 className='text-[#7C7C7C] font-medium text-xl'>Question {currentQuestion + 1} :</h4>
 						<div className='p-5'>
 							<Question question={questions[currentQuestion]} />
@@ -357,7 +357,7 @@ const Quiz = ({quizId}:{quizId:string}) => {
 							/>
 						</div>
 					</div>
-					<div className='bg-[#9654F40F] flex justify-center items-center gap-20 py-3'>
+					<div className='sm:bg-[#9654F40F] flex justify-center items-center gap-20 py-3'>
 						<button
 							className=' bg-white border border-[#C0C0C0] px-4 py-1 font-semibold  rounded-md'
 							onClick={handlePrevQuestion}

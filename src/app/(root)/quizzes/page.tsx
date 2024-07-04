@@ -33,7 +33,7 @@ const Quizzes = ({
       />
 
       <div className="flex flex-col justify-start gap-4">
-        <ul className="flex justify-center items-center bg-primary/10 rounded-md md:rounded-3xl overflow-hidden shadow-md">
+        <ul className="flex justify-center w-full items-center bg-primary/10 rounded-md md:rounded-3xl overflow-hidden shadow-md">
           {quizPageTabs.map((tab) => (
             <Link
               key={tab.id}
@@ -62,7 +62,7 @@ const Quizzes = ({
           ))}
         </ul>
 
-        <div className="flex flex-col ">
+        <div className="flex flex-col max-h-full">
           {activeQuizTab === "unattempted" && <Unattempted/>}
           {activeQuizTab === "attempted" && <Attempted/>}
         </div>
