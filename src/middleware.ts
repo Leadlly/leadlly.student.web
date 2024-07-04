@@ -8,7 +8,6 @@ export async function middleware(request: NextRequest) {
 
   const token = getTokenFromStorage(request);
   const userData = await getUser();
-  const plannerData = await await getPlanner();
 
   const isPublicPath =
     path.startsWith("/login") ||
@@ -60,7 +59,9 @@ export async function middleware(request: NextRequest) {
     path !== "/trial-subscription" &&
     path !== "/initial-info"
   ) {
-    const isInitialPlannerData = !!plannerData.success;
+    const plannerData = await getPlanner();
+
+    const isInitialPlannerData = plannerData.success;
 
     if (!isInitialPlannerData && path !== "/initial-study-data") {
       return NextResponse.redirect(
