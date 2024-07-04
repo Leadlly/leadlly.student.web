@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
 
   // free trial activation middleware
   if (token && !isPublicPath && path !== "/initial-info") {
-    const isSubscribed = !!userData.user?.subscription.freeTrialAvailed;
+    const isSubscribed = !!userData.user?.freeTrial.active === true;
 
     if (!isSubscribed && path !== "/trial-subscription") {
       return NextResponse.redirect(
