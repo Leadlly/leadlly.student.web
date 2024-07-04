@@ -62,7 +62,8 @@ export async function middleware(request: NextRequest) {
     const plannerData = await getPlanner();
 
     const isInitialPlannerData = plannerData.success;
-    console.log(isInitialPlannerData)
+    console.log(plannerData, "planner data")
+    console.log(isInitialPlannerData, "initial")
 
     if (!isInitialPlannerData && path !== "/initial-study-data") {
       return NextResponse.redirect(
