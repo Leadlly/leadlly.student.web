@@ -1,14 +1,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { TPlannerTodaysTopic } from "@/helpers/types";
+import { PlannerDataProps, TDayProps } from "@/helpers/types";
 import TodaysPlan from "./TodaysPlan";
 import RevisionZone from "./RevisionZone";
 import WeeklyPlan from "./WeeklyPlan";
 
 const MobileUI = ({
   todaysTopics,
+  plannerData,
+  setData,
 }: {
-  todaysTopics: TPlannerTodaysTopic[];
+  todaysTopics: TDayProps | null;
+  plannerData: PlannerDataProps;
+  setData: (data: TDayProps | null) => void;
 }) => {
   return (
     <section className="md:hidden w-full">
@@ -31,7 +35,7 @@ const MobileUI = ({
         </TabsContent>
 
         <TabsContent value="weekly_plan" className="h-[600px] mb-20">
-          <WeeklyPlan />
+          <WeeklyPlan data={plannerData} setData={setData} />
         </TabsContent>
       </Tabs>
     </section>

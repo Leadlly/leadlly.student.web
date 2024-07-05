@@ -1,12 +1,16 @@
-import { TPlannerTodaysTopic } from "@/helpers/types";
+import { PlannerDataProps, TDayProps } from "@/helpers/types";
 import TodaysPlan from "./TodaysPlan";
 import RevisionZone from "./RevisionZone";
 import WeeklyPlan from "./WeeklyPlan";
 
 const TabletUI = ({
   todaysTopics,
+  plannerData,
+  setData,
 }: {
-  todaysTopics: TPlannerTodaysTopic[];
+  todaysTopics: TDayProps | null;
+  plannerData: PlannerDataProps;
+  setData: (data: TDayProps | null) => void;
 }) => {
   return (
     <section className="hidden md:flex flex-col gap-4 overflow-y-auto custom__scrollbar pr-3 xl:hidden">
@@ -16,7 +20,7 @@ const TabletUI = ({
         <RevisionZone />
       </div>
 
-      <WeeklyPlan />
+      <WeeklyPlan data={plannerData} setData={setData} />
     </section>
   );
 };
