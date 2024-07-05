@@ -4,7 +4,7 @@ import { TQuizAnswerProps } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 
 export const saveDailyQuiz = async (data: {
-  topic: string;
+  topic: { name: string };
   questions: TQuizAnswerProps[];
 }) => {
   const token = await getCookie("token");

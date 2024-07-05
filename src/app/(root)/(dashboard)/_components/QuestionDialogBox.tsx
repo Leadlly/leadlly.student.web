@@ -56,7 +56,7 @@ const QuestionDialogBox = ({
     }
 
     const formattedData: TQuizAnswerProps = {
-      question,
+      question: questions[activeQuestion],
       studentAnswer: answer,
       isCorrect: optionTag === "Correct",
       tag: "daily_quiz",
@@ -81,7 +81,10 @@ const QuestionDialogBox = ({
     setIsSubmitting(true);
 
     try {
-      const res = await saveDailyQuiz({ topic, questions: attemptedQuestion });
+      const res = await saveDailyQuiz({
+        topic: { name: topic },
+        questions: attemptedQuestion,
+      });
 
       if (res.success) {
         toast.success(res.message);
