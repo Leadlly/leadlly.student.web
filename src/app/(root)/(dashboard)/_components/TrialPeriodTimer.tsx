@@ -11,7 +11,7 @@ const TrialPeriodTimer = () => {
   const router = useRouter();
 
   const freeTrialActivationDate = useAppSelector(
-    (state) => state.user.user?.subscription.dateOfActivation
+    (state) => state.user.user?.freeTrial.dateOfActivation
   );
 
   useEffect(() => {

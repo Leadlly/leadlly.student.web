@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
 
   // free trial activation middleware
   if (token && !isPublicPath && path !== "/initial-info") {
-    const isSubscribed = !!userData.user?.subscription.freeTrialAvailed;
+    const isSubscribed = !!userData.user?.freeTrial.active === true;
 
     if (!isSubscribed && path !== "/trial-subscription") {
       return NextResponse.redirect(
@@ -59,17 +59,16 @@ export async function middleware(request: NextRequest) {
     path !== "/trial-subscription" &&
     path !== "/initial-info"
   ) {
-    const plannerData = await getPlanner();
 
-    const isInitialPlannerData = plannerData.success;
+    const isPlanner = userData.user?.planner === true
 
-    if (!isInitialPlannerData && path !== "/initial-study-data") {
+    if (!isPlanner && path !== "/initial-study-data") {
       return NextResponse.redirect(
         new URL("/initial-study-data", request.nextUrl)
       );
     }
 
-    if (isInitialPlannerData && path === "/initial-study-data") {
+    if (isPlanner && path === "/initial-study-data") {
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   }
