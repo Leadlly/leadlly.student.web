@@ -11,7 +11,7 @@ import {
   getTodaysDay,
   getTodaysFormattedDate,
 } from "@/helpers/utils";
-import { PlannerDataProps, TDayProps } from "@/helpers/types";
+import { DataProps, PlannerDataProps, TDayProps } from "@/helpers/types";
 
 import QuestionDialogBox from "./QuestionDialogBox";
 import { getPlanner } from "@/actions/planner_actions";
@@ -28,7 +28,7 @@ const TodaysPlan = () => {
 
   useEffect(() => {
     const getQuestionData = async () => {
-      const { data }: PlannerDataProps = await getPlanner();
+      const { data }: DataProps = await getPlanner();
 
       setQuizData(
         data.days.filter(

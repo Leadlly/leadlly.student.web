@@ -339,11 +339,13 @@ export type TDayProps = {
 };
 
 export type PlannerDataProps = {
-  data: {
-    student: string;
-    startDate: string;
-    endDate: string;
-    days: TDayProps[];
-    createdAt: string;
-  };
+  student: string;
+  startDate: string;
+  endDate: string;
+  days: TDayProps[];
+  createdAt: string;
+};
+
+export type DataProps = {
+  data: PlannerDataProps;
 };
