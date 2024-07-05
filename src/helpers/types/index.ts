@@ -98,6 +98,13 @@ export type TQuizQuestionProps = {
   _id: string;
 };
 
+export type TQuizAnswerProps = {
+  question: {};
+  studentAnswer: string;
+  isCorrect: boolean;
+  tag: string;
+};
+
 export type TPlannerTodaysTopic = {
   subject: string;
   topics: string;
@@ -160,10 +167,12 @@ export type UserDataProps = {
   };
 
   password: string;
+  salt: string;
   avatar?: {
     public_id?: string;
     url?: string;
   };
+  planner: Boolean;
   parent: {
     name?: string;
     phone?: string;
@@ -176,7 +185,7 @@ export type UserDataProps = {
   academic: {
     standard: number;
     competitiveExam?: string;
-    subjects?: [];
+    subjects?: string[];
     schedule?: string;
     coachingMode?: string;
     coachingName?: string;
@@ -210,10 +219,10 @@ export type UserDataProps = {
     dateOfActivation?: Date;
   };
   freeTrial: {
-    availed: Boolean
-    active:  Boolean
-    dateOfActivation: Date,
-    dateOfDeactivation: Date,
+    availed?: Boolean;
+    active?: Boolean;
+    dateOfActivation?: Date;
+    dateOfDeactivation?: Date;
   };
   refund: {
     type?: string;

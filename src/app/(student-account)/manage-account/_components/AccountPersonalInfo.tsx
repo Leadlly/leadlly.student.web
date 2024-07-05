@@ -77,6 +77,10 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
       coachingAddress: user?.academic.coachingAddress
         ? user.academic.coachingAddress
         : "",
+      gender: user?.about.gender ? user?.about.gender : "",
+      class: user?.academic.standard ? String(user?.academic.standard) : "",
+      studentSchedule: user?.academic.schedule ? user.academic.schedule : "",
+      country: user?.address.country ? user.address.country : "",
     },
   });
 
@@ -120,7 +124,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="h-full flex flex-col gap-6">
+          className="h-full flex flex-col gap-6"
+        >
           <div className="flex-1 overflow-y-auto custom__scrollbar space-y-7 px-3">
             <div className="space-y-3">
               <h4 className="text-lg lg:text-[22px] font-medium text-primary">
@@ -138,7 +143,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         </FormLabel>
                         <Button
                           variant={"ghost"}
-                          className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent">
+                          className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent"
+                        >
                           <Edit3 className="w-4 h-4" />
                           Edit
                         </Button>
@@ -166,7 +172,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         </FormLabel>
                         <Button
                           variant={"ghost"}
-                          className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent">
+                          className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent"
+                        >
                           <Edit3 className="w-4 h-4" />
                           Edit
                         </Button>
@@ -194,17 +201,15 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={
-                          user?.academic.standard
-                            ? String(user?.academic.standard)
-                            : field.value
-                        }>
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger
                             className={cn(
                               "text-base lg:text-lg font-medium",
                               !field.value && "text-muted-foreground"
-                            )}>
+                            )}
+                          >
                             <SelectValue placeholder="Select your class" />
                           </SelectTrigger>
                         </FormControl>
@@ -237,7 +242,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         ) : ( */}
                         <Button
                           variant={"ghost"}
-                          className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
+                          className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent"
+                        >
                           Get OTP
                         </Button>
                         {/* )} */}
@@ -274,7 +280,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                         ) : ( */}
                         <Button
                           variant={"ghost"}
-                          className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent">
+                          className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent"
+                        >
                           Get OTP
                         </Button>
                         {/* )} */}
@@ -303,15 +310,15 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={
-                          user?.about.gender ? user?.about.gender : field.value
-                        }>
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger
                             className={cn(
                               "capitalize text-base lg:text-lg font-medium",
                               !field.value && "text-muted-foreground"
-                            )}>
+                            )}
+                          >
                             <SelectValue placeholder="Select your gender" />
                           </SelectTrigger>
                         </FormControl>
@@ -417,17 +424,15 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={
-                          user?.address.country
-                            ? user.address.country
-                            : field.value
-                        }>
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger
                             className={cn(
                               "text-base lg:text-lg font-medium",
                               !field.value && "text-muted-foreground"
-                            )}>
+                            )}
+                          >
                             <SelectValue placeholder="Select your country name" />
                           </SelectTrigger>
                         </FormControl>
@@ -487,7 +492,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                 Academic Information
               </h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-5">
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="competitiveExam"
                   render={({ field }) => (
@@ -504,7 +509,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                               ? user.academic.competitiveExam
                               : field.value
                           }
-                          className="flex items-center gap-x-5">
+                          className="flex items-center gap-x-5"
+                        >
                           <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                             <FormControl>
                               <RadioGroupItem
@@ -558,7 +564,7 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}
@@ -570,17 +576,15 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={
-                          user?.academic.schedule
-                            ? user.academic.schedule
-                            : field.value
-                        }>
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger
                             className={cn(
                               "text-base lg:text-lg font-medium",
                               !field.value && "text-muted-foreground"
-                            )}>
+                            )}
+                          >
                             <SelectValue placeholder="Ex: Coaching + College + Self Study" />
                           </SelectTrigger>
                         </FormControl>
@@ -698,7 +702,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
                               ? user.academic.coachingMode
                               : field.value
                           }
-                          className="flex items-center gap-x-5">
+                          className="flex items-center gap-x-5"
+                        >
                           <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                             <FormControl>
                               <RadioGroupItem
@@ -777,7 +782,8 @@ const AccountPersonalInfo = ({ user }: UserProps) => {
             <Button
               type="submit"
               className="text-base lg:text-lg font-semibold"
-              disabled={isSaving}>
+              disabled={isSaving}
+            >
               {isSaving ? (
                 <span className="flex items-center">
                   <Loader2 className="mr-2 w-5 h-5 animate-spin" /> Saving
