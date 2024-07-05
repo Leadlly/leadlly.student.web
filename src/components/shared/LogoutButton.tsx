@@ -19,8 +19,15 @@ const LogoutButton = () => {
 
   const logoutHandler = async () => {
     try {
-      const res = await apiClient.get("/api/auth/logout");
-      toast.success(res.data?.message);
+      const response = await fetch("/api/auth/logout", {
+        method: "Get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const responseData = await response.json()
+      toast.success(responseData.message);
       dispatch(userData(null));
       router.push("/login");
     } catch (error: any) {

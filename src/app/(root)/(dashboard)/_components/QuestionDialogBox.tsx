@@ -101,7 +101,7 @@ const QuestionDialogBox = ({
 
   return (
     <Modal setOpenDialogBox={setOpenQuestionDialogBox}>
-      {questions[activeQuestion] ? (
+      {questions && questions.length > 0 && questions[activeQuestion] ? (
         <>
           <div className="h-20 bg-primary/[0.2] rounded-b-xl flex items-center justify-between gap-5 md:gap-28 px-5 md:px-12">
             <div
