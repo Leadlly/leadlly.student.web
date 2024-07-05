@@ -5,15 +5,16 @@ import { Progress } from "@/components/ui/progress";
 
 import { cn } from "@/lib/utils";
 
-import { TQuizQuestionProps } from "@/helpers/types";
+import { TQuizAnswerProps, TQuizQuestionProps } from "@/helpers/types";
 
-import { ArrowLeft, Check, X } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import { ArrowLeft, Check, Loader2, X } from "lucide-react";
+import React, { useState } from "react";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import Modal from "@/components/shared/Modal";
 
-import DOMPurify from "dompurify";
 import { sanitizedHtml } from "@/helpers/utils";
+import { toast } from "sonner";
+import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
 
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
@@ -26,32 +27,72 @@ const QuestionDialogBox = ({
   topic: string;
 }) => {
   const [activeQuestion, setActiveQuestion] = useState(0);
-  const [attemptedQuestion, setAttemptedQuestion] = useState<number[]>([]);
+  const [attemptedQuestionIndex, setAttemptedQuestionIndex] = useState<
+    number[]
+  >([]);
+  const [attemptedQuestion, setAttemptedQuestion] = useState<
+    TQuizAnswerProps[]
+  >([]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
     null
   );
+  const [optionSelected, setOptionSelected] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onAnswerSelect = (answer: string, optionTag: string, index: number) => {
+  const onAnswerSelect = (
+    answer: string,
+    optionTag: string,
+    index: number,
+    question: string
+  ) => {
     setSelectedAnswerIndex(index);
 
-    if (optionTag === "Correct") {
-      setSelectedAnswer(answer);
-    } else {
-      setSelectedAnswer("");
+    setSelectedAnswer(answer);
+    setOptionSelected(true);
+
+    if (!attemptedQuestionIndex.includes(activeQuestion) && !selectedAnswer) {
+      setAttemptedQuestionIndex((prev) => [...prev, activeQuestion]);
     }
 
-    if (!attemptedQuestion.includes(activeQuestion) && !selectedAnswer) {
-      setAttemptedQuestion((prev) => [...prev, activeQuestion]);
+    const formattedData: TQuizAnswerProps = {
+      question,
+      studentAnswer: answer,
+      isCorrect: optionTag === "Correct",
+      tag: "daily_quiz",
+    };
+
+    if (!attemptedQuestion.includes(formattedData)) {
+      setAttemptedQuestion((prev) => [...prev, formattedData]);
     }
   };
 
   const handleNextQuestion = () => {
     setSelectedAnswerIndex(null);
     setSelectedAnswer("");
+    setOptionSelected(false);
 
     if (activeQuestion !== questions.length - 1) {
       setActiveQuestion((prev) => prev + 1);
+    }
+  };
+
+  const onHandleSubmit = async () => {
+    setIsSubmitting(true);
+
+    try {
+      const res = await saveDailyQuiz({ topic, questions: attemptedQuestion });
+
+      if (res.success) {
+        toast.success(res.message);
+        setOpenQuestionDialogBox(false);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -69,16 +110,26 @@ const QuestionDialogBox = ({
 
             <div className="flex-1 flex items-center gap-2 md:gap-5">
               <Progress
-                value={(attemptedQuestion.length / questions.length) * 100}
+                value={(attemptedQuestionIndex.length / questions.length) * 100}
                 className="h-2"
               />
               <p className="text-xs md:text-lg font-bold">
-                {attemptedQuestion.length}/{questions.length}
+                {attemptedQuestionIndex.length}/{questions.length}
               </p>
             </div>
 
-            <Button className="h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8] px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold">
-              Submit
+            <Button
+              className="w-20 md:w-28 h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8] px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold"
+              onClick={onHandleSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                </>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </div>
 
@@ -137,10 +188,18 @@ const QuestionDialogBox = ({
                           : selectedAnswerIndex === index &&
                               option.tag === "Incorrect"
                             ? "border-red-500 bg-red-500/10"
-                            : ""
+                            : "",
+                        optionSelected &&
+                          selectedAnswer !== option.name &&
+                          "pointer-events-none opacity-30"
                       )}
                       onClick={() =>
-                        onAnswerSelect(option.name, option.tag, index)
+                        onAnswerSelect(
+                          option.name,
+                          option.tag,
+                          index,
+                          questions[activeQuestion].question
+                        )
                       }
                     >
                       <div
