@@ -4,25 +4,37 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { RightArrowIcon } from "@/components";
-import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   getFormattedDate,
   getTodaysDay,
   getTodaysFormattedDate,
 } from "@/helpers/utils";
-import { DataProps, PlannerDataProps, TDayProps } from "@/helpers/types";
+import { DataProps, TDayProps } from "@/helpers/types";
 
 import QuestionDialogBox from "./QuestionDialogBox";
 import { getPlanner } from "@/actions/planner_actions";
+import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
+import { useReadLocalStorage, useIsMounted } from "usehooks-ts";
 
 const TodaysPlan = () => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState<{ name: string; _id: string } | null>(
+    null
+  );
   const [quizData, setQuizData] = useState<TDayProps | null>(null);
 
-  const handleCheckboxClick = (topic: string) => {
-    setTopic(topic);
+  const completedTopics: { expiryDate: number; value: string[] } | null =
+    useReadLocalStorage("completed_topic");
+
+  const incompleteTopics: { expiryDate: number; value: string[] } | null =
+    useReadLocalStorage("incomplete_topic");
+
+  const isMounted = useIsMounted();
+
+  const handleCheckboxClick = (topic: string, topicId: string) => {
+    setTopic({ name: topic, _id: topicId });
     setOpenQuestionDialogBox(true);
   };
 
@@ -41,6 +53,23 @@ const TodaysPlan = () => {
 
     getQuestionData();
   }, []);
+
+  useEffect(() => {
+    if (
+      isMounted() &&
+      completedTopics &&
+      new Date().getTime() >= completedTopics?.expiryDate!
+    ) {
+      localStorage.removeItem("completed_topic");
+    }
+    if (
+      isMounted() &&
+      incompleteTopics &&
+      new Date().getTime() >= incompleteTopics?.expiryDate!
+    ) {
+      localStorage.removeItem("incomplete_topic");
+    }
+  }, [isMounted]);
 
   return (
     <>
@@ -65,21 +94,66 @@ const TodaysPlan = () => {
       <div className="w-full flex-1 px-4 md:px-6 overflow-y-auto custom__scrollbar">
         <ul className="w-full h-full flex flex-col justify-start gap-1 md:gap-4 xl:gap-0">
           {quizData?.backRevisionTopics.map((topic) => (
-            <div key={topic._id} className="flex items-center justify-between">
+            <div
+              key={topic._id}
+              className={cn(
+                "flex items-center justify-between",
+                completedTopics &&
+                  completedTopics.value.length > 0 &&
+                  completedTopics.value.includes(topic._id!) &&
+                  "pointer-events-none opacity-70"
+              )}
+            >
               <li
                 className="flex items-start gap-2 w-full py-1 cursor-pointer"
-                onClick={() => handleCheckboxClick(topic.topic.name)}
+                onClick={() => handleCheckboxClick(topic.topic.name, topic._id)}
               >
-                <Checkbox className="h-4 w-4 md:h-[18px] md:w-[18px] md:mt-[2px] border-[2px] border-[#787878] data-[state=checked]:bg-green-400 data-[state=checked]:text-white data-[state=checked]:border-none" />
+                <div
+                  className={cn(
+                    "h-4 w-4 md:h-[18px] md:w-[18px] text-white border-2 rounded border-[#787878] grid place-items-center",
+                    completedTopics &&
+                      completedTopics.value.length > 0 &&
+                      completedTopics.value.includes(topic._id) &&
+                      "bg-[#0FD679]/80 border-none",
+                    incompleteTopics &&
+                      incompleteTopics.value.length > 0 &&
+                      incompleteTopics.value.includes(topic._id) &&
+                      "bg-[#ff2e2e]/80 border-none"
+                  )}
+                >
+                  {completedTopics &&
+                    completedTopics.value.length > 0 &&
+                    completedTopics.value.includes(topic._id) && (
+                      <Check className="w-3 h-3" />
+                    )}
+
+                  {incompleteTopics &&
+                    incompleteTopics.value.length > 0 &&
+                    incompleteTopics.value.includes(topic._id) && (
+                      <span className="leading-tight text-xs font-semibold">
+                        !
+                      </span>
+                    )}
+                </div>
+
                 <div className="capitalize text-sm md:text-base font-medium">
                   <p>{topic.topic.name}</p>
                 </div>
               </li>
-              {/* {topic.completed && (
-                <div className="text-[10px] py-[2px] px-1 text-green-500 bg-green-400/10 rounded capitalize">
-                  <p>completed</p>
-                </div>
-              )} */}
+              {completedTopics &&
+                completedTopics.value.length > 0 &&
+                completedTopics.value.includes(topic._id) && (
+                  <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize">
+                    <p>completed</p>
+                  </div>
+                )}
+              {incompleteTopics &&
+                incompleteTopics.value.length > 0 &&
+                incompleteTopics.value.includes(topic._id) && (
+                  <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize">
+                    <p>incomplete</p>
+                  </div>
+                )}
             </div>
           ))}
         </ul>
@@ -89,7 +163,7 @@ const TodaysPlan = () => {
         <QuestionDialogBox
           openQuestionDialogBox={openQuestionDialogBox}
           setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-          questions={quizData?.questions[0][topic]}
+          questions={quizData?.questions[0][topic?.name!]}
           topic={topic}
         />
       )}

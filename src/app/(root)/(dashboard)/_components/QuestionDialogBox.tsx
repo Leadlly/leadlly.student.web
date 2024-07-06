@@ -16,6 +16,8 @@ import { sanitizedHtml } from "@/helpers/utils";
 import { toast } from "sonner";
 import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
 
+import { useLocalStorage } from "usehooks-ts";
+
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
   questions,
@@ -24,7 +26,7 @@ const QuestionDialogBox = ({
   openQuestionDialogBox: boolean;
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
   questions: TQuizQuestionProps[];
-  topic: string;
+  topic: { name: string; _id: string } | null;
 }) => {
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [attemptedQuestionIndex, setAttemptedQuestionIndex] = useState<
@@ -40,12 +42,29 @@ const QuestionDialogBox = ({
   const [optionSelected, setOptionSelected] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onAnswerSelect = (
-    answer: string,
-    optionTag: string,
-    index: number,
-    question: string
-  ) => {
+  const [completedTopics, setCompletedTopics] = useLocalStorage(
+    "completed_topic",
+    {
+      expiryDate: 0,
+      value: [] as string[],
+    }
+  );
+  const [incompleteTopics, setIncompleteTopics, removeIncompleteTopics] =
+    useLocalStorage("incomplete_topic", {
+      expiryDate: 0,
+      value: [] as string[],
+    });
+
+  const expiryDate = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate() + 1,
+    0,
+    0,
+    0
+  ).getTime();
+
+  const onAnswerSelect = (answer: string, optionTag: string, index: number) => {
     setSelectedAnswerIndex(index);
 
     setSelectedAnswer(answer);
@@ -82,12 +101,26 @@ const QuestionDialogBox = ({
 
     try {
       const res = await saveDailyQuiz({
-        topic: { name: topic },
+        topic: { name: topic?.name! },
         questions: attemptedQuestion,
       });
 
       if (res.success) {
         toast.success(res.message);
+        if (attemptedQuestion.length === questions.length) {
+          if (incompleteTopics.value.includes(topic?._id!)) {
+            removeIncompleteTopics();
+          }
+          setCompletedTopics({
+            expiryDate,
+            value: [...completedTopics.value, topic?._id!],
+          });
+        } else {
+          setIncompleteTopics({
+            expiryDate,
+            value: [...incompleteTopics.value, topic?._id!],
+          });
+        }
         setOpenQuestionDialogBox(false);
       } else {
         toast.error(res.message);
@@ -139,7 +172,7 @@ const QuestionDialogBox = ({
           <div className="px-3 md:px-14 flex flex-col md:flex-row items-start gap-3">
             <div className="w-full space-y-5 pb-5">
               <h3 className="text-center text-xl md:text-3xl font-semibold text-black">
-                Quiz on <span className="capitalize">{topic}</span>
+                Quiz on <span className="capitalize">{topic?.name}</span>
               </h3>
 
               <div className="flex items-center justify-center w-full">
@@ -197,12 +230,7 @@ const QuestionDialogBox = ({
                           "pointer-events-none opacity-30"
                       )}
                       onClick={() =>
-                        onAnswerSelect(
-                          option.name,
-                          option.tag,
-                          index,
-                          questions[activeQuestion].question
-                        )
+                        onAnswerSelect(option.name, option.tag, index)
                       }
                     >
                       <div

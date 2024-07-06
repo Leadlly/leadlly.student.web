@@ -1,4 +1,3 @@
-import { getPlanner } from "@/actions/planner_actions";
 import { LeftArrowIcon, RightArrowIcon } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +12,7 @@ import {
   getTodaysFormattedDate,
 } from "@/helpers/utils";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const WeeklyPlan = ({
   data,
@@ -21,6 +21,7 @@ const WeeklyPlan = ({
   data: PlannerDataProps;
   setData: (data: TDayProps | null) => void;
 }) => {
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   return (
     <div className="w-full flex flex-col justify-start gap-5 h-full py-4 border rounded-xl overflow-x-hidden overflow-y-auto custom__scrollbar">
       <div className="w-full flex items-center justify-between gap-0 md:gap-4 py-2 xl:flex-col xl:items-start xl:justify-normal">
@@ -65,11 +66,16 @@ const WeeklyPlan = ({
                 getFormattedDate(new Date(plan.date)) ===
                   getTodaysFormattedDate()
                   ? "bg-primary text-white"
-                  : "bg-white text-black"
+                  : "bg-white text-black",
+                getFormattedDate(new Date(plan.date)) !==
+                  getTodaysFormattedDate() &&
+                  selectedPlan === plan._id &&
+                  "border-primary"
               )}
               onClick={async () => {
                 await setData(null);
                 await setData(plan);
+                setSelectedPlan(plan._id);
               }}
             >
               <p className="py-2 border-b border-b-slate-300 text-sm md:text-xl flex items-center justify-between md:justify-center gap-4 px-4">
