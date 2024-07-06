@@ -76,7 +76,7 @@ const TodaysPlan = () => {
       <div className="flex items-center justify-between py-3 px-4 md:px-6">
         <div className="flex items-center gap-2 md:flex-col md:items-start md:gap-1">
           <h4 className="text-base md:text-xl font-semibold">
-            To do list
+            Todo list
           </h4>
           <p className="text-[10px] md:text-xs mt-[2px] md:mt-0 font-medium text-[#9E9C9C]">
             {getTodaysDay()} {getTodaysFormattedDate()}
