@@ -7,6 +7,8 @@ import ProgressAnalytics from "./ProgressAnalytics";
 import UserProfileSheet from "./UserProfileSheet";
 import LogoutButton from "@/components/shared/LogoutButton";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
+import { Suspense } from "react";
+import Loader from "@/components/shared/Loader";
 
 const MobileUI = () => {
   return (
@@ -21,7 +23,9 @@ const MobileUI = () => {
       </div>
 
       <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[233px]">
-        <TodaysPlan />
+        <Suspense fallback={<Loader />}>
+          <TodaysPlan />
+        </Suspense>
       </div>
 
       <div className="border rounded-xl px-3 py-2">

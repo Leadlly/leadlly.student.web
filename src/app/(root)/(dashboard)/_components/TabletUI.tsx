@@ -10,6 +10,8 @@ import UpcomingWorkshops from "./UpcomingWorkshops";
 import DailyReport from "./DailyReport";
 import ProgressAnalytics from "./ProgressAnalytics";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
+import { Suspense } from "react";
+import Loader from "@/components/shared/Loader";
 
 const TabletUI = () => {
   return (
@@ -24,7 +26,9 @@ const TabletUI = () => {
         <div className="flex gap-4">
           <div className="space-y-4 w-1/2">
             <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">
-              <TodaysPlan />
+              <Suspense fallback={<Loader />}>
+                <TodaysPlan />
+              </Suspense>
             </div>
             <div className="border rounded-xl h-[240px]">
               <ConnectWithMentor />

@@ -86,7 +86,7 @@ const Login = () => {
 
   return (
     <div className="h-main-height relative">
-      <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-24">
+      <div className="flex items-center px-5 py-2 lg:mx-24">
         <Image
           src="/assets/images/leadlly_logo.svg"
           alt="Leadlly_Logo"
@@ -206,7 +206,7 @@ const Login = () => {
               </p>
             </div>
           </div>
-          <div className="relative w-56 h-56 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px]">
+          <div className="relative hidden xl:block w-56 h-56 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px]">
             <Image
               src="/assets/icons/Loginpic.png"
               alt="Login_page_photo"
@@ -217,7 +217,7 @@ const Login = () => {
         </div>
       </div>
 
-      <span className="absolute bottom-0 xl:right-0 -z-20 w-full xl:w-80 h-32 sm:h-64 xl:h-full rounded-tl-[40px] rounded-tr-[40px] xl:rounded-tr-none xl:rounded-bl-[40px] bg-[#FCF3FF]"></span>
+      <span className="absolute hidden xl:block bottom-0 xl:right-0 -z-20 w-full xl:w-80 h-32 sm:h-64 xl:h-full rounded-tl-[40px] rounded-tr-[40px] xl:rounded-tr-none xl:rounded-bl-[40px] bg-[#FCF3FF]"></span>
     </div>
   );
 };

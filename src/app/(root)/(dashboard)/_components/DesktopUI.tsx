@@ -12,6 +12,8 @@ import DailyStreakQuestions from "./DailyStreakQuestions";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
+import { Suspense } from "react";
+import Loader from "@/components/shared/Loader";
 
 const DesktopUI = () => {
   return (
@@ -33,8 +35,10 @@ const DesktopUI = () => {
       <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
         <section className="h-full flex flex-col justify-start gap-4 py-2 xl:w-[calc(100%-268px)]">
           <div className="w-full grid grid-cols-2 gap-4">
-            <div className="border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
-              <TodaysPlan />
+            <div className="relative border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
+              <Suspense fallback={<Loader />}>
+                <TodaysPlan />
+              </Suspense>
             </div>
 
             <div className="border rounded-xl">

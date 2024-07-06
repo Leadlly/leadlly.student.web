@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 
 import { RightArrowIcon } from "@/components";
@@ -17,6 +17,7 @@ import { getPlanner } from "@/actions/planner_actions";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { useReadLocalStorage, useIsMounted } from "usehooks-ts";
+import Loader from "@/components/shared/Loader";
 
 const TodaysPlan = () => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
@@ -160,12 +161,14 @@ const TodaysPlan = () => {
       </div>
 
       {openQuestionDialogBox && (
-        <QuestionDialogBox
-          openQuestionDialogBox={openQuestionDialogBox}
-          setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-          questions={quizData?.questions[0][topic?.name!]}
-          topic={topic}
-        />
+        <Suspense fallback={<Loader />}>
+          <QuestionDialogBox
+            openQuestionDialogBox={openQuestionDialogBox}
+            setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+            questions={quizData?.questions[0][topic?.name!]}
+            topic={topic}
+          />
+        </Suspense>
       )}
     </>
   );
