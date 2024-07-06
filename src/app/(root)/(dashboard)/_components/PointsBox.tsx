@@ -14,7 +14,6 @@ const PointsBox = () => {
         pointsText="Level Up"
         progressValue={60}
         progressIndicatorBg="bg-[#0075FF]"
-        pointsProgressText="+ 60%"
         pointsProgressTextColor="text-[#00B75F]"
         progressIconStroke="#00B75F"
       />
@@ -29,7 +28,6 @@ const PointsBox = () => {
         pointsText="Points"
         progressValue={30}
         progressIndicatorBg="bg-[#FF9900]"
-        pointsProgressText="+ 30%"
         pointsProgressTextColor="text-[#E55426]"
         progressIconStroke="#E55426"
       />
