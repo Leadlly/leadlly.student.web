@@ -64,7 +64,6 @@ const LevelPoints = ({
                 "text-[9px] font-bold mt-[0.5px]",
                 pointsProgressTextColor
               )}>
-              {pointsProgressText}
             </span>
           </div>
         )}
@@ -75,10 +74,6 @@ const LevelPoints = ({
               <span>Jan12</span>
               <span>Feb12</span>
             </div>
-
-            <p className="text-[8px] text-black font-semibold -mt-1">
-              Good Work
-            </p>
           </>
         )}
       </div>

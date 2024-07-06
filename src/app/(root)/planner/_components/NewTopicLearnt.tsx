@@ -159,7 +159,6 @@ const NewTopicLearnt = ({
             </li>
           ))}
         </ul>
-        <MenuIcon className="md:w-4 md:h-4 cursor-pointer" />
       </div>
 
       <Form {...form}>

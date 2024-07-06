@@ -76,19 +76,12 @@ const TodaysPlan = () => {
       <div className="flex items-center justify-between py-3 px-4 md:px-6">
         <div className="flex items-center gap-2 md:flex-col md:items-start md:gap-1">
           <h4 className="text-base md:text-xl font-semibold">
-            Today&apos;s Plan
+            Todo list
           </h4>
           <p className="text-[10px] md:text-xs mt-[2px] md:mt-0 font-medium text-[#9E9C9C]">
             {getTodaysDay()} {getTodaysFormattedDate()}
           </p>
         </div>
-        <Link
-          href="/"
-          className="flex items-center gap-4 text-[#A36AF5] text-sm md:text-base"
-        >
-          View all
-          <RightArrowIcon className="md:w-[9px] md:h-[9px] stroke-[#A36AF5]" />
-        </Link>
       </div>
 
       <div className="w-full flex-1 px-4 md:px-6 overflow-y-auto custom__scrollbar">
