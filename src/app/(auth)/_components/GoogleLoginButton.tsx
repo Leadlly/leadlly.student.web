@@ -1,6 +1,7 @@
 "use client";
 
 import { getUser } from "@/actions/user_actions";
+import Loader from "@/components/shared/Loader";
 
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/redux/hooks";
@@ -9,24 +10,33 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 import { toast } from "sonner";
 
-const GoogleLoginButton = () => {
+const GoogleLoginButton = ({
+  setIsLoading,
+}: {
+  setIsLoading: (isLoading: boolean) => void;
+}) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
+      setIsLoading(true);
       try {
-        const res = await axios.post("/api/google/auth", {
-          access_token: credentialResponse.access_token
-        },{
-          withCredentials: true, 
-          headers: {
-            'Content-Type': 'application/json',
+        const res = await axios.post(
+          "/api/google/auth",
+          {
+            access_token: credentialResponse.access_token,
           },
-        }
-      );
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const userInfo = await getUser();
         dispatch(userData(userInfo.user));
@@ -45,6 +55,8 @@ const GoogleLoginButton = () => {
         toast.error("Google login failed!", {
           description: error.response?.data?.message || error.message,
         });
+      } finally {
+        setIsLoading(false);
       }
     },
     onError: (error: any) => {
@@ -56,19 +68,22 @@ const GoogleLoginButton = () => {
   });
 
   return (
-    <Button
-      type="button"
-      variant={"outline"}
-      onClick={() => login()}
-      className="w-full text-lg lg:text-xl h-12 gap-2">
-      <Image
-        src="/assets/icons/google-icon.svg"
-        alt="Sign in with Google"
-        width={17}
-        height={17}
-      />
-      Sign in with Google
-    </Button>
+    <Suspense fallback={<Loader />}>
+      <Button
+        type="button"
+        variant={"outline"}
+        onClick={() => login()}
+        className="w-full text-lg lg:text-xl h-12 gap-2"
+      >
+        <Image
+          src="/assets/icons/google-icon.svg"
+          alt="Sign in with Google"
+          width={17}
+          height={17}
+        />
+        Sign in with Google
+      </Button>
+    </Suspense>
   );
 };
 
