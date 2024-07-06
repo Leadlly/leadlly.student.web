@@ -13,12 +13,17 @@ import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 import { toast } from "sonner";
 
-const GoogleLoginButton = () => {
+const GoogleLoginButton = ({
+  setIsLoading,
+}: {
+  setIsLoading: (isLoading: boolean) => void;
+}) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
+      setIsLoading(true);
       try {
         const res = await axios.post(
           "/api/google/auth",
@@ -50,6 +55,8 @@ const GoogleLoginButton = () => {
         toast.error("Google login failed!", {
           description: error.response?.data?.message || error.message,
         });
+      } finally {
+        setIsLoading(false);
       }
     },
     onError: (error: any) => {

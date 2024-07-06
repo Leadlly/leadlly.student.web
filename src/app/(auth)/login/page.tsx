@@ -29,10 +29,12 @@ import apiClient from "@/apiClient/apiClient";
 import { useAppDispatch } from "@/redux/hooks";
 import { getUser } from "@/actions/user_actions";
 import { userData } from "@/redux/slices/userSlice";
+import Loader from "@/components/shared/Loader";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -85,140 +87,153 @@ const Login = () => {
   };
 
   return (
-    <div className="h-main-height relative">
-      <div className="flex items-center px-5 py-2 lg:mx-24">
-        <Image
-          src="/assets/images/leadlly_logo.svg"
-          alt="Leadlly_Logo"
-          width={150}
-          height={50}
-        />
-      </div>
-
-      <div className="h-[calc(100%-56px)] flex items-center px-4 lg:mx-20">
-        <div className="flex flex-col xl:flex-row items-center justify-between lg:gap-6 w-full">
-          <div className="rounded-3xl px-5 sm:px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start space-y-4">
-            <div className="text-center space-y-2">
-              <h3 className="text-2xl lg:text-[52px] font-bold leading-none">
-                Welcome
-              </h3>
-              <p className="text-base lg:text-lg">
-                We are glad to see you with us
-              </p>
-            </div>
-
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onFormSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          placeholder="Email"
-                          icon1={<User className="w-5 h-5 opacity-70" />}
-                          className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          inputWrapperClassName="h-12"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          type={togglePassword ? "text" : "password"}
-                          placeholder="Create password"
-                          icon1={<Lock className="w-5 h-5 opacity-70" />}
-                          icon2={
-                            <div
-                              className="cursor-pointer"
-                              onClick={() => setTogglePassword(!togglePassword)}
-                            >
-                              {togglePassword ? (
-                                <EyeOff className="w-5 h-5 opacity-70" />
-                              ) : (
-                                <Eye className="w-5 h-5 opacity-70" />
-                              )}
-                            </div>
-                          }
-                          className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          inputWrapperClassName="h-12"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="w-full flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Checkbox id="remember-password" />
-                    <label htmlFor="remember-password" className="mt-1">
-                      Remember Password
-                    </label>
-                  </div>
-
-                  <div>
-                    <Link href={"/forgot-password"} className="text-primary">
-                      Forgot Password?
-                    </Link>
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full text-lg md:text-xl h-12"
-                  disabled={isLoggingIn}
-                >
-                  {isLoggingIn ? (
-                    <span className="flex items-center">
-                      <Loader2 className="w-6 h-6 animate-spin mr-2" /> Signing
-                      in
-                    </span>
-                  ) : (
-                    "Login"
-                  )}
-                </Button>
-              </form>
-            </Form>
-
-            <GoogleLoginButton />
-
-            <div className="w-full text-center">
-              <p>
-                No account yet?{" "}
-                <Link href={"/signup"} className="text-primary">
-                  Sign Up
-                </Link>
-              </p>
-            </div>
-          </div>
-          <div className="relative hidden xl:block w-56 h-56 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px]">
+    <>
+      {isLoading ? (
+        <>
+          <Loader />
+        </>
+      ) : (
+        <div className="h-main-height relative">
+          <div className="flex items-center px-5 py-2 lg:mx-24">
             <Image
-              src="/assets/icons/Loginpic.png"
-              alt="Login_page_photo"
-              fill
-              className="object-contain"
+              src="/assets/images/leadlly_logo.svg"
+              alt="Leadlly_Logo"
+              width={150}
+              height={50}
             />
           </div>
-        </div>
-      </div>
 
-      <span className="absolute hidden xl:block bottom-0 xl:right-0 -z-20 w-full xl:w-80 h-32 sm:h-64 xl:h-full rounded-tl-[40px] rounded-tr-[40px] xl:rounded-tr-none xl:rounded-bl-[40px] bg-[#FCF3FF]"></span>
-    </div>
+          <div className="h-[calc(100%-56px)] flex items-center px-4 lg:mx-20">
+            <div className="flex flex-col xl:flex-row items-center justify-between lg:gap-6 w-full">
+              <div className="rounded-3xl px-5 sm:px-8 lg:px-12 py-10 lg:py-14 shadow-xl max-w-[530px] w-full flex flex-col justify-start space-y-4">
+                <div className="text-center space-y-2">
+                  <h3 className="text-2xl lg:text-[52px] font-bold leading-none">
+                    Welcome
+                  </h3>
+                  <p className="text-base lg:text-lg">
+                    We are glad to see you with us
+                  </p>
+                </div>
+
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onFormSubmit)}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              placeholder="Email"
+                              icon1={<User className="w-5 h-5 opacity-70" />}
+                              className="focus-visible:ring-0 text-lg focus:ring-offset-0"
+                              inputWrapperClassName="h-12"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              type={togglePassword ? "text" : "password"}
+                              placeholder="Create password"
+                              icon1={<Lock className="w-5 h-5 opacity-70" />}
+                              icon2={
+                                <div
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    setTogglePassword(!togglePassword)
+                                  }
+                                >
+                                  {togglePassword ? (
+                                    <EyeOff className="w-5 h-5 opacity-70" />
+                                  ) : (
+                                    <Eye className="w-5 h-5 opacity-70" />
+                                  )}
+                                </div>
+                              }
+                              className="focus-visible:ring-0 text-lg focus:ring-offset-0"
+                              inputWrapperClassName="h-12"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="w-full flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Checkbox id="remember-password" />
+                        <label htmlFor="remember-password" className="mt-1">
+                          Remember Password
+                        </label>
+                      </div>
+
+                      <div>
+                        <Link
+                          href={"/forgot-password"}
+                          className="text-primary"
+                        >
+                          Forgot Password?
+                        </Link>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className="w-full text-lg md:text-xl h-12"
+                      disabled={isLoggingIn}
+                    >
+                      {isLoggingIn ? (
+                        <span className="flex items-center">
+                          <Loader2 className="w-6 h-6 animate-spin mr-2" />{" "}
+                          Signing in
+                        </span>
+                      ) : (
+                        "Login"
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+
+                <GoogleLoginButton setIsLoading={setIsLoading} />
+
+                <div className="w-full text-center">
+                  <p>
+                    No account yet?{" "}
+                    <Link href={"/signup"} className="text-primary">
+                      Sign Up
+                    </Link>
+                  </p>
+                </div>
+              </div>
+              <div className="relative hidden xl:block w-56 h-56 sm:w-96 sm:h-96 md:w-[500px] md:h-[500px]">
+                <Image
+                  src="/assets/icons/Loginpic.png"
+                  alt="Login_page_photo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+          </div>
+
+          <span className="absolute hidden xl:block bottom-0 xl:right-0 -z-20 w-full xl:w-80 h-32 sm:h-64 xl:h-full rounded-tl-[40px] rounded-tr-[40px] xl:rounded-tr-none xl:rounded-bl-[40px] bg-[#FCF3FF]"></span>
+        </div>
+      )}
+    </>
   );
 };
 
