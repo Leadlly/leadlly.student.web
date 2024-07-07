@@ -77,10 +77,10 @@ export const manageAccountTabs = [
   //   id: "subject-overview",
   //   label: "Subject Overview",
   // },
-  {
-    id: "your-mentor",
-    label: "Your Mentor",
-  },
+  // {
+  //   id: "your-mentor",
+  //   label: "Your Mentor",
+  // },
 ];
 
 export const subscriptionPlanningBenefits = [
@@ -129,3 +129,4 @@ export const SUBJECT_COLORS = {
   Chemistry: "bg-[#72EFDD4A]",
   Physics: "bg-[#A36AF53D]",
 };
+

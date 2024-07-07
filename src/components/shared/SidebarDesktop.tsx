@@ -37,7 +37,8 @@ const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
               key={item.href}
               className={cn(
                 "relative px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
-              )}>
+              )}
+            >
               {pathname === item.href && (
                 <motion.div
                   layoutId="sidebar_active_tab"
@@ -56,23 +57,22 @@ const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
                         ? "stroke-white"
                         : "fill-white"
                       : item.label !== "growth meter"
-                      ? "stroke-[#5A10D9]"
-                      : "fill-[#5A10D9]"
+                        ? "stroke-[#5A10D9]"
+                        : "fill-[#5A10D9]"
                   )}
                 />
                 <div
                   className={cn(
                     "md:hidden xl:block",
                     pathname === item.href ? "text-white" : "text-[#5A10D9]"
-                  )}>
+                  )}
+                >
                   {item.label}
                 </div>
               </li>
             </Link>
           );
         })}
-
-        <LogoutButton />
       </ul>
     </aside>
   );

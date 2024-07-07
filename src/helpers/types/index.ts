@@ -231,11 +231,7 @@ export type UserDataProps = {
     status?: string;
     amount?: string;
   };
-  quiz?: {
-    minor?: any[];
-    major?: any[];
-  };
-  createdAt?: Date; // Optional as it has a default value
+  createdAt?: Date;
 };
 
 export type UserProps = {
@@ -306,36 +302,49 @@ export interface Questions {
   [key: string]: Question | undefined;
 }
 
-export type TBackRevisionProps = {
-  topic: {
-    name: string;
-    studiedAt: [
-      {
-        date: string;
-        _id: string;
-      },
-    ];
-  };
-  chapter: {
-    name: string;
-    level: string;
-    studiedAt: [];
-  };
+export type Topic = {
+  name: string;
+  plannerFrequency?: number;
+  level?: string;
+  overall_efficiency?: number;
+  studiedAt: {
+    date?: Date;
+    efficiency?: number;
+  }[];
+};
+
+export type Chapter = {
+  name: string;
+  plannerFrequency?: number;
+  level?: string;
+  overall_efficiency?: number;
+  studiedAt: {
+    date?: Date;
+    efficiency?: number;
+  }[];
+};
+
+export type TRevisionProps = {
   _id: string;
   user: string;
   tag: string;
+  topic: Topic;
+  chapter: Chapter;
   subject: string;
   standard: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  efficiency?: any;
+  quizScores?: number[];
+  weeklyTestScore?: number;
 };
 
 export type TDayProps = {
   date: string;
   day: string;
-  continuousRevisionTopics: any[];
-  backRevisionTopics: TBackRevisionProps[];
-  questions: any[];
+  continuousRevisionTopics: TRevisionProps[];
+  backRevisionTopics: TRevisionProps[];
+  questions: { [key: string]: any };
   _id: string;
 };
 

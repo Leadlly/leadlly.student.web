@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  PlannerDataProps,
-  TDayProps,
-  TPlannerTodaysTopic,
-} from "@/helpers/types";
+import { PlannerDataProps, TDayProps } from "@/helpers/types";
 import DesktopUI from "./DesktopUI";
 import MobileUI from "./MobileUI";
 import TabletUI from "./TabletUI";
