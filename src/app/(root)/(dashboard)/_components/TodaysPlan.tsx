@@ -158,7 +158,7 @@ const TodaysPlan = () => {
           <QuestionDialogBox
             openQuestionDialogBox={openQuestionDialogBox}
             setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-            questions={quizData?.questions[0][topic?.name!]}
+            questions={quizData?.questions.topic?.name!}
             topic={topic}
           />
         </Suspense>

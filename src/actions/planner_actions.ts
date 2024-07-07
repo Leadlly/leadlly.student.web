@@ -61,3 +61,32 @@ export const createPlanner = async () => {
     }
   }
 };
+
+export const updatePlanner = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/planner/update`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+    revalidateTag("plannerData")
+
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error creating planner: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while creating planner!");
+    }
+  }
+};
