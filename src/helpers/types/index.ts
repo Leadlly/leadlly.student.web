@@ -334,7 +334,7 @@ export type TDayProps = {
   day: string;
   continuousRevisionTopics: any[];
   backRevisionTopics: TBackRevisionProps[];
-  questions: any[];
+  questions: { [key: string]: any };
   _id: string;
 };
 
