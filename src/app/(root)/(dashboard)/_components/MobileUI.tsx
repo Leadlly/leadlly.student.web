@@ -5,7 +5,6 @@ import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
 import UserProfileSheet from "./UserProfileSheet";
-import LogoutButton from "@/components/shared/LogoutButton";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
@@ -18,7 +17,6 @@ const MobileUI = () => {
         <div className="flex items-center gap-2">
           <UpgradeSubscriptionButton />
           <UserProfileSheet />
-          <LogoutButton />
         </div>
       </div>
 
