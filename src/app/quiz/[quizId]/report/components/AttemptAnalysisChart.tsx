@@ -86,7 +86,7 @@ const AttemptAnalysisChart: FC<AttemptAnalysisChartProps> = ({
 									show: true,
 									color: '#939393',
 									fontFamily: 'Mada, sans-serif',
-									fontSize: '13px',
+									fontSize: '10px',
 									label: 'Efficiency',
 									formatter: () => `${efficiency}%`,
 								},

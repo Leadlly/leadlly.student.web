@@ -1,45 +1,35 @@
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import Link from 'next/link';
-interface Subject {
-	name: string;
-	color: string;
-}
-interface WeeklyQuiz {
-	id: number;
-	description: string;
-	startDate: string;
-	endDate: string;
-	subjects: Subject[];
-	questions: number;
-}
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { UnattemptedWeeklyQuiz } from "@/helpers/types";
+import { getColorBySubject } from "@/helpers/utils";
+import Link from "next/link";
 
-type Props = { quiz: WeeklyQuiz };
+type Props = { quiz: UnattemptedWeeklyQuiz };
 const UnattemptedWeekQuiz = ({ quiz }: Props) => {
-	type DateString = string;
-	// Function to format date
-	function formatDate(dateString: DateString): string {
-		const date = new Date(dateString);
-		const day = date.getDate();
-		const month = date.toLocaleString('default', { month: 'short' });
-		return `${day} ${month}`;
-	}
+  type DateString = string;
+  // Function to format date
+  function formatDate(dateString: DateString): string {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "short" });
+    return `${day} ${month}`;
+  }
 
-	// Function to calculate days left until the meeting
-	function calculateDaysLeft(meetingDate: Date): number {
-		// Get the current date
-		const currentDate = new Date();
+  // Function to calculate days left until the meeting
+  function calculateDaysLeft(meetingDate: Date): number {
+    // Get the current date
+    const currentDate = new Date();
 
-		// Calculate the difference in milliseconds
-		const differenceInMs = meetingDate.getTime() - currentDate.getTime();
+    // Calculate the difference in milliseconds
+    const differenceInMs = meetingDate.getTime() - currentDate.getTime();
 
-		// Convert milliseconds to days
-		const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
-		return daysLeft;
-	}
-	const daysLeft = calculateDaysLeft(new Date(quiz.endDate));
+    // Convert milliseconds to days
+    const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+    return daysLeft;
+  }
+  const daysLeft = calculateDaysLeft(new Date(quiz.endDate));
 
-	return (
+  return (
     <div
       key={quiz.id}
       className="flex items-stretch gap-3 mx-2 md:mx-4 p-3 rounded-xl border-2 shadow-lg"
@@ -73,9 +63,9 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
               {quiz.subjects.map((subject, index) => (
                 <Label
                   key={index}
-                  className={`text-white text-xs md:text-base  py-1 px-2 mx-1 rounded ${subject.color}`}
+                  className={`text-black text-xs md:text-base py-1 px-2 md:px-4 mx-1 rounded ${getColorBySubject(subject)}`}
                 >
-                  {subject.name}
+                  {subject}
                 </Label>
               ))}
             </div>

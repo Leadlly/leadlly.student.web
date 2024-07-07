@@ -1,23 +1,10 @@
 import React from 'react';
 import AttemptedWeekQuiz from './AttemptedWeekQuiz';
+import { AttemptedWeeklyQuiz, Subject } from '@/helpers/types';
 
-type Subject = {
-	name: string;
-	color: string;
-};
 
-interface WeeklyQuiz {
-	id: number;
-	description: string;
-	startDate: string;
-	endDate: string;
-	subject: Subject;
-	completedDate: string;
-	efficiency: number;
-	questions: number;
-}
 type AttemptedWeeklyQuizzesProps = {
-	quizzes: WeeklyQuiz[];
+	quizzes: AttemptedWeeklyQuiz[];
 };
 
 const AttemptedWeeklyQuizzes = ({ quizzes }: AttemptedWeeklyQuizzesProps) => {

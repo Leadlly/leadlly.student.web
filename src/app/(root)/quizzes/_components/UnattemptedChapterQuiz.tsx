@@ -1,19 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { UnattemptedChapterQuizProps } from '@/helpers/types';
+import { getColorBySubject } from '@/helpers/utils';
 import Link from 'next/link';
-interface Subject {
-	name: string;
-	color: string;
-}
-interface ChapterQuiz {
-	id: number;
-	chapterName: string;
-	description: string;
-	subject: Subject;
-	questions: number;
-}
 
-type Props = { quiz: ChapterQuiz };
+type Props = { quiz: UnattemptedChapterQuizProps };
  const UnattemptedChapterQuiz = ({ quiz }: Props) => {
 	return (
     <div
@@ -34,9 +25,9 @@ type Props = { quiz: ChapterQuiz };
             </p>
             <div className="mt-5 mb-1">
               <Label
-                className={`text-white text-xs md:text-base py-1 px-2 mx-1 rounded ${quiz.subject.color}`}
+                className={`text-black text-xs md:text-base py-1 px-2 md:px-4 mx-1 rounded ${getColorBySubject(quiz.subject)}`}
               >
-                {quiz.subject.name}
+                {quiz.subject}
               </Label>
             </div>
           </div>

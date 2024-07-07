@@ -1,24 +1,13 @@
 'use client';
 import React, { useState } from 'react';
 import AttemptedQuiz from './AttemptedQuiz';
+import { AttemptedQuizProps } from '@/helpers/types';
 
-type Subject = {
-	name: string;
-	color: string;
-};
 
-interface ChapterQuiz {
-	id: number;
-	chapterName: string;
-	description: string;
-	subject: Subject;
-	questions: number;
-	completedDate: string;
-	efficiency: number;
-}
+
 
 type AttemptedCustomizedQuizzesProps = {
-	quizzes: ChapterQuiz[];
+	quizzes: AttemptedQuizProps[];
 };
 
 const AttemptedCustomizedQuizzes = ({ quizzes }: AttemptedCustomizedQuizzesProps) => {
@@ -29,7 +18,7 @@ const AttemptedCustomizedQuizzes = ({ quizzes }: AttemptedCustomizedQuizzesProps
 	const filteredQuizzes =
 		selectedSubject === 'All'
 			? quizzes
-			: quizzes.filter((quiz) => quiz.subject.name === selectedSubject);
+			: quizzes.filter((quiz) => quiz.subject === selectedSubject);
 
 	return (
 		<div>

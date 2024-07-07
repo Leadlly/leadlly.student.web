@@ -118,9 +118,14 @@ export const subscriptionLearningBenefits = [
   },
 ];
 export interface EfficiencyOption {
-	min?: number;
-	max?: number;
-	label: string;
-	progressBarColor: string;
-	textColor: string;
+  min?: number;
+  max?: number;
+  label: string;
+  progressBarColor: string;
+  textColor: string;
 }
+export const SUBJECT_COLORS = {
+  Maths: "bg-[#107FFC30]",
+  Chemistry: "bg-[#72EFDD4A]",
+  Physics: "bg-[#A36AF53D]",
+};

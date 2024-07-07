@@ -1,4 +1,5 @@
 import React, { SVGProps } from "react";
+import { SUBJECT_COLORS } from "../constants";
 
 export type TContainerProps = {
   children: React.ReactNode;
@@ -348,4 +349,40 @@ export type PlannerDataProps = {
 
 export type DataProps = {
   data: PlannerDataProps;
+};
+export type Subject = keyof typeof SUBJECT_COLORS;
+export interface AttemptedWeeklyQuiz {
+  id: number;
+  description: string;
+  startDate: string;
+  endDate: string;
+  subject: Subject;
+  completedDate: string;
+  efficiency: number;
+  questions: number;
+}
+export interface AttemptedQuizProps {
+  id: number;
+  chapterName: string;
+  description: string;
+  subject: Subject;
+  questions: number;
+  completedDate: string;
+  efficiency: number;
+}
+export type UnattemptedWeeklyQuiz = {
+  id: number;
+  description: string;
+  startDate: string;
+  endDate: string;
+  subjects: Subject[];
+  questions: number;
+};
+
+export type UnattemptedChapterQuizProps = {
+  id: number;
+  chapterName: string;
+  description: string;
+  subject: Subject;
+  questions: number;
 };
