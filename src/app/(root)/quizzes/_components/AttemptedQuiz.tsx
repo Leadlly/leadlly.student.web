@@ -1,24 +1,12 @@
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { getTextColor } from '@/helpers/constants/efficiency';
-import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { getTextColor } from "@/helpers/constants/efficiency";
+import { AttemptedQuizProps } from "@/helpers/types";
+import { getColorBySubject } from "@/helpers/utils";
+import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
-interface Subject {
-	name: string;
-	color: string;
-}
-
-interface AttemptedQuizProps {
-	id: number;
-	chapterName: string;
-	description: string;
-	subject: Subject;
-	questions: number;
-	completedDate: string;
-	efficiency: number;
-}
 
 type Props = { quiz: AttemptedQuizProps };
 
@@ -46,10 +34,10 @@ const AttemptedQuiz = ({ quiz }: Props) => {
             <div className="mt-5 flex items-center mb-1 gap-10">
               <div className="flex items-center">
                 <Label
-                  className={`text-white py-1 px-2 mx-1 rounded ${quiz.subject.color}`}
+                  className={`text-black text-xs md:text-base py-1 px-2 md:px-4 mx-1 rounded ${getColorBySubject(quiz.subject)}`}
                 >
-                  {quiz.subject.name}
-                </Label>{" "}
+                  {quiz.subject}
+                </Label>
                 <p className="text-gray-600 text-xs md:text-sm my-1 max-sm:hidden">
                   {quiz.questions} Quiz Questions
                 </p>

@@ -124,3 +124,9 @@ export interface EfficiencyOption {
   progressBarColor: string;
   textColor: string;
 }
+export const SUBJECT_COLORS = {
+  Maths: "bg-[#107FFC30]",
+  Chemistry: "bg-[#72EFDD4A]",
+  Physics: "bg-[#A36AF53D]",
+};
+

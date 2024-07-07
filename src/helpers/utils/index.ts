@@ -1,4 +1,6 @@
 import DOMPurify from "dompurify";
+import { SUBJECT_COLORS } from "../constants";
+import { Subject } from "../types";
 
 const daysOfWeek = [
   "Sunday",
@@ -96,4 +98,8 @@ export const formatTime = (seconds: number) => {
 export const sanitizedHtml = (htmlString: string) => {
   DOMPurify.sanitize(htmlString);
   return htmlString;
+};
+
+export const getColorBySubject = (subject: Subject): string => {
+  return SUBJECT_COLORS[subject] || "bg-[#B0BEC5]";
 };

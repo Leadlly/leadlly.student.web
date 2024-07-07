@@ -1,25 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { getTextColor } from '@/helpers/constants/efficiency';
+import { AttemptedWeeklyQuiz, Subject } from '@/helpers/types';
+import { getColorBySubject } from '@/helpers/utils';
 import { cn } from '@/lib/utils';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-interface Subject {
-	name: string;
-	color: string;
-}
-interface WeeklyQuiz {
-	id: number;
-	description: string;
-	startDate: string;
-	endDate: string;
-	subject: Subject;
-	completedDate:string,
-	efficiency:number,
-	questions: number;
-}
 
-type Props = { quiz: WeeklyQuiz };
+
+
+type Props = { quiz: AttemptedWeeklyQuiz };
 const AttemptedWeekQuiz = ({ quiz }: Props) => {
 	type DateString = string;
 	// Function to format date
@@ -54,10 +44,10 @@ const AttemptedWeekQuiz = ({ quiz }: Props) => {
             <div className="mt-5 flex items-center mb-1 gap-10">
               <div className="flex items-center">
                 <Label
-                  className={`text-white py-1 px-2 mx-1 rounded ${quiz.subject.color}`}
+                  className={`text-black text-xs md:text-base py-1 px-2 md:px-4 mx-1 rounded ${getColorBySubject(quiz.subject)}`}
                 >
-                  {quiz.subject.name}
-                </Label>{" "}
+                  {quiz.subject}
+                </Label>
                 <p className="text-gray-600 text-xs md:text-sm my-1 max-sm:hidden">
                   {quiz.questions} Quiz Questions
                 </p>
@@ -90,7 +80,7 @@ const AttemptedWeekQuiz = ({ quiz }: Props) => {
           </div>
         </div>
       </div>
-      <div className='flex-col flex justify-between sm:hidden'>
+      <div className="flex-col flex justify-between sm:hidden">
         {" "}
         <p
           className={cn(

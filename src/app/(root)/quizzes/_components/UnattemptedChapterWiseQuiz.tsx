@@ -1,21 +1,13 @@
 'use client';
 import React, { useMemo, useState } from 'react';
 import UnattemptedChapterQuiz from './UnattemptedChapterQuiz';
+import { UnattemptedChapterQuizProps } from '@/helpers/types';
 
-type Subject = {
-	name: string;
-	color: string;
-};
-type ChapterQuiz = {
-	id: number;
-	chapterName: string;
-	description: string;
-	subject: Subject;
-	questions: number;
-};
+
+
 
 type UnattemptedChapterWiseQuizzesProps = {
-	quizzes: ChapterQuiz[];
+	quizzes: UnattemptedChapterQuizProps[];
 };
 
 const UnattemptedChapterWiseQuizzes = ({ quizzes }: UnattemptedChapterWiseQuizzesProps) => {
@@ -26,7 +18,7 @@ const UnattemptedChapterWiseQuizzes = ({ quizzes }: UnattemptedChapterWiseQuizze
 	const filteredQuizzes = useMemo(() => {
 		return selectedSubject === 'All'
 			? quizzes
-			: quizzes.filter((quiz) => quiz.subject.name === selectedSubject);
+			: quizzes.filter((quiz) => quiz.subject === selectedSubject);
 	}, [selectedSubject,quizzes]);
 
 	return (
