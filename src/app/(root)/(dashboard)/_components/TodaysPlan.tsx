@@ -1,15 +1,8 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
 
-import { RightArrowIcon } from "@/components";
-
-import {
-  getFormattedDate,
-  getTodaysDay,
-  getTodaysFormattedDate,
-} from "@/helpers/utils";
+import { getFormattedDate } from "@/helpers/utils";
 import { DataProps, TDayProps } from "@/helpers/types";
 
 import QuestionDialogBox from "./QuestionDialogBox";
@@ -18,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { useReadLocalStorage, useIsMounted } from "usehooks-ts";
 import Loader from "@/components/shared/Loader";
+import ToDoListButton from "./ToDoListButton";
 
 const TodaysPlan = () => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
@@ -44,7 +38,7 @@ const TodaysPlan = () => {
       const { data }: DataProps = await getPlanner();
 
       setQuizData(
-        data.days.filter(
+        data?.days.filter(
           (item) =>
             getFormattedDate(new Date(item.date)) ===
             getFormattedDate(new Date(Date.now()))
@@ -85,72 +79,31 @@ const TodaysPlan = () => {
 
       <div className="w-full flex-1 px-4 md:px-6 overflow-y-auto custom__scrollbar">
         <ul className="w-full h-full flex flex-col justify-start gap-1 md:gap-4 xl:gap-0">
-          {quizData && quizData?.backRevisionTopics.length > 0 ? (
-            quizData?.backRevisionTopics.map((topic) => (
-              <div
-                key={topic._id}
-                className={cn(
-                  "flex items-center justify-between",
-                  completedTopics &&
-                    completedTopics.value.length > 0 &&
-                    completedTopics.value.includes(topic._id!) &&
-                    "pointer-events-none opacity-70"
-                )}
-              >
-                <li
-                  className="flex items-start gap-2 w-full py-1 cursor-pointer"
-                  onClick={() =>
-                    handleCheckboxClick(topic.topic.name, topic._id)
-                  }
-                >
-                  <div
-                    className={cn(
-                      "h-4 w-4 md:h-[18px] md:w-[18px] text-white border-2 rounded border-[#787878] grid place-items-center",
-                      completedTopics &&
-                        completedTopics.value.length > 0 &&
-                        completedTopics.value.includes(topic._id) &&
-                        "bg-[#0FD679]/80 border-none",
-                      incompleteTopics &&
-                        incompleteTopics.value.length > 0 &&
-                        incompleteTopics.value.includes(topic._id) &&
-                        "bg-[#ff2e2e]/80 border-none"
-                    )}
-                  >
-                    {completedTopics &&
-                      completedTopics.value.length > 0 &&
-                      completedTopics.value.includes(topic._id) && (
-                        <Check className="w-3 h-3" />
-                      )}
-
-                    {incompleteTopics &&
-                      incompleteTopics.value.length > 0 &&
-                      incompleteTopics.value.includes(topic._id) && (
-                        <span className="leading-tight text-xs font-semibold">
-                          !
-                        </span>
-                      )}
-                  </div>
-
-                  <div className="capitalize text-sm md:text-base font-medium">
-                    <p>{topic.topic.name}</p>
-                  </div>
-                </li>
-                {completedTopics &&
-                  completedTopics.value.length > 0 &&
-                  completedTopics.value.includes(topic._id) && (
-                    <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize">
-                      <p>completed</p>
-                    </div>
-                  )}
-                {incompleteTopics &&
-                  incompleteTopics.value.length > 0 &&
-                  incompleteTopics.value.includes(topic._id) && (
-                    <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize">
-                      <p>incomplete</p>
-                    </div>
-                  )}
-              </div>
-            ))
+          {quizData &&
+          (quizData?.backRevisionTopics.length > 0 ||
+            quizData.continuousRevisionTopics.length > 0) ? (
+            <>
+              {quizData?.backRevisionTopics.map((topic) => (
+                <ToDoListButton
+                  key={topic._id}
+                  setTopic={setTopic}
+                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                  topic={topic}
+                  completedTopics={completedTopics!}
+                  incompleteTopics={incompleteTopics!}
+                />
+              ))}
+              {quizData.continuousRevisionTopics.map((topic) => (
+                <ToDoListButton
+                  key={topic._id}
+                  setTopic={setTopic}
+                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                  topic={topic}
+                  completedTopics={completedTopics!}
+                  incompleteTopics={incompleteTopics!}
+                />
+              ))}
+            </>
           ) : (
             <div className="w-full h-full flex items-center justify-center text-muted-foreground">
               No topics for today!
@@ -164,7 +117,7 @@ const TodaysPlan = () => {
           <QuestionDialogBox
             openQuestionDialogBox={openQuestionDialogBox}
             setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-            questions={quizData?.questions.topic?.name!}
+            questions={quizData?.questions[topic?.name!]}
             topic={topic}
           />
         </Suspense>

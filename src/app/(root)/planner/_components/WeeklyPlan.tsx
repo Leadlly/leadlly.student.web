@@ -1,10 +1,6 @@
 import { LeftArrowIcon, RightArrowIcon } from "@/components";
 import { Button } from "@/components/ui/button";
-import {
-  PlannerDataProps,
-  TBackRevisionProps,
-  TDayProps,
-} from "@/helpers/types";
+import { PlannerDataProps, TRevisionProps, TDayProps } from "@/helpers/types";
 import {
   capitalizeFirstLetter,
   getFormattedDate,
@@ -22,6 +18,7 @@ const WeeklyPlan = ({
   setData: (data: TDayProps | null) => void;
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
   return (
     <div className="w-full flex flex-col justify-start gap-5 h-full py-4 border rounded-xl overflow-x-hidden overflow-y-auto custom__scrollbar">
       <div className="w-full flex items-center justify-between gap-0 md:gap-4 py-2 xl:flex-col xl:items-start xl:justify-normal">
@@ -83,12 +80,21 @@ const WeeklyPlan = ({
                 <span>{getFormattedDate(new Date(plan.date))}</span>
               </p>
               <p className="w-full py-2 text-xs md:text-base px-4 truncate overflow-hidden">
-                {plan.backRevisionTopics.length > 0 ? (
-                  plan.backRevisionTopics
-                    .map((topics: TBackRevisionProps) =>
-                      capitalizeFirstLetter(topics.topic.name)
-                    )
-                    .join(" / ")
+                {plan.backRevisionTopics.length > 0 ||
+                plan.continuousRevisionTopics.length > 0 ? (
+                  <>
+                    {plan.backRevisionTopics
+                      .map((topics: TRevisionProps) =>
+                        capitalizeFirstLetter(topics.topic.name)
+                      )
+                      .join(" / ")}
+                    {plan.backRevisionTopics.length > 0 && "/"}
+                    {plan.continuousRevisionTopics
+                      .map((topics: TRevisionProps) =>
+                        capitalizeFirstLetter(topics.topic.name)
+                      )
+                      .join(" / ")}
+                  </>
                 ) : (
                   <>No topics</>
                 )}

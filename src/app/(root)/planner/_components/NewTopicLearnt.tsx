@@ -44,6 +44,7 @@ import { subjectChaptersProps } from "@/helpers/types";
 import { toast } from "sonner";
 import { saveStudyData } from "@/actions/studyData_actions";
 import { getPlanner, updatePlanner } from "@/actions/planner_actions";
+import { useRouter } from "next/navigation";
 
 const NewTopicLearntSchema = z.object({
   chapterName: z.string({ required_error: "Please select a chapter!" }),
@@ -70,6 +71,8 @@ const NewTopicLearnt = ({
   const [topics, setTopics] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof NewTopicLearntSchema>>({
     resolver: zodResolver(NewTopicLearntSchema),
   });
@@ -94,13 +97,11 @@ const NewTopicLearnt = ({
 
       toast.success(responseData.message);
 
-      await updatePlanner()
-     const planner = await getPlanner()
-     console.log("planner", planner)
-
-      
+      await updatePlanner();
 
       form.reset();
+
+      router.refresh();
     } catch (error: any) {
       toast.error(error?.message);
     } finally {

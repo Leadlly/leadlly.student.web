@@ -16,6 +16,7 @@ export const getPlanner = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
+        cache: "force-cache",
         next: {
           tags: ["plannerData"],
         },
@@ -79,7 +80,7 @@ export const updatePlanner = async () => {
     );
 
     const responseData = await res.json();
-    revalidateTag("plannerData")
+    revalidateTag("plannerData");
 
     return responseData;
   } catch (error: unknown) {

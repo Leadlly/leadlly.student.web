@@ -49,11 +49,13 @@ const QuestionDialogBox = ({
       value: [] as string[],
     }
   );
-  const [incompleteTopics, setIncompleteTopics, removeIncompleteTopics] =
-    useLocalStorage("incomplete_topic", {
+  const [incompleteTopics, setIncompleteTopics] = useLocalStorage(
+    "incomplete_topic",
+    {
       expiryDate: 0,
       value: [] as string[],
-    });
+    }
+  );
 
   const expiryDate = new Date(
     new Date().getFullYear(),
@@ -109,7 +111,7 @@ const QuestionDialogBox = ({
         toast.success(res.message);
         if (attemptedQuestion.length === questions.length) {
           if (incompleteTopics.value.includes(topic?._id!)) {
-            removeIncompleteTopics();
+            incompleteTopics.value.filter((item) => item !== topic?._id);
           }
           setCompletedTopics({
             expiryDate,
@@ -184,7 +186,12 @@ const QuestionDialogBox = ({
                         "relative px-4 py-1 text-base md:text-lg font-medium cursor-pointer",
                         activeQuestion === index && "text-white"
                       )}
-                      onClick={() => setActiveQuestion(index)}
+                      onClick={() => {
+                        setSelectedAnswerIndex(null);
+                        setSelectedAnswer("");
+                        setOptionSelected(false);
+                        setActiveQuestion(index);
+                      }}
                     >
                       Q{index + 1}
                       {activeQuestion === index && (

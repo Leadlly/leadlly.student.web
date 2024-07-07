@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { capitalizeFirstLetter, getFormattedDate } from "@/helpers/utils";
-import { RightArrowIcon } from "@/components";
 import { TDayProps } from "@/helpers/types";
 import { useAppSelector } from "@/redux/hooks";
 import {
@@ -15,12 +13,24 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
     (state) => state.user.user?.academic.subjects
   );
 
-  function getTopicsForSubject(subject: string) {
+  function getBackRevisionTopicsForSubject(subject: string) {
     const topics = todaysTopics?.backRevisionTopics
       .filter((topic) => topic.subject === subject)
       .map((topic) => capitalizeFirstLetter(topic.topic.name));
 
-    return topics?.length ? topics.join(", ") : "No topics yet!";
+    return !topics?.length && !todaysTopics?.continuousRevisionTopics.length
+      ? "No topics yet!"
+      : topics?.join(", ");
+  }
+
+  function getContinuousRevisionTopicsForSubject(subject: string) {
+    const topics = todaysTopics?.continuousRevisionTopics
+      .filter((topic) => topic.subject === subject)
+      .map((topic) => capitalizeFirstLetter(topic.topic.name));
+
+    return !topics?.length && !todaysTopics?.backRevisionTopics.length
+      ? "No topics yet!"
+      : topics?.join(", ");
   }
 
   return (
@@ -56,17 +66,35 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                   <TooltipTrigger asChild>
                     <p className="text-xs md:text-sm leading-tight font-normal truncate text-[#454545] cursor-pointer">
                       {todaysTopics &&
-                      todaysTopics?.backRevisionTopics.length > 0
-                        ? getTopicsForSubject(subject)
-                        : "No plans yet!"}
+                      (todaysTopics?.backRevisionTopics.length > 0 ||
+                        todaysTopics.continuousRevisionTopics.length > 0) ? (
+                        <>
+                          {getContinuousRevisionTopicsForSubject(subject)}
+                          {todaysTopics?.backRevisionTopics.length > 0
+                            ? ", "
+                            : "."}
+                          {getBackRevisionTopicsForSubject(subject)}
+                        </>
+                      ) : (
+                        "No plans yet!"
+                      )}
                     </p>
                   </TooltipTrigger>
                   <TooltipContent className="max-w-md w-full">
                     <p className="text-xs md:text-sm leading-tight font-normal whitespace-normal text-[#454545]">
                       {todaysTopics &&
-                      todaysTopics?.backRevisionTopics.length > 0
-                        ? getTopicsForSubject(subject)
-                        : "No plans yet!"}
+                      (todaysTopics?.backRevisionTopics.length > 0 ||
+                        todaysTopics.continuousRevisionTopics.length > 0) ? (
+                        <>
+                          {getContinuousRevisionTopicsForSubject(subject)}
+                          {todaysTopics?.backRevisionTopics.length > 0
+                            ? ", "
+                            : "."}
+                          {getBackRevisionTopicsForSubject(subject)}
+                        </>
+                      ) : (
+                        "No plans yet!"
+                      )}
                     </p>
                   </TooltipContent>
                 </Tooltip>
