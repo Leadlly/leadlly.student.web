@@ -75,81 +75,87 @@ const TodaysPlan = () => {
   return (
     <>
       <div className="flex items-center justify-between py-3 px-4 md:px-6">
-        <div className="flex items-center gap-2 md:flex-col md:items-start md:gap-1">
-          <h4 className="text-base md:text-xl font-semibold">
-            Todo list
-          </h4>
+        <div className="w-full flex justify-between items-center gap-2 md:flex-col md:items-start md:gap-1">
+          <h4 className="text-base md:text-xl font-semibold">Todo list</h4>
           <p className="text-[10px] md:text-xs mt-[2px] md:mt-0 font-medium text-[#9E9C9C]">
-            {getTodaysDay()} {getTodaysFormattedDate()}
+            {quizData?.day} {getFormattedDate(new Date(quizData?.date!))}
           </p>
         </div>
       </div>
 
       <div className="w-full flex-1 px-4 md:px-6 overflow-y-auto custom__scrollbar">
         <ul className="w-full h-full flex flex-col justify-start gap-1 md:gap-4 xl:gap-0">
-          {quizData?.backRevisionTopics.map((topic) => (
-            <div
-              key={topic._id}
-              className={cn(
-                "flex items-center justify-between",
-                completedTopics &&
-                  completedTopics.value.length > 0 &&
-                  completedTopics.value.includes(topic._id!) &&
-                  "pointer-events-none opacity-70"
-              )}
-            >
-              <li
-                className="flex items-start gap-2 w-full py-1 cursor-pointer"
-                onClick={() => handleCheckboxClick(topic.topic.name, topic._id)}
-              >
-                <div
-                  className={cn(
-                    "h-4 w-4 md:h-[18px] md:w-[18px] text-white border-2 rounded border-[#787878] grid place-items-center",
-                    completedTopics &&
-                      completedTopics.value.length > 0 &&
-                      completedTopics.value.includes(topic._id) &&
-                      "bg-[#0FD679]/80 border-none",
-                    incompleteTopics &&
-                      incompleteTopics.value.length > 0 &&
-                      incompleteTopics.value.includes(topic._id) &&
-                      "bg-[#ff2e2e]/80 border-none"
-                  )}
-                >
-                  {completedTopics &&
+          {quizData && quizData?.backRevisionTopics.length > 0 ? (
+            quizData?.backRevisionTopics.map((topic) => (
+              <div
+                key={topic._id}
+                className={cn(
+                  "flex items-center justify-between",
+                  completedTopics &&
                     completedTopics.value.length > 0 &&
-                    completedTopics.value.includes(topic._id) && (
-                      <Check className="w-3 h-3" />
-                    )}
-
-                  {incompleteTopics &&
-                    incompleteTopics.value.length > 0 &&
-                    incompleteTopics.value.includes(topic._id) && (
-                      <span className="leading-tight text-xs font-semibold">
-                        !
-                      </span>
-                    )}
-                </div>
-
-                <div className="capitalize text-sm md:text-base font-medium">
-                  <p>{topic.topic.name}</p>
-                </div>
-              </li>
-              {completedTopics &&
-                completedTopics.value.length > 0 &&
-                completedTopics.value.includes(topic._id) && (
-                  <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize">
-                    <p>completed</p>
-                  </div>
+                    completedTopics.value.includes(topic._id!) &&
+                    "pointer-events-none opacity-70"
                 )}
-              {incompleteTopics &&
-                incompleteTopics.value.length > 0 &&
-                incompleteTopics.value.includes(topic._id) && (
-                  <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize">
-                    <p>incomplete</p>
+              >
+                <li
+                  className="flex items-start gap-2 w-full py-1 cursor-pointer"
+                  onClick={() =>
+                    handleCheckboxClick(topic.topic.name, topic._id)
+                  }
+                >
+                  <div
+                    className={cn(
+                      "h-4 w-4 md:h-[18px] md:w-[18px] text-white border-2 rounded border-[#787878] grid place-items-center",
+                      completedTopics &&
+                        completedTopics.value.length > 0 &&
+                        completedTopics.value.includes(topic._id) &&
+                        "bg-[#0FD679]/80 border-none",
+                      incompleteTopics &&
+                        incompleteTopics.value.length > 0 &&
+                        incompleteTopics.value.includes(topic._id) &&
+                        "bg-[#ff2e2e]/80 border-none"
+                    )}
+                  >
+                    {completedTopics &&
+                      completedTopics.value.length > 0 &&
+                      completedTopics.value.includes(topic._id) && (
+                        <Check className="w-3 h-3" />
+                      )}
+
+                    {incompleteTopics &&
+                      incompleteTopics.value.length > 0 &&
+                      incompleteTopics.value.includes(topic._id) && (
+                        <span className="leading-tight text-xs font-semibold">
+                          !
+                        </span>
+                      )}
                   </div>
-                )}
+
+                  <div className="capitalize text-sm md:text-base font-medium">
+                    <p>{topic.topic.name}</p>
+                  </div>
+                </li>
+                {completedTopics &&
+                  completedTopics.value.length > 0 &&
+                  completedTopics.value.includes(topic._id) && (
+                    <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize">
+                      <p>completed</p>
+                    </div>
+                  )}
+                {incompleteTopics &&
+                  incompleteTopics.value.length > 0 &&
+                  incompleteTopics.value.includes(topic._id) && (
+                    <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize">
+                      <p>incomplete</p>
+                    </div>
+                  )}
+              </div>
+            ))
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+              No topics for today!
             </div>
-          ))}
+          )}
         </ul>
       </div>
 

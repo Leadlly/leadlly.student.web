@@ -46,12 +46,13 @@ const AccountChaptersList = () => {
           <TableCell className="grid grid-cols-2 gap-1 lg:gap-3">
             <Link
               href={"#"}
-              className="flex items-center justify-center gap-x-1 text-lg font-medium border rounded">
+              className="flex items-center justify-center gap-x-1 text-lg font-medium sm:border rounded"
+            >
               <Edit3 className="w-3 h-3" />
               <span className="hidden lg:inline-block">Edit</span>
             </Link>
 
-            <Button className="flex items-center justify-center bg-primary/10 hover:bg-primary/20 text-primary text-lg font-medium px-0 lg:px-4">
+            <Button className="flex items-center justify-center bg-transparent sm:bg-primary/10 hover:bg-primary/20 text-primary text-lg font-medium px-0 lg:px-4">
               <Trash className="w-3 h-3 text-primary lg:hidden" />
               <span className="hidden lg:inline-block">Remove</span>
             </Button>

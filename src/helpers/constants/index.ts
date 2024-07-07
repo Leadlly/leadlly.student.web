@@ -77,10 +77,10 @@ export const manageAccountTabs = [
   //   id: "subject-overview",
   //   label: "Subject Overview",
   // },
-  {
-    id: "your-mentor",
-    label: "Your Mentor",
-  },
+  // {
+  //   id: "your-mentor",
+  //   label: "Your Mentor",
+  // },
 ];
 
 export const subscriptionPlanningBenefits = [
@@ -118,9 +118,9 @@ export const subscriptionLearningBenefits = [
   },
 ];
 export interface EfficiencyOption {
-	min?: number;
-	max?: number;
-	label: string;
-	progressBarColor: string;
-	textColor: string;
+  min?: number;
+  max?: number;
+  label: string;
+  progressBarColor: string;
+  textColor: string;
 }

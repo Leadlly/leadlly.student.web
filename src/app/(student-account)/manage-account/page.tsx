@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { ArrowLeft, CalendarDaysIcon, Settings } from "lucide-react";
+import { ArrowLeft, CalendarDaysIcon } from "lucide-react";
 
 import { DownArrowIcon } from "@/components";
 import { Button } from "@/components/ui/button";
@@ -14,22 +14,18 @@ import {
 } from "@/components/ui/popover";
 
 import AccountPersonalInfo from "./_components/AccountPersonalInfo";
-import AccountSubjectOverview from "./_components/AccountSubjectOverview";
 import AccountStudyProgress from "./_components/AccountStudyProgress";
 import Link from "next/link";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import AccountMentorInfo from "./_components/AccountMentorInfo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { getUser } from "@/actions/user_actions";
-
-import { UserDataProps } from "@/helpers/types";
-
 import { cn } from "@/lib/utils";
 
 import { format } from "date-fns";
 import { useAppSelector } from "@/redux/hooks";
 import { manageAccountTabs } from "@/helpers/constants";
+import LogoutButton from "@/components/shared/LogoutButton";
 
 const ManageAccount = ({
   searchParams,
@@ -47,7 +43,8 @@ const ManageAccount = ({
       <div className="flex items-center gap-6 px-4 pt-2">
         <Link
           href={"/"}
-          className="border rounded-md w-8 h-8 flex items-center justify-center">
+          className="border rounded-md w-8 h-8 flex items-center justify-center"
+        >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h3 className="text-2xl font-semibold">Manage Account</h3>
@@ -87,7 +84,8 @@ const ManageAccount = ({
                   className={cn(
                     "w-[206px] h-14 text-left font-normal flex items-center justify-between",
                     !date && "text-muted-foreground"
-                  )}>
+                  )}
+                >
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary/25">
                       <CalendarDaysIcon className="h-4 w-4 text-primary" />
@@ -109,17 +107,18 @@ const ManageAccount = ({
             </Popover>
           </div>
 
-          <Settings className="w-5 h-5" />
+          <LogoutButton />
         </div>
       </section>
 
       <div className="border-b-2 px-2 lg:px-16">
-        <ul className="flex items-center gap-3 lg:gap-10 overflow-x-auto no-scrollbar">
+        <ul className="flex items-center justify-center lg:justify-normal gap-3 lg:gap-10 overflow-x-auto no-scrollbar">
           {manageAccountTabs.map((tab) => (
             <Link
               key={tab.id}
               href={`/manage-account?tab=${tab.id}`}
-              className="relative pb-1">
+              className="relative pb-1"
+            >
               {activeManageAccountTab === tab.id && (
                 <MotionDiv
                   layoutId="active_manage_account_tab"
@@ -136,7 +135,8 @@ const ManageAccount = ({
                   activeManageAccountTab === tab.id
                     ? "text-primary"
                     : "text-black"
-                )}>
+                )}
+              >
                 {tab.label}
               </li>
             </Link>
@@ -163,11 +163,11 @@ const ManageAccount = ({
           </>
         )} */}
 
-        {activeManageAccountTab === "your-mentor" && (
+        {/* {activeManageAccountTab === "your-mentor" && (
           <>
             <AccountMentorInfo />
           </>
-        )}
+        )} */}
       </div>
     </div>
   );
