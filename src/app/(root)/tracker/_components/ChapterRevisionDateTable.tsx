@@ -63,8 +63,8 @@ const ChapterRevisionDateTable = ({
             {chapterData.topics.map((topic) => (
               <li
                 key={topic.title}
-                className="text-xs md:text-lg lg:text-xl leading-tight font-normal flex items-center gap-x-3">
-                <p className="w-36 md:w-56 lg:w-96">
+                className="text-xs md:text-lg lg:text-xl leading-tight font-normal gap-1 flex md:flex-row flex-col md:items-center md:gap-x-3">
+                <p className="w-36 md:w-56 lg:w-96"> 
                   {capitalizeFirstLetter(topic.title)}
                 </p>
 
