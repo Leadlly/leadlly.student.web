@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,41 +35,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-export const RequestMeetingFormSchema = z.object({
-  date_of_meeting: z.date({
-    required_error: "A date is required to request meeting.",
-  }),
-  time: z.string({ required_error: "A time is required to request meeting!" }),
-  meeting_agenda: z.string({
-    required_error: "Please enter your meeting agenda",
-  }),
-});
+import { RequestMeetingFormSchema } from "./RequestMeetingComponent";
 
-const RequestMeetingComponent = () => {
+
+
+const RequestMeetingDesktopComponent = () => {
   // const [selectedMeetingTime, setSelectedMeetingTime] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
   });
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (
-        window.innerWidth > 1024 &&
-        window.location.search === "?tab=requestMeeting"
-      ) {
-        router.push("/chat?tab=meetings");
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const onSubmit = (data: z.infer<typeof RequestMeetingFormSchema>) => {
     // Include the selected meeting time in the form submission data
@@ -87,11 +62,11 @@ const RequestMeetingComponent = () => {
   };
 
   return (
-    <div className="lg:hidden">
+    <div className="hidden lg:flex w-80">
       {!submitted ? (
-        <div className="h-[74dvh] flex flex-col gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
+        <div className="h-[74dvh] flex flex-col flex-1 gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
           {/* Request Meet */}
-          <div className="flex justify-center gap-x-2 py-3">
+          <div className="flex justify-center gap-x-2 py-3 ">
             <Image
               className=""
               src="/assets/images/video_call.png"
@@ -103,22 +78,11 @@ const RequestMeetingComponent = () => {
               Request <span className="text-primary font-normal">Meet</span>
             </h1>
           </div>
-          {/* Embarking */}
-          <div className="text-center space-y-4">
-            <h1 className="font-bold text-xl">
-              Embarking on a Journey Request for Mentorship Meeting
-            </h1>
-            <p className="text-base">
-              A meeting request offers students tailored mentorship, guidance,
-              and support, fostering an environment for accessing valuable
-              insights and resources to enhance personal development.
-            </p>
-          </div>
 
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-y-5 w-full max-w-lg mx-auto"
+              className="flex flex-col gap-y-5 w-full max-w-lg mx-auto flex-1"
             >
               <div className="grid grid-cols-2 gap-5">
                 {/* Date Select */}
@@ -134,7 +98,7 @@ const RequestMeetingComponent = () => {
                             <Button
                               variant={"outline"}
                               className={cn(
-                                "w-full pl-3 text-left font-normal",
+                                "w-full pl-3  text-left font-normal",
                                 !field.value && "text-muted-foreground"
                               )}
                             >
@@ -162,7 +126,7 @@ const RequestMeetingComponent = () => {
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormMessage />
+                      <FormMessage className="max-w-28 text-pretty line-clamp-3 " />
                     </FormItem>
                   )}
                 />
@@ -190,7 +154,7 @@ const RequestMeetingComponent = () => {
                           <SelectItem value="10:30 AM">10:30 AM</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormMessage />
+                      <FormMessage className="max-w-28 text-pretty line-clamp-3 " />
                     </FormItem>
                   )}
                 />
@@ -208,7 +172,7 @@ const RequestMeetingComponent = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-center"/>
                   </FormItem>
                 )}
               />
@@ -220,12 +184,12 @@ const RequestMeetingComponent = () => {
           </Form>
         </div>
       ) : (
-        <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
+        <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] bg-no-repeat flex-1">
           <div className="h-full flex flex-col gap-y-7 items-center justify-center">
-            <div className="w-16 h-16 md:w-20 md:h-20 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
-              <Check className="w-8 h-8 md:w-12 md:h-12" />
+            <div className="w-14 h-14 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
+              <Check className="w-8 h-8 " />
             </div>
-            <h1 className="text-primary text-4xl font-bold">
+            <h1 className="text-primary text-3xl font-bold mt-10">
               Sent Successfully
             </h1>
             <div className="text-center">
@@ -241,4 +205,4 @@ const RequestMeetingComponent = () => {
   );
 };
 
-export default RequestMeetingComponent;
+export default RequestMeetingDesktopComponent;

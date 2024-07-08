@@ -62,7 +62,7 @@ const ChapterOverviewTable = ({
                       <TableHead className="text-center text-xs md:text-base font-semibold">
                         {item.revisionFrequency}
                       </TableHead>
-                      <TableHead className="text-center text-[10px] md:text-base font-semibold">
+                      <TableHead className="text-center min-w-20 text-[10px] md:text-base font-semibold">
                         {convertDateString(item.lastRevised)}
                       </TableHead>
                       <TableHead>

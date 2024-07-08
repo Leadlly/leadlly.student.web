@@ -12,6 +12,7 @@ import {
   OneOnOneMeetingIcon,
   TabNavItem,
 } from "@/components";
+import RequestMeetingDesktopComponent from "./RequestMeetingDesktopComponent";
 
 const meetingTabs = [
   {
@@ -115,7 +116,7 @@ const MeetingsComponent = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row mb-20 md:mb-0">
+    <div className="flex flex-col lg:flex-row mb-20 md:mb-0 lg:gap-5">
       {/* Upcoming meetings */}
       <div className="py-3 border-2 rounded-xl flex-1 mb-5 h-full">
         <ul className="flex justify-around">
@@ -139,11 +140,13 @@ const MeetingsComponent = () => {
           {/* Upcoming Meetings Tab */}
           <div
             className="flex flex-col justify-start gap-3 h-full "
-            style={{ display: activeTab === "upcoming" ? "flex" : "none" }}>
+            style={{ display: activeTab === "upcoming" ? "flex" : "none" }}
+          >
             {upcomingMeetings.map((meeting) => (
               <div
                 key={meeting.id}
-                className="flex items-stretch gap-3 mx-2 md:mx-4 p-2 rounded-xl border-2 shadow-lg">
+                className="flex items-stretch gap-3 mx-2 md:mx-4 p-2 rounded-xl border-2 shadow-lg"
+              >
                 <div className="bg-[#56CFE1]/[0.2] rounded-lg w-28 flex flex-col justify-center items-center">
                   <h2 className="text-lg font-semibold">
                     {formatDate(meeting.date)}
@@ -176,7 +179,8 @@ const MeetingsComponent = () => {
                           meeting.meetingType.includes("One")
                             ? "text-[#57D0E1]"
                             : "text-[#6399D6]"
-                        )}>
+                        )}
+                      >
                         {meeting.meetingType}
                       </p>
                     </div>
@@ -207,59 +211,7 @@ const MeetingsComponent = () => {
         </div>
       </div>
       {/* About meetings */}
-      <div className="lg:max-w-[360px] w-full">
-        <div className="bg-purple-400 bg-opacity-10 rounded-xl px-3 py-2 text-center md:mx-4">
-          <h3 className="font-semibold">About Meetings</h3>
-          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
-            <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
-              <Image
-                src="/assets/images/video_call.png"
-                alt="VideoCall"
-                width={25}
-                height={25}
-              />
-            </div>
-            <p className="font-semibold text-left ml-3">
-              Meetings align, foster, and strategize.
-            </p>
-          </div>
-          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
-            <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
-              <Image
-                src="/assets/images/search_property.png"
-                alt="Property Search"
-                width={30}
-                height={30}
-              />
-            </div>
-            <p className="font-semibold text-left ml-3">
-              Meetings enable problem-solving and exploration
-            </p>
-          </div>
-          <div className="flex items-center justify-start my-2 mb-4 bg-white px-4 py-2 rounded-lg shadow-lg">
-            <div className="bg-purple-100 rounded-full mr-2 p-3 shadow-inner">
-              <Image
-                src="/assets/images/project_manager.png"
-                alt="Manager"
-                width={30}
-                height={30}
-              />
-            </div>
-            <p className="font-semibold text-left ml-3">
-              Meetings enhance professional growth significantly.
-            </p>
-          </div>
-        </div>
-        {/* Image of office */}
-        <div className="hidden lg:flex items-center justify-center my-3">
-          <Image
-            src="/assets/images/colleagues.png"
-            alt="Colleagues at office"
-            width={280}
-            height={280}
-          />
-        </div>
-      </div>
+    <RequestMeetingDesktopComponent/>
     </div>
   );
 };
