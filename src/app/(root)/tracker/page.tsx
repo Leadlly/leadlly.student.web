@@ -1,15 +1,16 @@
 import { Header } from "@/components";
-import MathsTracker from "./_components/MathsTracker";
-import PhysicsTracker from "./_components/PhysicsTracker";
-import ChemistryTracker from "./_components/ChemistryTracker";
 import TrackerTabs from "./_components/TrackerTabs";
+import TrackerComponent from "./_components/Tracker";
+import { getUserTracker } from "@/actions/tracker_actions";
 
-const Tracker = ({
+const Tracker = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const activeSubject = searchParams["subject"] ?? "maths";
+
+  const trackerData = await getUserTracker(activeSubject);
 
   return (
     <div className="h-full flex flex-col gap-y-4">
@@ -23,11 +24,9 @@ const Tracker = ({
       <hr className="border" />
 
       <div className="h-full overflow-y-auto custom__scrollbar pr-3 mb-16 md:mb-0">
-        {activeSubject === "maths" && <MathsTracker />}
-
-        {activeSubject === "physics" && <PhysicsTracker />}
-
-        {activeSubject === "chemistry" && <ChemistryTracker />}
+        {activeSubject && (
+          <TrackerComponent trackerData={trackerData.tracker} />
+        )}
       </div>
     </div>
   );

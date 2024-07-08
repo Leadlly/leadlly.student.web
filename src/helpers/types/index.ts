@@ -395,3 +395,11 @@ export type UnattemptedChapterQuizProps = {
   subject: Subject;
   questions: number;
 };
+
+export type TTrackerProps = {
+  _id: string;
+  user: string;
+  subject: string;
+  chapter: Chapter;
+  topics: Topic[];
+};

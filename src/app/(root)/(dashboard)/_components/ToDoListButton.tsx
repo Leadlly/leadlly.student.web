@@ -24,9 +24,10 @@ const ToDoListButton = ({
       key={topic._id}
       className={cn(
         "flex items-center justify-between",
-        completedTopics &&
-          completedTopics.value.length > 0 &&
-          completedTopics.value.includes(topic._id!) &&
+        (completedTopics || incompleteTopics) &&
+          (completedTopics?.value.length || incompleteTopics?.value.length) &&
+          (completedTopics?.value.includes(topic._id!) ||
+            incompleteTopics?.value.includes(topic._id!)) &&
           "pointer-events-none opacity-70"
       )}
     >

@@ -57,7 +57,7 @@ export function getFormattedDate(date: Date): string {
   return `${dayOfMonth} ${month} ${year}`;
 }
 
-export function convertDateString(inputDate: string): string {
+export function convertDateString(inputDate: Date): string {
   // Parse the input date string
   const date = new Date(inputDate);
 

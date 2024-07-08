@@ -70,9 +70,12 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
                         <>
                           {getContinuousRevisionTopicsForSubject(subject)}
-                          {todaysTopics?.backRevisionTopics.length > 0
+                          {todaysTopics?.backRevisionTopics.length &&
+                          todaysTopics.continuousRevisionTopics.length
                             ? ", "
-                            : "."}
+                            : !todaysTopics.continuousRevisionTopics.length
+                              ? ""
+                              : "."}
                           {getBackRevisionTopicsForSubject(subject)}
                         </>
                       ) : (
@@ -89,7 +92,9 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                           {getContinuousRevisionTopicsForSubject(subject)}
                           {todaysTopics?.backRevisionTopics.length > 0
                             ? ", "
-                            : "."}
+                            : !todaysTopics.continuousRevisionTopics.length
+                              ? ""
+                              : "."}
                           {getBackRevisionTopicsForSubject(subject)}
                         </>
                       ) : (
