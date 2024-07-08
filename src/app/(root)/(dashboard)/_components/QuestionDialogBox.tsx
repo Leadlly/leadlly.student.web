@@ -15,7 +15,6 @@ import Modal from "@/components/shared/Modal";
 import { sanitizedHtml } from "@/helpers/utils";
 import { toast } from "sonner";
 import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
-
 import { useLocalStorage } from "usehooks-ts";
 
 const QuestionDialogBox = ({

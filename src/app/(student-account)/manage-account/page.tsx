@@ -77,7 +77,7 @@ const ManageAccount = ({
 
         <div className="flex items-center gap-10 mt-5">
           <div>
-            <Popover>
+            {/*<Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
@@ -104,7 +104,7 @@ const ManageAccount = ({
                   initialFocus
                 />
               </PopoverContent>
-            </Popover>
+            </Popover>*/}
           </div>
 
           <LogoutButton />
