@@ -9,11 +9,14 @@ import { getFormattedDate } from "@/helpers/utils";
 
 const ClientWrapper = ({ data }: { data: PlannerDataProps }) => {
   const [todaysData, setTodaysData] = useState<TDayProps | null>(
-    data.days.filter(
-      (day) =>
-        getFormattedDate(new Date(day.date)) ===
-        getFormattedDate(new Date(Date.now()))
-    )[0] || null
+    (data &&
+      data.days &&
+      data.days.filter(
+        (day) =>
+          getFormattedDate(new Date(day.date)) ===
+          getFormattedDate(new Date(Date.now()))
+      )[0]) ||
+      null
   );
   return (
     <>
