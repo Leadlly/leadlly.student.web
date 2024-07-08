@@ -1,42 +1,25 @@
-"use client";
-
-import { useState } from "react";
-
-import { ArrowLeft, CalendarDaysIcon } from "lucide-react";
-
-import { DownArrowIcon } from "@/components";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { ArrowLeft } from "lucide-react";
 
 import AccountPersonalInfo from "./_components/AccountPersonalInfo";
 import AccountStudyProgress from "./_components/AccountStudyProgress";
 import Link from "next/link";
 import { MotionDiv } from "@/components/shared/MotionDiv";
-import AccountMentorInfo from "./_components/AccountMentorInfo";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { cn } from "@/lib/utils";
 
-import { format } from "date-fns";
-import { useAppSelector } from "@/redux/hooks";
 import { manageAccountTabs } from "@/helpers/constants";
 import LogoutButton from "@/components/shared/LogoutButton";
+import AccountUserProfile from "./_components/AccountUserProfile";
+import { getUnrevisedTopics } from "@/actions/studyData_actions";
 
-const ManageAccount = ({
+const ManageAccount = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const [date, setDate] = useState<Date>();
-
   const activeManageAccountTab = searchParams["tab"] ?? "personal-info";
 
-  const user = useAppSelector((state) => state.user.user);
+  const data = await getUnrevisedTopics();
 
   return (
     <div className="h-full flex flex-col">
@@ -51,29 +34,7 @@ const ManageAccount = ({
       </div>
 
       <section className="my-6 bg-primary/15 text-center lg:text-left lg:px-16 py-4 lg:py-8 flex flex-col lg:flex-row items-center justify-between">
-        <div className="flex flex-col lg:flex-row items-center gap-6">
-          <Avatar className="w-20 h-20 lg:w-32 lg:h-32">
-            <AvatarImage src={user?.avatar?.url} />
-            <AvatarFallback className="text-3xl font-semibold capitalize">
-              {user?.firstname[0]}
-              <span className="capitalize">
-                {user?.lastname ? user.lastname[0] : ""}
-              </span>
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="space-y-3 lg:space-y-5">
-            <h2 className="capitalize text-2xl lg:text-3xl font-bold">
-              <span className="text-primary">hello,</span> {user?.firstname}{" "}
-              {user?.lastname}
-            </h2>
-
-            <p className="text-base lg:text-xl max-w-lg">
-              Embrace the course as a catalyst for personal growth and
-              empowerment, propelling.
-            </p>
-          </div>
-        </div>
+        <AccountUserProfile />
 
         <div className="flex items-center gap-10 mt-5">
           <div>
@@ -147,13 +108,13 @@ const ManageAccount = ({
       <div className="flex-1 px-2 lg:px-16 py-6">
         {activeManageAccountTab === "personal-info" && (
           <>
-            <AccountPersonalInfo user={user} />
+            <AccountPersonalInfo />
           </>
         )}
 
         {activeManageAccountTab === "study-progress" && (
           <>
-            <AccountStudyProgress />
+            <AccountStudyProgress unrevisedTopics={data.data} />
           </>
         )}
 

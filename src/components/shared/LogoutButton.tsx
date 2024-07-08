@@ -38,10 +38,10 @@ const LogoutButton = () => {
   return (
     <Button
       onClick={logoutHandler}
-      variant={"ghost"}
-      className="w-full items-center gap-2 text-primary rounded-full xl:rounded-xl text-base md:text-[20px] font-normal hover:text-white hover:bg-primary py-3 px-2 md:px-4"
+      variant={"outline"}
+      className="w-full h-11 items-center gap-2 text-primary rounded-full xl:rounded-xl text-base md:text-lg font-normal hover:text-white hover:bg-primary py-3 px-2 md:px-4"
     >
-      <LogOut className="w-4 h-4 md:w-5 md:h-5" />
+      <LogOut className="w-4 h-4" />
       <span>Logout</span>
     </Button>
   );

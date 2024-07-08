@@ -2,7 +2,6 @@
 
 import { studentPersonalInfo } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { CalendarDatePicker } from "@/components/ui/calendar_date_picker";
 import {
   Form,
@@ -13,11 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -28,31 +23,21 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { useAppDispatch } from "@/redux/hooks";
-import { UserProps, userData } from "@/redux/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { userData } from "@/redux/slices/userSlice";
 import { AccountPersonalInfoSchema } from "@/schemas/accountPersonalInfoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import {
-  CalendarDaysIcon,
-  Edit3,
-  Globe,
-  Loader2,
-  MailOpen,
-  Phone,
-  User,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Edit3, Globe, Loader2, MailOpen, Phone, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-const AccountPersonalInfo = ({ user }: UserProps) => {
+const AccountPersonalInfo = () => {
   const [isSaving, setIsSaving] = useState(false);
 
-  const router = useRouter();
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.user);
 
   const form = useForm<z.infer<typeof AccountPersonalInfoSchema>>({
     resolver: zodResolver(AccountPersonalInfoSchema),

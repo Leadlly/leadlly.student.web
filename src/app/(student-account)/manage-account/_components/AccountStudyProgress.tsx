@@ -14,8 +14,13 @@ import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import { cn } from "@/lib/utils";
+import { TRevisionProps } from "@/helpers/types";
 
-const AccountStudyProgress = () => {
+const AccountStudyProgress = ({
+  unrevisedTopics,
+}: {
+  unrevisedTopics: TRevisionProps[];
+}) => {
   const [activeTab, setActiveTab] = useState("maths");
   const [activeTabChapters, setActiveTabChapters] = useState([]);
   const [resetForm, setResetForm] = useState<() => void>(() => {
@@ -82,17 +87,16 @@ const AccountStudyProgress = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom__scrollbar">
-        <TabContent id={activeTab} activeTab={activeTab}>
-          <AccountSubjectForm
-            subjectChapters={activeTabChapters}
-            activeSubject={activeTab}
-            userStandard={userStandard!}
-            onResetForm={handleResetForm}
-          />
-          <AccountChaptersList />
-        </TabContent>
-      </div>
+      <TabContent id={activeTab} activeTab={activeTab} className="h-auto">
+        <AccountSubjectForm
+          subjectChapters={activeTabChapters}
+          activeSubject={activeTab}
+          userStandard={userStandard!}
+          onResetForm={handleResetForm}
+        />
+      </TabContent>
+
+      <AccountChaptersList unrevisedTopics={unrevisedTopics} />
     </section>
   );
 };
