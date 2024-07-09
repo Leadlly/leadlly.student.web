@@ -15,7 +15,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
 
   function getBackRevisionTopicsForSubject(subject: string) {
     const topics = todaysTopics?.backRevisionTopics
-      .filter((topic) => topic.subject === subject)
+      .filter((topic) => topic.subject.name === subject)
       .map((topic) => capitalizeFirstLetter(topic.topic.name));
 
     return !topics?.length && !todaysTopics?.continuousRevisionTopics.length
@@ -25,7 +25,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
 
   function getContinuousRevisionTopicsForSubject(subject: string) {
     const topics = todaysTopics?.continuousRevisionTopics
-      .filter((topic) => topic.subject === subject)
+      .filter((topic) => topic.subject.name === subject)
       .map((topic) => capitalizeFirstLetter(topic.topic.name));
 
     return !topics?.length && !todaysTopics?.backRevisionTopics.length
