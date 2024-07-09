@@ -55,11 +55,11 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
         <ul className="h-full flex flex-col justify-start">
           {userSubjects?.map((subject) => (
             <li
-              key={subject}
+              key={subject.name}
               className="border-b md:border-none xl:border-b border-b-[#717171] border-opacity-[0.11] last:border-none py-4 px-7"
             >
               <h4 className="text-sm md:text-xl leading-tight font-medium text-black capitalize">
-                {subject}
+                {subject.name}
               </h4>
               <TooltipProvider>
                 <Tooltip>
@@ -69,14 +69,14 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                       (todaysTopics?.backRevisionTopics.length > 0 ||
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
                         <>
-                          {getContinuousRevisionTopicsForSubject(subject)}
+                          {getContinuousRevisionTopicsForSubject(subject.name)}
                           {todaysTopics?.backRevisionTopics.length &&
                           todaysTopics.continuousRevisionTopics.length
                             ? ", "
                             : !todaysTopics.continuousRevisionTopics.length
                               ? ""
                               : "."}
-                          {getBackRevisionTopicsForSubject(subject)}
+                          {getBackRevisionTopicsForSubject(subject.name)}
                         </>
                       ) : (
                         "No plans yet!"
@@ -89,13 +89,13 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                       (todaysTopics?.backRevisionTopics.length > 0 ||
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
                         <>
-                          {getContinuousRevisionTopicsForSubject(subject)}
+                          {getContinuousRevisionTopicsForSubject(subject.name)}
                           {todaysTopics?.backRevisionTopics.length > 0
                             ? ", "
                             : !todaysTopics.continuousRevisionTopics.length
                               ? ""
                               : "."}
-                          {getBackRevisionTopicsForSubject(subject)}
+                          {getBackRevisionTopicsForSubject(subject.name)}
                         </>
                       ) : (
                         "No plans yet!"

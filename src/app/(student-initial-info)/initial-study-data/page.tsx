@@ -92,18 +92,18 @@ const InitialStudyData = () => {
             <ul className="flex items-center gap-3 border-2 rounded-md p-1">
               {userAcademic?.subjects?.map((subject) => (
                 <li
-                  key={subject}
+                  key={subject.name}
                   className={cn(
                     "relative text-base md:text-lg capitalize font-medium px-3 py-1 cursor-pointer",
-                    activeSubject === subject && "text-white"
+                    activeSubject === subject.name && "text-white"
                   )}
                   onClick={() => {
-                    setActiveSubject(subject);
+                    setActiveSubject(subject.name);
                     resetForm();
                   }}
                 >
-                  {subject}
-                  {activeSubject === subject && (
+                  {subject.name}
+                  {activeSubject === subject.name && (
                     <MotionDiv
                       layoutId="active_chat_tab"
                       transition={{

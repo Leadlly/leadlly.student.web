@@ -19,8 +19,8 @@ const SubjectProgress = () => {
           {userSubjects?.map((tab, i) => (
             <TabNavItem
               key={i}
-              title={tab}
-              id={tab}
+              title={tab.name}
+              id={tab.name}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               layoutIdPrefix="subject_progress"

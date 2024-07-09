@@ -12,6 +12,8 @@ const Tracker = async ({
 
   const trackerData = await getUserTracker(activeSubject);
 
+  console.log(activeSubject, "subjects")
+
   return (
     <div className="h-full flex flex-col gap-y-4">
       <Header
