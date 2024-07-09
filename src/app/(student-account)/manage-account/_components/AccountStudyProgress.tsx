@@ -21,24 +21,25 @@ const AccountStudyProgress = ({
 }: {
   unrevisedTopics: TRevisionProps[];
 }) => {
-  const [activeTab, setActiveTab] = useState("maths");
   const [activeTabChapters, setActiveTabChapters] = useState([]);
   const [resetForm, setResetForm] = useState<() => void>(() => {
     return () => {};
   });
 
-  const handleResetForm = useCallback((resetFunction: () => void) => {
-    setResetForm(() => resetFunction);
-  }, []);
-
   const userData = useAppSelector((state) => state.user.user);
   const userSubjects = userData?.academic.subjects;
   const userStandard = userData?.academic.standard;
 
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0]);
+
+  const handleResetForm = useCallback((resetFunction: () => void) => {
+    setResetForm(() => resetFunction);
+  }, []);
+
   useEffect(() => {
     const chapters = async () => {
       try {
-        const data = await getSubjectChapters(activeTab, userStandard!);
+        const data = await getSubjectChapters(activeTab!, userStandard!);
         setActiveTabChapters(data.chapters);
       } catch (error: any) {
         toast.error("Unable to fetch chapters!", {
@@ -87,10 +88,10 @@ const AccountStudyProgress = ({
         </div>
       </div>
 
-      <TabContent id={activeTab} activeTab={activeTab} className="h-auto">
+      <TabContent id={activeTab!} activeTab={activeTab!} className="h-auto">
         <AccountSubjectForm
           subjectChapters={activeTabChapters}
-          activeSubject={activeTab}
+          activeSubject={activeTab!}
           userStandard={userStandard!}
           onResetForm={handleResetForm}
         />

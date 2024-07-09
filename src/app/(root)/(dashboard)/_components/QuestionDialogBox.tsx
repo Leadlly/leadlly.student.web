@@ -109,9 +109,15 @@ const QuestionDialogBox = ({
       if (res.success) {
         toast.success(res.message);
         if (attemptedQuestion.length === questions.length) {
-          if (incompleteTopics.value.includes(topic?._id!)) {
-            incompleteTopics.value.filter((item) => item !== topic?._id);
-          }
+          // if (incompleteTopics.value.includes(topic?._id!)) {
+          //   const filteredIncompleteTopics = incompleteTopics.value.filter(
+          //     (item) => item !== topic?._id
+          //   );
+          //   setIncompleteTopics({
+          //     expiryDate,
+          //     value: [...filteredIncompleteTopics],
+          //   });
+          // }
           setCompletedTopics({
             expiryDate,
             value: [...completedTopics.value, topic?._id!],

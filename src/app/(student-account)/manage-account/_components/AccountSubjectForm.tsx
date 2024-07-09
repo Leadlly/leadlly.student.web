@@ -81,7 +81,13 @@ const AccountSubjectForm = ({
   }, [selectedChapter, activeSubject, userStandard]);
 
   useEffect(() => {
-    onResetForm(() => form.reset());
+    onResetForm(() =>
+      form.reset({
+        chapterName: "",
+        topicNames: [],
+        levelOfDifficulty: "",
+      })
+    );
   }, [onResetForm, form.reset]);
 
   const onFormSubmit = async (data: z.infer<typeof AccountStudyFormSchema>) => {
@@ -109,7 +115,11 @@ const AccountSubjectForm = ({
         toast.error("Chapter already saved!");
       }
 
-      form.reset();
+      form.reset({
+        chapterName: "",
+        topicNames: [],
+        levelOfDifficulty: "",
+      });
     } catch (error: any) {
       toast.error("Error adding chapter", {
         description: error.message,

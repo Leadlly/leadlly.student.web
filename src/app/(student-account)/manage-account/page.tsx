@@ -37,37 +37,6 @@ const ManageAccount = async ({
         <AccountUserProfile />
 
         <div className="flex items-center gap-10 mt-5">
-          <div>
-            {/*<Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-[206px] h-14 text-left font-normal flex items-center justify-between",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-primary/25">
-                      <CalendarDaysIcon className="h-4 w-4 text-primary" />
-                    </div>
-                    {date ? format(date, "PPP") : format(new Date(), "PPP")}
-                  </div>
-
-                  <DownArrowIcon className="w-4 h-1.5" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>*/}
-          </div>
-
           <LogoutButton />
         </div>
       </section>

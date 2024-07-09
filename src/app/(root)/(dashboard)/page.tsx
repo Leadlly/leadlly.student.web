@@ -2,29 +2,6 @@ import DesktopUI from "./_components/DesktopUI";
 import MobileUI from "./_components/MobileUI";
 import TabletUI from "./_components/TabletUI";
 
-const todaysTopics = [
-  {
-    label: "limit",
-    completed: true,
-  },
-  {
-    label: "continuity",
-    completed: false,
-  },
-  {
-    label: "differentiability",
-    completed: false,
-  },
-  {
-    label: "electromagnetic induction",
-    completed: false,
-  },
-  {
-    label: "chemical bonding",
-    completed: false,
-  },
-];
-
 const Dashboard = () => {
   return (
     <>

@@ -1,7 +1,8 @@
+import ComingSoon from "@/components/shared/ComingSoon";
 import React from "react";
 
 const ErrorBook = () => {
-  return <div>ErrorBook</div>;
+  return <ComingSoon pageTitle="Error Book" />;
 };
 
 export default ErrorBook;

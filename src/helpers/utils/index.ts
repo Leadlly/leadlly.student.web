@@ -57,14 +57,16 @@ export function getFormattedDate(date: Date): string {
   return `${dayOfMonth} ${month} ${year}`;
 }
 
-export function convertDateString(inputDate: string): string {
-  // Parse the input date string
-  const date = new Date(inputDate);
+export function convertDateString(inputDate: Date): string {
+  const utcDate = new Date(inputDate);
 
-  // Extract the day, month, and year
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // getUTCMonth() is zero-based
-  const year = date.getUTCFullYear();
+  // Convert to IST by adding 5 hours and 30 minutes
+  const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000);
+
+  // Format the date
+  const day = istDate.getDate().toString().padStart(2, "0");
+  const month = (istDate.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+  const year = istDate.getFullYear();
 
   // Format the date as DD-MM-YYYY
   return `${day}-${month}-${year}`;

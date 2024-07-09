@@ -7,7 +7,7 @@ import { capitalizeFirstLetter, convertDateString } from "@/helpers/utils";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import ChapterRevisionDateTable from "./ChapterRevisionDateTable";
-import { chapterOverviewProps } from "@/helpers/types";
+import { chapterOverviewProps, TTrackerProps } from "@/helpers/types";
 import {
   Table,
   TableBody,
@@ -19,7 +19,7 @@ import {
 const ChapterOverviewTable = ({
   chapterData,
 }: {
-  chapterData: chapterOverviewProps;
+  chapterData: TTrackerProps;
 }) => {
   const [viewMore, setViewMore] = useState(false);
 
@@ -36,7 +36,7 @@ const ChapterOverviewTable = ({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="hidden lg:table-cell sticky top-0 z-30 lg:w-64 xl:w-80 rounded-tl-xl bg-white capitalize text-primary text-2xl leading-none text-left font-semibold py-2.5 lg:py-5 px-1.5 lg:px-3 whitespace-nowrap truncate">
-                      {chapterData.chapter}
+                      {chapterData.chapter.name}
                     </TableHead>
                     <TableHead className="lg:hidden md:w-56 sticky top-0 z-30 w-28 rounded-tl-xl bg-white text-black capitalize text-sm md:text-2xl leading-none text-center font-semibold py-2.5 lg:py-5 px-1.5 lg:px-3">
                       Topics
@@ -54,42 +54,50 @@ const ChapterOverviewTable = ({
                 </TableHeader>
 
                 <TableBody>
-                  {chapterData.topics.map((item) => (
-                    <TableRow key={item.title} className="border-none">
-                      <TableHead className="text-xs md:text-base">
-                        {capitalizeFirstLetter(item.title)}
-                      </TableHead>
-                      <TableHead className="text-center text-xs md:text-base font-semibold">
-                        {item.revisionFrequency}
-                      </TableHead>
-                      <TableHead className="text-center min-w-20 text-[10px] md:text-base font-semibold">
-                        {convertDateString(item.lastRevised)}
-                      </TableHead>
-                      <TableHead>
-                        <span className="w-full flex items-center justify-between text-[7px] md:text-xs font-semibold">
-                          <span>
-                            {item.efficiency < 70
-                              ? "Improve"
-                              : item.efficiency >= 70 && item.efficiency < 80
-                              ? "Moderate"
-                              : "Excellent"}
-                          </span>
-                          <span>{item.efficiency}%</span>
-                        </span>
-                        <Progress
-                          value={item.efficiency}
-                          className="h-1 md:h-[7px]"
-                          indicatorClassName={cn(
-                            item.efficiency < 70
-                              ? "bg-[#ff2e2e]"
-                              : item.efficiency >= 70 && item.efficiency < 80
-                              ? "bg-[#FFBA53]"
-                              : "bg-[#0FD679]"
+                  {chapterData && chapterData.topics.length ? (
+                    chapterData.topics.map((item) => (
+                      <TableRow key={item.name} className="border-none">
+                        <TableHead className="text-xs md:text-base">
+                          {capitalizeFirstLetter(item.name)}
+                        </TableHead>
+                        <TableHead className="text-center text-xs md:text-base font-semibold">
+                          {item.plannerFrequency}
+                        </TableHead>
+                        <TableHead className="text-center min-w-20 text-[10px] md:text-base font-semibold">
+                          {convertDateString(
+                            item.studiedAt[item.studiedAt.length - 1].date!
                           )}
-                        />
-                      </TableHead>
-                    </TableRow>
-                  ))}
+                        </TableHead>
+                        <TableHead>
+                          <span className="w-full flex items-center justify-between text-[7px] md:text-xs font-semibold">
+                            <span>
+                              {item.overall_efficiency! < 70
+                                ? "Improve"
+                                : item?.overall_efficiency! >= 70 &&
+                                    item.overall_efficiency! < 80
+                                  ? "Moderate"
+                                  : "Excellent"}
+                            </span>
+                            <span>{item?.overall_efficiency?.toFixed(0)}%</span>
+                          </span>
+                          <Progress
+                            value={item?.overall_efficiency}
+                            className="h-1 md:h-[7px]"
+                            indicatorClassName={cn(
+                              item?.overall_efficiency! < 70
+                                ? "bg-[#ff2e2e]"
+                                : item?.overall_efficiency! >= 70 &&
+                                    item?.overall_efficiency! < 80
+                                  ? "bg-[#FFBA53]"
+                                  : "bg-[#0FD679]"
+                            )}
+                          />
+                        </TableHead>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <div>No topics to track!</div>
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -97,7 +105,8 @@ const ChapterOverviewTable = ({
             <div className="hidden lg:block w-full text-center">
               <Button
                 className="h-10 bg-primary/[0.12] hover:bg-primary/[0.16] text-primary text-xl leading-none font-semibold"
-                onClick={onViewMoreButtonClickHandler}>
+                onClick={onViewMoreButtonClickHandler}
+              >
                 View More
               </Button>
             </div>
@@ -138,12 +147,13 @@ const ChapterOverviewTable = ({
 
           <div className="lg:hidden pt-5 flex items-center justify-between">
             <p className="text-primary text-lg leading-none font-semibold capitalize whitespace-nowrap truncate">
-              {chapterData.chapter}
+              {chapterData.chapter.name}
             </p>
 
             <Button
               className="h-6 bg-primary/[0.12] hover:bg-primary/[0.16] text-primary text-xs leading-none font-semibold"
-              onClick={onViewMoreButtonClickHandler}>
+              onClick={onViewMoreButtonClickHandler}
+            >
               View More
             </Button>
           </div>
