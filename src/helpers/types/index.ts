@@ -324,13 +324,18 @@ export type Chapter = {
   }[];
 };
 
+export type subject = {
+  name: string;
+  overall_efficiency?: number;
+};
+
 export type TRevisionProps = {
   _id: string;
   user: string;
   tag: string;
   topic: Topic;
   chapter: Chapter;
-  subject: string;
+  subject: subject;
   standard: number;
   createdAt?: Date;
   updatedAt?: Date;
