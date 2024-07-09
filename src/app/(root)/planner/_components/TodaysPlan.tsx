@@ -69,13 +69,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                       (todaysTopics?.backRevisionTopics.length > 0 ||
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
                         <>
-                          {getContinuousRevisionTopicsForSubject(subject)}
-                          {todaysTopics?.backRevisionTopics.length &&
-                          todaysTopics.continuousRevisionTopics.length
-                            ? ", "
-                            : !todaysTopics.continuousRevisionTopics.length
-                              ? ""
-                              : "."}
+                          {getContinuousRevisionTopicsForSubject(subject)}{" "}
                           {getBackRevisionTopicsForSubject(subject)}
                         </>
                       ) : (
@@ -89,12 +83,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                       (todaysTopics?.backRevisionTopics.length > 0 ||
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
                         <>
-                          {getContinuousRevisionTopicsForSubject(subject)}
-                          {todaysTopics?.backRevisionTopics.length > 0
-                            ? ", "
-                            : !todaysTopics.continuousRevisionTopics.length
-                              ? ""
-                              : "."}
+                          {getContinuousRevisionTopicsForSubject(subject)}{" "}
                           {getBackRevisionTopicsForSubject(subject)}
                         </>
                       ) : (

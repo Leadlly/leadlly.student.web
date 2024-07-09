@@ -62,41 +62,42 @@ const AccountChaptersList = ({
   };
 
   return (
-    <div className="w-full overflow-y-auto">
+    <div className="w-full h-full overflow-y-auto custom__scrollbar">
       <Table>
-        <TableHeader className="bg-[#f2f2f2]">
+        <TableHeader className="bg-[#f2f2f2] sticky top-0 z-30">
           <TableRow className="border-none">
-            <TableHead className="lg:w-96 flex items-center gap-2 text-sm lg:text-lg font-medium leading-tight sticky top-0 z-30">
+            <TableHead className="lg:w-96 flex items-center gap-2 text-sm lg:text-lg font-medium leading-tight">
               <FileText className="w-5 h-5" />
               List of chapters
             </TableHead>
-            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight sticky top-0 z-30">
+            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
               Topics covered
             </TableHead>
-            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight sticky top-0 z-30">
+            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
               Difficulty level
             </TableHead>
-            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight sticky top-0 z-30">
+            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
               Actions
             </TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {mergedChapterData?.map((item, index) => (
-            <TableRow key={item.name}>
-              <TableCell className="text-base lg:text-lg leading-tight flex items-start gap-2">
-                <span>{index + 1}.</span>{" "}
-                <span>{capitalizeFirstLetter(item.name)}</span>
-              </TableCell>
-              <TableCell className="text-center text-base lg:text-lg leading-tight">
-                {item.topics.length}
-              </TableCell>
-              <TableCell className="text-center text-base lg:text-lg leading-tight capitalize">
-                {item.level}
-              </TableCell>
-              <TableCell className="flex items-center justify-center gap-1 lg:gap-3">
-                {/* <Link
+          {mergedChapterData && mergedChapterData.length ? (
+            mergedChapterData?.map((item, index) => (
+              <TableRow key={item.name}>
+                <TableCell className="text-base lg:text-lg leading-tight flex items-start gap-2">
+                  <span>{index + 1}.</span>{" "}
+                  <span>{capitalizeFirstLetter(item.name)}</span>
+                </TableCell>
+                <TableCell className="text-center text-base lg:text-lg leading-tight">
+                  {item.topics.length}
+                </TableCell>
+                <TableCell className="text-center text-base lg:text-lg leading-tight capitalize">
+                  {item.level}
+                </TableCell>
+                <TableCell className="flex items-center justify-center gap-1 lg:gap-3">
+                  {/* <Link
               href={"#"}
               className="flex items-center justify-center gap-x-1 text-lg font-medium sm:border rounded"
             >
@@ -104,25 +105,28 @@ const AccountChaptersList = ({
               <span className="hidden lg:inline-block">Edit</span>
             </Link> */}
 
-                <Button
-                  className="flex items-center justify-center w-7 h-7 lg:w-24 lg:h-8 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium px-0 lg:px-4"
-                  onClick={() =>
-                    handleDeleteChapter({ chapterName: item.name })
-                  }
-                  disabled={isDeleting === item.name}
-                >
-                  {isDeleting === item.name ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                  ) : (
-                    <>
-                      <Trash className="w-3 h-3 text-primary lg:hidden" />
-                      <span className="hidden lg:inline-block">Remove</span>
-                    </>
-                  )}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+                  <Button
+                    className="flex items-center justify-center w-7 h-7 lg:w-24 lg:h-8 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium px-0 lg:px-4"
+                    onClick={() =>
+                      handleDeleteChapter({ chapterName: item.name })
+                    }
+                    disabled={isDeleting === item.name}
+                  >
+                    {isDeleting === item.name ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <>
+                        <Trash className="w-3 h-3 text-primary lg:hidden" />
+                        <span className="hidden lg:inline-block">Remove</span>
+                      </>
+                    )}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <div>No topics yet!</div>
+          )}
         </TableBody>
       </Table>
     </div>

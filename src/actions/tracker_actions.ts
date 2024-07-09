@@ -9,7 +9,7 @@ export const getUserTracker = async (subject: string | string[]) => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/tracker/get?subject=${subject}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Cookie: `token=${token}`,

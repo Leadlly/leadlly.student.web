@@ -5,11 +5,10 @@ import { SemiRadialChart, TabContent, TabNavItem } from "@/components";
 import { useAppSelector } from "@/redux/hooks";
 
 const SubjectProgress = () => {
-  const [activeTab, setActiveTab] = useState("maths");
-
   const userSubjects = useAppSelector(
     (state) => state.user.user?.academic.subjects
   );
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0]);
 
   return (
     <div className="h-full py-2">
@@ -21,7 +20,7 @@ const SubjectProgress = () => {
               key={i}
               title={tab}
               id={tab}
-              activeTab={activeTab}
+              activeTab={activeTab!}
               setActiveTab={setActiveTab}
               layoutIdPrefix="subject_progress"
               activeTabClassName="h-full inset-0"
@@ -31,7 +30,7 @@ const SubjectProgress = () => {
         </ul>
       </div>
       <div className="w-full h-full overflow-hidden">
-        <TabContent id="maths" activeTab={activeTab}>
+        <TabContent id={activeTab!} activeTab={activeTab!}>
           <div className="h-full grid grid-cols-2 mt-3 place-items-center">
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
@@ -51,7 +50,7 @@ const SubjectProgress = () => {
           </div>
         </TabContent>
 
-        <TabContent id="physics" activeTab={activeTab}>
+        {/* <TabContent id={activeTab!} activeTab={activeTab!}>
           <div className="grid grid-cols-2 mt-3">
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
@@ -71,7 +70,7 @@ const SubjectProgress = () => {
           </div>
         </TabContent>
 
-        <TabContent id="chemistry" activeTab={activeTab}>
+        <TabContent id={activeTab!} activeTab={activeTab!}>
           <div className="grid grid-cols-2 mt-3">
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
@@ -89,7 +88,7 @@ const SubjectProgress = () => {
               />
             </div>
           </div>
-        </TabContent>
+        </TabContent> */}
       </div>
     </div>
   );

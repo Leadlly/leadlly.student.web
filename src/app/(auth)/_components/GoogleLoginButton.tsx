@@ -8,16 +8,15 @@ import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 
-const GoogleLoginButton = ({
-  setIsLoading,
-}: {
-  setIsLoading: (isLoading: boolean) => void;
-}) => {
+const GoogleLoginButton = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -68,22 +67,29 @@ const GoogleLoginButton = ({
   });
 
   return (
-    <Suspense fallback={<Loader />}>
-      <Button
-        type="button"
-        variant={"outline"}
-        onClick={() => login()}
-        className="w-full text-lg lg:text-xl h-12 gap-2"
-      >
-        <Image
-          src="/assets/icons/google-icon.svg"
-          alt="Sign in with Google"
-          width={17}
-          height={17}
-        />
-        Sign in with Google
-      </Button>
-    </Suspense>
+    <Button
+      type="button"
+      variant={"outline"}
+      onClick={() => login()}
+      className="w-full text-lg lg:text-xl h-12 gap-2"
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="w-5 h-5 animate-spin" />
+        </>
+      ) : (
+        <>
+          <Image
+            src="/assets/icons/google-icon.svg"
+            alt="Sign in with Google"
+            width={17}
+            height={17}
+          />
+          Sign in with Google
+        </>
+      )}
+    </Button>
   );
 };
 
