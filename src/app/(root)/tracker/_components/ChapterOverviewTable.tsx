@@ -118,20 +118,26 @@ const ChapterOverviewTable = ({
             </p>
             <div className="flex-1 bg-primary/10 rounded-xl border border-primary lg:px-3 lg:py-5 flex lg:flex-col justify-center lg:justify-between items-center gap-5 mt-2">
               <div className="h-full lg:h-40 mt-5 lg:mt-0">
-                <DonutChart />
+                <DonutChart data={chapterData.chapter} />
               </div>
 
               <div className="flex flex-col gap-y-2 lg:-mt-5">
                 <div className="flex items-center gap-2">
                   <span className="w-[9px] h-[9px] rounded-full bg-primary"></span>
                   <span className="text-[9px] font-medium leading-none">
-                    Revision Completion - <span className="font-bold">80%</span>
+                    Revision Completion -{" "}
+                    <span className="font-bold">
+                      {chapterData.chapter.plannerFrequency}%
+                    </span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-[9px] h-[9px] rounded-full bg-[#72EFDD]"></span>
                   <span className="text-[9px] font-medium leading-none">
-                    Total Efficiency - <span className="font-bold">60%</span>
+                    Total Efficiency -{" "}
+                    <span className="font-bold">
+                      {chapterData.chapter.overall_efficiency}%
+                    </span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">

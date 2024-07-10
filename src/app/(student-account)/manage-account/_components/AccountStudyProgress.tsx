@@ -4,11 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 
 import AccountSubjectForm from "./AccountSubjectForm";
 
-import { TabContent, TabNavItem } from "@/components";
+import { TabContent } from "@/components";
 
-import { EllipsisVertical } from "lucide-react";
 import AccountChaptersList from "./AccountChaptersList";
-// import { userSubjects } from "@/helpers/constants";
 import { getSubjectChapters } from "@/actions/question_actions";
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
@@ -30,7 +28,7 @@ const AccountStudyProgress = ({
   const userSubjects = userData?.academic.subjects;
   const userStandard = userData?.academic.standard;
 
-  const [activeTab, setActiveTab] = useState(userSubjects?.[0]);
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
 
   const handleResetForm = useCallback((resetFunction: () => void) => {
     setResetForm(() => resetFunction);
@@ -61,18 +59,18 @@ const AccountStudyProgress = ({
           <ul className="flex items-center justify-between p-1 bg-white rounded-md">
             {userSubjects?.map((subject) => (
               <li
-                key={subject}
+                key={subject.name}
                 className={cn(
                   "relative text-base md:text-lg capitalize font-medium px-3 py-1 cursor-pointer z-30",
-                  activeTab === subject && "text-white"
+                  activeTab === subject.name && "text-white"
                 )}
                 onClick={() => {
-                  setActiveTab(subject);
+                  setActiveTab(subject.name);
                   resetForm();
                 }}
               >
-                {subject}
-                {activeTab === subject && (
+                {subject.name}
+                {activeTab === subject.name && (
                   <MotionDiv
                     layoutId="active_chat_tab"
                     transition={{

@@ -1,17 +1,20 @@
 "use client";
 
+import { Chapter } from "@/helpers/types";
 import dynamic from "next/dynamic";
 
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const DonutChart = () => {
+const DonutChart = ({ data }: { data: Chapter }) => {
+  const seriesArray = [data.plannerFrequency!, data.overall_efficiency!, 70];
+
   return (
     <>
       <Charts
         type="donut"
         width={"100%"}
         height={"100%"}
-        series={[80, 60, 70]}
+        series={[...seriesArray]}
         options={{
           chart: {
             height: "100%",

@@ -158,6 +158,25 @@ export type subjectChaptersProps = {
   }[];
 };
 
+export interface ISubject {
+  name: string;
+  overall_efficiency: number;
+  overall_progress: number;
+  total_questions_solved: number;
+}
+
+export interface IAcademic {
+  standard: number;
+  competitiveExam?: string | null;
+  subjects?: ISubject[];
+  schedule?: string | null;
+  coachingMode?: string | null;
+  coachingName?: string | null;
+  coachingAddress?: string | null;
+  schoolOrCollegeName?: string | null;
+  schoolOrCollegeAddress?: string | null;
+}
+
 export type UserDataProps = {
   firstname: string;
   lastname?: string;
@@ -183,17 +202,7 @@ export type UserDataProps = {
     addressLine?: string;
     pincode?: number;
   };
-  academic: {
-    standard: number;
-    competitiveExam?: string;
-    subjects?: string[];
-    schedule?: string;
-    coachingMode?: string;
-    coachingName?: string;
-    coachingAddress?: string;
-    schoolOrCollegeName?: string;
-    schoolOrCollegeAddress?: string;
-  };
+  academic: IAcademic;
   about: {
     dateOfBirth?: string;
     gender: string;

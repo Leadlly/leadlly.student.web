@@ -13,10 +13,7 @@ import TodaysVibe from "./TodaysVibe";
 import DailyStreakQuestions from "./DailyStreakQuestions";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
-import { UserDataProps } from "@/helpers/types";
-import { toast } from "sonner";
-import { getUser } from "@/actions/user_actions";
+
 import { useAppSelector } from "@/redux/hooks";
 
 const UserProfileSheet = () => {
@@ -30,9 +27,9 @@ const UserProfileSheet = () => {
             alt={`${user?.firstname}'s profile image`}
           />
           <AvatarFallback className="text-sm font-bold capitalize">
-            {user?.firstname[0]}
+            {user?.firstname?.[0]}
             <span className="capitalize">
-              {user?.lastname ? user.lastname[0] : ""}
+              {user?.lastname ? user.lastname?.[0] : ""}
             </span>
           </AvatarFallback>
         </Avatar>
@@ -40,7 +37,8 @@ const UserProfileSheet = () => {
       <SheetContent
         className="w-full sm:min-w-full py-4 flex flex-col gap-y-4 overflow-y-auto custom__scrollbar"
         icon={<ArrowLeft className="w-5 h-5" />}
-        sheetCloseClassName="left-4">
+        sheetCloseClassName="left-4"
+      >
         <SheetHeader className="text-left ml-10 text-xl font-semibold -mt-1">
           Profile
         </SheetHeader>

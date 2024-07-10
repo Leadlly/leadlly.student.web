@@ -6,9 +6,13 @@ import { useAppSelector } from "@/redux/hooks";
 
 const SubjectProgress = () => {
   const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
+    (state) => state.user.user?.academic?.subjects
   );
-  const [activeTab, setActiveTab] = useState(userSubjects?.[0]);
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
+
+  const subject = userSubjects?.filter(
+    (subject) => subject.name === activeTab
+  )[0];
 
   return (
     <div className="h-full py-2">
@@ -18,8 +22,8 @@ const SubjectProgress = () => {
           {userSubjects?.map((tab, i) => (
             <TabNavItem
               key={i}
-              title={tab}
-              id={tab}
+              title={tab.name}
+              id={tab.name}
               activeTab={activeTab!}
               setActiveTab={setActiveTab}
               layoutIdPrefix="subject_progress"
@@ -34,7 +38,7 @@ const SubjectProgress = () => {
           <div className="h-full grid grid-cols-2 mt-3 place-items-center">
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
-                series={[70]}
+                series={[subject?.overall_progress!]}
                 colors={["#6200EE"]}
                 chartLabel="revision"
               />
@@ -42,7 +46,7 @@ const SubjectProgress = () => {
 
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
-                series={[30]}
+                series={[subject?.overall_efficiency!]}
                 colors={["#56CFE1"]}
                 chartLabel="efficiency"
               />

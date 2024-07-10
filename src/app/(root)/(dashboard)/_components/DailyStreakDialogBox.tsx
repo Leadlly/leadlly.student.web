@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import Modal from "@/components/shared/Modal";
 import { Questions, Option } from "@/helpers/types/index";
 import { sanitizedHtml } from "@/helpers/utils";
+import { useAppSelector } from "@/redux/hooks";
 
 const DailyStreakDialogBox = ({
   setOpenQuestionDialogBox,
@@ -19,17 +20,25 @@ const DailyStreakDialogBox = ({
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [attemptedQuestion, setAttemptedQuestion] = useState<number[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState("Maths");
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
+    null
+  );
 
-  const questionData = questions[activeTab.toLowerCase()];
+  const userSubjects = useAppSelector(
+    (state) => state.user.user?.academic.subjects
+  );
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
+
+  const questionData = questions[activeTab?.toLowerCase()!];
 
   if (!questionData) return null;
 
   const { question, options } = questionData;
 
   const allOptions = options.map((option: Option) => option.name);
-  const correctOptions = options.filter((option: Option) => option.tag === "Correct").map((option: Option) => option.name);
+  const correctOptions = options
+    .filter((option: Option) => option.tag === "Correct")
+    .map((option: Option) => option.name);
 
   const onAnswerSelect = (answer: string, index: number) => {
     setSelectedAnswerIndex(index);
@@ -49,10 +58,11 @@ const DailyStreakDialogBox = ({
     setSelectedAnswerIndex(null);
     setSelectedAnswer("");
 
-    const tabs = ["Maths", "Physics", "Chemistry"];
-    const currentIndex = tabs.indexOf(activeTab);
-    const nextIndex = (currentIndex + 1) % tabs.length;
-    setActiveTab(tabs[nextIndex]);
+    const currentIndex = userSubjects?.findIndex(
+      (subject) => subject.name === activeTab
+    );
+    const nextIndex = (currentIndex! + 1) % userSubjects?.length!;
+    setActiveTab(userSubjects?.[nextIndex].name);
   };
 
   return (
@@ -73,18 +83,18 @@ const DailyStreakDialogBox = ({
 
         <div className="p-3 md:p-8 flex-1 flex flex-col">
           <div className="flex items-center justify-around gap-4 mb-4 border-b-2 border-gray-300">
-            {["Maths", "Physics", "Chemistry"].map((tab) => (
+            {userSubjects?.map((tab) => (
               <button
-                key={tab}
+                key={tab.name}
                 className={cn(
-                  "py-4 px-4 text-lg font-semibold",
-                  activeTab === tab
+                  "py-2 rounded-lg px-4 text-lg font-semibold capitalize",
+                  activeTab === tab.name
                     ? "border-b-4 border-primary text-gray-900 bg-primary/[0.1]"
                     : "text-gray-500"
                 )}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => setActiveTab(tab.name)}
               >
-                {tab}
+                {tab.name}
               </button>
             ))}
           </div>
@@ -93,7 +103,9 @@ const DailyStreakDialogBox = ({
             <div className="px-4 md:px-7 mb-4">
               <p className="text-base md:text-xl flex flex-row text-black font-medium mb-4">
                 <span className="mr-2"> Q.</span>
-                <span dangerouslySetInnerHTML={{ __html: question }} />
+                <span
+                  dangerouslySetInnerHTML={{ __html: sanitizedHtml(question) }}
+                />
               </p>
 
               <ul className="flex flex-col gap-2">
@@ -148,7 +160,9 @@ const DailyStreakDialogBox = ({
                 type="button"
                 className="h-7 md:h-9 px-4 md:px-6 text-base md:text-xl font-semibold"
                 onClick={handleNextQuestion}
-                disabled={activeTab === "Chemistry"}
+                disabled={
+                  activeTab === userSubjects?.[userSubjects?.length - 1].name
+                }
               >
                 Next
               </Button>

@@ -39,7 +39,7 @@ import {
   getSubjectChapters,
 } from "@/actions/question_actions";
 
-import { subjectChaptersProps } from "@/helpers/types";
+import { ISubject, subjectChaptersProps } from "@/helpers/types";
 
 import { toast } from "sonner";
 import { saveStudyData } from "@/actions/studyData_actions";
@@ -61,7 +61,7 @@ const NewTopicLearnt = ({
   userStandard,
 }: {
   setNewTopicLearnt: (newTopicLearnt: boolean) => void;
-  userSubjects: string[];
+  userSubjects: ISubject[];
   userStandard: number;
 }) => {
   const [activeSubject, setActiveSubject] = useState("maths");
@@ -153,17 +153,17 @@ const NewTopicLearnt = ({
               key={index}
               className={cn(
                 "capitalize font-semibold text-[#6a6a6a] border px-3 py-1 rounded-lg cursor-pointer",
-                activeSubject === item
+                activeSubject === item.name
                   ? "bg-primary/10 border-primary text-black"
                   : ""
               )}
               onClick={() => {
-                setActiveSubject(item);
+                setActiveSubject(item.name);
                 form.setValue("chapterName", "");
                 form.setValue("topicNames", []);
               }}
             >
-              {item}
+              {item.name}
             </li>
           ))}
         </ul>
