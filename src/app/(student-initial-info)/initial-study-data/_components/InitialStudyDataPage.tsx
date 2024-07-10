@@ -56,22 +56,23 @@ const InitialStudyDataPage = ({
 
   return (
     <section className="flex flex-col w-full">
-      <div className="px-3">
+      <div className="px-3 flex items-center justify-between">
         <Image
           src="/assets/images/leadlly_logo.svg"
           alt="Leadlly"
           width={130}
           height={60}
         />
-      </div>
-      <div className="w-full h-[calc(100dvh-50px)] px-3 py-10 sm:px-10 lg:p-6 space-y-3 flex flex-col">
-        <div className="w-full flex justify-between items-center">
-          <h1 className="text-xl md:text-3xl font-semibold">
-            Tell us about your learnings
-          </h1>
 
-          <ProceedButton />
-        </div>
+        <ProceedButton />
+      </div>
+      <div className="w-full h-[calc(100dvh-52px)] px-3 py-10 sm:px-10 lg:p-6 space-y-3 flex flex-col">
+        <h1 className="max-w-md w-full mx-auto text-center text-xl md:text-3xl font-semibold">
+          Tell us what you learnt till now
+        </h1>
+        <p className="max-w-md w-full mx-auto text-center text-base leading-tight">
+          Choose the chapters and topics you&apos;ve finished in your classes
+        </p>
 
         <div className="flex justify-center">
           <ul className="flex items-center gap-3 border-2 rounded-md p-1">

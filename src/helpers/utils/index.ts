@@ -105,3 +105,12 @@ export const sanitizedHtml = (htmlString: string) => {
 export const getColorBySubject = (subject: Subject): string => {
   return SUBJECT_COLORS[subject] || "bg-[#B0BEC5]";
 };
+
+export function isMoodButtonDisabled(lastMoodDate: String) {
+  if (!lastMoodDate) return false;
+
+  const today = new Date();
+  const formattedToday = today.toISOString().split("T")[0];
+
+  return lastMoodDate === formattedToday;
+}
