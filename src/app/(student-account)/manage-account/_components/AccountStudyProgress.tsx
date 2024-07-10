@@ -61,18 +61,18 @@ const AccountStudyProgress = ({
           <ul className="flex items-center justify-between p-1 bg-white rounded-md">
             {userSubjects?.map((subject) => (
               <li
-                key={subject}
+                key={subject.name}
                 className={cn(
                   "relative text-base md:text-lg capitalize font-medium px-3 py-1 cursor-pointer z-30",
-                  activeTab === subject && "text-white"
+                  activeTab === subject.name && "text-white"
                 )}
                 onClick={() => {
-                  setActiveTab(subject);
+                  setActiveTab(subject.name);
                   resetForm();
                 }}
               >
-                {subject}
-                {activeTab === subject && (
+                {subject.name}
+                {activeTab === subject.name && (
                   <MotionDiv
                     layoutId="active_chat_tab"
                     transition={{
