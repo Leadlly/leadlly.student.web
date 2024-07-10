@@ -36,3 +36,36 @@ export const saveDailyQuiz = async (data: {
     }
   }
 };
+
+export const getDailyStreakQuestions = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/questionbank/streakquestion`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "force-cache",
+      }
+    );
+
+    const responseData = await res.json();
+
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(
+        `Error in fetching daily streak questions: ${error.message}`
+      );
+    } else {
+      throw new Error(
+        "An unknown error occurred while fetching daily streak questions!"
+      );
+    }
+  }
+};

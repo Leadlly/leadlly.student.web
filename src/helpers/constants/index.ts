@@ -64,6 +64,34 @@ export const userSidebarLinks: TSidebarLink[] = [
   },
 ];
 
+export const moodEmojis = [
+  {
+    moodImg: "/assets/icons/sad_emoji.png",
+    mood_id: "sad-emoji",
+    mood: "sad",
+  },
+  {
+    moodImg: "/assets/icons/unhappy_emoji.png",
+    mood_id: "unhappy-emoji",
+    mood: "unhappy",
+  },
+  {
+    moodImg: "/assets/icons/neutral_emoji.png",
+    mood_id: "neutral-emoji",
+    mood: "neutral",
+  },
+  {
+    moodImg: "/assets/icons/smiling_emoji.png",
+    mood: "smiling",
+    mood_id: "smiling-emoji",
+  },
+  {
+    moodImg: "/assets/icons/laughing_emoji.png",
+    mood_id: "laughing-emoji",
+    mood: "laughing",
+  },
+];
+
 export const manageAccountTabs = [
   {
     id: "personal-info",
@@ -129,4 +157,3 @@ export const SUBJECT_COLORS = {
   Chemistry: "bg-[#72EFDD4A]",
   Physics: "bg-[#A36AF53D]",
 };
-

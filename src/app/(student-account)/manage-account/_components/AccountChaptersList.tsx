@@ -125,7 +125,11 @@ const AccountChaptersList = ({
               </TableRow>
             ))
           ) : (
-            <div>No topics yet!</div>
+            <TableRow>
+              <TableCell className="font-medium text-muted-foreground">
+                No topics yet!
+              </TableCell>
+            </TableRow>
           )}
         </TableBody>
       </Table>

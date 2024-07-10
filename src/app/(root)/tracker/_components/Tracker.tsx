@@ -1,15 +1,23 @@
-import { TTrackerProps } from "@/helpers/types";
+import { ISubject, TTrackerProps } from "@/helpers/types";
 import ChapterOverviewTable from "./ChapterOverviewTable";
 import SubjectOverview from "./SubjectOverview";
 
 const TrackerComponent = ({
   trackerData,
+  activeSubject,
+  userSubjects,
 }: {
   trackerData: TTrackerProps[];
+  userSubjects: ISubject[] | undefined;
+  activeSubject: string;
 }) => {
   return (
     <div className="flex flex-col gap-y-6">
-      <SubjectOverview />
+      <SubjectOverview
+        subject={
+          userSubjects?.filter((subject) => subject.name === activeSubject)[0]
+        }
+      />
 
       {trackerData && trackerData.length ? (
         trackerData.map((item) => (

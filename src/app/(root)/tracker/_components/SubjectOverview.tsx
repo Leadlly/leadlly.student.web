@@ -1,7 +1,8 @@
 import { RadialBarChart } from "@/components";
 import { Progress } from "@/components/ui/progress";
+import { ISubject } from "@/helpers/types";
 
-const SubjectOverview = () => {
+const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
   return (
     <div className="rounded-xl shadow-tracker_subject_overview px-5 py-4">
       <h2 className="text-lg md:text-2xl leading-none font-semibold text-black mb-4 lg:mb-0">
@@ -12,7 +13,7 @@ const SubjectOverview = () => {
       <div className="hidden lg:flex items-center gap-4 h-48">
         <div className="flex items-center h-full">
           <RadialBarChart
-            series={[75]}
+            series={[subject?.overall_progress!]}
             colors={["#9654f4"]}
             labels={["Revision Completion"]}
             width="80%"
@@ -21,7 +22,7 @@ const SubjectOverview = () => {
             fontSize="24px"
           />
           <RadialBarChart
-            series={[82]}
+            series={[subject?.overall_efficiency!]}
             colors={["#72EFDD"]}
             labels={["Revision Efficiency"]}
             width="80%"
@@ -68,8 +69,10 @@ const SubjectOverview = () => {
             Revision Completion
           </h4>
           <div className="flex items-center gap-4">
-            <Progress value={75} className="h-2" />
-            <p className="leading-none text-lg font-semibold">75%</p>
+            <Progress value={subject?.overall_progress!} className="h-2" />
+            <p className="leading-none text-lg font-semibold">
+              {subject?.overall_progress}%
+            </p>
           </div>
         </div>
         <div>
@@ -78,11 +81,13 @@ const SubjectOverview = () => {
           </h4>
           <div className="flex items-center gap-4">
             <Progress
-              value={82}
+              value={subject?.overall_efficiency!}
               className="h-2"
               indicatorClassName="bg-[#72EFDD]"
             />
-            <p className="leading-none text-lg font-semibold">82%</p>
+            <p className="leading-none text-lg font-semibold">
+              {subject?.overall_efficiency}%
+            </p>
           </div>
         </div>
         <div>

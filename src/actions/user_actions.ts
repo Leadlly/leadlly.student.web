@@ -173,3 +173,34 @@ export const studentPersonalInfo = async (data: StudentPersonalInfoProps) => {
     }
   }
 };
+
+export const setTodaysVibe = async (data: { todaysVibe: string }) => {
+  const token = await getCookie("token");
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/todaysVibe/save`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+    revalidateTag("userData");
+
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error in saving student current mood: ${error.message}`);
+    } else {
+      throw new Error(
+        "An unknown error occurred while saving student current mood!"
+      );
+    }
+  }
+};

@@ -28,7 +28,7 @@ const InitialStudyDataPage = ({
   const userAcademic = useAppSelector((state) => state.user.user?.academic);
 
   const [activeSubject, setActiveSubject] = useState(
-    userAcademic?.subjects?.[0]
+    userAcademic?.subjects?.[0].name
   );
 
   const handleResetForm = useCallback((resetFunction: () => void) => {
@@ -77,18 +77,18 @@ const InitialStudyDataPage = ({
           <ul className="flex items-center gap-3 border-2 rounded-md p-1">
             {userAcademic?.subjects?.map((subject) => (
               <li
-                key={subject}
+                key={subject.name}
                 className={cn(
                   "relative text-base md:text-lg capitalize font-medium px-3 py-1 cursor-pointer",
-                  activeSubject === subject && "text-white"
+                  activeSubject === subject.name && "text-white"
                 )}
                 onClick={() => {
-                  setActiveSubject(subject);
+                  setActiveSubject(subject.name);
                   resetForm();
                 }}
               >
-                {subject}
-                {activeSubject === subject && (
+                {subject.name}
+                {activeSubject === subject.name && (
                   <MotionDiv
                     layoutId="active_chat_tab"
                     transition={{

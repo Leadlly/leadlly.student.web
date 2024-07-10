@@ -4,11 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 
 import AccountSubjectForm from "./AccountSubjectForm";
 
-import { TabContent, TabNavItem } from "@/components";
+import { TabContent } from "@/components";
 
-import { EllipsisVertical } from "lucide-react";
 import AccountChaptersList from "./AccountChaptersList";
-// import { userSubjects } from "@/helpers/constants";
 import { getSubjectChapters } from "@/actions/question_actions";
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
@@ -30,7 +28,7 @@ const AccountStudyProgress = ({
   const userSubjects = userData?.academic.subjects;
   const userStandard = userData?.academic.standard;
 
-  const [activeTab, setActiveTab] = useState(userSubjects?.[0]);
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
 
   const handleResetForm = useCallback((resetFunction: () => void) => {
     setResetForm(() => resetFunction);
