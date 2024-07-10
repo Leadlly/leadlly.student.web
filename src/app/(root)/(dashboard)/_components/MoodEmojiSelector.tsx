@@ -24,8 +24,8 @@ const MoodEmojiSelector = () => {
   const [currentMood, setCurrentMood] = useState(
     userCurrentMood &&
       userCurrentMood.length &&
-      userCurrentMood?.[currentDateMoodIndex!].emoji
-      ? userCurrentMood?.[currentDateMoodIndex!].emoji
+      userCurrentMood?.[currentDateMoodIndex!]?.emoji
+      ? userCurrentMood?.[currentDateMoodIndex!]?.emoji
       : "neutral"
   );
 
@@ -78,7 +78,11 @@ const MoodEmojiSelector = () => {
         <>
           <p className="text-xs w-full text-center py-1 text-primary font-medium">
             Your current mood is{" "}
-            {user?.details?.mood?.[currentDateMoodIndex!].emoji}
+            {user?.details?.mood &&
+            user.details.mood.length &&
+            user?.details?.mood?.[currentDateMoodIndex!]?.emoji
+              ? user?.details?.mood?.[currentDateMoodIndex!]?.emoji
+              : "neutral"}
           </p>
         </>
       ) : (
