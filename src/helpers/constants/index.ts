@@ -157,3 +157,32 @@ export const SUBJECT_COLORS = {
   Chemistry: "bg-[#72EFDD4A]",
   Physics: "bg-[#A36AF53D]",
 };
+
+export const chatPageTabs = [
+  {
+    title: "chat",
+    id: "chat",
+    desktopView: true,
+  },
+  {
+    title: "meetings",
+    id: "meetings",
+    desktopView: true,
+  },
+  {
+    title: "request meeting",
+    id: "requestMeeting",
+    desktopView: false,
+  },
+];
+
+export const meetingTabs = [
+  {
+    id: "upcoming",
+    label: "upcoming",
+  },
+  {
+    id: "done",
+    label: "done",
+  },
+];

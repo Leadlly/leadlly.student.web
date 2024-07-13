@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 
-import { CalendarIcon, Check } from "lucide-react";
+import { CalendarIcon, Check, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -35,36 +35,45 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { RequestMeetingFormSchema } from "./RequestMeetingComponent";
-
-
+import { RequestMeetingFormSchema } from "@/schemas/requestMeetingFormSchema";
+import { requestMeeting } from "@/actions/meeting_actions";
 
 const RequestMeetingDesktopComponent = () => {
-  // const [selectedMeetingTime, setSelectedMeetingTime] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof RequestMeetingFormSchema>) => {
-    // Include the selected meeting time in the form submission data
-    const formData = { ...data };
-    toast.success("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(formData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
-    setSubmitted(true);
+  const onSubmit = async (data: z.infer<typeof RequestMeetingFormSchema>) => {
+    setIsSubmitting(true);
+
+    try {
+      const res = await requestMeeting({
+        date: data.date_of_meeting,
+        time: data.time,
+        message: data.meeting_agenda,
+      });
+
+      if (res.success === false) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success(res.message);
+      setSubmitted(true);
+      form.reset();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="hidden lg:flex w-80">
       {!submitted ? (
-        <div className="h-[74dvh] flex flex-col flex-1 gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
+        <div className="flex flex-col flex-1 gap-y-5 md:gap-y-7 border bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
           {/* Request Meet */}
           <div className="flex justify-center gap-x-2 py-3 ">
             <Image
@@ -172,31 +181,45 @@ const RequestMeetingDesktopComponent = () => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-center"/>
+                    <FormMessage className="text-center" />
                   </FormItem>
                 )}
               />
 
               <div className="text-center">
-                <Button type="submit">Submit Request</Button>
+                <Button type="submit" className="w-32">
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Submit Request"
+                  )}
+                </Button>
               </div>
             </form>
           </Form>
         </div>
       ) : (
-        <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] bg-no-repeat flex-1">
-          <div className="h-full flex flex-col gap-y-7 items-center justify-center">
+        <div className="relative flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:110px,_110px] bg-no-repeat flex-1">
+          <div className="absolute top-2 right-2">
+            <Button
+              variant={"outline"}
+              size={"sm"}
+              onClick={() => setSubmitted(false)}
+              className="border-primary text-primary hover:text-primary hover:bg-primary/10"
+            >
+              Back
+            </Button>
+          </div>
+          <div className="h-full flex flex-col gap-y-4 items-center justify-center">
             <div className="w-14 h-14 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
               <Check className="w-8 h-8 " />
             </div>
-            <h1 className="text-primary text-3xl font-bold mt-10">
+            <h1 className="text-primary text-3xl font-bold">
               Sent Successfully
             </h1>
             <div className="text-center">
-              <h3 className="text-3xl font-semibold mt-6">Thank You!</h3>
-              <p className="font-medium text-xl m-1">
-                Your Request has been sent
-              </p>
+              <h3 className="text-3xl font-semibold">Thank You!</h3>
+              <p className="font-medium text-xl">Your Request has been sent</p>
             </div>
           </div>
         </div>

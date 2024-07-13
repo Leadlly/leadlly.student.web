@@ -72,6 +72,26 @@ export function convertDateString(inputDate: Date): string {
   return `${day}-${month}-${year}`;
 }
 
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+  return `${day} ${month}`;
+}
+
+export function calculateDaysLeft(meetingDate: Date): number {
+  // Get the current date
+  const currentDate = new Date();
+
+  // Calculate the difference in milliseconds
+  const differenceInMs = meetingDate.getTime() - currentDate.getTime();
+
+  // Convert milliseconds to days
+  const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+
+  return daysLeft - 1;
+}
+
 export function capitalizeFirstLetter(
   sentence: string | undefined
 ): string | undefined {
