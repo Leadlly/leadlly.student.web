@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 
-import { CalendarIcon, Check } from "lucide-react";
+import { CalendarIcon, Check, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,18 +36,11 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-export const RequestMeetingFormSchema = z.object({
-  date_of_meeting: z.date({
-    required_error: "A date is required to request meeting.",
-  }),
-  time: z.string({ required_error: "A time is required to request meeting!" }),
-  meeting_agenda: z.string({
-    required_error: "Please enter your meeting agenda",
-  }),
-});
+import { RequestMeetingFormSchema } from "@/schemas/requestMeetingFormSchema";
+import { requestMeeting } from "@/actions/meeting_actions";
 
 const RequestMeetingComponent = () => {
-  // const [selectedMeetingTime, setSelectedMeetingTime] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
@@ -71,19 +64,31 @@ const RequestMeetingComponent = () => {
     };
   }, []);
 
-  const onSubmit = (data: z.infer<typeof RequestMeetingFormSchema>) => {
-    // Include the selected meeting time in the form submission data
-    const formData = { ...data };
-    toast.success("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(formData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
-    setSubmitted(true);
+  const onSubmit = async (data: z.infer<typeof RequestMeetingFormSchema>) => {
+    setIsSubmitting(true);
+
+    try {
+      const res = await requestMeeting({
+        date: data.date_of_meeting,
+        time: data.time,
+        message: data.meeting_agenda,
+      });
+
+      console.log(res);
+
+      if (res.success === false) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success(res.message);
+      setSubmitted(true);
+      form.reset();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -214,13 +219,29 @@ const RequestMeetingComponent = () => {
               />
 
               <div className="text-center">
-                <Button type="submit">Submit Request</Button>
+                <Button type="submit" className="w-32">
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Submit Request"
+                  )}
+                </Button>
               </div>
             </form>
           </Form>
         </div>
       ) : (
-        <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
+        <div className="relative h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
+          <div className="absolute top-2 right-2">
+            <Button
+              variant={"outline"}
+              size={"sm"}
+              onClick={() => setSubmitted(false)}
+              className="border-primary text-primary hover:text-primary hover:bg-primary/10"
+            >
+              Back
+            </Button>
+          </div>
           <div className="h-full flex flex-col gap-y-7 items-center justify-center">
             <div className="w-16 h-16 md:w-20 md:h-20 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
               <Check className="w-8 h-8 md:w-12 md:h-12" />

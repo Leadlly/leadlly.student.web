@@ -417,3 +417,17 @@ export type TTrackerProps = {
   chapter: Chapter;
   topics: Topic[];
 };
+
+export type TMeetingsProps = {
+  rescheduled: { isRescheduled: boolean };
+  gmeet: { link: string | null };
+  _id: string;
+  date: string;
+  time: string;
+  student: string;
+  mentor: string;
+  accepted: boolean;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+};

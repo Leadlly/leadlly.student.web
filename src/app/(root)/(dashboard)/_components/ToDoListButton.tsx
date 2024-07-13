@@ -32,12 +32,12 @@ const ToDoListButton = ({
       )}
     >
       <li
-        className="flex items-start gap-2 w-full py-1 cursor-pointer"
+        className="flex items-start gap-x-2 w-full py-1 cursor-pointer"
         onClick={() => handleCheckboxClick(topic.topic.name, topic._id)}
       >
-        <div
+        <span
           className={cn(
-            "h-4 w-4 md:h-[18px] md:w-[18px] text-white border-2 rounded border-[#787878] grid place-items-center mt-[2px]",
+            "h-4 w-4 md:h-[18px] md:w-[18px] p-1 text-white border-2 rounded border-[#787878] flex items-center justify-center mt-[2px]",
             completedTopics &&
               completedTopics.value.length > 0 &&
               completedTopics.value.includes(topic._id) &&
@@ -51,18 +51,18 @@ const ToDoListButton = ({
           {completedTopics &&
             completedTopics.value.length > 0 &&
             completedTopics.value.includes(topic._id) && (
-              <Check className="w-3 h-3" />
+              <Check className="w-4 h-4" />
             )}
 
           {incompleteTopics &&
             incompleteTopics.value.length > 0 &&
             incompleteTopics.value.includes(topic._id) && (
-              <span className="leading-tight text-xs font-semibold">!</span>
+              <span className="leading-tight text-sm font-semibold">!</span>
             )}
-        </div>
+        </span>
 
         <div className="capitalize text-sm md:text-base font-medium">
-          <p>{topic.topic.name}</p>
+          <p className="leading-tight">{topic.topic.name}</p>
         </div>
       </li>
       {completedTopics &&
