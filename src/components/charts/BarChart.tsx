@@ -1,7 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
+import BarChartSkeleton from "./_skeletons/BarChartSkeleton";
+const Charts = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+  loading: () => <BarChartSkeleton />,
+});
 
 const BarChart = () => {
   return (

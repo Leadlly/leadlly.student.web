@@ -12,6 +12,7 @@ import { Check } from "lucide-react";
 import { useReadLocalStorage, useIsMounted } from "usehooks-ts";
 import Loader from "@/components/shared/Loader";
 import ToDoListButton from "./ToDoListButton";
+import ToDoSkeleton from "./_skeletons/ToDoSkeleton";
 
 const TodaysPlan = () => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
@@ -66,6 +67,10 @@ const TodaysPlan = () => {
     }
   }, [isMounted]);
 
+  if (!quizData) {
+    return <ToDoSkeleton />;
+  }
+
   return (
     <>
       <div className="flex items-center justify-between py-3 px-4 md:px-6">
@@ -78,7 +83,7 @@ const TodaysPlan = () => {
       </div>
 
       <div className="w-full flex-1 px-4 md:px-6 overflow-y-auto custom__scrollbar">
-        <ul className="w-full h-full flex flex-col justify-start gap-1 md:gap-4 xl:gap-0">
+        <ul className="w-full h-full flex flex-col justify-start gap-2 md:gap-5 xl:gap-1">
           {quizData &&
           (quizData?.backRevisionTopics.length > 0 ||
             quizData.continuousRevisionTopics.length > 0) ? (
