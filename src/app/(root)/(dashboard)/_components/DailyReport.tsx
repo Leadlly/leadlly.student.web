@@ -1,12 +1,19 @@
+"use client";
+
 import { RadialBarChart } from "@/components";
+import { useAppSelector } from "@/redux/hooks";
 
 const DailyReport = () => {
+  const userDetails = useAppSelector((state) => state.user.user?.details);
   return (
     <div className="px-3 py-2">
       <h4 className="text-xs md:text-sm font-bold">Daily Report</h4>
       <div className="flex items-center justify-center">
         <RadialBarChart
-          series={[70, 37]}
+          series={[
+            userDetails?.dailyReport?.dailySessions!,
+            userDetails?.dailyReport?.dailyQuiz!,
+          ]}
           colors={["#9654F4", "#72EFDD"]}
           labels={["Sessions", "Quizzes"]}
           dataLabel="overall"

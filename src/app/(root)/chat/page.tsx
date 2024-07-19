@@ -18,7 +18,7 @@ const ChatPage = async ({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const activeChatTab = searchParams["tab"] ?? "chat";
+  const activeChatTab = searchParams["tab"] ?? chatPageTabs[0].title;
 
   const meetingData = await getMeetings();
 
@@ -67,7 +67,7 @@ const ChatPage = async ({
         </ul>
 
         <div className="flex-1 mb-2">
-          {activeChatTab === "chat" && (
+          {/* {activeChatTab === "chat" && (
             <ChatComponent
               chatData={{
                 img: "/assets/images/mentor.png",
@@ -108,7 +108,7 @@ const ChatPage = async ({
                 ],
               }}
             />
-          )}
+          )} */}
 
           {activeChatTab === "meetings" && (
             <MeetingsComponent upcomingMeetings={meetingData.meetings} />

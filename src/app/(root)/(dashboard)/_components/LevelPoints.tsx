@@ -27,7 +27,8 @@ const LevelPoints = ({
       className={cn(
         "border rounded-md p-2 flex flex-col justify-start gap-1",
         cardBgColor
-      )}>
+      )}
+    >
       <div className="flex items-center justify-between">
         <Image
           src={iconImageSrc}
@@ -56,7 +57,7 @@ const LevelPoints = ({
           indicatorClassName={progressIndicatorBg}
         />
 
-        {pointsText !== "Streak" && (
+        {/* {pointsText !== "Streak" && (
           <div className="flex items-center gap-[2px]">
             <UpArrowIcon fill={progressIconStroke} />
             <span
@@ -66,7 +67,7 @@ const LevelPoints = ({
               )}>
             </span>
           </div>
-        )}
+        )} */}
 
         {pointsText === "Streak" && (
           <>

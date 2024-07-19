@@ -187,7 +187,7 @@ const RequestMeetingDesktopComponent = () => {
               />
 
               <div className="text-center">
-                <Button type="submit" className="w-32">
+                <Button type="submit" className="w-32" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (

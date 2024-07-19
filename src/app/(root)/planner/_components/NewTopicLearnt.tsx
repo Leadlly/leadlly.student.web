@@ -64,7 +64,7 @@ const NewTopicLearnt = ({
   userSubjects: ISubject[];
   userStandard: number;
 }) => {
-  const [activeSubject, setActiveSubject] = useState("maths");
+  const [activeSubject, setActiveSubject] = useState(userSubjects?.[0]?.name);
   const [activeTabChapters, setActiveTabChapters] = useState<
     subjectChaptersProps[]
   >([]);

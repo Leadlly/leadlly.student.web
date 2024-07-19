@@ -162,7 +162,10 @@ export interface ISubject {
   name: string;
   overall_efficiency: number;
   overall_progress: number;
-  total_questions_solved: number;
+  total_questions_solved: {
+    number?: number;
+    percentage?: number;
+  };
 }
 
 export interface IAcademic {
@@ -216,6 +219,11 @@ export type UserDataProps = {
       day: String;
       emoji: String;
     }>;
+    dailyReport?: {
+      dailySessions: number;
+      dailyQuiz: number;
+      overall: number;
+    };
   };
   badges?: Array<{
     name: string;
@@ -327,6 +335,11 @@ export type Chapter = {
   plannerFrequency?: number;
   level?: string;
   overall_efficiency?: number;
+  overall_progress?: number;
+  total_questions_solved: {
+    number?: number;
+    percentage?: number;
+  };
   studiedAt: {
     date?: Date;
     efficiency?: number;
@@ -419,7 +432,11 @@ export type TTrackerProps = {
 };
 
 export type TMeetingsProps = {
-  rescheduled: { isRescheduled: boolean };
+  rescheduled: {
+    isRescheduled: boolean;
+    date: Date;
+    time: string;
+  };
   gmeet: { link: string | null };
   _id: string;
   date: string;

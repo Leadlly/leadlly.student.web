@@ -63,9 +63,15 @@ const MeetingsComponent = ({
                 >
                   <div className="bg-[#56CFE1]/[0.2] rounded-lg w-28 flex flex-col justify-center items-center">
                     <h2 className="text-lg font-semibold">
-                      {formatDate(meeting.date)}
+                      {meeting.rescheduled && meeting.rescheduled.isRescheduled
+                        ? formatDate(meeting.rescheduled.date)
+                        : formatDate(new Date(meeting.date))}
                     </h2>
-                    <p className="text-gray-600 text-sm">{meeting.time}</p>
+                    <p className="text-gray-600 text-sm">
+                      {meeting.rescheduled && meeting.rescheduled.isRescheduled
+                        ? meeting.rescheduled.time
+                        : meeting.time}
+                    </p>
                   </div>
                   <div className="w-full flex flex-col justify-between space-y-1">
                     <div className="w-full flex items-center justify-between">
@@ -101,8 +107,25 @@ const MeetingsComponent = ({
                       <div className="flex items-center gap-1">
                         <ClockIcon className="w-3 h-3 md:w-4 md:h-4" />
                         <p className="text-xs md:text-sm text-primary">
-                          More {calculateDaysLeft(new Date(meeting.date))} days
-                          to go
+                          {calculateDaysLeft(
+                            meeting.rescheduled &&
+                              meeting.rescheduled.isRescheduled
+                              ? new Date(meeting.rescheduled.date)
+                              : new Date(meeting.date)
+                          ) > 0 ? (
+                            <>
+                              More{" "}
+                              {calculateDaysLeft(
+                                meeting.rescheduled &&
+                                  meeting.rescheduled.isRescheduled
+                                  ? new Date(meeting.rescheduled.date)
+                                  : new Date(meeting.date)
+                              )}{" "}
+                              days to go
+                            </>
+                          ) : (
+                            "Meeting Over"
+                          )}
                         </p>
                       </div>
                     </div>

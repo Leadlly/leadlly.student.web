@@ -144,7 +144,12 @@ const ChapterOverviewTable = ({
                   <span className="w-[9px] h-[9px] rounded-full bg-[#FFDA57]"></span>
                   <span className="text-[9px] font-medium leading-none">
                     No. of Questions Solved -{" "}
-                    <span className="font-bold">70%</span>
+                    <span className="font-bold">
+                      {chapterData?.chapter?.total_questions_solved.number &&
+                      chapterData.chapter.total_questions_solved.number! > 100
+                        ? "120+"
+                        : chapterData.chapter.total_questions_solved.number}
+                    </span>
                   </span>
                 </div>
               </div>
