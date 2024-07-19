@@ -212,17 +212,34 @@ export type UserDataProps = {
   };
   role?: string;
   details?: {
-    level?: number;
-    points?: number;
-    streak?: number;
+    level?: { number: number };
+    points?: { number: number };
+    streak?: { number: number };
     mood?: Array<{
-      day: String;
-      emoji: String;
+      day: string;
+      emoji: string;
     }>;
-    dailyReport?: {
-      dailySessions: number;
-      dailyQuiz: number;
-      overall: number;
+    report?: {
+      dailyReport?: {
+        session: number;
+        quiz: number;
+        overall: number;
+      };
+      weeklyReport?: Array<{
+        session: number;
+        quiz: number;
+        overall: number;
+      }>;
+      monthlyReport?: Array<{
+        session: number;
+        quiz: number;
+        overall: number;
+      }>;
+      overallReport?: Array<{
+        session: number;
+        quiz: number;
+        overall: number;
+      }>;
     };
   };
   badges?: Array<{
@@ -249,6 +266,12 @@ export type UserDataProps = {
     amount?: string;
   };
   createdAt?: Date;
+};
+
+export type ProgressAnalyticsDataProps = {
+  session: number;
+  quiz: number;
+  overall: number;
 };
 
 export type UserProps = {

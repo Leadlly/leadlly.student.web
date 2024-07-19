@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AreaChart, BarChart, TabContent, TabNavItem } from "@/components";
+import { useAppSelector } from "@/redux/hooks";
 
 const progressAnalyticsMenus = [
   {
@@ -20,6 +21,8 @@ const progressAnalyticsMenus = [
 
 const ProgressAnalytics = () => {
   const [activeTab, setActiveTab] = useState("weekly");
+
+  const userDetails = useAppSelector((state) => state.user.user?.details);
   return (
     <div className="px-3 py-2">
       <div className="flex items-center justify-between">
@@ -42,17 +45,17 @@ const ProgressAnalytics = () => {
       <div className="w-full h-full overflow-hidden">
         <TabContent id="weekly" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <BarChart />
+            <BarChart weeklyProgress={userDetails?.report?.weeklyReport!} />
           </div>
         </TabContent>
         <TabContent id="monthly" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <AreaChart />
+            <AreaChart progress={userDetails?.report?.monthlyReport!} />
           </div>
         </TabContent>
         <TabContent id="overall" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <AreaChart />
+            <AreaChart progress={userDetails?.report?.overallReport!} />
           </div>
         </TabContent>
       </div>

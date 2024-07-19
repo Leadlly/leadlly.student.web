@@ -27,39 +27,39 @@ const AttemptTabs = [
 const Attempted = () => {
   // Example data for upcoming quizzes
   const [weeklyQuizzes, setWeeklyQuizzes] = useState<AttemptedWeeklyQuiz[]>([
-    {
-      id: 1,
-      description: "Weekly Quiz 1: Vector Algebra, Matrices and Determinants",
-      startDate: "2024-01-05",
-      endDate: "2024-01-11",
-      subject: "Chemistry",
-      questions: 30,
-      completedDate: "19 June 2024, at 10:30am",
-      efficiency: 80,
-    },
-    {
-      id: 2,
-      description: "Weekly Quiz 2: Electromagnetic Induction, Laws of Motion",
-      startDate: "2024-12-21",
-      endDate: "2024-12-27",
-      subject: "Maths",
-      questions: 30,
-      completedDate: "19 June 2024, at 10:30am",
-      efficiency: 80,
-    },
+    // {
+    //   id: 1,
+    //   description: "Weekly Quiz 1: Vector Algebra, Matrices and Determinants",
+    //   startDate: "2024-01-05",
+    //   endDate: "2024-01-11",
+    //   subject: "Chemistry",
+    //   questions: 30,
+    //   completedDate: "19 June 2024, at 10:30am",
+    //   efficiency: 80,
+    // },
+    // {
+    //   id: 2,
+    //   description: "Weekly Quiz 2: Electromagnetic Induction, Laws of Motion",
+    //   startDate: "2024-12-21",
+    //   endDate: "2024-12-27",
+    //   subject: "Maths",
+    //   questions: 30,
+    //   completedDate: "19 June 2024, at 10:30am",
+    //   efficiency: 80,
+    // },
   ]);
 
   const [chapterQuizzes, setChapterQuizzes] = useState<AttemptedQuizProps[]>([
-    {
-      id: 1,
-      chapterName: "Vector Algebra",
-      description:
-        "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
-      subject: "Maths",
-      questions: 30,
-      completedDate: "19 June 2024, at 10:30am",
-      efficiency: 80,
-    },
+    // {
+    //   id: 1,
+    //   chapterName: "Vector Algebra",
+    //   description:
+    //     "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
+    //   subject: "Maths",
+    //   questions: 30,
+    //   completedDate: "19 June 2024, at 10:30am",
+    //   efficiency: 80,
+    // },
   ]);
 
   const [activeTab, setActiveTab] = useState("weeklyquiz");

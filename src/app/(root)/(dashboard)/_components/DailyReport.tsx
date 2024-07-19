@@ -11,8 +11,8 @@ const DailyReport = () => {
       <div className="flex items-center justify-center">
         <RadialBarChart
           series={[
-            userDetails?.dailyReport?.dailySessions!,
-            userDetails?.dailyReport?.dailyQuiz!,
+            userDetails?.report?.dailyReport?.session!,
+            userDetails?.report?.dailyReport?.quiz!,
           ]}
           colors={["#9654F4", "#72EFDD"]}
           labels={["Sessions", "Quizzes"]}

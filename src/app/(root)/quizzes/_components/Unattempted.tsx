@@ -29,43 +29,43 @@ const unattemptTabs = [
 const Unattempted = () => {
   // Example data for upcoming quizzes
   const [weeklyQuizzes, setWeeklyQuizzes] = useState<UnattemptedWeeklyQuiz[]>([
-    {
-      id: 1,
-      description: "Weekly Quiz 1: Vector Algebra, Matrices and Determinants",
-      startDate: "2024-01-05",
-      endDate: "2024-01-11",
-      subjects: ["Maths", "Physics", "Chemistry"],
-      questions: 30,
-    },
-    {
-      id: 2,
-      description: "Weekly Quiz 2: Electromagnetic Induction, Laws of Motion",
-      startDate: "2024-12-21",
-      endDate: "2024-12-27",
-      subjects: ["Maths",  "Chemistry","Physics",],
-      questions: 30,
-    },
+    // {
+    //   id: 1,
+    //   description: "Weekly Quiz 1: Vector Algebra, Matrices and Determinants",
+    //   startDate: "2024-01-05",
+    //   endDate: "2024-01-11",
+    //   subjects: ["Maths", "Physics", "Chemistry"],
+    //   questions: 30,
+    // },
+    // {
+    //   id: 2,
+    //   description: "Weekly Quiz 2: Electromagnetic Induction, Laws of Motion",
+    //   startDate: "2024-12-21",
+    //   endDate: "2024-12-27",
+    //   subjects: ["Maths",  "Chemistry","Physics",],
+    //   questions: 30,
+    // },
   ]);
 
   const [chapterQuizzes, setChapterQuizzes] = useState<
     UnattemptedChapterQuizProps[]
   >([
-    {
-      id: 1,
-      chapterName: "Chemical Bonding",
-      description:
-        "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
-      subject: "Chemistry",
-      questions: 40,
-    },
-    {
-      id: 2,
-      chapterName: "Laws of Motion",
-      description:
-        "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
-      subject: "Physics",
-      questions: 40,
-    },
+    // {
+    //   id: 1,
+    //   chapterName: "Chemical Bonding",
+    //   description:
+    //     "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
+    //   subject: "Chemistry",
+    //   questions: 40,
+    // },
+    // {
+    //   id: 2,
+    //   chapterName: "Laws of Motion",
+    //   description:
+    //     "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
+    //   subject: "Physics",
+    //   questions: 40,
+    // },
     // Add more quizzes here
   ]);
 

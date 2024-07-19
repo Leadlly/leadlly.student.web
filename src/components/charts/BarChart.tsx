@@ -2,12 +2,17 @@
 
 import dynamic from "next/dynamic";
 import BarChartSkeleton from "./_skeletons/BarChartSkeleton";
+import { ProgressAnalyticsDataProps } from "@/helpers/types";
 const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
   loading: () => <BarChartSkeleton />,
 });
 
-const BarChart = () => {
+const BarChart = ({
+  weeklyProgress,
+}: {
+  weeklyProgress: ProgressAnalyticsDataProps[];
+}) => {
   return (
     <>
       <div className="flex-1">
@@ -18,11 +23,11 @@ const BarChart = () => {
           series={[
             {
               name: "Revisions",
-              data: [44, 55, 57, 56, 61, 58, 63],
+              data: weeklyProgress.map((data) => data.session),
             },
             {
               name: "Quizzes",
-              data: [35, 41, 36, 26, 45, 48, 52],
+              data: weeklyProgress.map((data) => data.quiz),
             },
           ]}
           options={{
