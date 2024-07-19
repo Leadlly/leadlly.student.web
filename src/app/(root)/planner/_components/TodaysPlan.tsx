@@ -1,4 +1,9 @@
-import { capitalizeFirstLetter, getFormattedDate } from "@/helpers/utils";
+import {
+  capitalizeFirstLetter,
+  getFormattedDate,
+  getTodaysDay,
+  getTodaysFormattedDate,
+} from "@/helpers/utils";
 import { TDayProps } from "@/helpers/types";
 import { useAppSelector } from "@/redux/hooks";
 import {
@@ -38,15 +43,16 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
       <div className="flex items-center justify-between px-7 py-4 bg-sidebar-background rounded-t-xl">
         <div className="flex flex-col justify-start gap-1">
           <h4 className="text-base md:text-2xl leading-none font-semibold text-black">
-            {getFormattedDate(new Date(todaysTopics?.date!)) ===
-            getFormattedDate(new Date(Date.now()))
+            {!todaysTopics?.day && todaysTopics?.day !== getTodaysDay()
               ? "Today"
               : todaysTopics?.day}
             &apos;s Plan
           </h4>
           <p className="text-xs font-semibold text-[#9E9C9C]">
-            {todaysTopics?.day}{" "}
-            {getFormattedDate(new Date(todaysTopics?.date!))}
+            {todaysTopics?.day ? todaysTopics.day : getTodaysDay()}{" "}
+            {todaysTopics?.date
+              ? getFormattedDate(new Date(todaysTopics?.date!))
+              : getTodaysFormattedDate()}
           </p>
         </div>
       </div>

@@ -1,6 +1,11 @@
+"use client";
+
+import { useAppSelector } from "@/redux/hooks";
 import LevelPoints from "./LevelPoints";
 
 const PointsBox = () => {
+  const userDetails = useAppSelector((state) => state.user.user?.details);
+
   return (
     <div className="grid grid-cols-3 gap-4 xl:gap-2">
       <LevelPoints
@@ -10,9 +15,17 @@ const PointsBox = () => {
         iconShadowColor="shadow-[#32CEFF]/[0.55]"
         chevronBgColor="bg-[#D2E0E7]"
         pointsColor="text-[#0075FF]"
-        points={10}
+        points={
+          userDetails?.level && userDetails.level.number
+            ? userDetails.level.number
+            : 0
+        }
         pointsText="Level Up"
-        progressValue={60}
+        progressValue={
+          userDetails?.level && userDetails.level.number
+            ? userDetails.level.number
+            : 0
+        }
         progressIndicatorBg="bg-[#0075FF]"
         pointsProgressTextColor="text-[#00B75F]"
         progressIconStroke="#00B75F"
@@ -24,9 +37,17 @@ const PointsBox = () => {
         iconShadowColor="shadow-[#FFE608]/[0.55]"
         chevronBgColor="bg-[#FCDEBC]"
         pointsColor="text-[#FF9900]"
-        points={70}
+        points={
+          userDetails?.points && userDetails.points.number
+            ? userDetails.points.number
+            : 0
+        }
         pointsText="Points"
-        progressValue={30}
+        progressValue={
+          userDetails?.points && userDetails.points.number
+            ? userDetails.points.number
+            : 0
+        }
         progressIndicatorBg="bg-[#FF9900]"
         pointsProgressTextColor="text-[#E55426]"
         progressIconStroke="#E55426"
@@ -37,9 +58,17 @@ const PointsBox = () => {
         iconAltText="Fire Flame"
         chevronBgColor="bg-[#FFC0F9]"
         pointsColor="text-[#FF00E5]"
-        points={16}
+        points={
+          userDetails?.streak && userDetails.streak.number
+            ? userDetails.streak.number
+            : 0
+        }
         pointsText="Streak"
-        progressValue={50}
+        progressValue={
+          userDetails?.streak && userDetails.streak.number
+            ? userDetails.streak.number
+            : 0
+        }
         progressIndicatorBg="bg-[#FF00E5]"
       />
     </div>

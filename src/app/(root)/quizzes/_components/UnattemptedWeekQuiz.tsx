@@ -1,20 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UnattemptedWeeklyQuiz } from "@/helpers/types";
-import { getColorBySubject } from "@/helpers/utils";
+import { formatDate, getColorBySubject } from "@/helpers/utils";
 import Link from "next/link";
 
 type Props = { quiz: UnattemptedWeeklyQuiz };
 const UnattemptedWeekQuiz = ({ quiz }: Props) => {
-  type DateString = string;
-  // Function to format date
-  function formatDate(dateString: DateString): string {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "short" });
-    return `${day} ${month}`;
-  }
-
   // Function to calculate days left until the meeting
   function calculateDaysLeft(meetingDate: Date): number {
     // Get the current date
@@ -37,7 +28,8 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
       <div className="w-full flex flex-col justify-start space-y-1">
         <div className="w-full flex items-center justify-between">
           <h1 className="text-base md:text-2xl font-semibold">
-            {formatDate(quiz.startDate)} - {formatDate(quiz.endDate)}
+            {formatDate(new Date(quiz.startDate))} -{" "}
+            {formatDate(new Date(quiz.endDate))}
           </h1>
           {daysLeft <= 0 ? (
             <p className="text-xs md:text-sm text-red-800 font-medium">

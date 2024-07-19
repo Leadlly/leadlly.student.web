@@ -72,7 +72,7 @@ export function convertDateString(inputDate: Date): string {
   return `${day}-${month}-${year}`;
 }
 
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: Date): string {
   const date = new Date(dateString);
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "short" });

@@ -162,7 +162,10 @@ export interface ISubject {
   name: string;
   overall_efficiency: number;
   overall_progress: number;
-  total_questions_solved: number;
+  total_questions_solved: {
+    number?: number;
+    percentage?: number;
+  };
 }
 
 export interface IAcademic {
@@ -209,13 +212,35 @@ export type UserDataProps = {
   };
   role?: string;
   details?: {
-    level?: number;
-    points?: number;
-    streak?: number;
+    level?: { number: number };
+    points?: { number: number };
+    streak?: { number: number };
     mood?: Array<{
-      day: String;
-      emoji: String;
+      day: string;
+      emoji: string;
     }>;
+    report?: {
+      dailyReport?: {
+        session: number;
+        quiz: number;
+        overall: number;
+      };
+      weeklyReport?: Array<{
+        session: number;
+        quiz: number;
+        overall: number;
+      }>;
+      monthlyReport?: Array<{
+        session: number;
+        quiz: number;
+        overall: number;
+      }>;
+      overallReport?: Array<{
+        session: number;
+        quiz: number;
+        overall: number;
+      }>;
+    };
   };
   badges?: Array<{
     name: string;
@@ -241,6 +266,12 @@ export type UserDataProps = {
     amount?: string;
   };
   createdAt?: Date;
+};
+
+export type ProgressAnalyticsDataProps = {
+  session: number;
+  quiz: number;
+  overall: number;
 };
 
 export type UserProps = {
@@ -327,6 +358,11 @@ export type Chapter = {
   plannerFrequency?: number;
   level?: string;
   overall_efficiency?: number;
+  overall_progress?: number;
+  total_questions_solved: {
+    number?: number;
+    percentage?: number;
+  };
   studiedAt: {
     date?: Date;
     efficiency?: number;
@@ -419,7 +455,11 @@ export type TTrackerProps = {
 };
 
 export type TMeetingsProps = {
-  rescheduled: { isRescheduled: boolean };
+  rescheduled: {
+    isRescheduled: boolean;
+    date: Date;
+    time: string;
+  };
   gmeet: { link: string | null };
   _id: string;
   date: string;

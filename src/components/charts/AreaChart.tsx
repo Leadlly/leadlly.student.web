@@ -1,9 +1,14 @@
 "use client";
 
+import { ProgressAnalyticsDataProps } from "@/helpers/types";
 import dynamic from "next/dynamic";
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AreaChart = () => {
+const AreaChart = ({
+  progress,
+}: {
+  progress: ProgressAnalyticsDataProps[];
+}) => {
   return (
     <>
       <div className="flex-1">
@@ -14,11 +19,11 @@ const AreaChart = () => {
           series={[
             {
               name: "Revision Session",
-              data: [31, 40],
+              data: progress.map((data) => data.quiz),
             },
             {
               name: "Quizzes",
-              data: [11, 32],
+              data: progress.map((data) => data.session),
             },
           ]}
           options={{

@@ -7,12 +7,15 @@ import DailyStreakDialogBox from "./DailyStreakDialogBox";
 import { Questions } from "@/helpers/types/index";
 import { getDailyStreakQuestions } from "@/actions/daily_quiz_actions";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const DailyStreakQuestions: React.FC = () => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
   const [questions, setQuestions] = useState<Questions>({});
+  const [isQuestionLoading, setIsQuestionLoading] = useState(false);
 
   const handleBoxClick = async () => {
+    setIsQuestionLoading(true);
     try {
       const response = await getDailyStreakQuestions();
 
@@ -28,6 +31,8 @@ const DailyStreakQuestions: React.FC = () => {
       toast.error("Error fetching questions:", {
         description: error.message,
       });
+    } finally {
+      setIsQuestionLoading(false);
     }
   };
 
@@ -41,8 +46,16 @@ const DailyStreakQuestions: React.FC = () => {
           <p className="text-[11px] text-black font-normal">
             Daily prompts sustain commitment, motivation.
           </p>
-          <Button className="h-6 text-xs" onClick={handleBoxClick}>
-            Attempt Now
+          <Button
+            className="max-w-24 w-full h-6 text-xs"
+            onClick={handleBoxClick}
+            disabled={isQuestionLoading}
+          >
+            {isQuestionLoading ? (
+              <Loader2 className="w-3 h-3 animate-spin" />
+            ) : (
+              "Attempt Now"
+            )}
           </Button>
         </div>
 

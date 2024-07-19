@@ -10,9 +10,11 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { getUserTracker } from "@/actions/tracker_actions";
 import { toast } from "sonner";
+import Loader from "@/components/shared/Loader";
 
 const TrackerPage = () => {
   const [trackerData, setTrackerData] = useState<TTrackerProps[] | null>(null);
+  const [isTrackerLoading, setIsTrackerLoading] = useState(false);
 
   const userSubjects = useAppSelector(
     (state) => state.user.user?.academic.subjects
@@ -22,11 +24,14 @@ const TrackerPage = () => {
 
   useEffect(() => {
     const geTrackerData = async () => {
+      setIsTrackerLoading(true);
       try {
         const data = await getUserTracker(activeSubject!);
         setTrackerData(data.tracker);
       } catch (error: any) {
         toast.error(error.message);
+      } finally {
+        setIsTrackerLoading(false);
       }
     };
 
@@ -60,12 +65,16 @@ const TrackerPage = () => {
       <hr className="border" />
 
       <div className="h-full overflow-y-auto custom__scrollbar pr-3 mb-16 md:mb-0">
-        {activeSubject && (
-          <TrackerComponent
-            activeSubject={activeSubject}
-            trackerData={trackerData!}
-            userSubjects={userSubjects}
-          />
+        {isTrackerLoading ? (
+          <Loader />
+        ) : (
+          activeSubject && (
+            <TrackerComponent
+              activeSubject={activeSubject}
+              trackerData={trackerData!}
+              userSubjects={userSubjects}
+            />
+          )
         )}
       </div>
     </div>

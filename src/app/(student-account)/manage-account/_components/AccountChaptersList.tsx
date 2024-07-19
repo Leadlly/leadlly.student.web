@@ -40,6 +40,7 @@ const AccountChaptersList = ({
           level: curr.chapter.level,
           overall_efficiency: curr.chapter.overall_efficiency,
           plannerFrequency: curr.chapter.plannerFrequency,
+          total_questions_solved: curr.chapter.total_questions_solved,
         });
       }
 

@@ -31,12 +31,13 @@ const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
             fontSize="24px"
           />
           <RadialBarChart
-            series={[60]}
+            series={[subject?.total_questions_solved.percentage!]}
             colors={["#FFDA57"]}
             labels={["No. of Questions Solved"]}
             width="80%"
             hollowSize="60%"
             dataLabel="questions"
+            subject={subject}
           />
         </div>
 
@@ -96,11 +97,15 @@ const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
           </h4>
           <div className="flex items-center gap-4">
             <Progress
-              value={60}
+              value={subject?.total_questions_solved.percentage}
               className="h-2"
               indicatorClassName="bg-[#FFDA57]"
             />
-            <p className="leading-none text-lg font-semibold">120+</p>
+            <p className="leading-none text-lg font-semibold">
+              {subject?.total_questions_solved.number! > 120
+                ? "120+"
+                : subject?.total_questions_solved.number}
+            </p>
           </div>
         </div>
       </div>

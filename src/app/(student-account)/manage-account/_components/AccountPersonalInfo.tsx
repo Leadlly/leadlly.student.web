@@ -477,7 +477,7 @@ const AccountPersonalInfo = () => {
                 Academic Information
               </h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-5">
-                {/* <FormField
+                <FormField
                   control={form.control}
                   name="competitiveExam"
                   render={({ field }) => (
@@ -499,49 +499,13 @@ const AccountPersonalInfo = () => {
                           <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                             <FormControl>
                               <RadioGroupItem
-                                value="NEET"
+                                value={user?.academic.competitiveExam!}
                                 className="lg:w-5 lg:h-5"
                                 circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
                             <FormLabel className="text-base lg:text-lg font-medium">
-                              NEET
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                            <FormControl>
-                              <RadioGroupItem
-                                value="JEE"
-                                className="lg:w-5 lg:h-5"
-                                circleClassName="lg:w-3 lg:h-3"
-                              />
-                            </FormControl>
-                            <FormLabel className="text-base lg:text-lg font-medium">
-                              JEE
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                            <FormControl>
-                              <RadioGroupItem
-                                value="Board"
-                                className="lg:w-5 lg:h-5"
-                                circleClassName="lg:w-3 lg:h-3"
-                              />
-                            </FormControl>
-                            <FormLabel className="text-base lg:text-lg font-medium">
-                              Board
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                            <FormControl>
-                              <RadioGroupItem
-                                value="Other"
-                                className="lg:w-5 lg:h-5"
-                                circleClassName="lg:w-3 lg:h-3"
-                              />
-                            </FormControl>
-                            <FormLabel className="text-base lg:text-lg font-medium">
-                              Other
+                              {user?.academic.competitiveExam?.toUpperCase()}
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -549,7 +513,7 @@ const AccountPersonalInfo = () => {
                       <FormMessage />
                     </FormItem>
                   )}
-                /> */}
+                />
 
                 <FormField
                   control={form.control}
@@ -574,14 +538,17 @@ const AccountPersonalInfo = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="coaching+college+self-study">
-                            Coaching + College + Self Study
+                          <SelectItem value="school+coaching+self-study">
+                            School + coaching + self-study
                           </SelectItem>
-                          <SelectItem value="coaching+college">
-                            Coaching + College
+                          <SelectItem value="school+self-study">
+                            School + self study
                           </SelectItem>
-                          <SelectItem value="college+self-study">
-                            College + Self Study
+                          <SelectItem value="coaching+self-study">
+                            Coaching + self-study
+                          </SelectItem>
+                          <SelectItem value="only self-study">
+                            Only self-study
                           </SelectItem>
                         </SelectContent>
                       </Select>

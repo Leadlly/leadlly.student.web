@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import RadialBarChartSkeleton from "./_skeletons/RadialBarChartSkeleton";
+import { ISubject } from "@/helpers/types";
 const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
   loading: () => <RadialBarChartSkeleton />,
@@ -16,6 +17,7 @@ type RadialBarChartProps = {
   width: string;
   hollowSize: string;
   fontSize?: string;
+  subject?: ISubject;
 };
 
 const RadialBarChart = ({
@@ -26,6 +28,7 @@ const RadialBarChart = ({
   width,
   hollowSize,
   fontSize,
+  subject,
 }: RadialBarChartProps) => {
   return (
     <div className="relative h-full">
@@ -90,7 +93,9 @@ const RadialBarChart = ({
       >
         {labels.includes("No. of Questions Solved") && (
           <p className="text-2xl leading-none font-semibold text-center">
-            120+
+            {subject?.total_questions_solved.number! > 120
+              ? "120+"
+              : subject?.total_questions_solved.number}
           </p>
         )}
         <p

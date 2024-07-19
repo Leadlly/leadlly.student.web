@@ -1,27 +1,15 @@
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { getTextColor } from '@/helpers/constants/efficiency';
-import { AttemptedWeeklyQuiz, Subject } from '@/helpers/types';
-import { getColorBySubject } from '@/helpers/utils';
-import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
-
-
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { getTextColor } from "@/helpers/constants/efficiency";
+import { AttemptedWeeklyQuiz, Subject } from "@/helpers/types";
+import { formatDate, getColorBySubject } from "@/helpers/utils";
+import { cn } from "@/lib/utils";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 type Props = { quiz: AttemptedWeeklyQuiz };
 const AttemptedWeekQuiz = ({ quiz }: Props) => {
-	type DateString = string;
-	// Function to format date
-	function formatDate(dateString: DateString): string {
-		const date = new Date(dateString);
-		const day = date.getDate();
-		const month = date.toLocaleString('default', { month: 'short' });
-		return `${day} ${month}`;
-	}
-
-	
-	return (
+  return (
     <div
       key={quiz.id}
       className="flex items-stretch gap-1 sm:gap-3 mx-2 md:mx-4 p-3 rounded-xl border-2 shadow-lg"
@@ -29,7 +17,8 @@ const AttemptedWeekQuiz = ({ quiz }: Props) => {
       <div className="w-full flex flex-col justify-start space-y-1">
         <div className="w-full flex items-center justify-between">
           <h1 className="text-base md:text-2xl font-semibold">
-            {formatDate(quiz.startDate)} - {formatDate(quiz.endDate)}
+            {formatDate(new Date(quiz.startDate))} -{" "}
+            {formatDate(new Date(quiz.endDate))}
           </h1>
         </div>
         <div className="flex justify-between space-y-1 space-x-4 items-end">

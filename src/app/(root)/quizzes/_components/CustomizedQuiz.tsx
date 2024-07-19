@@ -1,54 +1,55 @@
-import React, { useState } from 'react';
-import CustomInput from './CustomInput';
-import Image from 'next/image';
-import icon from '../../../../../public/assets/images/customizequiz.png';
+import React, { useState } from "react";
+import CustomInput from "./CustomInput";
+import Image from "next/image";
+import icon from "../../../../../public/assets/images/customizequiz.png";
+import { Button } from "@/components/ui/button";
 
-const subjects = ['Math', 'Science'];
+const subjects = ["Math", "Science"];
 const chapters = {
-	Math: ['Algebra', 'Geometry'],
-	Science: ['Physics', 'Chemistry'],
+  Math: ["Algebra", "Geometry"],
+  Science: ["Physics", "Chemistry"],
 };
 const topics = {
-	Algebra: ['Linear Equations', 'Quadratic Equations'],
-	Geometry: ['Triangles', 'Circles'],
-	Physics: ['Kinematics', 'Dynamics'],
-	Chemistry: ['Organic Chemistry', 'Inorganic Chemistry'],
+  Algebra: ["Linear Equations", "Quadratic Equations"],
+  Geometry: ["Triangles", "Circles"],
+  Physics: ["Kinematics", "Dynamics"],
+  Chemistry: ["Organic Chemistry", "Inorganic Chemistry"],
 };
 
 const CustomizedQuiz: React.FC = () => {
-	const [subjectName, setSubjectName] = useState<string>('');
-	const [chapterName, setChapterName] = useState<string>('');
-	const [topicName, setTopicName] = useState<string>('');
-	const [numberOfQuestions, setNumberOfQuestions] = useState<string>('');
-	const [difficulty, setDifficulty] = useState<string>('');
+  const [subjectName, setSubjectName] = useState<string>("");
+  const [chapterName, setChapterName] = useState<string>("");
+  const [topicName, setTopicName] = useState<string>("");
+  const [numberOfQuestions, setNumberOfQuestions] = useState<string>("");
+  const [difficulty, setDifficulty] = useState<string>("");
 
-	const handleCreateNow = () => {
-		// Logic for creating the quiz
-		console.log({
-			subjectName,
-			chapterName,
-			topicName,
-			numberOfQuestions,
-			difficulty,
-		});
-	};
+  const handleCreateNow = () => {
+    // Logic for creating the quiz
+    console.log({
+      subjectName,
+      chapterName,
+      topicName,
+      numberOfQuestions,
+      difficulty,
+    });
+  };
 
-	const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setSubjectName(e.target.value);
-		setChapterName('');
-		setTopicName('');
-	};
+  const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSubjectName(e.target.value);
+    setChapterName("");
+    setTopicName("");
+  };
 
-	const handleChapterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setChapterName(e.target.value);
-		setTopicName('');
-	};
+  const handleChapterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setChapterName(e.target.value);
+    setTopicName("");
+  };
 
-	return (
+  return (
     <div className="flex flex-col items-center gap-2 p-4 border border-gray-300 rounded-lg bg-[#F4EBFF] max-w-80 lg:w-80">
       <div className="flex justify-between items-center w-full">
         <h1 className="text-xl font-medium">Customized Quiz</h1>
-        <h1 className="text-[#9654F4] font-medium">Draft(1)</h1>
+        <h1 className="text-[#9654F4] font-medium">Draft(0)</h1>
       </div>
 
       <CustomInput
@@ -104,20 +105,18 @@ const CustomizedQuiz: React.FC = () => {
           label="Hard"
         />
       </div>
-      <div className="flex justify-between w-full ">
-        <button className="flex-1  py-2 text-[#787878] font-medium px-4 border bg-white border-[#787878] rounded-[6px] ">
+      <div className="grid grid-cols-2 gap-3 w-full ">
+        <Button className="" variant={"outline"} disabled={true}>
           Save as Draft
-        </button>
-        <button
-          onClick={handleCreateNow}
-          className="flex-1 ml-2 py-2 px-4 bg-blue-500 text-white rounded-[6px] "
-        >
+        </Button>
+        <Button onClick={handleCreateNow} className="" disabled={true}>
           Create Now
-        </button>
+        </Button>
       </div>
       <p className=" text-xs md:text-sm font-medium text-center">
-        Create your own personalized quiz by giving the information related to
-        the quiz and practice!
+        {/* Create your own personalized quiz by giving the information related to
+        the quiz and practice! */}
+        Creating quiz coming soon...
       </p>
       <Image src={icon} width={130} height={130} alt="customize quiz" />
     </div>
