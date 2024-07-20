@@ -1,14 +1,24 @@
 "use client";
 
-import { ProgressAnalyticsDataProps } from "@/helpers/types";
+import { TStudentOverallReportProps } from "@/helpers/types";
 import dynamic from "next/dynamic";
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AreaChart = ({
+const OverallReportChart = ({
   progress,
 }: {
-  progress: ProgressAnalyticsDataProps[];
+  progress: TStudentOverallReportProps[] | null;
 }) => {
+  const sessionData =
+    progress && progress.length
+      ? progress?.map((data) => Math.round(data.session))
+      : [0];
+
+  const quizData =
+    progress && progress.length
+      ? progress.map((data) => Math.round(data.quiz))
+      : [0];
+
   return (
     <>
       <div className="flex-1">
@@ -19,11 +29,11 @@ const AreaChart = ({
           series={[
             {
               name: "Revision Session",
-              data: progress.map((data) => data.quiz),
+              data: sessionData,
             },
             {
               name: "Quizzes",
-              data: progress.map((data) => data.session),
+              data: quizData,
             },
           ]}
           options={{
@@ -33,10 +43,6 @@ const AreaChart = ({
             stroke: {
               curve: "smooth",
               width: [1, 1],
-            },
-            xaxis: {
-              type: "category",
-              categories: ["Jan12", "Feb12"],
             },
             fill: {
               colors: ["#9654F4", "#56CFE1"],
@@ -51,4 +57,4 @@ const AreaChart = ({
   );
 };
 
-export default AreaChart;
+export default OverallReportChart;

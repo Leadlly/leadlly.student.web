@@ -12,7 +12,8 @@ import Input from "./shared/Input";
 import SemiRadialChart from "./charts/SemiRadialChart";
 import RadialBarChart from "./charts/RadialBarChart";
 import BarChart from "./charts/BarChart";
-import AreaChart from "./charts/AreaChart";
+import MonthlyReportChart from "./charts/MonthlyReportChart";
+import OverallReportChart from "./charts/OverallReportChart";
 import DonutChart from "./charts/DonutChart";
 
 import RightArrowIcon from "./icons/RightArrowIcon";
@@ -47,7 +48,8 @@ export {
   SemiRadialChart,
   RadialBarChart,
   BarChart,
-  AreaChart,
+  MonthlyReportChart,
+  OverallReportChart,
   DonutChart,
   RightArrowIcon,
   LeftArrowIcon,

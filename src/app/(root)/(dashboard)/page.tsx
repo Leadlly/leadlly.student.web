@@ -1,20 +1,49 @@
+import { getPlanner } from "@/actions/planner_actions";
 import DesktopUI from "./_components/DesktopUI";
 import MobileUI from "./_components/MobileUI";
 import TabletUI from "./_components/TabletUI";
+import { DataProps } from "@/helpers/types";
+import { getFormattedDate } from "@/helpers/utils";
 
-const Dashboard = () => {
+const Dashboard = async () => {
+  const { data }: DataProps = await getPlanner();
+
   return (
     <>
       <div className="hidden xl:block h-full">
-        <DesktopUI />
+        <DesktopUI
+          quizTopics={
+            data?.days.filter(
+              (item) =>
+                getFormattedDate(new Date(item.date)) ===
+                getFormattedDate(new Date(Date.now()))
+            )[0]
+          }
+        />
       </div>
 
       <div className="h-full hidden md:block xl:hidden md:pb-4">
-        <TabletUI />
+        <TabletUI
+          quizTopics={
+            data?.days.filter(
+              (item) =>
+                getFormattedDate(new Date(item.date)) ===
+                getFormattedDate(new Date(Date.now()))
+            )[0]
+          }
+        />
       </div>
 
       <div className="h-full md:hidden">
-        <MobileUI />
+        <MobileUI
+          quizTopics={
+            data?.days.filter(
+              (item) =>
+                getFormattedDate(new Date(item.date)) ===
+                getFormattedDate(new Date(Date.now()))
+            )[0]
+          }
+        />
       </div>
     </>
   );

@@ -8,8 +8,9 @@ import UserProfileSheet from "./UserProfileSheet";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
+import { TDayProps } from "@/helpers/types";
 
-const MobileUI = () => {
+const MobileUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
   return (
     <div className="flex flex-col justify-start gap-3">
       <div className="flex items-center justify-between">
@@ -22,7 +23,7 @@ const MobileUI = () => {
 
       <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[233px]">
         <Suspense fallback={<Loader />}>
-          <TodaysPlan />
+          <TodaysPlan quizData={quizTopics} />
         </Suspense>
       </div>
 

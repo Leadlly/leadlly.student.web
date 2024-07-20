@@ -2,7 +2,10 @@
 
 import dynamic from "next/dynamic";
 import BarChartSkeleton from "./_skeletons/BarChartSkeleton";
-import { ProgressAnalyticsDataProps } from "@/helpers/types";
+import {
+  ProgressAnalyticsDataProps,
+  TStudentReportProps,
+} from "@/helpers/types";
 const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
   loading: () => <BarChartSkeleton />,
@@ -11,8 +14,19 @@ const Charts = dynamic(() => import("react-apexcharts"), {
 const BarChart = ({
   weeklyProgress,
 }: {
-  weeklyProgress: ProgressAnalyticsDataProps[];
+  weeklyProgress: TStudentReportProps | null;
 }) => {
+  const sessionData = weeklyProgress
+    ? weeklyProgress?.days.map((data) => Math.round(data.session))
+    : [];
+
+  const quizData = weeklyProgress
+    ? weeklyProgress?.days.map((data) => Math.round(data.quiz))
+    : [];
+
+  const days = weeklyProgress
+    ? weeklyProgress?.days.map((data) => data.day.slice(0, 3))
+    : [];
   return (
     <>
       <div className="flex-1">
@@ -23,11 +37,15 @@ const BarChart = ({
           series={[
             {
               name: "Revisions",
-              data: weeklyProgress.map((data) => data.session),
+              data:
+                sessionData && sessionData.length
+                  ? sessionData
+                  : [0, 0, 0, 0, 0, 0, 0],
             },
             {
               name: "Quizzes",
-              data: weeklyProgress.map((data) => data.quiz),
+              data:
+                quizData && quizData.length ? quizData : [0, 0, 0, 0, 0, 0, 0],
             },
           ]}
           options={{
@@ -51,7 +69,10 @@ const BarChart = ({
               colors: ["transparent"],
             },
             xaxis: {
-              categories: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+              categories:
+                days && days.length
+                  ? days
+                  : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             },
             fill: {
               colors: ["#9654F4", "#56CFE1"],

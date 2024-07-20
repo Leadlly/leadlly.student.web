@@ -15,10 +15,17 @@ import Modal from "@/components/shared/Modal";
 import { sanitizedHtml } from "@/helpers/utils";
 import { toast } from "sonner";
 import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
-import { useLocalStorage } from "usehooks-ts";
 import { getUser } from "@/actions/user_actions";
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
+import {
+  getMonthlyReport,
+  getOverallReport,
+  getWeeklyReport,
+} from "@/actions/student_report_actions";
+import { weeklyData } from "@/redux/slices/weeklyReportSlice";
+import { monthlyData } from "@/redux/slices/monthlyReportSlice";
+import { overallData } from "@/redux/slices/overallReportSlice";
 
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
@@ -45,30 +52,6 @@ const QuestionDialogBox = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  const [completedTopics, setCompletedTopics] = useLocalStorage(
-    "completed_topic",
-    {
-      expiryDate: 0,
-      value: [] as string[],
-    }
-  );
-  const [incompleteTopics, setIncompleteTopics] = useLocalStorage(
-    "incomplete_topic",
-    {
-      expiryDate: 0,
-      value: [] as string[],
-    }
-  );
-
-  const expiryDate = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    new Date().getDate() + 1,
-    0,
-    0,
-    0
-  ).getTime();
 
   const onAnswerSelect = (answer: string, optionTag: string, index: number) => {
     setSelectedAnswerIndex(index);
@@ -112,20 +95,25 @@ const QuestionDialogBox = ({
       });
 
       if (res.success) {
-        const userInfo = await getUser();
-        dispatch(userData(userInfo.user));
+        const userInfo = getUser();
+        const weeklyReportInfo = getWeeklyReport();
+        const monthlyReportInfo = getMonthlyReport();
+        const overallReportInfo = getOverallReport();
+
+        const [user, weeklyReport, monthlyReport, overallReport] =
+          await Promise.all([
+            userInfo,
+            weeklyReportInfo,
+            monthlyReportInfo,
+            overallReportInfo,
+          ]);
+
+        dispatch(userData(user.user));
+        dispatch(weeklyData(weeklyReport.weeklyReport));
+        dispatch(monthlyData(monthlyReport.monthlyReport));
+        dispatch(overallData(overallReport.overallReport));
         toast.success(res.message);
-        if (attemptedQuestion.length === questions.length) {
-          setCompletedTopics({
-            expiryDate,
-            value: [...completedTopics.value, topic?._id!],
-          });
-        } else {
-          setIncompleteTopics({
-            expiryDate,
-            value: [...incompleteTopics.value, topic?._id!],
-          });
-        }
+
         setOpenQuestionDialogBox(false);
       } else {
         toast.error(res.message);

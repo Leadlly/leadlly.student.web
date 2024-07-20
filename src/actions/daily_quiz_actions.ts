@@ -26,6 +26,10 @@ export const saveDailyQuiz = async (data: {
 
     const responseData = await res.json();
     revalidateTag("userData");
+    revalidateTag("weeklyReport");
+    revalidateTag("monthlyReport");
+    revalidateTag("overallReport");
+    revalidateTag("plannerData");
     return responseData;
   } catch (error) {
     if (error instanceof Error) {
