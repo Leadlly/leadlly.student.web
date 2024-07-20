@@ -1,17 +1,24 @@
 "use client";
 
+import {
+  getMonthlyReport,
+  getOverallReport,
+  getWeeklyReport,
+} from "@/actions/student_report_actions";
 import { getUser } from "@/actions/user_actions";
-import Loader from "@/components/shared/Loader";
 
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/redux/hooks";
+import { monthlyData } from "@/redux/slices/monthlyReportSlice";
+import { overallData } from "@/redux/slices/overallReportSlice";
 import { userData } from "@/redux/slices/userSlice";
+import { weeklyData } from "@/redux/slices/weeklyReportSlice";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const GoogleLoginButton = () => {
@@ -37,8 +44,20 @@ const GoogleLoginButton = () => {
           }
         );
 
-        const userInfo = await getUser();
-        dispatch(userData(userInfo.user));
+        const weeklyReportInfo = getWeeklyReport();
+        const monthlyReportInfo = getMonthlyReport();
+        const overallReportInfo = getOverallReport();
+
+        const [weeklyReport, monthlyReport, overallReport] = await Promise.all([
+          weeklyReportInfo,
+          monthlyReportInfo,
+          overallReportInfo,
+        ]);
+
+        dispatch(userData(res.data.user));
+        dispatch(weeklyData(weeklyReport.weeklyReport));
+        dispatch(monthlyData(monthlyReport.monthlyReport));
+        dispatch(overallData(overallReport.overallReport));
 
         toast.success("Login success", {
           description: res.data.message,
