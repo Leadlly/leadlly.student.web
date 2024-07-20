@@ -49,7 +49,7 @@ const DailyStreakQuestions: React.FC = () => {
           <Button
             className="max-w-24 w-full h-6 text-xs"
             onClick={handleBoxClick}
-            disabled={isQuestionLoading}
+            disabled={isQuestionLoading || true}
           >
             {isQuestionLoading ? (
               <Loader2 className="w-3 h-3 animate-spin" />

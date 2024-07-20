@@ -226,6 +226,8 @@ export type UserDataProps = {
         overall: number;
       };
       weeklyReport?: Array<{
+        day: string;
+        date: Date;
         session: number;
         quiz: number;
         overall: number;
@@ -269,6 +271,8 @@ export type UserDataProps = {
 };
 
 export type ProgressAnalyticsDataProps = {
+  day?: string;
+  date?: Date;
   session: number;
   quiz: number;
   overall: number;

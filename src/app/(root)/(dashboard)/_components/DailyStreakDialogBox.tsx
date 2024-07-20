@@ -43,11 +43,7 @@ const DailyStreakDialogBox = ({
   const onAnswerSelect = (answer: string, index: number) => {
     setSelectedAnswerIndex(index);
 
-    if (correctOptions.includes(answer)) {
-      setSelectedAnswer(answer);
-    } else {
-      setSelectedAnswer("");
-    }
+    setSelectedAnswer(answer);
 
     if (!attemptedQuestion.includes(activeQuestion) && !selectedAnswer) {
       setAttemptedQuestion((prev) => [...prev, activeQuestion]);

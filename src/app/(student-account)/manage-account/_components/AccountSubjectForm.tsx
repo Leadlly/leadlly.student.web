@@ -231,7 +231,7 @@ const AccountSubjectForm = ({
               />
             </div>
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="levelOfDifficulty"
               render={({ field }) => (
@@ -285,7 +285,7 @@ const AccountSubjectForm = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
 
           <div className="grid place-items-center">

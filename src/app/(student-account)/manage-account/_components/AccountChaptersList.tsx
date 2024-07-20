@@ -74,9 +74,9 @@ const AccountChaptersList = ({
             <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
               Topics covered
             </TableHead>
-            <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
+            {/* <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
               Difficulty level
-            </TableHead>
+            </TableHead> */}
             <TableHead className="text-sm lg:text-lg text-center font-medium leading-tight">
               Actions
             </TableHead>
@@ -94,9 +94,9 @@ const AccountChaptersList = ({
                 <TableCell className="text-center text-base lg:text-lg leading-tight">
                   {item.topics.length}
                 </TableCell>
-                <TableCell className="text-center text-base lg:text-lg leading-tight capitalize">
+                {/* <TableCell className="text-center text-base lg:text-lg leading-tight capitalize">
                   {item.level}
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="flex items-center justify-center gap-1 lg:gap-3">
                   {/* <Link
               href={"#"}
