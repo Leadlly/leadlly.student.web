@@ -26,8 +26,15 @@ import { Input } from "@/components/ui/input";
 import GoogleLoginButton from "@/app/(auth)/_components/GoogleLoginButton";
 
 import { useAppDispatch } from "@/redux/hooks";
-import { getUser } from "@/actions/user_actions";
 import { userData } from "@/redux/slices/userSlice";
+import {
+  getMonthlyReport,
+  getOverallReport,
+  getWeeklyReport,
+} from "@/actions/student_report_actions";
+import { weeklyData } from "@/redux/slices/weeklyReportSlice";
+import { monthlyData } from "@/redux/slices/monthlyReportSlice";
+import { overallData } from "@/redux/slices/overallReportSlice";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -56,11 +63,23 @@ const Login = () => {
         body: JSON.stringify(data),
       });
 
-      const userDataInfo = await getUser();
-
-      dispatch(userData(userDataInfo?.user));
       if (response.ok) {
         const responseData = await response.json();
+
+        const weeklyReportInfo = getWeeklyReport();
+        const monthlyReportInfo = getMonthlyReport();
+        const overallReportInfo = getOverallReport();
+
+        const [weeklyReport, monthlyReport, overallReport] = await Promise.all([
+          weeklyReportInfo,
+          monthlyReportInfo,
+          overallReportInfo,
+        ]);
+
+        dispatch(userData(responseData.user));
+        dispatch(weeklyData(weeklyReport.weeklyReport));
+        dispatch(monthlyData(monthlyReport.monthlyReport));
+        dispatch(overallData(overallReport.overallReport));
         toast.success(responseData.message);
 
         router.replace("/");

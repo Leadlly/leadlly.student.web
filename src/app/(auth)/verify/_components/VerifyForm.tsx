@@ -27,6 +27,16 @@ import * as z from "zod";
 import { Loader2 } from "lucide-react";
 import ResendOtpButton from "./ResendOtpButton";
 import Image from "next/image";
+import {
+  getMonthlyReport,
+  getOverallReport,
+  getWeeklyReport,
+} from "@/actions/student_report_actions";
+import { weeklyData } from "@/redux/slices/weeklyReportSlice";
+import { userData } from "@/redux/slices/userSlice";
+import { monthlyData } from "@/redux/slices/monthlyReportSlice";
+import { overallData } from "@/redux/slices/overallReportSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const OTPFormSchema = z.object({
   otp: z
@@ -38,6 +48,8 @@ const Verify = () => {
   const [isVerifying, setIsVerifying] = useState(false);
 
   const router = useRouter();
+
+  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof OTPFormSchema>>({
     resolver: zodResolver(OTPFormSchema),
@@ -61,6 +73,22 @@ const Verify = () => {
 
       if (response.ok) {
         const responseData = await response.json();
+
+        const weeklyReportInfo = getWeeklyReport();
+        const monthlyReportInfo = getMonthlyReport();
+        const overallReportInfo = getOverallReport();
+
+        const [weeklyReport, monthlyReport, overallReport] = await Promise.all([
+          weeklyReportInfo,
+          monthlyReportInfo,
+          overallReportInfo,
+        ]);
+
+        dispatch(userData(responseData.user));
+        dispatch(weeklyData(weeklyReport.weeklyReport));
+        dispatch(monthlyData(monthlyReport.monthlyReport));
+        dispatch(overallData(overallReport.overallReport));
+
         toast.success("Account verified successfully", {
           description: responseData.message,
         });
