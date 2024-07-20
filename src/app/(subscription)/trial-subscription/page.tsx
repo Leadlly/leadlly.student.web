@@ -12,7 +12,7 @@ import ExplorePlanButton from "./_components/ExplorePlanButton";
 const TrialSubscription = () => {
   return (
     <section className="relative w-full h-full px-3">
-      <ExplorePlanButton />
+      {/* <ExplorePlanButton /> */}
       <div className="w-full sticky top-0 inset-x-0 bg-white px-4 py-2">
         <Image
           src="/assets/images/leadlly_logo.svg"
@@ -50,7 +50,7 @@ const TrialSubscription = () => {
           />
         </div>
       </section>
-      <section>
+      {/* <section>
         <h2 className="text-lg lg:text-4xl font-bold leading-tight mb-10 text-center">
           Our Subscription Plan
         </h2>
@@ -64,7 +64,7 @@ const TrialSubscription = () => {
           />
           <PlanPriceBox title="ultimate plan" duration="24" amount={333} />
         </div>
-      </section>
+      </section> */}
     </section>
   );
 };
