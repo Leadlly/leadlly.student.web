@@ -14,8 +14,9 @@ import UpcomingWorkshops from "./UpcomingWorkshops";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
+import { TDayProps } from "@/helpers/types";
 
-const DesktopUI = () => {
+const DesktopUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
   return (
     <div className="relative h-full flex flex-col justify-start gap-3 xl:gap-6">
       <div className="flex items-center justify-between gap-4">
@@ -37,7 +38,7 @@ const DesktopUI = () => {
           <div className="w-full grid grid-cols-2 gap-4">
             <div className="relative border rounded-xl flex flex-col justify-start overflow-hidden h-[233px]">
               <Suspense fallback={<Loader />}>
-                <TodaysPlan />
+                <TodaysPlan quizData={quizTopics} />
               </Suspense>
             </div>
 

@@ -12,8 +12,9 @@ import ProgressAnalytics from "./ProgressAnalytics";
 import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
+import { TDayProps } from "@/helpers/types";
 
-const TabletUI = () => {
+const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
   return (
     <div className="h-full flex flex-col justify-start gap-4">
       <div className="flex justify-between">
@@ -27,7 +28,7 @@ const TabletUI = () => {
           <div className="space-y-4 w-1/2">
             <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">
               <Suspense fallback={<Loader />}>
-                <TodaysPlan />
+                <TodaysPlan quizData={quizTopics} />
               </Suspense>
             </div>
             <div className="border rounded-xl h-[240px]">

@@ -1,10 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "@/redux/slices/userSlice";
+import weeklyReportReducer from "@/redux/slices/weeklyReportSlice";
+import monthlyReportReducer from "@/redux/slices/monthlyReportSlice";
+import overallReportReducer from "@/redux/slices/overallReportSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       user: userReducer,
+      weeklyReport: weeklyReportReducer,
+      monthlyReport: monthlyReportReducer,
+      overallReport: overallReportReducer,
     },
   });
 };

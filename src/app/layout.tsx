@@ -11,6 +11,11 @@ import { getCookie } from "@/actions/cookie_actions";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { UserProps } from "@/helpers/types";
+import {
+  getMonthlyReport,
+  getOverallReport,
+  getWeeklyReport,
+} from "@/actions/student_report_actions";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -25,32 +30,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // let userData: UserProps = { user: null };
-  // const token = await getCookie("token");
+  const userData = getUser();
+  const weeklyReportData = getWeeklyReport();
+  const monthlyReportData = getMonthlyReport();
+  const overallReportData = getOverallReport();
 
-  // const headersList = headers();
-  // const pathname = headersList.get("x-pathname");
-
-  // const isPublicPath =
-  //   pathname?.startsWith("/login") ||
-  //   pathname?.startsWith("/signup") ||
-  //   pathname?.startsWith("/verify") ||
-  //   pathname?.startsWith("/resetpassword") ||
-  //   pathname?.startsWith("/forgot-password");
-
-  // if (!token && !isPublicPath) {
-  //   redirect("/login");
-  // }
-
-  // if (token && isPublicPath) {
-  //   redirect("/");
-  // }
-
-  // if (token) {
-  //   userData = await getUser();
-  // }
-
-  const userData = await getUser();
+  const [user, weeklyReport, monthlyReport, overallReport] = await Promise.all([
+    userData,
+    weeklyReportData,
+    monthlyReportData,
+    overallReportData,
+  ]);
 
   return (
     <html lang="en">
@@ -60,7 +50,12 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <StoreProvider user={userData?.user}>
+        <StoreProvider
+          user={user?.user}
+          weeklyReport={weeklyReport.weeklyReport}
+          monthlyReport={monthlyReport.monthlyReport}
+          overallReport={overallReport.overallReport}
+        >
           <GoogleOAuthProvider
             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
           >

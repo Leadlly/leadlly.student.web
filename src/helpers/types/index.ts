@@ -223,25 +223,8 @@ export type UserDataProps = {
       dailyReport?: {
         session: number;
         quiz: number;
-        overall: number;
+        overall?: number;
       };
-      weeklyReport?: Array<{
-        day: string;
-        date: Date;
-        session: number;
-        quiz: number;
-        overall: number;
-      }>;
-      monthlyReport?: Array<{
-        session: number;
-        quiz: number;
-        overall: number;
-      }>;
-      overallReport?: Array<{
-        session: number;
-        quiz: number;
-        overall: number;
-      }>;
     };
   };
   badges?: Array<{
@@ -273,6 +256,26 @@ export type UserDataProps = {
 export type ProgressAnalyticsDataProps = {
   day?: string;
   date?: Date;
+  session: number;
+  quiz: number;
+  overall: number;
+};
+
+export type TStudentReportProps = {
+  startDate: string;
+  endDate: string;
+  days: Array<{
+    day: string;
+    date: string;
+    session: number;
+    quiz: number;
+    overall: number;
+  }>;
+};
+
+export type TStudentOverallReportProps = {
+  day: string;
+  date: string;
   session: number;
   quiz: number;
   overall: number;
@@ -399,6 +402,8 @@ export type TDayProps = {
   continuousRevisionTopics: TRevisionProps[];
   backRevisionTopics: TRevisionProps[];
   questions: { [key: string]: any };
+  completedTopics: any[];
+  incompletedTopics: any[];
   _id: string;
 };
 

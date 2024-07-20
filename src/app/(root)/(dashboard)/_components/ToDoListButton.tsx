@@ -10,8 +10,8 @@ const ToDoListButton = ({
   incompleteTopics,
 }: {
   topic: TRevisionProps;
-  completedTopics: { expiryDate: number; value: string[] };
-  incompleteTopics: { expiryDate: number; value: string[] };
+  completedTopics: any[];
+  incompleteTopics: any[];
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
   setTopic: (topic: { name: string; _id: string } | null) => void;
 }) => {
@@ -25,9 +25,9 @@ const ToDoListButton = ({
       className={cn(
         "flex items-center justify-between",
         (completedTopics || incompleteTopics) &&
-          (completedTopics?.value.length || incompleteTopics?.value.length) &&
-          (completedTopics?.value.includes(topic._id!) ||
-            incompleteTopics?.value.includes(topic._id!)) &&
+          (completedTopics?.length || incompleteTopics?.length) &&
+          (completedTopics?.includes(topic.topic.name) ||
+            incompleteTopics?.includes(topic.topic.name)) &&
           "pointer-events-none opacity-70"
       )}
     >
@@ -39,24 +39,24 @@ const ToDoListButton = ({
           className={cn(
             "h-4 w-4 md:h-[18px] md:w-[18px] p-1 text-white border-2 rounded border-[#787878] flex items-center justify-center mt-[2px]",
             completedTopics &&
-              completedTopics.value.length > 0 &&
-              completedTopics.value.includes(topic._id) &&
+              completedTopics.length > 0 &&
+              completedTopics.includes(topic.topic.name) &&
               "bg-[#0FD679]/80 border-none",
             incompleteTopics &&
-              incompleteTopics.value.length > 0 &&
-              incompleteTopics.value.includes(topic._id) &&
+              incompleteTopics.length > 0 &&
+              incompleteTopics.includes(topic.topic.name) &&
               "bg-[#ff2e2e]/80 border-none"
           )}
         >
           {completedTopics &&
-            completedTopics.value.length > 0 &&
-            completedTopics.value.includes(topic._id) && (
+            completedTopics.length > 0 &&
+            completedTopics.includes(topic.topic.name) && (
               <Check className="w-4 h-4" />
             )}
 
           {incompleteTopics &&
-            incompleteTopics.value.length > 0 &&
-            incompleteTopics.value.includes(topic._id) && (
+            incompleteTopics.length > 0 &&
+            incompleteTopics.includes(topic.topic.name) && (
               <span className="leading-tight text-sm font-semibold">!</span>
             )}
         </span>
@@ -66,15 +66,15 @@ const ToDoListButton = ({
         </div>
       </li>
       {completedTopics &&
-        completedTopics.value.length > 0 &&
-        completedTopics.value.includes(topic._id) && (
+        completedTopics.length > 0 &&
+        completedTopics.includes(topic.topic.name) && (
           <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize">
             <p>completed</p>
           </div>
         )}
       {incompleteTopics &&
-        incompleteTopics.value.length > 0 &&
-        incompleteTopics.value.includes(topic._id) && (
+        incompleteTopics.length > 0 &&
+        incompleteTopics.includes(topic.topic.name) && (
           <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize">
             <p>incomplete</p>
           </div>
