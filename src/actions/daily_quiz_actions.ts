@@ -2,6 +2,7 @@
 
 import { TQuizAnswerProps } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
+import { revalidateTag } from "next/cache";
 
 export const saveDailyQuiz = async (data: {
   topic: { name: string };
@@ -24,7 +25,7 @@ export const saveDailyQuiz = async (data: {
     );
 
     const responseData = await res.json();
-
+    revalidateTag("userData");
     return responseData;
   } catch (error) {
     if (error instanceof Error) {

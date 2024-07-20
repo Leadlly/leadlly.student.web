@@ -16,6 +16,9 @@ import { sanitizedHtml } from "@/helpers/utils";
 import { toast } from "sonner";
 import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
 import { useLocalStorage } from "usehooks-ts";
+import { getUser } from "@/actions/user_actions";
+import { useAppDispatch } from "@/redux/hooks";
+import { userData } from "@/redux/slices/userSlice";
 
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
@@ -40,6 +43,8 @@ const QuestionDialogBox = ({
   );
   const [optionSelected, setOptionSelected] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   const [completedTopics, setCompletedTopics] = useLocalStorage(
     "completed_topic",
@@ -107,17 +112,10 @@ const QuestionDialogBox = ({
       });
 
       if (res.success) {
+        const userInfo = await getUser();
+        dispatch(userData(userInfo.user));
         toast.success(res.message);
         if (attemptedQuestion.length === questions.length) {
-          // if (incompleteTopics.value.includes(topic?._id!)) {
-          //   const filteredIncompleteTopics = incompleteTopics.value.filter(
-          //     (item) => item !== topic?._id
-          //   );
-          //   setIncompleteTopics({
-          //     expiryDate,
-          //     value: [...filteredIncompleteTopics],
-          //   });
-          // }
           setCompletedTopics({
             expiryDate,
             value: [...completedTopics.value, topic?._id!],
@@ -189,7 +187,9 @@ const QuestionDialogBox = ({
                       key={ques._id}
                       className={cn(
                         "relative px-4 py-1 text-base md:text-lg font-medium cursor-pointer",
-                        activeQuestion === index && "text-white"
+                        activeQuestion === index && "text-white",
+                        attemptedQuestionIndex.includes(index) &&
+                          "pointer-events-none opacity-30"
                       )}
                       onClick={() => {
                         setSelectedAnswerIndex(null);

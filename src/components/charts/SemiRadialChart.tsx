@@ -41,6 +41,21 @@ const SemiRadialChart = ({
                   fontWeight: "600",
                   offsetY: 8,
                 },
+                total: {
+                  show: true,
+                  formatter: function (w) {
+                    const sum = w?.globals?.series.reduce(
+                      (acc: number, value: number) => acc + value,
+                      0
+                    );
+
+                    const average = sum / w?.globals?.series.length;
+
+                    const averagePercentage = Math.round((average / 100) * 100);
+
+                    return `${averagePercentage}%`;
+                  },
+                },
               },
             },
           },

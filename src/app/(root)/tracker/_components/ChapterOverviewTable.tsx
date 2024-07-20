@@ -127,7 +127,7 @@ const ChapterOverviewTable = ({
                   <span className="text-[9px] font-medium leading-none">
                     Revision Completion -{" "}
                     <span className="font-bold">
-                      {chapterData.chapter.plannerFrequency}%
+                      {Math.round(chapterData.chapter.plannerFrequency!)}%
                     </span>
                   </span>
                 </div>
@@ -136,7 +136,7 @@ const ChapterOverviewTable = ({
                   <span className="text-[9px] font-medium leading-none">
                     Total Efficiency -{" "}
                     <span className="font-bold">
-                      {chapterData.chapter.overall_efficiency}%
+                      {Math.round(chapterData.chapter.overall_efficiency!)}%
                     </span>
                   </span>
                 </div>
