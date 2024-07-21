@@ -28,29 +28,35 @@ const WeeklyPlan = ({
           </h4>
         </div>
 
-        <div className="xl:w-full flex items-center justify-between gap-4 md:gap-x-10 px-3 md:px-7">
-          <div className="text-xs md:text-xl xl:text-2xl leading-none text-[#6e6e6e] font-semibold text-center">
-            <p>
-              {getMonthDate(new Date(data?.startDate))} -{" "}
-              {getMonthDate(new Date(data?.endDate))}
-            </p>
-          </div>
-          <div className="flex items-center space-x-4 md:space-x-8">
-            <Button
-              variant={"secondary"}
-              className="w-6 h-6 md:w-7 md:h-7 px-0 flex items-center justify-center rounded-full"
-            >
-              <LeftArrowIcon className="w-[8px] h-[8px] md:w-3 md:h-3" />
-            </Button>
+        {data && data.startDate ? (
+          <div className="xl:w-full flex items-center justify-between gap-4 md:gap-x-10 px-3 md:px-7">
+            <div className="text-xs md:text-xl xl:text-2xl leading-none text-[#6e6e6e] font-semibold text-center">
+              <p>
+                {getMonthDate(new Date(data?.startDate))} -{" "}
+                {getMonthDate(new Date(data?.endDate))}
+              </p>
+            </div>
+            <div className="flex items-center space-x-4 md:space-x-8">
+              <Button
+                variant={"secondary"}
+                className="w-6 h-6 md:w-7 md:h-7 px-0 flex items-center justify-center rounded-full"
+              >
+                <LeftArrowIcon className="w-[8px] h-[8px] md:w-3 md:h-3" />
+              </Button>
 
-            <Button
-              variant={"secondary"}
-              className="w-6 h-6 md:w-7 md:h-7 px-0 flex items-center justify-center rounded-full"
-            >
-              <RightArrowIcon className="w-[8px] h-[8px] md:w-3 md:h-3" />
-            </Button>
+              <Button
+                variant={"secondary"}
+                className="w-6 h-6 md:w-7 md:h-7 px-0 flex items-center justify-center rounded-full"
+              >
+                <RightArrowIcon className="w-[8px] h-[8px] md:w-3 md:h-3" />
+              </Button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="text-center text-muted-foreground font-medium px-3 md:px-7">
+            <p>Planner will generate shortly...</p>
+          </div>
+        )}
       </div>
 
       <div className="w-full flex-1 overflow-hidden md:px-5">
