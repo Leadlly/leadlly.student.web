@@ -53,6 +53,7 @@ const ContinuousRevisionForm = ({
   >([]);
   const [topics, setTopics] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
 
   const form = useForm<z.infer<typeof NewTopicLearntSchema>>({
     resolver: zodResolver(NewTopicLearntSchema),
@@ -137,7 +138,10 @@ const ContinuousRevisionForm = ({
             name="chapterName"
             render={({ field }) => (
               <FormItem>
-                <Popover>
+                <Popover
+                  open={chapterPopoverOpen}
+                  onOpenChange={setChapterPopoverOpen}
+                >
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
@@ -171,7 +175,9 @@ const ContinuousRevisionForm = ({
                               key={chapter._id}
                               onSelect={() => {
                                 form.setValue("chapterName", chapter.name);
+                                setChapterPopoverOpen(false);
                               }}
+                              className="cursor-pointer"
                             >
                               <Check
                                 className={cn(
