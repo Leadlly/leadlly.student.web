@@ -1,6 +1,6 @@
 import { Header } from "@/components";
 import TodaysPlan from "./TodaysPlan";
-import ConnectWithMentor from "./ConnectWithMentor";
+import ContinuousRevision from "./ContinuousRevision";
 import SubjectProgress from "./SubjectProgress";
 import ProfileBox from "./ProfileBox";
 import PointsBox from "./PointsBox";
@@ -32,7 +32,7 @@ const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
               </Suspense>
             </div>
             <div className="border rounded-xl h-[240px]">
-              <ConnectWithMentor />
+              <ContinuousRevision />
             </div>
             <div className="border rounded-xl h-[270px] ">
               <SubjectProgress />

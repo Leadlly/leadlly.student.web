@@ -1,7 +1,7 @@
 import { Header, NotificationIcon } from "@/components";
 
 import TodaysPlan from "./TodaysPlan";
-import ConnectWithMentor from "./ConnectWithMentor";
+import ContinuousRevision from "./ContinuousRevision";
 import SubjectProgress from "./SubjectProgress";
 import DailyReport from "./DailyReport";
 import ProgressAnalytics from "./ProgressAnalytics";
@@ -43,7 +43,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
             </div>
 
             <div className="border rounded-xl">
-              <ConnectWithMentor />
+              <ContinuousRevision />
             </div>
           </div>
 
