@@ -54,6 +54,7 @@ const AccountSubjectForm = ({
 }) => {
   const [topics, setTopics] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
+  const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
 
   const form = useForm<z.infer<typeof AccountStudyFormSchema>>({
     resolver: zodResolver(AccountStudyFormSchema),
@@ -146,7 +147,10 @@ const AccountSubjectForm = ({
                       <FormLabel className="whitespace-nowrap text-base lg:text-xl font-medium mt-1">
                         Chapter :
                       </FormLabel>
-                      <Popover>
+                      <Popover
+                        open={chapterPopoverOpen}
+                        onOpenChange={setChapterPopoverOpen}
+                      >
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
@@ -181,7 +185,9 @@ const AccountSubjectForm = ({
                                         "chapterName",
                                         chapter.name
                                       );
+                                      setChapterPopoverOpen(false);
                                     }}
+                                    className="cursor-pointer"
                                   >
                                     <Check
                                       className={cn(
