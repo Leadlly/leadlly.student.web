@@ -1,6 +1,6 @@
 import { Header } from "@/components";
 import TodaysPlan from "./TodaysPlan";
-import ConnectWithMentor from "./ConnectWithMentor";
+import ContinuousRevision from "./ContinuousRevision";
 import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
@@ -28,7 +28,7 @@ const MobileUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
       </div>
 
       <div className="border rounded-xl px-3 py-2">
-        <ConnectWithMentor />
+        <ContinuousRevision />
       </div>
 
       <div className="border rounded-xl">
