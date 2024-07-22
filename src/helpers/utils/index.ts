@@ -73,23 +73,44 @@ export function convertDateString(inputDate: Date): string {
 }
 
 export function formatDate(dateString: Date): string {
+  // Create a Date object from the input UTC date string
   const date = new Date(dateString);
-  const day = date.getDate();
+
+  // Get the UTC time in milliseconds
+  const utcTime = date.getTime();
+
+  // Offset in milliseconds for IST (5 hours and 30 minutes ahead of UTC)
+  const istOffset = 5 * 60 * 60 * 1000 + 30 * 60 * 1000;
+
+  // Create a new Date object for IST
+  const istDate = new Date(utcTime + istOffset);
+
+  // Extract the day and month in IST
+  const day = istDate.getDate();
   const month = date.toLocaleString("default", { month: "short" });
   return `${day} ${month}`;
 }
 
 export function calculateDaysLeft(meetingDate: Date): number {
-  // Get the current date
+  // Get the current date and time
   const currentDate = new Date();
 
+  // Offset in milliseconds for IST (5 hours and 30 minutes ahead of UTC)
+  const istOffset = 5 * 60 * 60 * 1000 + 30 * 60 * 1000;
+
+  // Convert current date to IST
+  const ISTCurrentDate = new Date(currentDate.getTime() + istOffset);
+
+  // Convert meeting date to IST
+  const ISTMeetingDate = new Date(meetingDate.getTime() + istOffset);
+
   // Calculate the difference in milliseconds
-  const differenceInMs = meetingDate.getTime() - currentDate.getTime();
+  const differenceInMs = ISTMeetingDate.getTime() - ISTCurrentDate.getTime();
 
   // Convert milliseconds to days
   const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
 
-  return daysLeft - 1;
+  return daysLeft;
 }
 
 export function capitalizeFirstLetter(
