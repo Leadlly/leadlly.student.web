@@ -57,6 +57,17 @@ export function getFormattedDate(date: Date): string {
   return `${dayOfMonth} ${month} ${year}`;
 }
 
+export function getFormattedDateForProd(date: Date): string {
+  const istOffset = 5 * 60 * 60 * 1000 + 30 * 60 * 1000; // IST is UTC +5:30
+  const istDate = new Date(date.getTime() + istOffset);
+
+  const dayOfMonth: string = String(istDate.getDate()).padStart(2, "0");
+  const month: string = monthsOfYear[istDate.getMonth()];
+  const year: number = istDate.getFullYear();
+
+  return `${dayOfMonth} ${month} ${year}`;
+}
+
 export function convertDateString(inputDate: Date): string {
   const utcDate = new Date(inputDate);
 
