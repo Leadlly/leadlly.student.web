@@ -3,7 +3,11 @@ import DesktopUI from "./_components/DesktopUI";
 import MobileUI from "./_components/MobileUI";
 import TabletUI from "./_components/TabletUI";
 import { DataProps } from "@/helpers/types";
-import { getFormattedDate, getFormattedDateForProd } from "@/helpers/utils";
+import {
+  getFormattedDate,
+  getFormattedDateForProd,
+  getTodaysDay,
+} from "@/helpers/utils";
 
 const Dashboard = async () => {
   const { data }: DataProps = await getPlanner();
@@ -13,13 +17,7 @@ const Dashboard = async () => {
       <div className="hidden xl:block h-full">
         <DesktopUI
           quizTopics={
-            data?.days.filter((item) =>
-              process.env.NODE_ENV === "development"
-                ? getFormattedDate(new Date(item.date)) ===
-                  getFormattedDate(new Date(Date.now()))
-                : getFormattedDateForProd(new Date(item.date)) ===
-                  getFormattedDateForProd(new Date(Date.now()))
-            )[0]
+            data?.days.filter((item) => item.day === getTodaysDay())[0]
           }
         />
       </div>
@@ -27,11 +25,7 @@ const Dashboard = async () => {
       <div className="h-full hidden md:block xl:hidden md:pb-4">
         <TabletUI
           quizTopics={
-            data?.days.filter(
-              (item) =>
-                getFormattedDate(new Date(item.date)) ===
-                getFormattedDate(new Date(Date.now()))
-            )[0]
+            data?.days.filter((item) => item.day === getTodaysDay())[0]
           }
         />
       </div>
@@ -39,11 +33,7 @@ const Dashboard = async () => {
       <div className="h-full md:hidden">
         <MobileUI
           quizTopics={
-            data?.days.filter(
-              (item) =>
-                getFormattedDate(new Date(item.date)) ===
-                getFormattedDate(new Date(Date.now()))
-            )[0]
+            data?.days.filter((item) => item.day === getTodaysDay())[0]
           }
         />
       </div>
