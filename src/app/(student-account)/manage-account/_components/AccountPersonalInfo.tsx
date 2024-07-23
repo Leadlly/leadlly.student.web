@@ -126,13 +126,13 @@ const AccountPersonalInfo = () => {
                         <FormLabel className="text-base lg:text-lg font-medium">
                           First Name:
                         </FormLabel>
-                        <Button
+                        {/* <Button
                           variant={"ghost"}
                           className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent"
                         >
                           <Edit3 className="w-4 h-4" />
                           Edit
-                        </Button>
+                        </Button> */}
                       </div>
                       <FormControl>
                         <Input
@@ -155,13 +155,13 @@ const AccountPersonalInfo = () => {
                         <FormLabel className="text-base lg:text-lg font-medium">
                           Last Name:
                         </FormLabel>
-                        <Button
+                        {/* <Button
                           variant={"ghost"}
                           className="flex items-center gap-1 px-2 text-sm lg:text-base text-[#656565] h-0 hover:bg-transparent"
                         >
                           <Edit3 className="w-4 h-4" />
                           Edit
-                        </Button>
+                        </Button> */}
                       </div>
                       <FormControl>
                         <Input
@@ -224,12 +224,12 @@ const AccountPersonalInfo = () => {
                             Verified
                           </p>
                         ) : ( */}
-                        <Button
+                        {/* <Button
                           variant={"ghost"}
                           className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent"
                         >
                           Get OTP
-                        </Button>
+                        </Button> */}
                         {/* )} */}
                       </div>
                       <FormControl>
@@ -262,12 +262,13 @@ const AccountPersonalInfo = () => {
                             Verified
                           </p>
                         ) : ( */}
-                        <Button
+                        {/* <Button
                           variant={"ghost"}
                           className="text-xs lg:text-sm underline px-2 text-[#656565] h-0 hover:bg-transparent"
+                          
                         >
                           Get OTP
-                        </Button>
+                        </Button> */}
                         {/* )} */}
                       </div>
                       <FormControl>
@@ -276,6 +277,7 @@ const AccountPersonalInfo = () => {
                           placeholder="Enter your email"
                           icon2={<MailOpen className="w-5 h-5" />}
                           className="text-base lg:text-lg font-medium"
+                          disabled={true}
                           {...field}
                         />
                       </FormControl>

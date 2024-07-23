@@ -40,6 +40,26 @@ export function getMonthDate(date: Date): string {
   return `${month} ${dayOfMonth}`;
 }
 
+export function getMonthDateForProd(date: Date): string {
+  // Get the time in milliseconds since the epoch (UTC)
+  const utcTime = date.getTime();
+
+  // Define the IST offset in milliseconds (5 hours and 30 minutes)
+  const istOffset = 5.5 * 60 * 60 * 1000;
+
+  // Calculate the IST time in milliseconds
+  const istTime = utcTime + istOffset;
+
+  // Create a new Date object for IST time
+  const istDate = new Date(istTime);
+
+  // Extract the day of the month and the month name in IST
+  const dayOfMonth: string = String(istDate.getUTCDate()).padStart(2, "0");
+  const month: string = monthsOfYear[istDate.getUTCMonth()];
+
+  return `${month} ${dayOfMonth}`;
+}
+
 export function getTodaysFormattedDate() {
   const today = new Date();
   const dayOfMonth = String(today.getDate()).padStart(2, "0");

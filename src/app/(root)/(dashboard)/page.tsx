@@ -27,10 +27,12 @@ const Dashboard = async () => {
       <div className="h-full hidden md:block xl:hidden md:pb-4">
         <TabletUI
           quizTopics={
-            data?.days.filter(
-              (item) =>
-                getFormattedDate(new Date(item.date)) ===
-                getFormattedDate(new Date(Date.now()))
+            data?.days.filter((item) =>
+              process.env.NODE_ENV === "development"
+                ? getFormattedDate(new Date(item.date)) ===
+                  getFormattedDate(new Date(Date.now()))
+                : getFormattedDateForProd(new Date(item.date)) ===
+                  getFormattedDateForProd(new Date(Date.now()))
             )[0]
           }
         />
@@ -39,10 +41,12 @@ const Dashboard = async () => {
       <div className="h-full md:hidden">
         <MobileUI
           quizTopics={
-            data?.days.filter(
-              (item) =>
-                getFormattedDate(new Date(item.date)) ===
-                getFormattedDate(new Date(Date.now()))
+            data?.days.filter((item) =>
+              process.env.NODE_ENV === "development"
+                ? getFormattedDate(new Date(item.date)) ===
+                  getFormattedDate(new Date(Date.now()))
+                : getFormattedDateForProd(new Date(item.date)) ===
+                  getFormattedDateForProd(new Date(Date.now()))
             )[0]
           }
         />

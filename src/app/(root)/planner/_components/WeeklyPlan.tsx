@@ -5,6 +5,7 @@ import {
   capitalizeFirstLetter,
   getFormattedDate,
   getMonthDate,
+  getMonthDateForProd,
   getTodaysFormattedDate,
 } from "@/helpers/utils";
 import { cn } from "@/lib/utils";
@@ -32,8 +33,13 @@ const WeeklyPlan = ({
           <div className="xl:w-full flex items-center justify-between gap-4 md:gap-x-10 px-3 md:px-7">
             <div className="text-xs md:text-xl xl:text-2xl leading-none text-[#6e6e6e] font-semibold text-center">
               <p>
-                {getMonthDate(new Date(data?.startDate))} -{" "}
-                {getMonthDate(new Date(data?.endDate))}
+                {process.env.NODE_ENV === "development"
+                  ? getMonthDate(new Date(data?.startDate))
+                  : getMonthDateForProd(new Date(data.startDate))}{" "}
+                -{" "}
+                {process.env.NODE_ENV === "development"
+                  ? getMonthDate(new Date(data?.endDate))
+                  : getMonthDateForProd(new Date(data.endDate))}
               </p>
             </div>
             <div className="flex items-center space-x-4 md:space-x-8">
