@@ -1,8 +1,15 @@
-import ComingSoon from "@/components/shared/ComingSoon";
-import React from "react";
 
-const ErrorBook = () => {
-  return <ComingSoon pageTitle="Error Book" />;
-};
+  import React from "react";
+import ErrorBookContainer from "./components/ErrorBookContainer";
 
-export default ErrorBook;
+  const ErrorBook = () => {
+    return (
+      <div className="max-h-screen">
+        <h1 className="text-5xl font-semibold py-4">Error Book</h1>
+
+        <ErrorBookContainer />
+      </div>
+    );  
+  };
+
+  export default ErrorBook;
