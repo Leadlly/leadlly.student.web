@@ -24,7 +24,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
       .map((topic) => capitalizeFirstLetter(topic.topic.name));
 
     return !topics?.length && !todaysTopics?.continuousRevisionTopics.length
-      ? "No topics yet!"
+      ? "No plans today!"
       : topics?.join(", ");
   }
 
@@ -34,7 +34,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
       .map((topic) => capitalizeFirstLetter(topic.topic.name));
 
     return !topics?.length && !todaysTopics?.backRevisionTopics.length
-      ? "No topics yet!"
+      ? "No plans today!"
       : topics?.join(", ");
   }
 
@@ -45,7 +45,9 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
           <h4 className="text-base md:text-2xl leading-none font-semibold text-black">
             {!todaysTopics?.day && todaysTopics?.day !== getTodaysDay()
               ? "Today"
-              : todaysTopics?.day}
+              : todaysTopics?.day && todaysTopics.day === getTodaysDay()
+                ? "Today"
+                : todaysTopics.day}
             &apos;s Plan
           </h4>
           <p className="text-xs font-semibold text-[#9E9C9C]">
@@ -85,7 +87,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                           {getBackRevisionTopicsForSubject(subject.name)}
                         </>
                       ) : (
-                        "No plans yet!"
+                        "No plans today!"
                       )}
                     </p>
                   </TooltipTrigger>
@@ -96,7 +98,8 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
                         <>
                           {getContinuousRevisionTopicsForSubject(subject.name)}
-                          {todaysTopics?.backRevisionTopics.length > 0
+                          {todaysTopics?.backRevisionTopics.length &&
+                          todaysTopics.continuousRevisionTopics.length
                             ? ", "
                             : !todaysTopics.continuousRevisionTopics.length
                               ? ""
@@ -104,7 +107,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                           {getBackRevisionTopicsForSubject(subject.name)}
                         </>
                       ) : (
-                        "No plans yet!"
+                        "No plans today!"
                       )}
                     </p>
                   </TooltipContent>
