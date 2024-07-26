@@ -53,9 +53,9 @@ export const userSidebarLinks: TSidebarLink[] = [
     href: "/workshops",
   },
   {
-    label: "liberty",
+    label: "library",
     icon: LibertyIcon,
-    href: "/liberty",
+    href: "/library",
   },
   {
     label: "study room",

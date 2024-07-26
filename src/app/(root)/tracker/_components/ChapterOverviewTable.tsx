@@ -71,9 +71,9 @@ const ChapterOverviewTable = ({
                         <TableHead>
                           <span className="w-full flex items-center justify-between text-[7px] md:text-xs font-semibold">
                             <span>
-                              {item.overall_efficiency! < 70
+                              {item.overall_efficiency! <= 40
                                 ? "Improve"
-                                : item?.overall_efficiency! >= 70 &&
+                                : item?.overall_efficiency! > 40 &&
                                     item.overall_efficiency! < 80
                                   ? "Moderate"
                                   : "Excellent"}
@@ -84,9 +84,9 @@ const ChapterOverviewTable = ({
                             value={item?.overall_efficiency}
                             className="h-1 md:h-[7px]"
                             indicatorClassName={cn(
-                              item?.overall_efficiency! < 70
+                              item?.overall_efficiency! <= 40
                                 ? "bg-[#ff2e2e]"
-                                : item?.overall_efficiency! >= 70 &&
+                                : item?.overall_efficiency! > 40 &&
                                     item?.overall_efficiency! < 80
                                   ? "bg-[#FFBA53]"
                                   : "bg-[#0FD679]"

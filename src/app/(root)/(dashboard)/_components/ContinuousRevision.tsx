@@ -54,6 +54,7 @@ const ContinuousRevision = () => {
           activeSubject={activeSubject}
           setActiveSubject={setActiveSubject}
           userStandard={userStandard!}
+          userSubjects={userSubjects!}
         />
       )}
     </div>

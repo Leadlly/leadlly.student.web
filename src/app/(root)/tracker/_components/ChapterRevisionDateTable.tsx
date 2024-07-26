@@ -19,9 +19,9 @@ const ChapterRevisionDateTable = ({
     <div
       className={cn(
         "border rounded-xl relative p-4 lg:p-0",
-        chapterData.chapter.overall_efficiency! < 60
+        chapterData.chapter.overall_efficiency! <= 40
           ? "bg-[#ff2e2e]/10 border-[#ff2e2e]"
-          : chapterData.chapter.overall_efficiency! >= 60 &&
+          : chapterData.chapter.overall_efficiency! > 40 &&
               chapterData.chapter.overall_efficiency! < 80
             ? "bg-[#ff9900]/10 border-[#ff9900]"
             : "bg-[#0fd679]/10 border-[#0fd679]"
@@ -79,9 +79,9 @@ const ChapterRevisionDateTable = ({
                         key={index}
                         className={cn(
                           "whitespace-nowrap px-2 py-1.5 rounded text-xs md:text-base",
-                          revisionDate.efficiency! < 60
+                          revisionDate.efficiency! <= 40
                             ? "bg-[#ff2e2e]/10 text-[#ff2e2e]"
-                            : revisionDate.efficiency! >= 60 &&
+                            : revisionDate.efficiency! > 40 &&
                                 revisionDate.efficiency! < 80
                               ? "bg-[#ff9900]/10 text-[#ff9900]"
                               : "bg-[#0fd679]/10 text-[#0fd679]"
@@ -96,9 +96,9 @@ const ChapterRevisionDateTable = ({
                         <span
                           className={cn(
                             "font-bold",
-                            topic.overall_efficiency! < 60
+                            topic.overall_efficiency! <= 40
                               ? "text-[#ff2e2e]"
-                              : topic.overall_efficiency! >= 60 &&
+                              : topic.overall_efficiency! > 40 &&
                                   topic.overall_efficiency! < 80
                                 ? "text-[#ff9900]"
                                 : "text-[#0fd679]"
