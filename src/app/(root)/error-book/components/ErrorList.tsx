@@ -31,22 +31,22 @@ const errorBook = {
 export default function ErrorList() {
   return (
     <Tabs defaultValue="Maths" className="w-full">
-      <TabsList className="bg-transparent flex justify-start items-start gap-14 ">
+      <TabsList className="bg-transparent flex justify-between lg:justify-start items-start gap-4 md:gap-14 flex-wrap md:flex-nowrap">
         <TabsTrigger
           value="Maths"
-          className="rounded-lg font-semibold data-[state=active]:border-[#9654F4] data-[state=active]:bg-[#9654F412] data-[state=active]:border-2  border-[#A2A2A2] border-2 px-6 text-[#A2A2A2] data-[state=active]:text-[#9654F4]"
+          className="rounded-lg font-semibold data-[state=active]:border-[#9654F4] data-[state=active]:bg-[#9654F412] data-[state=active]:border-2  border-[#A2A2A2] border-2 px-3 md:px-6 text-[#A2A2A2] data-[state=active]:text-[#9654F4]"
         >
           Maths
         </TabsTrigger>
         <TabsTrigger
           value="Physics"
-          className="rounded-lg font-semibold data-[state=active]:border-[#9654F4] data-[state=active]:bg-[#9654F412] data-[state=active]:border-2  border-[#A2A2A2] border-2 px-6 text-[#A2A2A2] data-[state=active]:text-[#9654F4]"
+          className="rounded-lg font-semibold data-[state=active]:border-[#9654F4] data-[state=active]:bg-[#9654F412] data-[state=active]:border-2  border-[#A2A2A2] border-2 px-3 md:px-6 text-[#A2A2A2] data-[state=active]:text-[#9654F4]"
         >
           Physics
         </TabsTrigger>
         <TabsTrigger
           value="Chemistry"
-          className="rounded-lg font-semibold data-[state=active]:border-[#9654F4] data-[state=active]:bg-[#9654F412] data-[state=active]:border-2  border-[#A2A2A2] border-2 px-6 text-[#A2A2A2] data-[state=active]:text-[#9654F4]"
+          className="rounded-lg font-semibold data-[state=active]:border-[#9654F4] data-[state=active]:bg-[#9654F412] data-[state=active]:border-2  border-[#A2A2A2] border-2 px-3 md:px-6 text-[#A2A2A2] data-[state=active]:text-[#9654F4]"
         >
           Chemistry
         </TabsTrigger>
@@ -61,7 +61,7 @@ export default function ErrorList() {
             questions={item.questions}
           />
         ))}
-      </TabsContent>{" "}
+      </TabsContent>
       <TabsContent value="Physics" className="overflow-y-hidden">
         {errorBook.Physics.map((item, index) => (
           <ChapterCard
@@ -71,7 +71,7 @@ export default function ErrorList() {
             questions={item.questions}
           />
         ))}
-      </TabsContent>{" "}
+      </TabsContent>
       <TabsContent value="Chemistry" className="overflow-y-hidden">
         {errorBook.Chemistry.map((item, index) => (
           <ChapterCard

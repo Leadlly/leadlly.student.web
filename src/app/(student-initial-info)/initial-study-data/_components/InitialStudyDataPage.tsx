@@ -28,7 +28,7 @@ const InitialStudyDataPage = ({
   const   userAcademic = useAppSelector((state) => state.user.user?.academic);
 
   const [activeSubject, setActiveSubject] = useState(
-    userAcademic?.subjects?.[0]?.name
+    userAcademic?.subjects?.[0].name
   );
 
   const handleResetForm = useCallback((resetFunction: () => void) => {
