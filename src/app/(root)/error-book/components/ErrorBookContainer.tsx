@@ -12,7 +12,7 @@ const ErrorBookContainer: React.FC = () => {
     <motion.div className="flex pt-4 overflow-y-auto">
       {isMinimized && <ErrorList />}
 
-      <div className="hidden lg:block">
+      <div className="hidden w-full lg:block">
         <ErrorNotes isMinimized={isMinimized} setIsMinimized={setIsMinimized} />
       </div>
     </motion.div>
