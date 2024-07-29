@@ -221,6 +221,7 @@ export type UserDataProps = {
     }>;
     report?: {
       dailyReport?: {
+        date: Date;
         session: number;
         quiz: number;
         overall?: number;
