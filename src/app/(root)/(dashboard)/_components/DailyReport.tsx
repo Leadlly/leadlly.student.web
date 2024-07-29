@@ -1,18 +1,32 @@
 "use client";
 
 import { RadialBarChart } from "@/components";
+import {
+  convertDateString,
+  formatDate,
+  getFormattedDate,
+} from "@/helpers/utils";
 import { useAppSelector } from "@/redux/hooks";
 
 const DailyReport = () => {
   const userDetails = useAppSelector((state) => state.user.user?.details);
+
   return (
     <div className="px-3 py-2">
       <h4 className="text-xs md:text-sm font-bold">Daily Report</h4>
       <div className="flex items-center justify-center">
         <RadialBarChart
           series={[
-            userDetails?.report?.dailyReport?.session!,
-            userDetails?.report?.dailyReport?.quiz!,
+            userDetails?.report?.dailyReport?.date &&
+            formatDate(userDetails?.report?.dailyReport?.date!) ===
+              formatDate(new Date(Date.now()))
+              ? userDetails?.report?.dailyReport?.session!
+              : 0,
+            userDetails?.report?.dailyReport?.date &&
+            formatDate(userDetails?.report?.dailyReport?.date!) ===
+              formatDate(new Date(Date.now()))
+              ? userDetails?.report?.dailyReport?.quiz!
+              : 0,
           ]}
           colors={["#9654F4", "#72EFDD"]}
           labels={["Sessions", "Quizzes"]}
