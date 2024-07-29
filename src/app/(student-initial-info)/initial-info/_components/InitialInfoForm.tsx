@@ -35,7 +35,7 @@ const InitialInfoSchema = z.object({
   class: z.string({ required_error: "Please select your class!" }),
   phone: z.string({ required_error: "Please enter your phone number" }).max(10),
   gender: z.string({ required_error: "Please select your gender!" }),
-  competitiveExam: z.enum(["NEET", "JEE", "Board", "Other"], {
+  competitiveExam: z.enum(["NEET", "JEE"], {
     message: "Please select your type of exam!",
   }),
   studentSchedule: z.string({ required_error: "Please select your schedule!" }),
@@ -225,7 +225,7 @@ const StudentInitialInfoForm = () => {
                             JEE
                           </FormLabel>
                         </FormItem>
-                        <FormItem className="space-y-0 mt-1 flex items-center gap-2">
+                        {/* <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                           <FormControl>
                             <RadioGroupItem
                               value="Board"
@@ -236,8 +236,8 @@ const StudentInitialInfoForm = () => {
                           <FormLabel className="text-base lg:text-lg font-medium">
                             Board
                           </FormLabel>
-                        </FormItem>
-                        <FormItem className="space-y-0 mt-1 flex items-center gap-2">
+                        </FormItem> */}
+                        {/* <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                           <FormControl>
                             <RadioGroupItem
                               value="Other"
@@ -248,7 +248,7 @@ const StudentInitialInfoForm = () => {
                           <FormLabel className="text-base lg:text-lg font-medium">
                             Other
                           </FormLabel>
-                        </FormItem>
+                        </FormItem> */}
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
