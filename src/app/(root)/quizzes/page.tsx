@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 import Unattempted from "./_components/Unattempted";
 import Attempted from "./_components/Attempted";
+import { getWeeklyQuiz } from "@/actions/weekly_quiz_actions";
 
 const quizPageTabs = [
   {
@@ -17,14 +18,15 @@ const quizPageTabs = [
   },
 ];
 
-const Quizzes = ({
+const Quizzes = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-
   const activeQuizTab = searchParams["tab"] ?? "unattempted";
-  
+
+  const weeklyQuizData = await getWeeklyQuiz();
+
   return (
     <div className="flex flex-col justify-start gap-3 md:gap-6 h-full">
       <Header
@@ -63,8 +65,10 @@ const Quizzes = ({
         </ul>
 
         <div className="flex flex-col max-h-full">
-          {activeQuizTab === "unattempted" && <Unattempted/>}
-          {activeQuizTab === "attempted" && <Attempted/>}
+          {activeQuizTab === "unattempted" && (
+            <Unattempted weeklyQuizzes={weeklyQuizData.weeklyQuiz} />
+          )}
+          {activeQuizTab === "attempted" && <Attempted />}
         </div>
       </div>
     </div>

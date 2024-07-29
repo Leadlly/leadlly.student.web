@@ -439,12 +439,35 @@ export interface AttemptedQuizProps {
   efficiency: number;
 }
 export type UnattemptedWeeklyQuiz = {
-  id: number;
-  description: string;
+  _id: string;
+  user: string;
+  questions: {
+    [key: string]: {
+      _id: string;
+      question: string;
+      options: {
+        name: string;
+        tag: string;
+        images: string | null;
+        _id: string;
+      }[];
+      standard: number;
+      subject: string;
+      chapter: string[];
+      topics: string[];
+      subtopics: string[];
+      level: string;
+      images: [];
+      createdBy: string;
+      createdAt: string;
+    }[];
+  };
+  quizType: string;
+  attempted: boolean;
+  reattempted: number;
   startDate: string;
   endDate: string;
-  subjects: Subject[];
-  questions: number;
+  createdAt: string;
 };
 
 export type UnattemptedChapterQuizProps = {
