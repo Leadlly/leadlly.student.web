@@ -15,6 +15,8 @@ import RequestMeetingDesktopComponent from "./RequestMeetingDesktopComponent";
 import { meetingTabs } from "@/helpers/constants";
 import { TMeetingsProps } from "@/helpers/types";
 import { calculateDaysLeft, formatDate } from "@/helpers/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const MeetingsComponent = ({
   upcomingMeetings,
@@ -78,7 +80,6 @@ const MeetingsComponent = ({
                       <h3 className="text-base md:text-lg font-semibold capitalize">
                         {meeting.message}
                       </h3>
-                      <MenuIcon className="md:w-4 md:h-4" />
                     </div>
                     {/* <p className="text-xs md:text-sm text-black font-semibold">
                     {meeting.description}
@@ -104,29 +105,47 @@ const MeetingsComponent = ({
                         {meeting.meetingType}
                       </p>
                     </div> */}
-                      <div className="flex items-center gap-1">
-                        <ClockIcon className="w-3 h-3 md:w-4 md:h-4" />
-                        <p className="text-xs md:text-sm text-primary">
-                          {calculateDaysLeft(
-                            meeting.rescheduled &&
-                              meeting.rescheduled.isRescheduled
-                              ? new Date(meeting.rescheduled.date)
-                              : new Date(meeting.date)
-                          ) > 0 ? (
-                            <>
-                              More{" "}
-                              {calculateDaysLeft(
-                                meeting.rescheduled &&
-                                  meeting.rescheduled.isRescheduled
-                                  ? new Date(meeting.rescheduled.date)
-                                  : new Date(meeting.date)
-                              )}{" "}
-                              days to go
-                            </>
-                          ) : (
-                            "Meeting Over"
+                      <div className="w-full flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          <ClockIcon className="w-3 h-3 md:w-4 md:h-4" />
+                          <p className="text-xs md:text-sm text-primary">
+                            {calculateDaysLeft(
+                              meeting.rescheduled &&
+                                meeting.rescheduled.isRescheduled
+                                ? new Date(meeting.rescheduled.date)
+                                : new Date(meeting.date)
+                            ) > 0 ? (
+                              <>
+                                More{" "}
+                                {calculateDaysLeft(
+                                  meeting.rescheduled &&
+                                    meeting.rescheduled.isRescheduled
+                                    ? new Date(meeting.rescheduled.date)
+                                    : new Date(meeting.date)
+                                )}{" "}
+                                days to go
+                              </>
+                            ) : (
+                              "Meeting Over"
+                            )}
+                          </p>
+                        </div>
+                        <Link
+                          href={
+                            meeting.gmeet && meeting.gmeet.link
+                              ? meeting.gmeet.link
+                              : "#"
+                          }
+                          target={
+                            meeting.gmeet && meeting.gmeet.link ? "_blank" : ""
+                          }
+                          className={cn(
+                            (!meeting.accepted || !meeting.gmeet.link) &&
+                              "pointer-events-none opacity-70"
                           )}
-                        </p>
+                        >
+                          <Button size={"sm"}>Join Meeting</Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
