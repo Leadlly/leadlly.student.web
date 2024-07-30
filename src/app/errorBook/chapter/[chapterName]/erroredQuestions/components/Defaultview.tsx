@@ -2,8 +2,8 @@
 import BackButton from "./BackButton";
 import ChapterDetails from "./ChapterDetails";
 import ErroredQuestions from "./ErroredQuestions";
-type Props = {};
-const Defaultview = (props: Props) => {
+type Props = { chapterErrorBook: any; chapterName: string };
+const Defaultview = ({ chapterErrorBook, chapterName }: Props) => {
   return (
     <div>
       {" "}
@@ -14,10 +14,13 @@ const Defaultview = (props: Props) => {
         </div>
         <div className="flex flex-col  items-start justify-between p-5 pb-6 border-b bg-[#9654F42E] gap-16 rounded-lg m-5">
           {" "}
-          <ChapterDetails />
+          <ChapterDetails
+            totalQuestions={chapterErrorBook.length}
+            chapterName={chapterName}
+          />
         </div>
       </header>{" "}
-      <ErroredQuestions/>
+      <ErroredQuestions chapterErrorBook={chapterErrorBook} />
     </div>
   );
 };
