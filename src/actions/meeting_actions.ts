@@ -53,7 +53,6 @@ export const getMeetings = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
         next: {
           tags: ["meetingData"],
         },
