@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { userSidebarLinks } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
 
-const MobileMenu = () => {
+const MobileMenu = ({ meetingsLength }: { meetingsLength: number }) => {
   const [navScrollPosition, setNavScrollPosition] = useState(0);
   const navbarRef = useRef<HTMLDivElement>(null);
 
@@ -71,17 +71,28 @@ const MobileMenu = () => {
             )}
           >
             <li className="w-full flex flex-col gap-2 items-center justify-center">
-              <item.icon
-                className={cn(
-                  pathname === item.href
-                    ? item.label !== "growth meter"
-                      ? "stroke-[#5A10D9]"
-                      : "fill-[#5A10D9]"
-                    : item.label !== "growth meter"
-                      ? "stroke-[#6a6a6a]"
-                      : "fill-[#6a6a6a]"
+              <div className="relative">
+                <item.icon
+                  className={cn(
+                    pathname === item.href
+                      ? item.label !== "growth meter"
+                        ? "stroke-[#5A10D9]"
+                        : "fill-[#5A10D9]"
+                      : item.label !== "growth meter"
+                        ? "stroke-[#6a6a6a]"
+                        : "fill-[#6a6a6a]"
+                  )}
+                />
+                {item.label === "chat" && meetingsLength > 0 && (
+                  <span
+                    className={cn(
+                      "absolute -top-1 -left-1 text-[10px] font-semibold size-4 rounded-full flex items-center justify-center p-1 text-white bg-[#0fd679]"
+                    )}
+                  >
+                    {meetingsLength}
+                  </span>
                 )}
-              />
+              </div>
               <span
                 className={cn(
                   "leading-none text-xs capitalize text-nowrap",
