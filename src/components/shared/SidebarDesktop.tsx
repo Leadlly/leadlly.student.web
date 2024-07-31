@@ -12,7 +12,13 @@ import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 
-const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
+const SidebarDesktop = ({
+  sidebar,
+  meetingsLength,
+}: {
+  sidebar: TSidebarLink[];
+  meetingsLength: number;
+}) => {
   const pathname = usePathname();
 
   return (
@@ -50,17 +56,28 @@ const SidebarDesktop = ({ sidebar }: { sidebar: TSidebarLink[] }) => {
                 />
               )}
               <li className="relative z-10 flex items-center gap-3 capitalize text-base md:text-[20px]">
-                <item.icon
-                  className={cn(
-                    pathname === item.href
-                      ? item.label !== "growth meter"
-                        ? "stroke-white"
-                        : "fill-white"
-                      : item.label !== "growth meter"
-                        ? "stroke-[#5A10D9]"
-                        : "fill-[#5A10D9]"
+                <div className="relative">
+                  <item.icon
+                    className={cn(
+                      pathname === item.href
+                        ? item.label !== "growth meter"
+                          ? "stroke-white"
+                          : "fill-white"
+                        : item.label !== "growth meter"
+                          ? "stroke-[#5A10D9]"
+                          : "fill-[#5A10D9]"
+                    )}
+                  />
+                  {item.label === "chat" && meetingsLength > 0 && (
+                    <span
+                      className={cn(
+                        "absolute -top-1 -left-1 text-[10px] font-semibold size-4 rounded-full flex items-center justify-center p-1 text-white bg-[#0fd679]"
+                      )}
+                    >
+                      {meetingsLength}
+                    </span>
                   )}
-                />
+                </div>
                 <div
                   className={cn(
                     "md:hidden xl:block",
