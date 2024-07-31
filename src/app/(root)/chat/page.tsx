@@ -20,9 +20,20 @@ const ChatPage = async ({
 }) => {
   const activeChatTab = searchParams["tab"] ?? chatPageTabs[0].title;
 
-  const meetingData = await getMeetings();
+  const upcomingMeetingData = getMeetings("");
+  const doneMeetingsData = getMeetings("done");
 
-  if (!meetingData || !meetingData.success) {
+  const [upcomingMeeting, doneMeeting] = await Promise.all([
+    upcomingMeetingData,
+    doneMeetingsData,
+  ]);
+
+  if (
+    !upcomingMeeting ||
+    !upcomingMeeting.success ||
+    !doneMeeting ||
+    !doneMeeting.success
+  ) {
     return <Loader />;
   }
 
@@ -111,7 +122,10 @@ const ChatPage = async ({
           )} */}
 
           {activeChatTab === "meetings" && (
-            <MeetingsComponent upcomingMeetings={meetingData.meetings} />
+            <MeetingsComponent
+              upcomingMeetings={upcomingMeeting.meetings}
+              doneMeetings={doneMeeting.meetings}
+            />
           )}
 
           {activeChatTab === "requestMeeting" && <RequestMeetingComponent />}
