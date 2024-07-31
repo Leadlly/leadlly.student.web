@@ -40,6 +40,7 @@ import { toast } from "sonner";
 import { getChapterTopics } from "@/actions/question_actions";
 import { saveStudyData } from "@/actions/studyData_actions";
 import { AccountStudyFormSchema } from "@/schemas/accountStudyFormSchema";
+import { allocateBackTopics } from "@/actions/planner_actions";
 
 const AccountSubjectForm = ({
   subjectChapters,
@@ -116,6 +117,8 @@ const AccountSubjectForm = ({
         toast.error("Chapter already saved!");
       }
 
+      await allocateBackTopics()
+      
       form.reset({
         chapterName: "",
         topicNames: [],
