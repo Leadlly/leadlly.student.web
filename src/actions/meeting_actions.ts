@@ -40,12 +40,12 @@ export const requestMeeting = async (data: DataProps) => {
   }
 };
 
-export const getMeetings = async () => {
+export const getMeetings = async (meeting: string) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/meeting/get`,
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/meeting/get?meeting=${meeting}`,
       {
         method: "POST",
         headers: {
