@@ -70,6 +70,14 @@ const RequestMeetingDesktopComponent = () => {
     }
   };
 
+  const formatTime = (hour: number, minute: number) => {
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+  };
+
+  const intervalCount = (22 - 9) * 4 + 1;
+
   return (
     <div className="hidden lg:flex w-80">
       {!submitted ? (
@@ -156,11 +164,17 @@ const RequestMeetingDesktopComponent = () => {
                             <SelectValue placeholder="Select a time" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="9:00 AM">9:00 AM</SelectItem>
-                          <SelectItem value="9:30 AM">9:30 AM</SelectItem>
-                          <SelectItem value="10:00 AM">10:00 AM</SelectItem>
-                          <SelectItem value="10:30 AM">10:30 AM</SelectItem>
+                        <SelectContent className="max-h-72">
+                          {Array.from({ length: intervalCount }).map((_, i) => {
+                            const hour = Math.floor(i / 4) + 9;
+                            const minute = (i % 4) * 15;
+                            const timeSlot = formatTime(hour, minute);
+                            return (
+                              <SelectItem key={i} value={timeSlot}>
+                                {timeSlot}
+                              </SelectItem>
+                            );
+                          })}
                         </SelectContent>
                       </Select>
                       <FormMessage className="max-w-28 text-pretty line-clamp-3 " />
