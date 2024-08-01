@@ -79,18 +79,20 @@ export type TMoodEmojisProps = {
   moodImg: string;
 };
 
+export type TQuizQuestionOptionsProps = {
+  name: string;
+  tag: string;
+  images: string | null;
+  _id: string;
+};
+
 export type TQuizQuestionProps = {
   chapter: string[];
   createdAt: string;
   createdBy: string;
   images: [];
   level: string;
-  options: Array<{
-    name: string;
-    tag: string;
-    images: string | null;
-    _id: string;
-  }>;
+  options: TQuizQuestionOptionsProps[];
   question: string;
   standard: number;
   subject: string;

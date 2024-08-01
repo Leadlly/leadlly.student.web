@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -17,9 +18,9 @@ const Pagination: React.FC<PaginationProps> = ({
   answeredQuestions,
 }) => {
   const getVisiblePages = (width: number) => {
-    if (width < 600) return 5; 
-    if (width < 900) return 9; 
-    return 13; 
+    if (width < 600) return 5;
+    if (width < 900) return 9;
+    return 13;
   };
   const [visiblePages, setVisiblePages] = useState(
     getVisiblePages(window.innerWidth)
