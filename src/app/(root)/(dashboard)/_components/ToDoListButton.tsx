@@ -23,7 +23,7 @@ const ToDoListButton = ({
     <div
       key={topic._id}
       className={cn(
-        "flex items-center justify-between",
+        "flex items-start justify-between",
         (completedTopics || incompleteTopics) &&
           (completedTopics?.length || incompleteTopics?.length) &&
           (completedTopics?.includes(topic.topic.name) ||
@@ -68,14 +68,14 @@ const ToDoListButton = ({
       {completedTopics &&
         completedTopics.length > 0 &&
         completedTopics.includes(topic.topic.name) && (
-          <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize">
+          <div className="text-[10px] py-[2px] px-1 bg-[#0FD679]/80 text-white rounded capitalize mt-1.5">
             <p>completed</p>
           </div>
         )}
       {incompleteTopics &&
         incompleteTopics.length > 0 &&
         incompleteTopics.includes(topic.topic.name) && (
-          <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize">
+          <div className="text-[10px] py-[2px] px-1 bg-[#ff2e2e]/80 text-white rounded capitalize mt-1.5">
             <p>incomplete</p>
           </div>
         )}

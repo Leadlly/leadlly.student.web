@@ -73,7 +73,7 @@ const MeetingsComponent = ({
                   <div className="w-full flex flex-col justify-between space-y-1">
                     <div className="w-full flex items-center justify-between">
                       <h3 className="text-base md:text-lg font-semibold capitalize">
-                        {meeting.message}
+                        {meeting.message ? meeting.message : "New Meeting"}
                       </h3>
                     </div>
                     <div className="flex justify-between items-center">
