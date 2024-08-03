@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -53,7 +53,7 @@ const MeetingsComponent = ({
             style={{ display: activeTab === "upcoming" ? "flex" : "none" }}
           >
             {upcomingMeetings && upcomingMeetings.length ? (
-              upcomingMeetings.map((meeting) => (
+              upcomingMeetings.map((meeting, index) => (
                 <div
                   key={meeting._id}
                   className="min-h-28 flex gap-3 mx-2 md:mx-4 p-2 rounded-xl border-2 shadow-lg"
@@ -81,25 +81,9 @@ const MeetingsComponent = ({
                         <div className="flex items-center gap-1">
                           <ClockIcon className="w-3 h-3 md:w-4 md:h-4" />
                           <p className="text-xs md:text-sm text-primary">
-                            {calculateDaysLeft(
-                              meeting.rescheduled &&
-                                meeting.rescheduled.isRescheduled
-                                ? new Date(meeting.rescheduled.date)
-                                : new Date(meeting.date)
-                            ) > 0 ? (
-                              <>
-                                More{" "}
-                                {calculateDaysLeft(
-                                  meeting.rescheduled &&
-                                    meeting.rescheduled.isRescheduled
-                                    ? new Date(meeting.rescheduled.date)
-                                    : new Date(meeting.date)
-                                )}{" "}
-                                days to go
-                              </>
-                            ) : (
-                              "Meeting Over"
-                            )}
+                            {meeting.isCompleted
+                              ? "Meeting Over"
+                              : "Upcoming Meeting"}
                           </p>
                         </div>
                         <Link

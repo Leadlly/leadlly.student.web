@@ -480,4 +480,6 @@ export type TMeetingsProps = {
   message: string;
   createdAt: string;
   updatedAt: string;
+  createdBy: string;
+  isCompleted: boolean;
 };
