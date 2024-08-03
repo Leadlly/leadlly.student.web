@@ -38,7 +38,7 @@ const UnattemptedWeekQuiz = ({ quiz }: Props) => {
       <div className="w-full flex flex-col justify-start space-y-1">
         <div className="w-full flex items-center justify-between">
           <h1 className="text-base md:text-2xl font-semibold">
-            {formatDate(new Date(quiz.startDate))} -{" "}
+            {formatDate(new Date(quiz.createdAt))} -{" "}
             {formatDate(new Date(quiz.endDate))}
           </h1>
           {daysLeft <= 0 ? (
