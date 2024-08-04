@@ -1,3 +1,4 @@
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -9,10 +10,10 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import Link from 'next/link';
+import { Button } from '../ui/button';
 
-type Props = {quizId:string}
-const SubmitDialog = ({quizId}: Props) => {
+type Props = {  onSubmit: () => void };
+const SubmitDialog = ({onSubmit}: Props) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger className="font-normal md:font-semibold px-3 py-1  text-base md:text-xl bg-[#9654F4] text-white rounded-[6px]">
@@ -29,7 +30,9 @@ const SubmitDialog = ({quizId}: Props) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Link href={`/quiz/${quizId}/report`}>Yes, Submit</Link>
+            <Button  onClick={onSubmit}>
+              Yes, Submit
+            </Button>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -37,3 +40,4 @@ const SubmitDialog = ({quizId}: Props) => {
   );
 }
 export default SubmitDialog
+// href={`/quiz/${quizId}/report`}

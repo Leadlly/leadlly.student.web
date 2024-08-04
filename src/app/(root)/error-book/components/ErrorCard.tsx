@@ -28,9 +28,11 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
     })
   );
   async function handleToggle(isCompleted: boolean) {
-    try {console.log('run')
+    try {
+      console.log(isCompleted);
+      if (isCompleted === false) return;
       toggleNote({ isCompleted });
-      const result = await toggleErrorNote({ errorNoteId: id });
+      await toggleErrorNote({ errorNoteId: id });
     } catch (error) {
       toast.error("failed to toggle error note try again...");
     }
@@ -47,10 +49,11 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
         id={id}
         checked={optimisticNote.isCompleted}
         onCheckedChange={(checked) =>
+          !optimisticNote.isCompleted &&
           startTransaction(() => handleToggle(checked as boolean))
         }
       />
-      <Label className=" line-clamp-2  cursor-pointer" htmlFor={id}>
+      <Label className=" line-clamp-2  cursor-pointer max-w-60" htmlFor={id}>
         {note}
       </Label>
     </div>

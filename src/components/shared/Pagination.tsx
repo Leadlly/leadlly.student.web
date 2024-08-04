@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ interface PaginationProps {
   totalQuestions: number;
   currentQuestion: number;
   onPageChange: (pageNumber: number) => void;
-  answeredQuestions: (0 | 1 | 2 | 3 | 4)[];
+  answeredQuestions: boolean[]
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -17,9 +17,9 @@ const Pagination: React.FC<PaginationProps> = ({
   answeredQuestions,
 }) => {
   const getVisiblePages = (width: number) => {
-    if (width < 600) return 5; 
-    if (width < 900) return 9; 
-    return 13; 
+    if (width < 600) return 5;
+    if (width < 900) return 9;
+    return 13;
   };
   const [visiblePages, setVisiblePages] = useState(
     getVisiblePages(window.innerWidth)
@@ -67,7 +67,7 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div className="flex justify-center gap-2  sm:gap-3 md:gap-4 lg:gap-5 w-full items-center ">
       <button
-        className="px-2"
+        className={`px-2 ${startPage === 0 ? "hidden" : ""}`}
         onClick={() => handlePageClick(Math.max(0, startPage - visiblePages))}
         disabled={startPage === 0}
       >
@@ -128,7 +128,7 @@ const Pagination: React.FC<PaginationProps> = ({
         </>
       )}
       <button
-        className="px-2"
+        className={`px-2 ${endPage === totalQuestions ? "hidden" : ""}`}
         onClick={() =>
           handlePageClick(
             Math.min(totalQuestions - 1, startPage + visiblePages)

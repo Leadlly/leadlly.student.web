@@ -114,9 +114,41 @@ export const toggleErrorNote = async ({
     if (error instanceof Error) {
       throw new Error(`Error toggling errorNote: ${error.message}`);
     } else {
-      throw new Error("An unknown error occurred while toggling errorNote!");
+      throw new Error("An unknown error   occurred while toggling errorNote!");
     }
-  }finally{
-    revalidatePath('/error-notes')
+  } finally {
+    revalidatePath("/error-notes");
+  }
+};
+export const updateErrorNote = async ({
+  questionIds,
+}: {
+  questionIds: string[];
+}) => {
+  const token = await getCookie("token");
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/errorBook/update`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({ solvedQuestions: questionIds }),
+      }
+    );
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error updating error note: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while updating error note!");
+    }
+  } finally {
+    revalidatePath("/error-notes");
   }
 };

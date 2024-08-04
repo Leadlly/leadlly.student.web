@@ -10,7 +10,7 @@ const ErroredQuestions = ({
 }) => {
   console.log(chapterErrorBook);
   return (
-    <section className=" md:p-5 lg:p-10  ">
+    <section className="p-5 lg:p-10  ">
       <h2 className="text-2xl font-semibold mb-4 text-[#000000]">
         Errored Questions
       </h2>
@@ -37,7 +37,7 @@ const ErroredQuestions = ({
               );
             })}
             <ol
-              className="grid grid-cols-2 grid-rows-2"
+              className="grid pl-5 md:grid-cols-2 md:grid-rows-2"
               type="A"
               style={{ listStyleType: "upper-alpha" }}
             >
@@ -47,9 +47,9 @@ const ErroredQuestions = ({
                     <div
                       dangerouslySetInnerHTML={{ __html: option.name }}
                     ></div>{" "}
-                    {option.image && (
+                    {option.images && (
                       <Image
-                        src={option.image}
+                        src={option.images}
                         alt="question image"
                         key={index}
                         width={300}
