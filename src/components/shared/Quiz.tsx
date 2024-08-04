@@ -103,13 +103,14 @@ const Quiz = ({ quizId, questions, questionTitle, subtitle }: QuizProps) => {
   const handleSubmit = () => {
     startTransition(async () => {
       try {
+				
         setIsSubmitting(true);
         await updateErrorNote({
           questionIds: answeredQuestions
             .map((questions) => {
               return questions.isCorrect ? questions.questionId : null;
             })
-            .filter((id) => id != null),
+            .filter((id): id is string => id !== null),
         });
         router.replace("/error-book");
       } catch (error) {
