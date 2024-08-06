@@ -2,7 +2,6 @@
 
 import { Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import {
   AttachIcon,
   CallIcon,
@@ -13,7 +12,6 @@ import {
 import { cn } from "@/lib/utils";
 import { ChatData } from "@/helpers/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -25,6 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import useSocket from "@/hooks/useSocket";
+import { useEffect, useState } from "react";
+import { sendMessage } from "@/actions/chat_actions";
+import { useAppSelector } from "@/redux/hooks";
 
 const chatFormSchema = z.object({
   content: z
@@ -32,13 +34,50 @@ const chatFormSchema = z.object({
     .min(1, { message: "Message must contain at least 1 character(s)" }),
 });
 
+interface ChatMessage {
+  sender: string;
+  message: string;
+  timestamp: string;
+  sendBy: string
+}
+
 const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   const form = useForm<z.infer<typeof chatFormSchema>>({
     resolver: zodResolver(chatFormSchema),
   });
+  
+  const { reset, handleSubmit, control } = form;
+
+  const socket = useSocket();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const userEmail = useAppSelector((state) => state.user.user?.email);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('chat_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
+        setMessages(prevMessages => [...prevMessages, data]);
+        console.log('Received chat message room event:', data);
+      });
+      return () => {
+        socket.off('chat_message');
+      };
+    }
+  }, [socket]);
 
   const onMessageSubmit = async (data: z.infer<typeof chatFormSchema>) => {
-    console.log(data);
+    console.log(data, "here is th edata sending as message")
+    const formattedData = {
+      message: data.content,
+      email: userEmail,
+    };
+
+    try {
+      const response = await sendMessage(formattedData);
+      console.log(response);
+      reset(); // Clear the textarea after sending the message
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   return (
@@ -57,36 +96,35 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
           </div>
           <div className="flex items-center gap-10">
             <Button variant={"link"} className="px-0 hidden md:block">
-              {/* Add onClick */}
               <CallIcon />
             </Button>
             <Button variant={"link"} className="px-0">
-              {/* Add onClick */}
               <MenuIcon className="md:w-5 md:h-5" />
             </Button>
           </div>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto custom__scrollbar px-3 md:px-10 py-4">
-        {/* Chat messages go here */}
         <div className="flex flex-col">
-          {chatData.messages.map((message, index) => (
+          {messages.map((message, index) => (
             <div
               className={cn(
                 "flex mb-2",
-                message.sender === "mentor" ? "justify-start" : "justify-end"
+                message.sendBy === "mentor" ? "justify-start" : "justify-end"
               )}
-              key={index}>
+              key={index}
+            >
               <div>
                 <div
                   className={cn(
                     "py-2 px-4 rounded-lg max-w-64 w-full",
-                    message.sender === "mentor" ? "bg-white" : "bg-primary/15"
-                  )}>
-                  <p>{message.text}</p>
+                    message.sendBy === "mentor" ? "bg-white" : "bg-primary/15"
+                  )}
+                >
+                  <p>{message.message}</p>
                 </div>
                 <span className="text-xs text-gray-400 mx-1">
-                  {message.sender === "mentor" ? "Mentor, " : "You, "}
+                  {message.sendBy === "mentor" ? `${message.sender}, ` : "You, "}
                   {message.timestamp}
                 </span>
               </div>
@@ -96,13 +134,14 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
       </div>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onMessageSubmit)}
-          className="flex items-center gap-1 md:gap-3 border rounded-lg bg-white mt-2 md:mx-10 md:my-4 p-2">
+          onSubmit={handleSubmit(onMessageSubmit)}
+          className="flex items-center gap-1 md:gap-3 border rounded-lg bg-white mt-2 md:mx-10 md:my-4 p-2"
+        >
           <Button variant={"link"} className="text-black/70 px-2">
             <Smile className="cursor-pointer w-5 h-5 md:w-6 md:h-6" />
           </Button>
           <FormField
-            control={form.control}
+            control={control}
             name="content"
             render={({ field }) => (
               <FormItem className="flex-1">

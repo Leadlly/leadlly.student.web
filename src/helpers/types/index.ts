@@ -126,11 +126,6 @@ export interface ChatData {
   img: string;
   title: string;
   status: string;
-  messages: Array<{
-    sender: string;
-    text: string;
-    timestamp: string;
-  }>;
 }
 
 export type chapterOverviewProps = {

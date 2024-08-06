@@ -1,16 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { LogOut } from "lucide-react";
-import LogoutButton from "./LogoutButton";
+import { useAppSelector } from "@/redux/hooks";
+import { joinRoom } from "@/actions/chat_actions";
+import useSocket from "@/hooks/useSocket";
 
 const SidebarDesktop = ({
   sidebar,
@@ -20,6 +19,43 @@ const SidebarDesktop = ({
   meetingsLength: number;
 }) => {
   const pathname = usePathname();
+  const userEmail = useAppSelector((state) => state.user.user?.email);
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      console.log(socket)
+      socket.on("connect", () => {
+        console.log(`Connected with socket ID: ${socket.id}`);
+      });
+
+      socket.on('join_room', (data) => {
+        console.log(data)
+        console.log('Received join room event:', data);
+      });
+      return () => {
+        socket.off('connect');
+        socket.off('join_room');
+      };
+    };
+  }, [socket]);
+
+  const handleChatClick = async () => {
+    console.log('clicked ')
+    // if (!userEmail) {
+    //   console.error('User email or socket ID is not available.');
+    //   return;
+    // }
+
+    try {
+      console.log(userEmail)
+      const userData = { email: userEmail }; // Send socket ID with user data
+      const response = await joinRoom(userData);
+      console.log('Room joined successfully:', response);
+    } catch (error) {
+      console.error('Failed to join room:', error);
+    }
+  };
 
   return (
     <aside className="bg-sidebar-background w-full h-full md:w-20 xl:w-sidebar md:h-main-height md:rounded-xl overflow-y-hidden shadow-xl">
@@ -87,6 +123,9 @@ const SidebarDesktop = ({
                   {item.label}
                 </div>
               </li>
+              {item.label === 'chat' && (
+                <button onClick={handleChatClick} className="absolute inset-0 w-full h-full cursor-pointer" />
+              )}
             </Link>
           );
         })}
