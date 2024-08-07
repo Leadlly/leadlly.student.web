@@ -24,37 +24,29 @@ const SidebarDesktop = ({
 
   useEffect(() => {
     if (socket) {
-      console.log(socket)
+      console.log(`Socket initialized: ${socket.id}`);
+
       socket.on("connect", () => {
         console.log(`Connected with socket ID: ${socket.id}`);
+        
+        // Emit join_room event when connected
+        if (userEmail) {
+          console.log('Emitting join_room event');
+          socket.emit('join_room', { userEmail });
+        } else {
+          console.error('User email is not available');
+        }
       });
 
-      socket.on('join_room', (data) => {
-        console.log(data)
-        console.log('Received join room event:', data);
-      });
       return () => {
         socket.off('connect');
-        socket.off('join_room');
+        // Ensure to remove other listeners if any
       };
-    };
-  }, [socket]);
+    }
+  }, [socket, userEmail]);
 
   const handleChatClick = async () => {
-    console.log('clicked ')
-    // if (!userEmail) {
-    //   console.error('User email or socket ID is not available.');
-    //   return;
-    // }
-
-    try {
-      console.log(userEmail)
-      const userData = { email: userEmail }; // Send socket ID with user data
-      const response = await joinRoom(userData);
-      console.log('Room joined successfully:', response);
-    } catch (error) {
-      console.error('Failed to join room:', error);
-    }
+ 
   };
 
   return (
@@ -124,7 +116,7 @@ const SidebarDesktop = ({
                 </div>
               </li>
               {item.label === 'chat' && (
-                <button onClick={handleChatClick} className="absolute inset-0 w-full h-full cursor-pointer" />
+                <button onClick={handleChatClick} className="absolute inset-0 w-full h-full cursor-pointer z-10" />
               )}
             </Link>
           );

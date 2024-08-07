@@ -6,16 +6,16 @@ const useSocket = (): Socket | null => {
 
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_CHAT_API_BASE_URL!, {
-      transports: ['websocket', 'polling'], 
+      transports: ['websocket'], 
       withCredentials: true, 
     });
 
     setSocketInstance(socket);
 
     // Cleanup the socket connection on component unmount
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []); 
   
   return socketInstance;

@@ -49,31 +49,37 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   const { reset, handleSubmit, control } = form;
 
   const socket = useSocket();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const userEmail = useAppSelector((state) => state.user.user?.email);
+  const [messages, setMessages] = useState<any[]>([]);
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     if (socket) {
-      socket.on('chat_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
+      socket.on('room_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
         setMessages(prevMessages => [...prevMessages, data]);
-        console.log('Received chat message room event:', data);
+        console.log('Received room message room event:', data);
       });
       return () => {
-        socket.off('chat_message');
+        socket.off('room_message');
       };
     }
   }, [socket]);
 
   const onMessageSubmit = async (data: z.infer<typeof chatFormSchema>) => {
-    console.log(data, "here is th edata sending as message")
     const formattedData = {
       message: data.content,
-      email: userEmail,
+      sender: user?.firstname,
+      room: user?.email,
+      studentId: '',
+      sendBy: "student",
+      timeStamp: new Date(Date.toString()),
+      socketId: socket?.id
     };
 
     try {
-      const response = await sendMessage(formattedData);
-      console.log(response);
+      // const response = await sendMessage(formattedData);
+      // console.log(response);
+      if(socket)
+      socket.emit('chat_message', formattedData) 
       reset(); // Clear the textarea after sending the message
     } catch (error) {
       console.error('Failed to send message:', error);
