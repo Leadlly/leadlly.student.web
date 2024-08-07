@@ -10,7 +10,7 @@ interface OptionsProps {
   options: TQuizQuestionOptionsProps[];
   selectedOption: TQuizQuestionOptionsProps | null;
   handleOptionChange: (option: TQuizQuestionOptionsProps) => void;
-  attemptedOption: {
+  attemptedOption?: {
     questionId: string;
     quizId: string;
     topic: { name: string };

@@ -10,8 +10,10 @@ export interface WeeklyQuizProps {
   }>;
 }
 
+const storedQuizzes = localStorage.getItem("leadlly_weekly_quiz");
+
 const initialState: WeeklyQuizProps = {
-  quizzes: [],
+  quizzes: storedQuizzes ? JSON.parse(storedQuizzes) : [],
 };
 
 export const weeklyQuizSlice = createSlice({
@@ -19,23 +21,38 @@ export const weeklyQuizSlice = createSlice({
   initialState,
   reducers: {
     weeklyQuizData: (state, action) => {
-      const existingQuestion = state.quizzes.some(
+      // Get existing quizzes from localStorage
+      const storedQuizzes = localStorage.getItem("leadlly_weekly_quiz");
+      const quizzes: typeof state.quizzes = storedQuizzes
+        ? JSON.parse(storedQuizzes)
+        : [];
+
+      // Check if the quiz already exists
+      const existingQuestion = quizzes.some(
         (quiz) => quiz.questionId === action.payload.questionId
       );
 
       if (existingQuestion) {
-        const quizIndex = state.quizzes.findIndex(
+        // Find index of the existing quiz
+        const quizIndex = quizzes.findIndex(
           (quiz) => quiz.questionId === action.payload.questionId
         );
         if (quizIndex !== -1) {
-          state.quizzes.splice(quizIndex, 1, action.payload);
+          // Replace the existing quiz
+          quizzes[quizIndex] = action.payload;
         }
       } else {
-        state.quizzes.push(action.payload);
+        // Add new quiz
+        quizzes.push(action.payload);
       }
+
+      // Update state and localStorage
+      state.quizzes = quizzes;
+      localStorage.setItem("leadlly_weekly_quiz", JSON.stringify(quizzes));
     },
     clearWeeklyData: (state) => {
       state.quizzes = [];
+      localStorage.removeItem("leadlly_weekly_quiz");
     },
   },
 });

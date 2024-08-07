@@ -12,7 +12,6 @@ import { userData } from "@/redux/slices/userSlice";
 import { weeklyData } from "@/redux/slices/weeklyReportSlice";
 import { monthlyData } from "@/redux/slices/monthlyReportSlice";
 import { overallData } from "@/redux/slices/overallReportSlice";
-import { PersistGate } from "redux-persist/integration/react";
 
 export default function StoreProvider({
   children,
@@ -37,11 +36,5 @@ export default function StoreProvider({
     storeRef.current.dispatch(overallData(overallReport));
   }
 
-  return (
-    <Provider store={storeRef.current}>
-      <PersistGate loading={null} persistor={storeRef.current.__persistor}>
-        {children}
-      </PersistGate>
-    </Provider>
-  );
+  return <Provider store={storeRef.current}>{children}</Provider>;
 }
