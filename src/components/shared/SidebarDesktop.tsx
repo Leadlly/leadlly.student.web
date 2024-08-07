@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
-import { useAppSelector } from "@/redux/hooks";
-import { joinRoom } from "@/actions/chat_actions";
-import useSocket from "@/hooks/useSocket";
 
 const SidebarDesktop = ({
   sidebar,
@@ -18,36 +15,8 @@ const SidebarDesktop = ({
   sidebar: TSidebarLink[];
   meetingsLength: number;
 }) => {
+
   const pathname = usePathname();
-  const userEmail = useAppSelector((state) => state.user.user?.email);
-  const socket = useSocket();
-
-  useEffect(() => {
-    if (socket) {
-      console.log(`Socket initialized: ${socket.id}`);
-
-      socket.on("connect", () => {
-        console.log(`Connected with socket ID: ${socket.id}`);
-        
-        // Emit join_room event when connected
-        if (userEmail) {
-          console.log('Emitting join_room event');
-          socket.emit('join_room', { userEmail });
-        } else {
-          console.error('User email is not available');
-        }
-      });
-
-      return () => {
-        socket.off('connect');
-        // Ensure to remove other listeners if any
-      };
-    }
-  }, [socket, userEmail]);
-
-  const handleChatClick = async () => {
- 
-  };
 
   return (
     <aside className="bg-sidebar-background w-full h-full md:w-20 xl:w-sidebar md:h-main-height md:rounded-xl overflow-y-hidden shadow-xl">
@@ -115,9 +84,6 @@ const SidebarDesktop = ({
                   {item.label}
                 </div>
               </li>
-              {item.label === 'chat' && (
-                <button onClick={handleChatClick} className="absolute inset-0 w-full h-full cursor-pointer z-10" />
-              )}
             </Link>
           );
         })}

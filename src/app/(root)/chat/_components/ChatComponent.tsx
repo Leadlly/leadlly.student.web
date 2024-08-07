@@ -23,10 +23,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import useSocket from "@/hooks/useSocket";
 import { useEffect, useState } from "react";
 import { sendMessage } from "@/actions/chat_actions";
 import { useAppSelector } from "@/redux/hooks";
+import { useSocket } from "@/contexts/socket/socketProvider";
 
 const chatFormSchema = z.object({
   content: z
