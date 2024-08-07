@@ -1,9 +1,9 @@
 import React from "react";
 import UnattemptedWeekQuiz from "./UnattemptedWeekQuiz";
-import { Subject, UnattemptedWeeklyQuiz } from "@/helpers/types";
+import { Subject, WeeklyQuizProps } from "@/helpers/types";
 
 type UnattemptedWeeklyQuizzesProps = {
-  quizzes: UnattemptedWeeklyQuiz[];
+  quizzes: WeeklyQuizProps[];
 };
 
 const UnattemptedWeeklyQuizzes = ({
@@ -14,7 +14,7 @@ const UnattemptedWeeklyQuizzes = ({
       <div className=" w-full  min-h-20 flex flex-col gap-4">
         {quizzes && quizzes.length ? (
           quizzes.map((quiz, index) => (
-            <UnattemptedWeekQuiz key={quiz.id} quiz={quiz} />
+            <UnattemptedWeekQuiz key={quiz._id} quiz={quiz} />
           ))
         ) : (
           <div className="text-center text-lg text-muted-foreground">

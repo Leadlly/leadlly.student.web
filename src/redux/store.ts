@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import userReducer from "@/redux/slices/userSlice";
 import weeklyReportReducer from "@/redux/slices/weeklyReportSlice";
 import monthlyReportReducer from "@/redux/slices/monthlyReportSlice";
 import overallReportReducer from "@/redux/slices/overallReportSlice";
+import weeklyQuizReducer from "@/redux/slices/weeklyQuizSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -11,10 +13,10 @@ export const makeStore = () => {
       weeklyReport: weeklyReportReducer,
       monthlyReport: monthlyReportReducer,
       overallReport: overallReportReducer,
+      weeklyQuizzes: weeklyQuizReducer,
     },
   });
 };
-
 // Infer the type of makeStore
 export type AppStore = ReturnType<typeof makeStore>;
 

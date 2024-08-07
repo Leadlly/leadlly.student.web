@@ -7,6 +7,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import ContinuousRevisionForm from "./ContinuousRevisionForm";
+import { ISubject } from "@/helpers/types";
 
 const ContinuousRevision = () => {
   const [activeSubject, setActiveSubject] = useState<string | null>(null);
