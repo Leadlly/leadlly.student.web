@@ -90,19 +90,23 @@ export type TQuizQuestionProps = {
   chapter: string[];
   createdAt: string;
   createdBy: string;
-  images: [];
+  images: Array<{
+    key: string;
+    url: string;
+    _id: string;
+  }>;
   level: string;
   options: TQuizQuestionOptionsProps[];
   question: string;
   standard: number;
   subject: string;
-  subtopics: [];
+  subtopics: string[];
   topics: string[];
   _id: string;
 };
 
 export type TQuizAnswerProps = {
-  question: {};
+  question: TQuizQuestionProps;
   studentAnswer: string;
   isCorrect: boolean;
   tag: string;

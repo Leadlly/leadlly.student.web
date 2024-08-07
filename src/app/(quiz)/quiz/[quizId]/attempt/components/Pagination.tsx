@@ -1,21 +1,28 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ArrowRight, Dot } from "lucide-react";
+import { ArrowLeft, ArrowRight, Dot, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface PaginationProps {
   totalQuestions: number;
   currentQuestion: number;
   onPageChange: (pageNumber: number) => void;
-  answeredQuestions: (0 | 1 | 2 | 3 | 4)[];
+  loading: string | null;
+  questionIds: string[];
+  storedQuestionIds: string[];
+  currentQuestionId: string;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   totalQuestions,
   currentQuestion,
   onPageChange,
-  answeredQuestions,
+  loading,
+  questionIds,
+  storedQuestionIds,
+  currentQuestionId,
 }) => {
   const getVisiblePages = (width: number) => {
     if (width < 600) return 5;
@@ -38,6 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
   const startPage = Math.floor(currentQuestion / visiblePages) * visiblePages;
   const endPage = Math.min(totalQuestions, startPage + visiblePages);
 
@@ -48,51 +56,55 @@ const Pagination: React.FC<PaginationProps> = ({
   const pages = [];
   for (let i = startPage; i < endPage; i++) {
     pages.push(
-      <button
+      <Button
         key={i}
         className={cn(
-          "shadow-question text-[#A8A5A5] border text-xs sm:text-base  border-[#F2F2F2]  rounded sm:rounded-[7px]  size-5 sm:size-10 ",
+          "shadow-question size-5 sm:size-10 ",
           currentQuestion === i
-            ? "bg-purple-500 text-white"
-            : answeredQuestions[i]
+            ? "bg-primary text-white"
+            : storedQuestionIds.includes(questionIds[i])
               ? "bg-green-500 text-white"
               : "bg-[#FFFFFF]"
         )}
         onClick={() => handlePageClick(i)}
+        variant={"outline"}
+        disabled={loading === currentQuestionId}
       >
-        {i + 1}
-      </button>
+        {loading === currentQuestionId ? (
+          <Loader2 className="w-3 h-3 animate-spin" />
+        ) : (
+          <>{i + 1}</>
+        )}
+      </Button>
     );
   }
-  console.log(answeredQuestions);
   return (
     <div className="flex justify-center gap-2  sm:gap-3 md:gap-4 lg:gap-5 w-full items-center ">
-      <button
+      <Button
+        variant={"ghost"}
         className="px-2"
         onClick={() => handlePageClick(Math.max(0, startPage - visiblePages))}
-        disabled={startPage === 0}
+        disabled={currentQuestion === 0}
       >
-        <ArrowLeft
-          className="size-4 sm:size-6"
-          color={startPage === 0 ? "#000000" : "#A8A8A8"}
-        />
-      </button>
+        <ArrowLeft className="size-4 sm:size-6" />
+      </Button>
 
       {startPage > 0 && (
         <>
-          <button
+          <Button
             className={cn(
-              "shadow-question text-[#A8A5A5] text-xs sm:text-base  border border-[#F2F2F2] rounded sm:rounded-[7px] size-5 sm:size-10 ",
+              "shadow-question size-5 sm:size-10",
               currentQuestion === 1
-                ? "bg-purple-500 text-white"
-                : answeredQuestions[0]
+                ? "bg-primary text-white"
+                : storedQuestionIds.includes(questionIds[0])
                   ? "bg-green-500 text-white"
                   : "bg-[#FFFFFF]"
             )}
             onClick={() => handlePageClick(0)}
+            variant={"outline"}
           >
             1
-          </button>
+          </Button>
           <div className="flex justify-center items-center">
             <Dot color="#BFBFBF" className="size-4 sm:size-7" />
             <Dot color="#BFBFBF" className="size-4 sm:size-7 max-sm:hidden" />
@@ -113,35 +125,34 @@ const Pagination: React.FC<PaginationProps> = ({
             <Dot color="#BFBFBF" className="size-4 sm:size-7" />
           </div>
 
-          <button
+          <Button
             className={cn(
-              "shadow-question text-[#A8A5A5] text-xs sm:text-base border border-[#F2F2F2]  rounded sm:rounded-[7px]  size-5 sm:size-10 ",
-              currentQuestion === totalQuestions
-                ? "bg-purple-500 text-white"
-                : answeredQuestions[totalQuestions - 1]
+              "shadow-question size-5 sm:size-10",
+              currentQuestion + 1 === totalQuestions
+                ? "bg-primary text-white"
+                : storedQuestionIds.includes(questionIds[totalQuestions - 1])
                   ? "bg-green-500 text-white"
                   : "bg-[#FFFFFF]"
             )}
             onClick={() => handlePageClick(totalQuestions - 1)}
+            variant={"outline"}
           >
             {totalQuestions}
-          </button>
+          </Button>
         </>
       )}
-      <button
+      <Button
+        variant={"ghost"}
         className="px-2"
         onClick={() =>
           handlePageClick(
             Math.min(totalQuestions - 1, startPage + visiblePages)
           )
         }
-        disabled={endPage === totalQuestions}
+        disabled={currentQuestion + 1 === totalQuestions}
       >
-        <ArrowRight
-          className="size-4 sm:size-6"
-          color={endPage === totalQuestions ? "#000000" : "#A8A8A8"}
-        />
-      </button>
+        <ArrowRight className="size-4 sm:size-6" />
+      </Button>
     </div>
   );
 };

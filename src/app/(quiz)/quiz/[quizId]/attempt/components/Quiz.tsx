@@ -4,8 +4,18 @@ import Question from "./Question";
 import Options from "./Options";
 import Pagination from "./Pagination";
 import SubmitDialog from "./SubmitDialog";
-import { TQuizQuestionProps } from "@/helpers/types";
+import {
+  TQuizAnswerProps,
+  TQuizQuestionOptionsProps,
+  TQuizQuestionProps,
+} from "@/helpers/types";
 import { getMonthDate } from "@/helpers/utils";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { saveWeeklyQuizQuestion } from "@/actions/weekly_quiz_actions";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { weeklyQuizData } from "@/redux/slices/weeklyQuizSlice";
+import { Loader2 } from "lucide-react";
 
 const Quiz = ({
   quizId,
@@ -18,35 +28,83 @@ const Quiz = ({
   startDate: string;
   endDate: string;
 }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
-  const [answeredQuestions, setAnsweredQuestions] = useState<
-    (0 | 1 | 2 | 3 | 4)[]
-  >(Array(questions.length).fill(0));
+  const weekly_quiz_data = useAppSelector(
+    (state) => state.weeklyQuizzes.quizzes
+  );
 
-  const handleOptionChange = (index: number, questionNumber: number) => {
-    setAnsweredQuestions((prev) => {
-      const newPrev = [...prev];
-      if (index in [0, 1, 2, 3, 4])
-        newPrev[questionNumber] = index as 0 | 1 | 3 | 2 | 4;
-      return newPrev;
-    });
+  const [currentQuestion, setCurrentQuestion] = useState(
+    weekly_quiz_data.length > 0 ? weekly_quiz_data.length : 0
+  );
+  const [selectedOption, setSelectedOption] =
+    useState<TQuizQuestionOptionsProps | null>(null);
+
+  const [isSaving, setIsSaving] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
+
+  const questionIds = questions.map((ques) => ques._id);
+
+  const storedQuestionIds = weekly_quiz_data.map(
+    (data: {
+      questionId: string;
+      quizId: string;
+      topic: { name: string };
+      question: TQuizAnswerProps;
+    }) => data.questionId
+  );
+
+  const attemptedQuestionAnswers = weekly_quiz_data.find(
+    (ques: any) => ques.questionId === questions[currentQuestion]?._id
+  );
+
+  const quizData = async () => {
+    const formattedData = {
+      quizId,
+      topic: { name: questions[currentQuestion].topics[0] },
+      question: {
+        question: questions[currentQuestion],
+        studentAnswer: selectedOption?.name!,
+        isCorrect: selectedOption?.tag === "Correct",
+        tag: "weekly_quiz",
+      },
+    };
+    setIsSaving(questions[currentQuestion]._id);
+    try {
+      const res = await saveWeeklyQuizQuestion(formattedData);
+      dispatch(
+        weeklyQuizData({
+          questionId: questions[currentQuestion]._id,
+          ...formattedData,
+        })
+      );
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsSaving(null);
+    }
   };
 
-  const handleNextQuestion = () => {
-    setCurrentQuestion((prev) => Math.min(prev + 1, questions.length - 1));
+  const handleOptionChange = (option: TQuizQuestionOptionsProps) => {
+    setSelectedOption(option);
   };
+
+  const handleNextQuestion = async () => {
+    if (selectedOption) {
+      await quizData();
+      setSelectedOption(null);
+    }
+    setCurrentQuestion((prev: any) => Math.min(prev + 1, questions.length - 1));
+  };
+
   const handlePrevQuestion = () => {
-    setCurrentQuestion((prev) => Math.max(prev - 1, 0));
+    setCurrentQuestion((prev: any) => Math.max(prev - 1, 0));
   };
 
-  const handlePageChange = (pageNumber: number) => {
+  const handlePageChange = async (pageNumber: number) => {
     setCurrentQuestion(pageNumber);
   };
-  useEffect(() => {
-    setSelectedOption(answeredQuestions[currentQuestion]);
-  }, [currentQuestion, answeredQuestions]);
+
   return (
     <>
       <div className="flex flex-col justify-center gap-3 sm:gap-7 items-center px-5">
@@ -59,13 +117,11 @@ const Quiz = ({
             {getMonthDate(new Date(endDate))}
           </h2>
         </div>
-        <div className="bg-[#9654F42E] rounded-[10px] p-4 w-full flex justify-between items-center">
+        <div className="bg-primary/10 rounded-[10px] p-4 w-full flex justify-between items-center">
           <span className="font-semibold text-[#636363] text-base md:text-2xl">
             Answered:{" "}
-            <span className="text-[#9654F4]">
-              {answeredQuestions.filter(Boolean).length}
-            </span>
-            /{questions.length}
+            <span className="text-primary">{weekly_quiz_data.length}</span>/
+            {questions.length}
           </span>
           <SubmitDialog quizId={quizId} />
         </div>
@@ -73,7 +129,10 @@ const Quiz = ({
           totalQuestions={questions.length}
           currentQuestion={currentQuestion}
           onPageChange={handlePageChange}
-          answeredQuestions={answeredQuestions}
+          questionIds={questionIds}
+          storedQuestionIds={storedQuestionIds}
+          currentQuestionId={questions[currentQuestion]?._id}
+          loading={isSaving}
         />
         <div className="w-full sm:border-2 sm:border-[#CFCFCF] rounded-[10px] mb-5">
           <div className="sm:p-7">
@@ -83,26 +142,30 @@ const Quiz = ({
             <div className="p-5">
               <Question question={questions[currentQuestion]} />
               <Options
-                options={questions[currentQuestion].options}
+                options={questions[currentQuestion]?.options}
                 selectedOption={selectedOption}
                 handleOptionChange={handleOptionChange}
-                questionNumber={currentQuestion}
+                attemptedOption={attemptedQuestionAnswers}
               />
             </div>
           </div>
           <div className="sm:bg-[#9654F40F] flex justify-center items-center gap-20 py-3">
-            <button
-              className=" bg-white border border-[#C0C0C0] px-4 py-1 font-semibold  rounded-md"
-              onClick={handlePrevQuestion}
-            >
+            <Button variant={"outline"} onClick={handlePrevQuestion}>
               Prev
-            </button>
-            <button
-              className=" bg-[#9654F4] text-white border border-transparent px-4 py-1 font-semibold  rounded-md"
+            </Button>
+            <Button
               onClick={handleNextQuestion}
+              disabled={
+                isSaving === questions[currentQuestion]?._id ||
+                currentQuestion === questions.length - 1
+              }
             >
-              Next
-            </button>
+              {isSaving === questions[currentQuestion]?._id ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <>{selectedOption ? "Save & Next" : "Next"}</>
+              )}
+            </Button>
           </div>
         </div>
       </div>
