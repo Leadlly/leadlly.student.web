@@ -78,48 +78,15 @@ const ChatPage = async ({
         </ul>
 
         <div className="flex-1 mb-2">
-          {/* {activeChatTab === "chat" && (
+          {activeChatTab === "chat" && (
             <ChatComponent
               chatData={{
                 img: "/assets/images/mentor.png",
                 title: "Dhruvi Rawal",
                 status: "Last seen today at 11:50 PM",
-                messages: [
-                  {
-                    sender: "user",
-                    text: "Hello there!",
-                    timestamp: "9:00 AM",
-                  },
-                  {
-                    sender: "mentor",
-                    text: "Hi! How can I help you today?",
-                    timestamp: "9:05 AM",
-                  },
-                  {
-                    sender: "user",
-                    text: "I need some assistance with my project.",
-                    timestamp: "9:10 AM",
-                  },
-                  {
-                    sender: "mentor",
-                    text: "Sure, I`d be happy to help. What specifically do you need assistance with?",
-                    timestamp: "9:15 AM",
-                  },
-                  {
-                    sender: "user",
-                    text: "I`m having trouble with the implementation of a feature.",
-                    timestamp: "9:20 AM",
-                  },
-                  {
-                    sender: "mentor",
-                    text: "Okay, let`s take a look at your code and debug it together.",
-                    timestamp: "9:25 AM",
-                  },
-                  // Add more messages
-                ],
               }}
             />
-          )} */}
+          )}
 
           {activeChatTab === "meetings" && (
             <MeetingsComponent

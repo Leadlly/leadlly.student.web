@@ -16,6 +16,7 @@ import {
   getOverallReport,
   getWeeklyReport,
 } from "@/actions/student_report_actions";
+import { SocketProvider } from "@/contexts/socket/socketProvider";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -50,6 +51,7 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
+        <SocketProvider>
         <StoreProvider
           user={user?.user}
           weeklyReport={weeklyReport.weeklyReport}
@@ -65,6 +67,7 @@ export default async function RootLayout({
             <Toaster richColors position="top-center" />
           </GoogleOAuthProvider>
         </StoreProvider>
+        </SocketProvider>
       </body>
     </html>
   );

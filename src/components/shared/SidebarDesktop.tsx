@@ -4,13 +4,9 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { LogOut } from "lucide-react";
-import LogoutButton from "./LogoutButton";
 
 const SidebarDesktop = ({
   sidebar,
@@ -19,6 +15,7 @@ const SidebarDesktop = ({
   sidebar: TSidebarLink[];
   meetingsLength: number;
 }) => {
+
   const pathname = usePathname();
 
   return (
