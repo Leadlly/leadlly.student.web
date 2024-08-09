@@ -158,7 +158,7 @@ const Login = () => {
                         <FormControl>
                           <Input
                             type={togglePassword ? "text" : "password"}
-                            placeholder="Create password"
+                            placeholder="Enter password"
                             icon1={<Lock className="w-5 h-5 opacity-70" />}
                             icon2={
                               <div

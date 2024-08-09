@@ -218,16 +218,15 @@ const QuestionDialogBox = ({
                       key={option._id}
                       className={cn(
                         "flex items-center gap-6 text-base md:text-xl text-black font-normal border rounded-xl px-4 py-2 cursor-pointer",
-                        selectedAnswerIndex === index &&
-                          option.tag === "Correct"
+                        optionSelected && option.tag === "Correct"
                           ? "border-primary bg-primary/10"
                           : selectedAnswerIndex === index &&
                               option.tag === "Incorrect"
-                            ? "border-red-500 bg-red-500/10"
+                            ? "border-[#ff2e2e] bg-[#ff2e2e]/10"
                             : "",
                         optionSelected &&
                           selectedAnswer !== option.name &&
-                          "pointer-events-none opacity-30"
+                          "pointer-events-none opacity-50"
                       )}
                       onClick={() =>
                         onAnswerSelect(option.name, option.tag, index)
@@ -236,19 +235,17 @@ const QuestionDialogBox = ({
                       <div
                         className={cn(
                           "w-4 h-4 rounded-full border border-black cursor-pointer flex items-center justify-center",
-                          selectedAnswerIndex === index &&
-                            option.tag === "Correct"
+                          optionSelected && option.tag === "Correct"
                             ? "bg-primary border-none"
                             : selectedAnswerIndex === index &&
                                 option.tag === "Incorrect"
-                              ? "bg-red-500 border-none"
+                              ? "bg-[#ff2e2e] border-none"
                               : ""
                         )}
                       >
-                        {selectedAnswerIndex === index &&
-                          option.tag === "Correct" && (
-                            <Check className="w-3 h-3 text-white font-medium" />
-                          )}
+                        {optionSelected && option.tag === "Correct" && (
+                          <Check className="w-3 h-3 text-white font-medium" />
+                        )}
 
                         {selectedAnswerIndex === index &&
                           option.tag === "Incorrect" && (

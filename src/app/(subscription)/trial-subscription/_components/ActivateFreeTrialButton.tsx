@@ -44,7 +44,7 @@ const ActivateFreeTrialButton = () => {
           <Loader2 className="w-5 h-5 animate-spin" />
         </span>
       ) : (
-        "Enroll 21 Days Free Trail"
+        "Start the 21-Day Challenge"
       )}
     </Button>
   );

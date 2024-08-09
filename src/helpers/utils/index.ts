@@ -120,7 +120,7 @@ export function calculateDaysLeft(meetingDate: Date): number {
   // Convert milliseconds to days
   const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
 
-  return daysLeft - 1;
+  return daysLeft;
 }
 
 export function capitalizeFirstLetter(
