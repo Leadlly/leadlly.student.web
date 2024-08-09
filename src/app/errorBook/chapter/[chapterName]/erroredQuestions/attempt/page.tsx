@@ -1,7 +1,7 @@
 
 import { FC } from "react";
 import { getChapterErrorBook } from "@/actions/error_book_actions";
-import Quiz from "../components/Quiz";
+import Quiz from "./_components/Quiz";
 
 const Report = async ({ params }: { params: { chapterName: string } }) => {
   const { chapterErrorBook } = await getChapterErrorBook({

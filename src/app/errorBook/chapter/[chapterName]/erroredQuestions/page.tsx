@@ -1,7 +1,7 @@
 // pages/report.tsx
 import { FC } from "react";
-import DesktopView from "./components/DesktopView";
-import Defaultview from "./components/Defaultview";
+import DesktopView from "./_components/DesktopView";
+import Defaultview from "./_components/Defaultview";
 import { getChapterErrorBook } from "@/actions/error_book_actions";
 
 const Report = async ({ params }: { params: { chapterName: string } }) => {

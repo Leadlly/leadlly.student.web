@@ -1,29 +1,9 @@
+import { EQuestion } from '@/helpers/types';
 import Image from 'next/image';
 import React from 'react';
-interface OptionType {
-  name: string;
-  tag: string;
-  images: string | null;
-  _id: string;
-}
 
-interface QuestionType {
-  _id: string;
-  question: string;
-  options: OptionType[];
-  standard: number;
-  subject: string;
-  chapter: string[];
-  topics: string[];
-  subtopics: string[];
-  level: string;
-  images: string[];
-  createdBy: string;
-  createdAt: string;
-  __v: number;
-}
 interface QuestionProps {
-	question: QuestionType
+	question: EQuestion
 }
 
 const Question: React.FC<QuestionProps> = ({ question }) => {
@@ -38,7 +18,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
       {question.images.map((image, index) => {
         return (
           <Image
-            src={image}
+            src={image.url}
             alt="question image"
             key={index}
             width={300}

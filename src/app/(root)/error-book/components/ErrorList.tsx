@@ -20,7 +20,7 @@ export default function ErrorList({ errorBook }: ErrorBookProps) {
   }
   return (
     <Tabs defaultValue={errorBook[0]?.subject} className="w-full">
-      <TabsList className="bg-transparent flex justify-between lg:justify-start items-start gap-4 md:gap-14 flex-wrap md:flex-nowrap">
+      <TabsList className="bg-transparent flex justify-around lg:justify-start items-start gap-4 md:gap-14 flex-wrap md:flex-nowrap">
         {errorBook.map((tab) => {
           return (
             <TabsTrigger

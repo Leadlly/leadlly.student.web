@@ -532,16 +532,18 @@ export type ErrorBookProps = {
   errorBook?: SubjectProps[];
   errorNotes?: ErrorNoteProps[];
 };
-interface QuestionOption {
+export interface QuestionOption {
   name: string;
   tag: "Correct" | "Incorrect";
-  images?: string;
+  images?: Image[];
   _id: string;
 }
-
-export interface ErrorBookQuestion {
-  _id: string;
-  question: {
+export interface Image {
+  url: string;
+  key: string;
+  _id:string
+}
+export interface EQuestion {
     _id: string;
     question: string;
     options: QuestionOption[];
@@ -551,11 +553,14 @@ export interface ErrorBookQuestion {
     topics: string[];
     subtopics: string[];
     level: string;
-    images: string[];
+    images: Image[];
     createdBy: string;
     createdAt: string;
     __v: number;
   };
+export interface ErrorBookQuestion {
+  _id: string;
+  question: EQuestion
 }
 export type ChapterErrorBookProps = {
   chapterErrorBook: ErrorBookQuestion[];

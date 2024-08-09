@@ -28,7 +28,7 @@ const ErroredQuestions = ({
             {solvedQuestion.question.images.map((image, index) => {
               return (
                 <Image
-                  src={image}
+                  src={image.url}
                   alt="question image"
                   key={index}
                   width={300}
@@ -41,24 +41,22 @@ const ErroredQuestions = ({
               type="A"
               style={{ listStyleType: "upper-alpha" }}
             >
-              {solvedQuestion.question.options?.map(
-                (option: any, optIndex: any) => (
-                  <li key={optIndex} className="pl-5 font-semibold">
-                    <div
-                      dangerouslySetInnerHTML={{ __html: option.name }}
-                    ></div>{" "}
-                    {option.images && (
+              {solvedQuestion.question.options?.map((option, optIndex) => (
+                <li key={optIndex} className="pl-5 font-semibold">
+                  <div dangerouslySetInnerHTML={{ __html: option.name }}></div>{" "}
+                  {option?.images?.map((image, index) => {
+                    return (
                       <Image
-                        src={option.images}
+                        src={image.url}
                         alt="question image"
                         key={index}
                         width={300}
                         height={200}
                       />
-                    )}
-                  </li>
-                )
-              )}
+                    );
+                  })}
+                </li>
+              ))}
             </ol>
           </div>
         ))}

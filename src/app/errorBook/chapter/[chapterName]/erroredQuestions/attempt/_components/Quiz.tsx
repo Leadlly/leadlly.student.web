@@ -8,44 +8,12 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import Question from "./Question";
+import { ErrorBookQuestion } from "@/helpers/types";
 
-interface OptionType {
-  name: string;
-  tag: string;
-  images: string | null;
-  _id: string;
-}
-
-interface QuestionType {
-  _id: string;
-  question: string;
-  options: OptionType[];
-  standard: number;
-  subject: string;
-  chapter: string[];
-  topics: string[];
-  subtopics: string[];
-  level: string;
-  images: string[];
-  createdBy: string;
-  createdAt: string;
-  __v: number;
-}
-
-interface SolvedQuestionType {
-  _id: string;
-  student: string;
-  question: QuestionType;
-  studentAnswer: string;
-  isCorrect: boolean;
-  tag: string;
-  createdAt: string;
-  __v: number;
-}
 
 interface QuizProps {
   quizId?: string;
-  questions: SolvedQuestionType[];
+  questions: ErrorBookQuestion[];
   questionTitle: string;
   subtitle: string;
 }

@@ -1,8 +1,9 @@
+import { QuestionOption } from "@/helpers/types";
 import Image from "next/image";
 import React from "react";
 
 interface OptionsProps {
-  options: { name: string; tag: string; images: string | null; _id: string }[];
+  options: QuestionOption[];
   selectedOption: string | null;
   handleOptionChange: (answerId: string, questionId: string) => void;
   questionId: string;
@@ -30,15 +31,17 @@ const Options: React.FC<OptionsProps> = ({
             onChange={() => handleOptionChange(option._id, questionId)}
           />
           <div dangerouslySetInnerHTML={{ __html: option.name }}></div>{" "}
-          {option.images && (
-            <Image
-              src={option.images}
-              alt="question image"
-              key={index}
-              width={300}
-              height={200}
-            />
-          )}
+          {option.images?.map((image, index) => {
+            return (
+              <Image
+                src={image.url}
+                alt="question image"
+                key={index}
+                width={300}
+                height={200}
+              />
+            );
+          })}
         </label>
       ))}
     </div>
