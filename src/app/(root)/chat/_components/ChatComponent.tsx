@@ -24,9 +24,10 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { sendMessage } from "@/actions/chat_actions";
 import { useAppSelector } from "@/redux/hooks";
 import { useSocket } from "@/contexts/socket/socketProvider";
+import { formatTimestamp } from "@/helpers/utils";
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 const chatFormSchema = z.object({
   content: z
@@ -35,7 +36,6 @@ const chatFormSchema = z.object({
 });
 
 interface ChatMessage {
-  sender: string;
   message: string;
   timestamp: string;
   sendBy: string
@@ -48,13 +48,14 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   
   const { reset, handleSubmit, control } = form;
 
+
   const socket = useSocket();
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(chatData.message || []);
   const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     if (socket) {
-      socket.on('room_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
+      socket.on('room_message', (data: { message: string, timestamp: string, sendBy: string }) => {
         setMessages(prevMessages => [...prevMessages, data]);
         console.log('Received room message room event:', data);
       });
@@ -64,23 +65,22 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
     }
   }, [socket]);
 
+
   const onMessageSubmit = async (data: z.infer<typeof chatFormSchema>) => {
     const formattedData = {
       message: data.content,
-      sender: user?.firstname,
+      sender: user?._id,
+      receiver: user?.mentor.id,
       room: user?.email,
-      studentId: '',
-      sendBy: "student",
+      sendBy: user?.firstname,
       timeStamp: new Date(Date.toString()),
       socketId: socket?.id
     };
 
     try {
-      // const response = await sendMessage(formattedData);
-      // console.log(response);
       if(socket)
       socket.emit('chat_message', formattedData) 
-      reset(); // Clear the textarea after sending the message
+      reset({ content: "" }); 
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -110,13 +110,16 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
           </div>
         </div>
       </div>
+
       <div className="flex-1 overflow-y-auto custom__scrollbar px-3 md:px-10 py-4">
+      <ScrollToBottom className="flex flex-col space-y-4">
+
         <div className="flex flex-col">
           {messages.map((message, index) => (
             <div
               className={cn(
                 "flex mb-2",
-                message.sendBy === "mentor" ? "justify-start" : "justify-end"
+                message.sendBy === user?.firstname ? "justify-end" : "justify-start"
               )}
               key={index}
             >
@@ -124,20 +127,23 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
                 <div
                   className={cn(
                     "py-2 px-4 rounded-lg max-w-64 w-full",
-                    message.sendBy === "mentor" ? "bg-white" : "bg-primary/15"
+                    message.sendBy === user?.firstname ? "bg-primary/15" : "bg-white"
                   )}
                 >
                   <p>{message.message}</p>
                 </div>
                 <span className="text-xs text-gray-400 mx-1">
-                  {message.sendBy === "mentor" ? `${message.sender}, ` : "You, "}
-                  {message.timestamp}
+                  {message.sendBy === user?.firstname ? "You, " : `${message.sendBy}, `}
+                  {formatTimestamp(message?.timestamp ||  new Date(Date.now()).toString())}
                 </span>
               </div>
             </div>
           ))}
         </div>
+
+        </ScrollToBottom>
       </div>
+
       <Form {...form}>
         <form
           onSubmit={handleSubmit(onMessageSubmit)}

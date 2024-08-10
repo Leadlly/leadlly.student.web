@@ -126,6 +126,11 @@ export interface ChatData {
   img: string;
   title: string;
   status: string;
+  message: [{
+    message: string;
+    timestamp: string;
+    sendBy: string
+  }];
 }
 
 export type chapterOverviewProps = {
@@ -176,6 +181,7 @@ export interface IAcademic {
 }
 
 export type UserDataProps = {
+  _id: string;
   firstname: string;
   lastname?: string;
   email: string;
@@ -183,7 +189,9 @@ export type UserDataProps = {
     personal?: number;
     other?: number;
   };
-
+  mentor: {
+    id: string;
+  };
   password: string;
   salt: string;
   avatar?: {
@@ -305,6 +313,7 @@ export type ResetPasswordProps = {
 };
 
 export type StudentPersonalInfoProps = {
+  _id?: string
   address?: string;
   class?: number;
   coachingAddress?: string;

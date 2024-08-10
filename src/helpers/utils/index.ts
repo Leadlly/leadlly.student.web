@@ -165,3 +165,17 @@ export function isMoodButtonDisabled(lastMoodDate: String) {
 
   return lastMoodDate === formattedToday;
 }
+
+export const formatTimestamp = (timestamp: string) => {
+  const date = new Date(timestamp);
+
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date'; 
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  }).format(date);
+};

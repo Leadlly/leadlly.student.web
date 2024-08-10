@@ -12,6 +12,8 @@ import { chatPageTabs } from "@/helpers/constants/index";
 import { getMeetings } from "@/actions/meeting_actions";
 import { toast } from "sonner";
 import Loader from "@/components/shared/Loader";
+import { getUser } from "@/actions/user_actions";
+import { getChat } from "@/actions/chat_actions";
 
 const ChatPage = async ({
   searchParams,
@@ -20,12 +22,14 @@ const ChatPage = async ({
 }) => {
   const activeChatTab = searchParams["tab"] ?? chatPageTabs[0].title;
 
+  const user = getUser() 
   const upcomingMeetingData = getMeetings("");
   const doneMeetingsData = getMeetings("done");
 
-  const [upcomingMeeting, doneMeeting] = await Promise.all([
+  const [upcomingMeeting, doneMeeting, userData] = await Promise.all([
     upcomingMeetingData,
     doneMeetingsData,
+    user
   ]);
 
   if (
@@ -36,6 +40,13 @@ const ChatPage = async ({
   ) {
     return <Loader />;
   }
+
+  const chatDataPromise = getChat({
+    mentorId: userData.user.mentor.id,
+    studentId: userData.user._id,
+  });
+
+  const chatData = await chatDataPromise;
 
   return (
     <div className="flex flex-col justify-start gap-3 md:gap-6 h-full">
@@ -84,6 +95,7 @@ const ChatPage = async ({
                 img: "/assets/images/mentor.png",
                 title: "Dhruvi Rawal",
                 status: "Last seen today at 11:50 PM",
+                message: chatData.messages
               }}
             />
           )}
