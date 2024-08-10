@@ -86,6 +86,13 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(onMessageSubmit)();
+    }
+  };
+
   return (
     <div className="h-[75dvh] flex flex-col border bg-primary/10 rounded-xl overflow-hidden">
       <div className="bg-white p-3 md:py-4 md:px-6 border-b rounded-lg border-gray-200 flex items-center">
@@ -111,10 +118,8 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom__scrollbar px-3 md:px-10 py-4">
-      <ScrollToBottom className="flex flex-col space-y-4">
-
-        <div className="flex flex-col">
+      <div className="flex-1 overflow-y-auto px-3 md:px-10 py-4">
+      <ScrollToBottom className="h-[100%]" scrollViewClassName="custom__scrollbar">
           {messages.map((message, index) => (
             <div
               className={cn(
@@ -139,8 +144,6 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
               </div>
             </div>
           ))}
-        </div>
-
         </ScrollToBottom>
       </div>
 
@@ -160,6 +163,7 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
                 <FormControl>
                   <Textarea
                     placeholder="Type a Message here!..."
+                    onKeyDown={handleKeyDown}
                     className="resize-none border-none min-h-10 custom__scrollbar outline-none focus:outline-none focus-visible:ring-0 text-base"
                     rows={1}
                     {...field}
