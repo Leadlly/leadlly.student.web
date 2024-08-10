@@ -1,52 +1,31 @@
 "use client";
 
 import { TabNavItem } from "@/components";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
 import UnattemptedChapterWiseQuizzes from "./UnattemptedChapterWiseQuiz";
 import UnattemptedWeeklyQuizzes from "./UnattemptedWeeklyQuizzes";
 import CustomizedQuiz from "./CustomizedQuiz";
-import {
-  UnattemptedChapterQuizProps,
-  UnattemptedWeeklyQuiz,
-} from "@/helpers/types";
+import { UnattemptedChapterQuizProps, WeeklyQuizProps } from "@/helpers/types";
 
-const unattemptTabs = [
+const unattemptedTabs = [
   {
-    id: "weeklyquiz",
+    id: "weeklyQuiz",
     label: "Weekly Quiz",
     mobileOnly: false,
   },
   {
-    id: "chapterquiz",
+    id: "chapterQuiz",
     label: "Chapter Quiz",
     mobileOnly: false,
   },
   { id: "customizedQuiz", label: "Custom Quiz", mobileOnly: true },
 ];
 
-const Unattempted = () => {
-  // Example data for upcoming quizzes
-  const [weeklyQuizzes, setWeeklyQuizzes] = useState<UnattemptedWeeklyQuiz[]>([
-    // {
-    //   id: 1,
-    //   description: "Weekly Quiz 1: Vector Algebra, Matrices and Determinants",
-    //   startDate: "2024-01-05",
-    //   endDate: "2024-01-11",
-    //   subjects: ["Maths", "Physics", "Chemistry"],
-    //   questions: 30,
-    // },
-    // {
-    //   id: 2,
-    //   description: "Weekly Quiz 2: Electromagnetic Induction, Laws of Motion",
-    //   startDate: "2024-12-21",
-    //   endDate: "2024-12-27",
-    //   subjects: ["Maths",  "Chemistry","Physics",],
-    //   questions: 30,
-    // },
-  ]);
-
+const Unattempted = ({
+  weeklyQuizzes,
+}: {
+  weeklyQuizzes: WeeklyQuizProps[];
+}) => {
   const [chapterQuizzes, setChapterQuizzes] = useState<
     UnattemptedChapterQuizProps[]
   >([
@@ -69,7 +48,7 @@ const Unattempted = () => {
     // Add more quizzes here
   ]);
 
-  const [activeTab, setActiveTab] = useState("weeklyquiz");
+  const [activeTab, setActiveTab] = useState("weeklyQuiz");
 
   return (
     <div className="flex flex-col  mb-20 md:mb-0 max-w-full">
@@ -77,7 +56,7 @@ const Unattempted = () => {
       <div className="flex gap-3  justify-between	">
         <div className="py-3 border-2 rounded-xl flex-1 mb-5 h-full ">
           <ul className="flex justify-around">
-            {unattemptTabs.map((tab) => (
+            {unattemptedTabs.map((tab) => (
               <TabNavItem
                 key={tab.id}
                 id={tab.id}
@@ -95,10 +74,10 @@ const Unattempted = () => {
 
           <div className="max-h-[700px] lg:max-h-[700px]  xl:max-h-[470px] h-full overflow-y-auto custom__scrollbar">
             {/* Upcoming Meetings Tab */}
-            {activeTab == "weeklyquiz" && (
+            {activeTab == "weeklyQuiz" && (
               <UnattemptedWeeklyQuizzes quizzes={weeklyQuizzes} />
             )}
-            {activeTab == "chapterquiz" && (
+            {activeTab == "chapterQuiz" && (
               <UnattemptedChapterWiseQuizzes quizzes={chapterQuizzes} />
             )}{" "}
             {activeTab == "customizedQuiz" && (

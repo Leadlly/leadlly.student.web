@@ -79,28 +79,34 @@ export type TMoodEmojisProps = {
   moodImg: string;
 };
 
+export type TQuizQuestionOptionsProps = {
+  name: string;
+  tag: string;
+  images: string | null;
+  _id: string;
+};
+
 export type TQuizQuestionProps = {
   chapter: string[];
   createdAt: string;
   createdBy: string;
-  images: [];
-  level: string;
-  options: Array<{
-    name: string;
-    tag: string;
-    images: string | null;
+  images: Array<{
+    key: string;
+    url: string;
     _id: string;
   }>;
+  level: string;
+  options: TQuizQuestionOptionsProps[];
   question: string;
   standard: number;
   subject: string;
-  subtopics: [];
+  subtopics: string[];
   topics: string[];
   _id: string;
 };
 
 export type TQuizAnswerProps = {
-  question: {};
+  question: TQuizQuestionProps;
   studentAnswer: string;
   isCorrect: boolean;
   tag: string;
@@ -443,13 +449,36 @@ export interface AttemptedQuizProps {
   completedDate: string;
   efficiency: number;
 }
-export type UnattemptedWeeklyQuiz = {
-  id: number;
-  description: string;
+export type WeeklyQuizProps = {
+  _id: string;
+  user: string;
+  questions: {
+    [key: string]: {
+      _id: string;
+      question: string;
+      options: {
+        name: string;
+        tag: string;
+        images: string | null;
+        _id: string;
+      }[];
+      standard: number;
+      subject: string;
+      chapter: string[];
+      topics: string[];
+      subtopics: string[];
+      level: string;
+      images: [];
+      createdBy: string;
+      createdAt: string;
+    }[];
+  };
+  quizType: string;
+  attempted: boolean;
+  reattempted: number;
   startDate: string;
   endDate: string;
-  subjects: Subject[];
-  questions: number;
+  createdAt: string;
 };
 
 export type UnattemptedChapterQuizProps = {
@@ -486,4 +515,58 @@ export type TMeetingsProps = {
   updatedAt: string;
   createdBy: string;
   isCompleted: boolean;
+};
+export type ChapterProps = {
+  chapter: string;
+  totalQuestions: number;
+};
+
+export type SubjectProps = {
+  subject: string;
+  chapters: ChapterProps[];
+};
+export type ErrorNoteProps = {
+  _id: string;
+  note: string;
+  isCompleted: boolean;
+  createdAt: Date;
+};
+
+export type ErrorBookProps = {
+  errorBook?: SubjectProps[];
+  errorNotes?: ErrorNoteProps[];
+};
+export interface QuestionOption {
+  name: string;
+  tag: "Correct" | "Incorrect";
+  images?: Image[];
+  _id: string;
+}
+export interface Image {
+  url: string;
+  key: string;
+  _id:string
+}
+export interface EQuestion {
+    _id: string;
+    question: string;
+    options: QuestionOption[];
+    standard: number;
+    subject: string;
+    chapter: string[];
+    topics: string[];
+    subtopics: string[];
+    level: string;
+    images: Image[];
+    createdBy: string;
+    createdAt: string;
+    __v: number;
+  };
+export interface ErrorBookQuestion {
+  _id: string;
+  question: EQuestion
+}
+export type ChapterErrorBookProps = {
+  chapterErrorBook: ErrorBookQuestion[];
+  chapterName: string;
 };

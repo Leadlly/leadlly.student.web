@@ -1,9 +1,9 @@
 import React from "react";
 import AttemptedWeekQuiz from "./AttemptedWeekQuiz";
-import { AttemptedWeeklyQuiz, Subject } from "@/helpers/types";
+import { AttemptedWeeklyQuiz, Subject, WeeklyQuizProps } from "@/helpers/types";
 
 type AttemptedWeeklyQuizzesProps = {
-  quizzes: AttemptedWeeklyQuiz[];
+  quizzes: WeeklyQuizProps[];
 };
 
 const AttemptedWeeklyQuizzes = ({ quizzes }: AttemptedWeeklyQuizzesProps) => {
@@ -12,7 +12,7 @@ const AttemptedWeeklyQuizzes = ({ quizzes }: AttemptedWeeklyQuizzesProps) => {
       <div className=" w-full  min-h-20 flex flex-col gap-4">
         {quizzes && quizzes.length ? (
           quizzes.map((quiz, index) => (
-            <AttemptedWeekQuiz key={quiz.id} quiz={quiz} />
+            <AttemptedWeekQuiz key={quiz._id} quiz={quiz} />
           ))
         ) : (
           <div className="text-center text-lg text-muted-foreground">
