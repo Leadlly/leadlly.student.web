@@ -7,12 +7,10 @@ import { MotionDiv } from "@/components/shared/MotionDiv";
 import ChatComponent from "./_components/ChatComponent";
 import MeetingsComponent from "./_components/MeetingsComponent";
 import RequestMeetingComponent from "./_components/RequestMeetingComponent";
-
 import { chatPageTabs } from "@/helpers/constants/index";
 import { getMeetings } from "@/actions/meeting_actions";
-import { toast } from "sonner";
 import Loader from "@/components/shared/Loader";
-import { getUser } from "@/actions/user_actions";
+import { getMentorInfo, getUser } from "@/actions/user_actions";
 import { getChat } from "@/actions/chat_actions";
 
 const ChatPage = async ({
@@ -22,14 +20,16 @@ const ChatPage = async ({
 }) => {
   const activeChatTab = searchParams["tab"] ?? chatPageTabs[0].title;
 
-  const user = getUser() 
+  const user = getUser(); 
+  const mentor = getMentorInfo(); 
   const upcomingMeetingData = getMeetings("");
   const doneMeetingsData = getMeetings("done");
 
-  const [upcomingMeeting, doneMeeting, userData] = await Promise.all([
+  const [upcomingMeeting, doneMeeting, userData, mentorData] = await Promise.all([
     upcomingMeetingData,
     doneMeetingsData,
-    user
+    user,
+    mentor
   ]);
 
   if (
@@ -92,9 +92,9 @@ const ChatPage = async ({
           {activeChatTab === "chat" && (
             <ChatComponent
               chatData={{
-                img: "/assets/images/mentor.png",
-                title: "Dhruvi Rawal",
-                status: "Last seen today at 11:50 PM",
+                img: "/assets/images/dsq_image.png",
+                title: mentorData.mentor.firstname,
+                status: "",
                 message: chatData.messages
               }}
             />

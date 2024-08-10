@@ -26,9 +26,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { useSocket } from "@/contexts/socket/socketProvider";
-import { formatTimestamp } from "@/helpers/utils";
+import { formatTimestamp, getFormattedDateForProd } from "@/helpers/utils";
 import ScrollToBottom from 'react-scroll-to-bottom';
-
 const chatFormSchema = z.object({
   content: z
     .string({ required_error: "Please enter a message to send!" })
@@ -48,7 +47,6 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
   
   const { reset, handleSubmit, control } = form;
 
-
   const socket = useSocket();
   const [messages, setMessages] = useState<ChatMessage[]>(chatData.message || []);
   const user = useAppSelector((state) => state.user.user);
@@ -65,7 +63,6 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
     }
   }, [socket]);
 
-
   const onMessageSubmit = async (data: z.infer<typeof chatFormSchema>) => {
     const formattedData = {
       message: data.content,
@@ -73,7 +70,7 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
       receiver: user?.mentor.id,
       room: user?.email,
       sendBy: user?.firstname,
-      timeStamp: new Date(Date.toString()),
+      timestamp: new Date(Date.now()).toString(),
       socketId: socket?.id
     };
 
@@ -93,6 +90,36 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
     }
   };
 
+  // Group messages by date
+  const groupMessagesByDate = (messages: ChatMessage[]) => {
+    const groupedMessages: { [date: string]: ChatMessage[] } = {};
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    messages.forEach(message => {
+      const messageDate = new Date(message.timestamp);
+      let dateLabel;
+
+      if (messageDate.toDateString() === today.toDateString()) {
+        dateLabel = 'Today';
+      } else if (messageDate.toDateString() === yesterday.toDateString()) {
+        dateLabel = 'Yesterday';
+      } else {
+        dateLabel = getFormattedDateForProd(messageDate); // Format as needed
+      }
+
+      if (!groupedMessages[dateLabel]) {
+        groupedMessages[dateLabel] = [];
+      }
+      groupedMessages[dateLabel].push(message);
+    });
+
+    return groupedMessages;
+  };
+
+  const groupedMessages = groupMessagesByDate(messages);
+
   return (
     <div className="h-[75dvh] flex flex-col border bg-primary/10 rounded-xl overflow-hidden">
       <div className="bg-white p-3 md:py-4 md:px-6 border-b rounded-lg border-gray-200 flex items-center">
@@ -107,41 +134,46 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
               <p className="text-sm text-gray-600">{chatData.status}</p>
             </div>
           </div>
-          <div className="flex items-center gap-10">
+          {/* <div className="flex items-center gap-10">
             <Button variant={"link"} className="px-0 hidden md:block">
               <CallIcon />
             </Button>
             <Button variant={"link"} className="px-0">
               <MenuIcon className="md:w-5 md:h-5" />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 md:px-10 py-4">
-      <ScrollToBottom className="h-[100%]" scrollViewClassName="custom__scrollbar">
-          {messages.map((message, index) => (
-            <div
-              className={cn(
-                "flex mb-2",
-                message.sendBy === user?.firstname ? "justify-end" : "justify-start"
-              )}
-              key={index}
-            >
-              <div>
+        <ScrollToBottom className="h-[100%]" scrollViewClassName="custom__scrollbar">
+          {Object.entries(groupedMessages).map(([dateLabel, messages]) => (
+            <div key={dateLabel}>
+              <div className="text-center text-gray-500 py-2">{dateLabel}</div>
+              {messages.map((message, index) => (
                 <div
                   className={cn(
-                    "py-2 px-4 rounded-lg max-w-64 w-full",
-                    message.sendBy === user?.firstname ? "bg-primary/15" : "bg-white"
+                    "flex mb-2",
+                    message.sendBy === user?.firstname ? "justify-end" : "justify-start"
                   )}
+                  key={index}
                 >
-                  <p>{message.message}</p>
+                  <div>
+                    <div
+                      className={cn(
+                        "py-2 px-4 rounded-lg max-w-64 w-full",
+                        message.sendBy === user?.firstname ? "bg-primary/15" : "bg-white"
+                      )}
+                    >
+                      <p>{message.message}</p>
+                    </div>
+                    <span className="text-xs text-gray-400 mx-1">
+                      {message.sendBy === user?.firstname ? "You, " : `${message.sendBy}, `}
+                      {formatTimestamp(message?.timestamp)}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-xs text-gray-400 mx-1">
-                  {message.sendBy === user?.firstname ? "You, " : `${message.sendBy}, `}
-                  {formatTimestamp(message?.timestamp ||  new Date(Date.now()).toString())}
-                </span>
-              </div>
+              ))}
             </div>
           ))}
         </ScrollToBottom>
@@ -174,12 +206,12 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
             )}
           />
           <div className="flex items-center gap-4">
-            <Button variant={"link"} className="px-0 pl-2">
+            {/* <Button variant={"link"} className="px-0 pl-2">
               <AttachIcon className="md:w-4 md:h-6" />
             </Button>
             <Button variant={"link"} className="px-0">
               <MicIcon className="md:w-7 md:h-7" />
-            </Button>
+            </Button> */}
             <Button type="submit">
               <SendIcon className="md:w-7 md:h-7" />
             </Button>
