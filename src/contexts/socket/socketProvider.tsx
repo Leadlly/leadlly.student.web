@@ -21,7 +21,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
 
       if (socket && fetchedUser) {
-        socket.emit('join_room', { userEmail: fetchedUser.user.email });
+        socket.emit('student_joining_room', { userEmail: fetchedUser.user.email });
       }
 
       setSocketInstance(socket);
