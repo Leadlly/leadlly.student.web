@@ -132,12 +132,12 @@ export interface ChatData {
   img: string;
   title: string;
   status: string;
-  message: [{
-    message: string;
-    timestamp: string;
-    sendBy: string
-  }];
 }
+
+export interface NotificationBadgeProps {
+  type: "all" | "chat" | "meeting"; 
+}
+
 
 export type chapterOverviewProps = {
   chapter: string;

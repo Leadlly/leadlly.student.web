@@ -8,8 +8,9 @@ import { motion } from "framer-motion";
 
 import { userSidebarLinks } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
+import NotificationBadge from "@/app/(root)/chat/_components/NotificationBadge";
 
-const MobileMenu = ({ meetingsLength }: { meetingsLength: number }) => {
+const MobileMenu = () => {
   const [navScrollPosition, setNavScrollPosition] = useState(0);
   const navbarRef = useRef<HTMLDivElement>(null);
 
@@ -83,14 +84,8 @@ const MobileMenu = ({ meetingsLength }: { meetingsLength: number }) => {
                         : "fill-[#6a6a6a]"
                   )}
                 />
-                {item.label === "chat" && meetingsLength > 0 && (
-                  <span
-                    className={cn(
-                      "absolute -top-1 -left-1 text-[10px] font-semibold size-4 rounded-full flex items-center justify-center p-1 text-white bg-[#0fd679]"
-                    )}
-                  >
-                    {meetingsLength}
-                  </span>
+                {item.label === "chat" && (
+                 <NotificationBadge type="all"/>
                 )}
               </div>
               <span

@@ -28,6 +28,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { useSocket } from "@/contexts/socket/socketProvider";
 import { formatTimestamp, getFormattedDateForProd } from "@/helpers/utils";
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { getChat } from "@/actions/chat_actions";
 const chatFormSchema = z.object({
   content: z
     .string({ required_error: "Please enter a message to send!" })
@@ -40,16 +41,37 @@ interface ChatMessage {
   sendBy: string
 }
 
-const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
+const ChatComponent = ({data}: {data: ChatData}) => {
   const form = useForm<z.infer<typeof chatFormSchema>>({
     resolver: zodResolver(chatFormSchema),
   });
   
   const { reset, handleSubmit, control } = form;
 
-  const socket = useSocket();
-  const [messages, setMessages] = useState<ChatMessage[]>(chatData.message || []);
+  const {socket} = useSocket();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const user = useAppSelector((state) => state.user.user);
+
+
+  useEffect(() => {
+    const fetchChat = async () => {
+      if (user) {
+        try {
+          const chat = await getChat({
+            mentorId: user.mentor.id,
+            studentId: user._id,
+          });
+
+          setMessages(chat.messages || []);
+        } catch (error) {
+          console.error('Failed to fetch chat:', error);
+        }
+      }
+    };
+
+    fetchChat();
+  }, [user]);
+  
 
   useEffect(() => {
     if (socket) {
@@ -57,11 +79,17 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
         setMessages(prevMessages => [...prevMessages, data]);
         console.log('Received room message room event:', data);
       });
+      
       return () => {
         socket.off('room_message');
       };
     }
   }, [socket]);
+
+  useEffect(() => {
+    if (socket)
+    socket.emit("open_chat", {userId: user?._id, room: user?.email})
+  }, [socket, messages, user])
 
   const onMessageSubmit = async (data: z.infer<typeof chatFormSchema>) => {
     const formattedData = {
@@ -126,12 +154,12 @@ const ChatComponent = ({ chatData }: { chatData: ChatData }) => {
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
             <Avatar className="w-11 h-11">
-              <AvatarImage src={chatData.img} alt="User Avatar" />
+              <AvatarImage src={data.img} alt="User Avatar" />
               <AvatarFallback>DR</AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="text-lg font-semibold">{chatData.title}</h3>
-              <p className="text-sm text-gray-600">{chatData.status}</p>
+              <h3 className="text-lg font-semibold">{data.title}</h3>
+              <p className="text-sm text-gray-600">{data.status}</p>
             </div>
           </div>
           {/* <div className="flex items-center gap-10">

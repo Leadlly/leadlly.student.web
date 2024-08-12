@@ -7,13 +7,12 @@ import { motion } from "framer-motion";
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
+import NotificationBadge from "@/app/(root)/chat/_components/NotificationBadge";
 
 const SidebarDesktop = ({
-  sidebar,
-  meetingsLength,
+  sidebar
 }: {
   sidebar: TSidebarLink[];
-  meetingsLength: number;
 }) => {
 
   const pathname = usePathname();
@@ -65,14 +64,8 @@ const SidebarDesktop = ({
                           : "fill-[#5A10D9]"
                     )}
                   />
-                  {item.label === "chat" && meetingsLength > 0 && (
-                    <span
-                      className={cn(
-                        "absolute -top-1 -left-1 text-[10px] font-semibold size-4 rounded-full flex items-center justify-center p-1 text-white bg-[#0fd679]"
-                      )}
-                    >
-                      {meetingsLength}
-                    </span>
+                  {item.label === "chat" && (
+                    <NotificationBadge type="all"/>
                   )}
                 </div>
                 <div

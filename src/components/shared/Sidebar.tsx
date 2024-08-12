@@ -3,11 +3,10 @@
 import SidebarDesktop from "./SidebarDesktop";
 import { userSidebarLinks } from "@/helpers/constants";
 
-const Sidebar = ({ meetingsLength }: { meetingsLength: number }) => {
+const Sidebar = () => {
   return (
     <SidebarDesktop
       sidebar={userSidebarLinks}
-      meetingsLength={meetingsLength}
     />
   );
 };
