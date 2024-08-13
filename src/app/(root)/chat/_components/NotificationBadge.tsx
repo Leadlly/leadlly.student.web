@@ -10,16 +10,20 @@ import { NotificationBadgeProps } from "@/helpers/types";
 const NotificationBadge: React.FC<NotificationBadgeProps> = ({ type }) => {
   const { notifications } = useSocket();
   const user = useAppSelector((state) => state.user.user);
+  const messagesCount = useAppSelector((state) => state.unreadMessages.messagesCount);
+ 
   const [chatCount, setChatCount] = useState<number>(0);
   const [meetingsLength, setMeetingsLength] = useState<number>(0);
 
   useEffect(() => {
-    if (user?.email && notifications[user.email] !== undefined) {
-      setChatCount(notifications[user.email]);
+    if (user?.email) {
+      // Combine notifications from socket and Redux
+      const combinedChatCount = (notifications[user.email] || 0) + messagesCount;
+      setChatCount(combinedChatCount);
     } else {
-      setChatCount(0); 
+      setChatCount(0);
     }
-  }, [notifications, user?.email]);
+  }, [notifications, messagesCount, user?.email]);
 
   useEffect(() => {
     const fetchMeetingsLength = async () => {

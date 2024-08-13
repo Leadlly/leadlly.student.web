@@ -24,11 +24,12 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useSocket } from "@/contexts/socket/socketProvider";
 import { formatTimestamp, getFormattedDateForProd } from "@/helpers/utils";
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { getChat } from "@/actions/chat_actions";
+import { unreadMessages } from "@/redux/slices/unreadMessagesSlice";
 const chatFormSchema = z.object({
   content: z
     .string({ required_error: "Please enter a message to send!" })
@@ -51,6 +52,7 @@ const ChatComponent = ({data}: {data: ChatData}) => {
   const {socket} = useSocket();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch()
 
 
   useEffect(() => {
@@ -87,9 +89,11 @@ const ChatComponent = ({data}: {data: ChatData}) => {
   }, [socket]);
 
   useEffect(() => {
-    if (socket)
-    socket.emit("open_chat", {userId: user?._id, room: user?.email})
-  }, [socket, messages, user])
+    if (socket) {
+      socket.emit("open_chat", {userId: user?._id, room: user?.email})
+      dispatch(unreadMessages(0))
+    }
+  }, [socket, messages, user, dispatch])
 
   const onMessageSubmit = async (data: z.infer<typeof chatFormSchema>) => {
     const formattedData = {
