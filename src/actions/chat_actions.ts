@@ -27,7 +27,7 @@ export const getChat = async (data: {mentorId: string, studentId: string}) => {
   }
 };
 
-export const getUnreadMessage = async (data: {receiver: string, room: string}) => {
+export const getUnreadMessage = async (data: [{receiver: string, room: string}]) => {
   try {
     console.log(data, "here is the data of get unread")
     const response = await fetch(

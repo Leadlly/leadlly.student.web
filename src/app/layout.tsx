@@ -44,10 +44,14 @@ export default async function RootLayout({
     overallReportData,
   ]);
   
-  const unreadMessages = await getUnreadMessage({
+  const unreadMessagesResponse = await getUnreadMessage([{
     receiver: user?.user._id, room: user?.user.email
-  });
+  }]);
 
+  const unreadMessagesForUser = unreadMessagesResponse.unreadCount.find(
+    (message: {room: string, messageCount: number}) => message.room === user?.user.email
+  );
+  
   return (
     <html lang="en">
       <body
@@ -62,7 +66,7 @@ export default async function RootLayout({
           weeklyReport={weeklyReport.weeklyReport}
           monthlyReport={monthlyReport.monthlyReport}
           overallReport={overallReport.overallReport}
-          unreadChats={unreadMessages.messageCount}
+          unreadChats={unreadMessagesForUser.messageCount}
         >
           <GoogleOAuthProvider
             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
