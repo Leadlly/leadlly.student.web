@@ -1,17 +1,15 @@
 import Link from "next/link";
-
 import { cn } from "@/lib/utils";
 import { Header } from "@/components";
 import { MotionDiv } from "@/components/shared/MotionDiv";
-
 import ChatComponent from "./_components/ChatComponent";
 import MeetingsComponent from "./_components/MeetingsComponent";
 import RequestMeetingComponent from "./_components/RequestMeetingComponent";
-
 import { chatPageTabs } from "@/helpers/constants/index";
 import { getMeetings } from "@/actions/meeting_actions";
-import { toast } from "sonner";
 import Loader from "@/components/shared/Loader";
+import { getMentorInfo, getUser } from "@/actions/user_actions";
+import NotificationBadge from "./_components/NotificationBadge";
 
 const ChatPage = async ({
   searchParams,
@@ -20,12 +18,16 @@ const ChatPage = async ({
 }) => {
   const activeChatTab = searchParams["tab"] ?? chatPageTabs[0].title;
 
+  const user = getUser(); 
+  const mentor = getMentorInfo(); 
   const upcomingMeetingData = getMeetings("");
   const doneMeetingsData = getMeetings("done");
 
-  const [upcomingMeeting, doneMeeting] = await Promise.all([
+  const [upcomingMeeting, doneMeeting, userData, mentorData] = await Promise.all([
     upcomingMeetingData,
     doneMeetingsData,
+    user,
+    mentor
   ]);
 
   if (
@@ -35,6 +37,16 @@ const ChatPage = async ({
     !doneMeeting.success
   ) {
     return <Loader />;
+  }
+
+  if (!userData.user.mentor.id) {
+    return (
+      <div className="flex flex-col justify-center items-center h-full">
+        <p className="text-center text-lg md:text-xl">
+          You can access this section once a mentor is allotted.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -67,59 +79,32 @@ const ChatPage = async ({
               )}
               <li
                 className={cn(
-                  "flex items-center justify-between w-full capitalize text-base md:text-xl text-black",
+                  "relative flex items-center justify-between w-full capitalize text-base md:text-xl text-black",
                   activeChatTab === tab.id ? "text-primary" : "text-black"
                 )}
               >
                 {tab.title}
+                {tab.id === "chat" && (
+                  <NotificationBadge type="chat" />
+                )}
+                {tab.id === "meetings" && (
+                  <NotificationBadge type="meeting" />
+                )}
               </li>
             </Link>
           ))}
         </ul>
 
         <div className="flex-1 mb-2">
-          {/* {activeChatTab === "chat" && (
+          {activeChatTab === "chat" && (
             <ChatComponent
-              chatData={{
-                img: "/assets/images/mentor.png",
-                title: "Dhruvi Rawal",
-                status: "Last seen today at 11:50 PM",
-                messages: [
-                  {
-                    sender: "user",
-                    text: "Hello there!",
-                    timestamp: "9:00 AM",
-                  },
-                  {
-                    sender: "mentor",
-                    text: "Hi! How can I help you today?",
-                    timestamp: "9:05 AM",
-                  },
-                  {
-                    sender: "user",
-                    text: "I need some assistance with my project.",
-                    timestamp: "9:10 AM",
-                  },
-                  {
-                    sender: "mentor",
-                    text: "Sure, I`d be happy to help. What specifically do you need assistance with?",
-                    timestamp: "9:15 AM",
-                  },
-                  {
-                    sender: "user",
-                    text: "I`m having trouble with the implementation of a feature.",
-                    timestamp: "9:20 AM",
-                  },
-                  {
-                    sender: "mentor",
-                    text: "Okay, let`s take a look at your code and debug it together.",
-                    timestamp: "9:25 AM",
-                  },
-                  // Add more messages
-                ],
+              data={{
+                img: "/assets/images/dsq_image.png",
+                title: mentorData.mentor.firstname,
+                status: ""
               }}
             />
-          )} */}
+          )}
 
           {activeChatTab === "meetings" && (
             <MeetingsComponent
