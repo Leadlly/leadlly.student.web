@@ -144,39 +144,6 @@ export const getUser = async () => {
   }
 };
 
-export const getMentorInfo = async () => {
-  const token = await getCookie("token");
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/mentor/info`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["mentorData"],
-        },
-      }
-    );
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Error in fetching mentor: ${error.message}`);
-    } else {
-      throw new Error(
-        "An unknown error occurred while fetching mentor"
-      );
-    }
-  }
-};
-
 export const studentPersonalInfo = async (data: StudentPersonalInfoProps) => {
   const token = await getCookie("token");
   try {

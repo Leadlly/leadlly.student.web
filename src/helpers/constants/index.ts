@@ -159,11 +159,11 @@ export const SUBJECT_COLORS = {
 };
 
 export const chatPageTabs = [
-  {
-    title: "chat",
-    id: "chat",
-    desktopView: true,
-  },
+  // {
+  //   title: "chat",
+  //   id: "chat",
+  //   desktopView: true,
+  // },
   {
     title: "meetings",
     id: "meetings",

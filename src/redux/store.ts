@@ -5,7 +5,6 @@ import weeklyReportReducer from "@/redux/slices/weeklyReportSlice";
 import monthlyReportReducer from "@/redux/slices/monthlyReportSlice";
 import overallReportReducer from "@/redux/slices/overallReportSlice";
 import weeklyQuizReducer from "@/redux/slices/weeklyQuizSlice";
-import unreadMessagesReducer from "@/redux/slices/unreadMessagesSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -15,7 +14,6 @@ export const makeStore = () => {
       monthlyReport: monthlyReportReducer,
       overallReport: overallReportReducer,
       weeklyQuizzes: weeklyQuizReducer,
-      unreadMessages: unreadMessagesReducer
     },
   });
 };
