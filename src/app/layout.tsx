@@ -16,8 +16,6 @@ import {
   getOverallReport,
   getWeeklyReport,
 } from "@/actions/student_report_actions";
-import { SocketProvider } from "@/contexts/socket/socketProvider";
-import { getUnreadMessage } from "@/actions/chat_actions";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -43,15 +41,7 @@ export default async function RootLayout({
     monthlyReportData,
     overallReportData,
   ]);
-  
-  const unreadMessagesResponse = await getUnreadMessage([{
-    receiver: user?.user._id, room: user?.user.email
-  }]);
 
-  const unreadMessagesForUser = unreadMessagesResponse.unreadCount.find(
-    (message: {room: string, messageCount: number}) => message.room === user?.user.email
-  );
-  
   return (
     <html lang="en">
       <body
@@ -60,13 +50,11 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <SocketProvider>
         <StoreProvider
           user={user?.user}
           weeklyReport={weeklyReport.weeklyReport}
           monthlyReport={monthlyReport.monthlyReport}
           overallReport={overallReport.overallReport}
-          unreadChats={unreadMessagesForUser.messageCount}
         >
           <GoogleOAuthProvider
             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
@@ -77,7 +65,6 @@ export default async function RootLayout({
             <Toaster richColors position="top-center" />
           </GoogleOAuthProvider>
         </StoreProvider>
-        </SocketProvider>
       </body>
     </html>
   );

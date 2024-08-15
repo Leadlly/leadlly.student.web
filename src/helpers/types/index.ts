@@ -132,12 +132,12 @@ export interface ChatData {
   img: string;
   title: string;
   status: string;
+  messages: Array<{
+    sender: string;
+    text: string;
+    timestamp: string;
+  }>;
 }
-
-export interface NotificationBadgeProps {
-  type: "all" | "chat" | "meeting"; 
-}
-
 
 export type chapterOverviewProps = {
   chapter: string;
@@ -187,7 +187,6 @@ export interface IAcademic {
 }
 
 export type UserDataProps = {
-  _id: string;
   firstname: string;
   lastname?: string;
   email: string;
@@ -195,9 +194,7 @@ export type UserDataProps = {
     personal?: number;
     other?: number;
   };
-  mentor: {
-    id: string;
-  };
+
   password: string;
   salt: string;
   avatar?: {
@@ -319,7 +316,6 @@ export type ResetPasswordProps = {
 };
 
 export type StudentPersonalInfoProps = {
-  _id?: string
   address?: string;
   class?: number;
   coachingAddress?: string;
