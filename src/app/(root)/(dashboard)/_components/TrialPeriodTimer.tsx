@@ -18,7 +18,7 @@ const TrialPeriodTimer = () => {
     const checkTrialStatus = () => {
       const trialStartDate = new Date(freeTrialActivationDate!);
       const trialEndDate = new Date(
-        trialStartDate.getTime() + 21 * 24 * 60 * 60 * 1000
+        trialStartDate.getTime() + 60 * 24 * 60 * 60 * 1000
       );
       const now = new Date();
 
