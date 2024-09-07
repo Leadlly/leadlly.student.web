@@ -54,14 +54,14 @@ const SubscriptionPlans = () => {
             />
           </div>
           <div className="flex flex-col md:flex-row justify-between md:items-end gap-5 pb-10">
-            <PlanPriceBox title="basic plan" duration="6" amount={499} />
+            <PlanPriceBox title="basic plan" duration="3" amount={499} />
             <PlanPriceBox
               title="professional plan"
-              duration="12"
+              duration="6"
               amount={416}
               className=" bg-primary/10"
             />
-            <PlanPriceBox title="ultimate plan" duration="24" amount={333} />
+            <PlanPriceBox title="ultimate plan" duration="12" amount={333} />
           </div>
         </div>
       </section>
