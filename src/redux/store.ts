@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit";
 
+import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "@/redux/slices/userSlice";
 import weeklyReportReducer from "@/redux/slices/weeklyReportSlice";
 import monthlyReportReducer from "@/redux/slices/monthlyReportSlice";
