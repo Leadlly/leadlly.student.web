@@ -11,8 +11,11 @@ import PlanPriceBox from "./_components/PlanPriceBox";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { getPricing } from "@/actions/subscription_actions";
 
-const SubscriptionPlans = () => {
+const SubscriptionPlans = async () => {
+  const pricing = await getPricing("main");
+
   return (
     <>
       <section>
@@ -37,7 +40,7 @@ const SubscriptionPlans = () => {
         />
 
         <div className="px-3 xl:px-14">
-          <div className="w-full rounded-xl shadow-[0_0_36.8px_0_rgba(150,84,244,0.19)] px-5 xl:px-12 py-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5  my-7 md:my-12">
+          <div className="w-full rounded-xl shadow-[0_0_36.8px_0_rgba(150,84,244,0.19)] px-5 xl:px-12 py-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5 my-7 md:my-12">
             <BenefitsBox
               title="planning & organization:"
               subscriptionBenefits={subscriptionPlanningBenefits}
@@ -53,15 +56,19 @@ const SubscriptionPlans = () => {
               subscriptionBenefits={subscriptionLearningBenefits}
             />
           </div>
+
+          {/* Dynamic PlanPriceBox Rendering based on pricing data */}
           <div className="flex flex-col md:flex-row justify-between md:items-end gap-5 pb-10">
-            <PlanPriceBox title="basic plan" duration="3" amount={499} />
-            <PlanPriceBox
-              title="professional plan"
-              duration="6"
-              amount={416}
-              className=" bg-primary/10"
-            />
-            <PlanPriceBox title="ultimate plan" duration="12" amount={333} />
+            {pricing?.map((plan: any) => (
+              <PlanPriceBox
+                key={plan.planId}
+                title={plan['duration(months)'] === '3' ? "basic plan" : plan['duration(months)'] === '6' ? "professional plan" : "ultimate plan"}
+                duration={plan['duration(months)']}
+                amount={plan.amount} 
+                planId={plan.planId}
+                className={plan['duration(months)'] === '6' ? "bg-primary/10" : ""}
+              />
+            ))}
           </div>
         </div>
       </section>

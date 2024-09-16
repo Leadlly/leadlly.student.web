@@ -8,24 +8,39 @@ import { Loader2 } from "lucide-react";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
+import { loadRazorpayScript } from "@/helpers/utils";
 
 const PaymentButton = ({
   title,
   duration,
   user,
+  planId,
 }: {
   title: string;
   duration: string;
+  planId: string;
   user: UserDataProps;
 }) => {
   const [subscriptionId, setSubscriptionId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const searchParams = useSearchParams();
+  const subscriptionIdParams = searchParams.get("subscriptionId");
+  const appRedirectParam = searchParams.get("redirect");
+
+  useEffect(() => {
+    if (subscriptionIdParams) {
+      setSubscriptionId(subscriptionIdParams);
+    }
+  }, [subscriptionIdParams]);
+
   const subscribeHandler = async () => {
     setIsLoading(true);
 
     try {
-      const data = await buySubscription(duration);
+      console.log(planId, "here is plan id")
+      const data = await buySubscription(planId);
       setSubscriptionId(data?.id);
     } catch (error: any) {
       toast.error("Error buying subscription", {
@@ -36,34 +51,53 @@ const PaymentButton = ({
     }
   };
 
+  const openRazorpayPopUp = () => {
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
+      name: "Leadlly",
+      order_id: subscriptionId,
+      callback_url: appRedirectParam
+        ? `${appRedirectParam}?transaction=true`
+        : `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/verify`,
+      prefill: {
+        name: user.firstname || "",      
+        email: user.email || "",   
+        contact: user.phone || "",  
+      },  
+      modal: {
+        ondismiss: function () {
+          window.location.href = appRedirectParam
+            ? `${appRedirectParam}?transaction=cancelled`
+            : "/subscription-plans";
+        },
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#9654f4",
+      },
+    };
+
+    const razor = new window.Razorpay(options);
+    razor.open();
+  };
+
   useEffect(() => {
     if (subscriptionId) {
-      const openRazorpayPopUp = () => {
-        const options = {
-          key: process.env.RAZORPAY_API_KEY,
-          name: "Leadlly",
-          subscription_id: subscriptionId,
-          callback_url: `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscribe/verify`,
-          prefill: {
-            name: user.firstname,
-            email: user.email,
-            contact: "",
-          },
-          notes: {
-            address: "Razorpay Corporate Office",
-          },
-          theme: {
-            color: "#8563BF",
-          },
-        };
-
-        const razor = new window.Razorpay(options);
-        razor.open();
+      const loadAndOpenRazorpay = async () => {
+        const isLoaded = await loadRazorpayScript();
+        if (isLoaded) {
+          openRazorpayPopUp();
+        } else {
+          console.error("Razorpay script failed to load");
+        }
       };
 
-      openRazorpayPopUp();
+      loadAndOpenRazorpay();
     }
-  }, [subscriptionId, user.firstname, user.email]);
+  }, [subscriptionId]);
+
   return (
     <>
       <Script
