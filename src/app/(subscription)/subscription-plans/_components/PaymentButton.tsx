@@ -15,9 +15,11 @@ const PaymentButton = ({
   title,
   duration,
   user,
+  planId,
 }: {
   title: string;
   duration: string;
+  planId: string;
   user: UserDataProps;
 }) => {
   const [subscriptionId, setSubscriptionId] = useState("");
@@ -37,7 +39,8 @@ const PaymentButton = ({
     setIsLoading(true);
 
     try {
-      const data = await buySubscription(duration);
+      console.log(planId, "here is plan id")
+      const data = await buySubscription(planId);
       setSubscriptionId(data?.id);
     } catch (error: any) {
       toast.error("Error buying subscription", {
@@ -50,12 +53,17 @@ const PaymentButton = ({
 
   const openRazorpayPopUp = () => {
     const options = {
-      key: process.env.RAZORPAY_API_KEY,
+      key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
       name: "Leadlly",
-      subscription_id: subscriptionId,
+      order_id: subscriptionId,
       callback_url: appRedirectParam
         ? `${appRedirectParam}?transaction=true`
-        : `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscribe/verify`,
+        : `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/verify`,
+      prefill: {
+        name: user.firstname || "",      
+        email: user.email || "",   
+        contact: user.phone || "",  
+      },  
       modal: {
         ondismiss: function () {
           window.location.href = appRedirectParam
@@ -89,6 +97,7 @@ const PaymentButton = ({
       loadAndOpenRazorpay();
     }
   }, [subscriptionId]);
+
   return (
     <>
       <Script

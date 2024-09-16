@@ -7,6 +7,7 @@ type PlanPriceProps = {
   title: string;
   duration: string;
   amount: number;
+  planId: string
   className?: string;
 };
 
@@ -14,6 +15,7 @@ const PlanPriceBox = async ({
   title,
   duration,
   amount,
+  planId,
   className,
 }: PlanPriceProps) => {
   const userData = await getUser();
@@ -43,7 +45,7 @@ const PlanPriceBox = async ({
               : `year${Math.floor(Number(duration) / 12) === 1 ? "" : "s"}`}
           </p>
           <p className="text-lg lg:text-xl font-semibold text-[#6d6a6a]">
-            {amount}/- per month
+            {Math.round(amount / Number(duration))}/- per month
           </p>
         </div>
 
@@ -51,6 +53,7 @@ const PlanPriceBox = async ({
           <PaymentButton
             duration={duration}
             title={title}
+            planId={planId}
             user={userData.user}
           />
         </div>
