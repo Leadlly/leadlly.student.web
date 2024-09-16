@@ -111,6 +111,32 @@ export const resetPassword = async (
   }
 };
 
+export const verifyAuthToken = async (token: string) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/token/verify`,
+      {
+        method: "POST",
+        body: JSON.stringify({ token }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error verifying auth token: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while verifying auth token!");
+    }
+  }
+};
+
 export const getUser = async () => {
   const token = await getCookie("token");
   try {
