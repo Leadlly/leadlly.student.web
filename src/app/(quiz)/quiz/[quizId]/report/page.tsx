@@ -1,7 +1,7 @@
 // pages/report.tsx
 import { FC } from "react";
-import DesktopView from "./components/DesktopView";
 import Defaultview from "./components/Defaultview";
+import DesktopView from "./components/Defaultview";
 
 const Report: FC = () => {
   return (
@@ -13,7 +13,6 @@ const Report: FC = () => {
       <div className="h-full block xl:hidden md:pb-4">
         <Defaultview />
       </div>
-
     </div>
   );
 };
