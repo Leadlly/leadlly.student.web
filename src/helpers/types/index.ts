@@ -541,28 +541,37 @@ export interface QuestionOption {
 export interface Image {
   url: string;
   key: string;
-  _id:string
+  _id: string;
 }
 export interface EQuestion {
-    _id: string;
-    question: string;
-    options: QuestionOption[];
-    standard: number;
-    subject: string;
-    chapter: string[];
-    topics: string[];
-    subtopics: string[];
-    level: string;
-    images: Image[];
-    createdBy: string;
-    createdAt: string;
-    __v: number;
-  };
+  _id: string;
+  question: string;
+  options: QuestionOption[];
+  standard: number;
+  subject: string;
+  chapter: string[];
+  topics: string[];
+  subtopics: string[];
+  level: string;
+  images: Image[];
+  createdBy: string;
+  createdAt: string;
+  __v: number;
+}
 export interface ErrorBookQuestion {
   _id: string;
-  question: EQuestion
+  question: EQuestion;
 }
 export type ChapterErrorBookProps = {
   chapterErrorBook: ErrorBookQuestion[];
   chapterName: string;
 };
+
+export interface Plan {
+  id: string;
+  amount: number;
+  currency: string;
+  "duration(months)": string;
+  planId: string;
+  type: string;
+}
