@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import PaymentButton from "./PaymentButton";
-import { getUser } from "@/actions/user_actions";
+import { UserDataProps } from "@/helpers/types";
 
 type PlanPriceProps = {
   title: string;
   duration: string;
   amount: number;
-  planId: string
+  planId: string;
   className?: string;
+  setSubscriptionId: (subscriptionId: string) => void;
 };
 
 const PlanPriceBox = async ({
@@ -17,14 +17,15 @@ const PlanPriceBox = async ({
   amount,
   planId,
   className,
+  setSubscriptionId,
 }: PlanPriceProps) => {
-  const userData = await getUser();
   return (
     <div
       className={cn(
         "w-full md:w-72 bg-white rounded-xl shadow-[0_0_95px_-27px_rgba(150,84,244,0.2)] overflow-hidden",
         className
-      )}>
+      )}
+    >
       {title === "professional plan" && (
         <div className="bg-primary text-white text-base lg:text-lg font-semibold capitalize text-center py-2">
           <p>recommended !</p>
@@ -51,10 +52,9 @@ const PlanPriceBox = async ({
 
         <div className="grid place-items-center">
           <PaymentButton
-            duration={duration}
             title={title}
             planId={planId}
-            user={userData.user}
+            setSubscriptionId={setSubscriptionId}
           />
         </div>
       </div>
