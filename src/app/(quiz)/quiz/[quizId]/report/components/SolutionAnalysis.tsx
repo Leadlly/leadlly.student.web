@@ -2,54 +2,6 @@ import { CircleCheckBig, CircleX } from "lucide-react";
 import React from "react";
 
 const SolutionAnalysis = ({ question }: any) => {
-  console.log(question);
-  const solutions = [
-    {
-      question: "What is the capital of France?",
-      options: [
-        { answer: "Paris" },
-        { answer: "London" },
-        { answer: "Rome" },
-        { answer: "Berlin" },
-      ],
-      selected: 1,
-      correct: 0,
-    },
-    {
-      question: "What is 2 + 2?",
-      options: [
-        { answer: "3" },
-        { answer: "4" },
-        { answer: "5" },
-        { answer: "6" },
-      ],
-      selected: 2,
-      correct: 1,
-    },
-    {
-      question: "What is the capital of France?",
-      options: [
-        { answer: "Paris" },
-        { answer: "London" },
-        { answer: "Rome" },
-        { answer: "Berlin" },
-      ],
-      selected: 1,
-      correct: 1,
-    },
-    {
-      question: "What is 2 + 2?",
-      options: [
-        { answer: "3" },
-        { answer: "4" },
-        { answer: "5" },
-        { answer: "6" },
-      ],
-      selected: 1,
-      correct: 1,
-    },
-  ];
-
   return (
     <section className="shadow-section my-5 rounded-[10px] flex-1 p-6 md:p-10 lg:p-20 mx-5 md:mx-10 lg:mx-20">
       <h2 className="text-2xl font-semibold mb-4 text-[#9E9E9E]">

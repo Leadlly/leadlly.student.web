@@ -18,6 +18,10 @@ export type ReportSchema = {
   questions: string[];
   status: number;
   topicsWithEfficiency: topicWithEfficiency[];
+  score: number;
+  totalQuestions: number;
+  inCorrectAnswers: number;
+  correctAnswers: number;
 };
 
 const Defaultview = (props: Props) => {
@@ -40,6 +44,7 @@ const Defaultview = (props: Props) => {
     }
   }, [quizId, fetchQuizReport]);
 
+  console.log(report);
   return (
     <div>
       <header>
@@ -55,8 +60,12 @@ const Defaultview = (props: Props) => {
         </div>
       </header>
       <div className="flex flex-1 gap-5 max-md:mx-5">
-        <AttemptAnalysis />
-        <Score />
+        <AttemptAnalysis
+          correctAnswers={report?.correctAnswers}
+          incorrectAnswers={report?.inCorrectAnswers}
+          totalQuestions={report?.totalQuestions}
+        />
+        <Score score={report?.score} questions={report?.totalQuestions} />
       </div>
       {report && <SolutionAnalysis question={report.questions} />}
     </div>
