@@ -4,9 +4,9 @@ import apiClient from '@/apiClient/apiClient';
 
 export async function POST(req: NextRequest) {
   try {
+    const appRedirectParam = req.nextUrl.searchParams.get('appRedirectURI') || null;
+
     const formData = await req.formData();
-    
-    const appRedirectParam = await req.json();
     const razorpay_payment_id = formData.get("razorpay_payment_id") as string | null;
     const razorpay_order_id = formData.get("razorpay_order_id") as string | null;
     const razorpay_signature = formData.get("razorpay_signature") as string | null;
