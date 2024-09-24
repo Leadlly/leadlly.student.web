@@ -42,7 +42,7 @@ const SubscriptionPlansPage = ({
       key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
       name: "Leadlly",
       order_id: subscriptionId,
-      callback_url: `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}&user=${JSON.stringify(user)}`,
+      callback_url: `/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}`,
       prefill: {
         name: user ? user.firstname : "",
         email: user ? user.email : "",
