@@ -3,12 +3,14 @@
 import { revalidateTag } from "next/cache";
 import { getCookie } from "./cookie_actions";
 
-export const buySubscription = async (duration: string) => {
+export const buySubscription = async (planId: string) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/create?duration=${duration}`,
+
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/create?planId=${planId}`,
+
       {
         method: "POST",
         headers: {
@@ -28,6 +30,35 @@ export const buySubscription = async (duration: string) => {
       throw new Error(`Error buying subscription: ${error.message}`);
     } else {
       throw new Error("An unknown error occurred while buying subscription");
+    }
+  }
+};
+
+export const getPricing = async (pricingType: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/pricing/get?pricingType=${pricingType}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+
+    return data.pricing;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error fetching Pricing: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while fetching Pricing");
     }
   }
 };

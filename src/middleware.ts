@@ -1,10 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getUser } from "./actions/user_actions";
-import { getPlanner } from "./actions/planner_actions";
+import { getUser, verifyAuthToken } from "./actions/user_actions";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const searchParams = request.nextUrl.searchParams;
+
+  if (path.startsWith("/subscription-plans") && searchParams.has("token")) {
+    const token = searchParams.get("token");
+
+    try {
+      const response = await verifyAuthToken(token || "");
+
+      if (token && response.isValidToken) {
+        const response = NextResponse.next();
+
+        response.cookies.set("token", token, {
+          httpOnly: true,
+          path: "/",
+          sameSite: "strict",
+          expires: new Date("9999-12-31T23:59:59Z"),
+        });
+
+        return response;
+      } else {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+    } catch (error) {
+      console.error("Error verifying token:", error);
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
 
   const token = getTokenFromStorage(request);
   const userData = await getUser();
@@ -59,8 +85,7 @@ export async function middleware(request: NextRequest) {
     path !== "/trial-subscription" &&
     path !== "/initial-info"
   ) {
-
-    const isPlanner = userData.user?.planner === true
+    const isPlanner = userData.user?.planner === true;
 
     if (!isPlanner && path !== "/initial-study-data") {
       return NextResponse.redirect(
