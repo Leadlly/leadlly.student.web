@@ -8,7 +8,7 @@ export const buySubscription = async (duration: string) => {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscribe/create?duration=${duration}`,
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/create?duration=${duration}`,
       {
         method: "POST",
         headers: {
@@ -37,7 +37,7 @@ export const getFreeTrialActive = async () => {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscribe/freetrial`,
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/freetrial`,
       {
         method: "GET",
         headers: {
@@ -49,10 +49,17 @@ export const getFreeTrialActive = async () => {
       }
     );
 
+    // Log the response status for debugging
+    console.log(`Response status: ${res.status}`);
+
+    if (!res.ok) {
+      const errorText = await res.text(); // Capture the response text for more details
+      throw new Error(`Failed to fetch free trial: ${errorText}`);
+    }
+
     const data = await res.json();
-
     revalidateTag("userData");
-
+    
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -62,3 +69,5 @@ export const getFreeTrialActive = async () => {
     }
   }
 };
+
+
