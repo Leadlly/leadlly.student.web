@@ -99,21 +99,35 @@ export default function StudentInitialInfoForm() {
   const [formData, setFormData] = useState({
     phone: '',
     gender: '',
-    standard: '',
+    class: '',
     competitiveExam: '',
     studentSchedule: ''
   })
 
-  
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+  const handleSelectChange = (field: string, value: string) => {
+    let mappedValue: string | number = value;
+
+    if (field === 'class') {
+      if (value === 'Eleven') mappedValue = 11;
+      else if (value === 'Twelve') mappedValue = 12;
+      else if (value === 'Dropper') mappedValue = 'Dropper';
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: mappedValue,
+    }));
+  };
+
+
+
 
   const handleNext = () => {
     setStep(prev => Math.min(prev + 1, 6))
@@ -125,22 +139,22 @@ export default function StudentInitialInfoForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (step < 5) {
       handleNext();
       return;
     }
-  
-    const submissionData = { 
-      ...formData, 
-      standard: Number(formData.standard),  // This should already have the correct standard
-      phone: Number(formData.phone)
+
+    const submissionData = {
+      ...formData,
+      class: formData.class === 'Dropper' ? undefined : Number(formData.class),
+      phone: Number(formData.phone),
     };
-  
+
     try {
       const responseData = await studentPersonalInfo(submissionData);
       toast.success(responseData.message);
-  
+
       const trialData = await getFreeTrialActive();
       toast.success(trialData.message);
       router.push('/');
@@ -148,7 +162,7 @@ export default function StudentInitialInfoForm() {
       toast.error("Unable to save information! " + (error as Error).message);
     }
   };
-  
+
 
 
 
@@ -227,129 +241,130 @@ export default function StudentInitialInfoForm() {
                   </div>
                 )}
 
-               
 
-{step === 2 && (
-  <div className="space-y-4 flex flex-col items-center justify-center">
-    <h2 className="text-2xl font-bold mb-2">What is your Gender?</h2>
-    <p className="text-gray-600 text-center mb-4">
-      Select your gender from the given below options
-    </p>
-    <RadioGroup
-      onValueChange={(value) => handleSelectChange('gender', value)}
-      value={formData.gender}
-      className="flex flex-col items-center space-y-4"
-    >
-      <div className="flex gap-[50px] space-x-4">
-        {['Female', 'Male'].map((gender) => (
-          <button
-            onClick={() => handleSelectChange('gender', gender)}
-            key={gender}
-            className="flex flex-col items-center"
-          >
-            <RadioGroupItem value={gender} id={gender} className="sr-only" />
-            <Label
-              htmlFor={gender}
-              className={`cursor-pointer flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.gender === gender ? 'border-purple-500' : 'border-gray-200'
-                }`}
-              style={{ width: '143px', height: '140px' }} // Set the width and height here
-            >
-              <Image
-                src={genderImages[gender as keyof GenderImages]}
-                alt={gender}
-                width={80} // Adjust width as necessary
-                height={80} // Adjust height as necessary
-                className="mb-2"
-              />
-              <span className="capitalize text-center">{gender}</span>
-            </Label>
-          </button>
-        ))}
-      </div>
-      <div className="flex justify-center">
-        <button
-          onClick={() => handleSelectChange('gender', 'Other')}
-          className="flex flex-col items-center"
-        >
-          <RadioGroupItem value="Other" id="Other" className="sr-only" />
-          <Label
-            htmlFor="Other"
-            className={`cursor-pointer flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.gender === 'Other' ? 'border-purple-500' : 'border-gray-200'
-              }`}
-            style={{ width: '143px', height: '140px' }} // Set the width and height here
-          >
-            <Image
-              src={genderImages['Other']}
-              alt="Other"
-              width={80} // Adjust width as necessary
-              height={80} // Adjust height as necessary
-              className="mb-2"
-            />
-            <span className="capitalize text-center">Other</span>
-          </Label>
-        </button>
-      </div>
-    </RadioGroup>
-  </div>
-)}
 
-{step === 3 && (
-  <div className="space-y-4 flex flex-col items-center justify-center">
-    <h2 className="text-2xl font-bold mb-2">Which class are you studying?</h2>
-    <p className="text-gray-600 text-center mb-4">
-      Focus on core topics with hands-on practice and real-world examples for deeper understanding.
-    </p>
-    <div className="flex flex-col items-center">
-      <div className="flex gap-[50px] space-x-4 mb-4">
-      {['Eleven', 'Twelve'].map((classOption) => (
-  <button
-    key={classOption}
-    type="button"
-    onClick={() => {
-      handleSelectChange('standard', classOption);
-      handleNext();
-    }}
-    className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.standard === classOption ? 'border-purple-500' : 'border-gray-200'
-    }`}
-    style={{ width: '140px', height: '140px' }}
-  >
-    <Image
-      src={classImage[classOption as keyof ClassImage]}
-      alt={classOption}
-      width={113}
-      height={113}
-      className="mb-2"
-    />
-    <span className="capitalize">{classOption}</span>
-  </button>
-))}
+                {step === 2 && (
+                  <div className="space-y-4 flex flex-col items-center justify-center">
+                    <h2 className="text-2xl font-bold mb-2">What is your Gender?</h2>
+                    <p className="text-gray-600 text-center mb-4">
+                      Select your gender from the given below options
+                    </p>
+                    <RadioGroup
+                      onValueChange={(value) => handleSelectChange('gender', value)}
+                      value={formData.gender}
+                      className="flex flex-col items-center space-y-4"
+                    >
+                      <div className="flex gap-[50px] space-x-4">
+                        {['Female', 'Male'].map((gender) => (
+                          <button
+                            onClick={() => handleSelectChange('gender', gender)}
+                            key={gender}
+                            className="flex flex-col items-center"
+                          >
+                            <RadioGroupItem value={gender} id={gender} className="sr-only" />
+                            <Label
+                              htmlFor={gender}
+                              className={`cursor-pointer flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.gender === gender ? 'border-purple-500' : 'border-gray-200'
+                                }`}
+                              style={{ width: '143px', height: '140px' }}
+                            >
+                              <Image
+                                src={genderImages[gender as keyof GenderImages]}
+                                alt={gender}
+                                width={80} 
+                                height={80} 
+                                className="mb-2"
+                              />
+                              <span className="capitalize text-center">{gender}</span>
+                            </Label>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex justify-center">
+                        <button
+                          onClick={() => handleSelectChange('gender', 'Other')}
+                          className="flex flex-col items-center"
+                        >
+                          <RadioGroupItem value="Other" id="Other" className="sr-only" />
+                          <Label
+                            htmlFor="Other"
+                            className={`cursor-pointer flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.gender === 'Other' ? 'border-purple-500' : 'border-gray-200'
+                              }`}
+                            style={{ width: '143px', height: '140px' }} 
+                          >
+                            <Image
+                              src={genderImages['Other']}
+                              alt="Other"
+                              width={80}
+                              height={80}
+                              className="mb-2"
+                            />
+                            <span className="capitalize text-center">Other</span>
+                          </Label>
+                        </button>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                )}
 
-      </div>
-      <div className="flex justify-center">
-        <button
-          key="Dropper"
-          type="button"
-          onClick={() => {
-            handleSelectChange('standard', 'Dropper');
-            handleNext();
-          }}
-          className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.standard === 'Dropper' ? 'border-purple-500' : 'border-gray-200'
-            }`}
-          style={{ width: '140px', height: '140px' }} // Set the width and height here
-        >
-          <Image
-            src={classImage['Dropper']} // Use dynamic image for 'Dropper'
-            alt="Dropper"
-            width={64} // Adjust width as necessary
-            height={64} // Adjust height as necessary
-            className="mb-2"
-          />
-          <span className="capitalize">Dropper</span>
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                {step === 3 && (
+                  <div className="space-y-4 flex flex-col items-center justify-center">
+                    <h2 className="text-2xl font-bold mb-2">Which class are you studying?</h2>
+                    <p className="text-gray-600 text-center mb-4">
+                      Focus on core topics with hands-on practice and real-world examples for deeper understanding.
+                    </p>
+                    <div className="flex flex-col items-center">
+                      <div className="flex gap-[50px] space-x-4 mb-4">
+                        {['Eleven', 'Twelve'].map((classOption) => (
+                          <button
+                            key={classOption}
+                            type="button"
+                            onClick={() => {
+                              handleSelectChange('class', classOption);
+                              handleNext(); // Proceed to next step
+                            }}
+                            className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.class === classOption ? 'border-purple-500' : 'border-gray-200'
+                              }`}
+                            style={{ width: '140px', height: '140px' }}
+                          >
+                            <Image
+                              src={classImage[classOption as keyof ClassImage]}
+                              alt={classOption}
+                              width={113}
+                              height={113}
+                              className="mb-2"
+                            />
+                            <span className="capitalize">{classOption}</span>
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="flex justify-center">
+                        <button
+                          key="Dropper"
+                          type="button"
+                          onClick={() => {
+                            handleSelectChange('class', 'Dropper'); // Update class in formData
+                            handleNext(); // Proceed to next step
+                          }}
+                          className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.class === 'Dropper' ? 'border-purple-500' : 'border-gray-200'
+                            }`}
+                          style={{ width: '140px', height: '140px' }}
+                        >
+                          <Image
+                            src={classImage['Dropper']}
+                            alt="Dropper"
+                            width={64}
+                            height={64}
+                            className="mb-2"
+                          />
+                          <span className="capitalize">Dropper</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
 
                 {step === 4 && (
                   <div className="space-y-4 flex flex-col items-center justify-center">
@@ -371,16 +386,15 @@ export default function StudentInitialInfoForm() {
                           style={{
                             width: '140px',
                             height: '180px',
-                            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Added shadow
+                            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                           }}
                         >
-                          {/* Main text with dynamic color */}
                           <div
                             className="flex items-center justify-center"
                             style={{
                               width: '100%',
                               height: '70%',
-                              color: exam === 'jee' ? '#2D61FD' : '#06E480', // JEE and NEET color
+                              color: exam === 'jee' ? '#2D61FD' : '#06E480',
                               fontSize: '24px',
                               fontWeight: 'bold',
                             }}
@@ -388,7 +402,6 @@ export default function StudentInitialInfoForm() {
                             {exam.toUpperCase()}
                           </div>
 
-                          {/* Top-right image */}
                           <Image
                             src={examImages[exam as keyof ExamImages].topRight}
                             alt={`${exam}-top-right`}
@@ -397,7 +410,6 @@ export default function StudentInitialInfoForm() {
                             className="absolute top-[-0.5rem] right-[-0.5rem] overflow-hidden"
                           />
 
-                          {/* Bottom-left image */}
                           <Image
                             src={examImages[exam as keyof ExamImages].bottomLeft}
                             alt={`${exam}-bottom-left`}
@@ -411,33 +423,33 @@ export default function StudentInitialInfoForm() {
                   </div>
                 )}
 
-               {step === 5 && (
-  <div className="space-y-4">
-    <h1 className="text-2xl text-center font-bold mb-4">Schedule you follow?</h1>
-    <p className="text-gray-600 text-center mb-4">Focus on core topics with hands-on practice and real-world examples for deeper understanding.</p>
-    <div className="flex flex-col w-full space-y-4">
-      {['School + Coaching + Self-study', 'Coaching + Self-study', 'School + Self-study', 'Only Self-study'].map((schedule, index) => (
-        <Button
-          key={index}
-          type="button"
-          onClick={() => handleSelectChange('studentSchedule', schedule)}
-          variant={formData.studentSchedule === schedule ? 'default' : 'outline'}
-          className="w-full h-16 shadow-none flex items-center justify-start pl-4 text-[16px] font-semibold"
-        >
-          {schedule}
-        </Button>
-      ))}
-    </div>
-    <div className="flex justify-center"> {/* Centering the button */}
-      <Button
-        type="submit"
-        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6"
-      >
-        Finish
-      </Button>
-    </div>
-  </div>
-)}
+                {step === 5 && (
+                  <div className="space-y-4">
+                    <h1 className="text-2xl text-center font-bold mb-4">Schedule you follow?</h1>
+                    <p className="text-gray-600 text-center mb-4">Focus on core topics with hands-on practice and real-world examples for deeper understanding.</p>
+                    <div className="flex flex-col w-full space-y-4">
+                      {['School + Coaching + Self-study', 'Coaching + Self-study', 'School + Self-study', 'Only Self-study'].map((schedule, index) => (
+                        <Button
+                          key={index}
+                          type="button"
+                          onClick={() => handleSelectChange('studentSchedule', schedule)}
+                          variant={formData.studentSchedule === schedule ? 'default' : 'outline'}
+                          className="w-full h-16 shadow-none flex items-center justify-start pl-4 text-[16px] font-semibold"
+                        >
+                          {schedule}
+                        </Button>
+                      ))}
+                    </div>
+                    <div className="flex justify-center">
+                      <Button
+                        type="submit"
+                        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6"
+                      >
+                        Finish
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </form>
 
             </div>
