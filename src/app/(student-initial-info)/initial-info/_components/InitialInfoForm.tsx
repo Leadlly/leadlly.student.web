@@ -97,6 +97,8 @@ const examImages: ExamImages = {
 export default function StudentInitialInfoForm() {
   const router = useRouter();
   const [step, setStep] = useState(1)
+  const [error, setError] = useState('');
+  const [errors, setErrors] = useState(false);
   const [formData, setFormData] = useState({
     phone: '',
     gender: '',
@@ -113,22 +115,11 @@ export default function StudentInitialInfoForm() {
   }
 
   const handleSelectChange = (field: string, value: string) => {
-    let mappedValue: string | number = value;
-
-    if (field === 'class') {
-      if (value === 'Eleven') mappedValue = 11;
-      else if (value === 'Twelve') mappedValue = 12;
-      else if (value === 'Dropper') mappedValue = 'Dropper';
-    }
-
     setFormData((prevData) => ({
       ...prevData,
-      [field]: mappedValue,
+      [field]: value,
     }));
   };
-
-
-
 
   const handleNext = () => {
     setStep(prev => Math.min(prev + 1, 6))
@@ -146,9 +137,13 @@ export default function StudentInitialInfoForm() {
       return;
     }
 
+    const classValue = formData.class === 'Dropper' ? undefined :
+      (formData.class === 'Eleven' ? 11 :
+        (formData.class === 'Twelve' ? 12 : undefined));
+
     const submissionData = {
       ...formData,
-      class: formData.class === 'Dropper' ? undefined : Number(formData.class),
+      class: classValue,
       phone: Number(formData.phone),
     };
 
@@ -163,6 +158,15 @@ export default function StudentInitialInfoForm() {
       toast.error("Unable to save information! " + (error as Error).message);
     }
   };
+
+  <Button
+    type="submit"
+    onClick={handleSubmit}
+    className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6"
+  >
+    Finish
+  </Button>
+
 
   const { src, width, height } = stepImages[step] || { src: '', width: 400, height: 400 }
 
@@ -206,10 +210,6 @@ export default function StudentInitialInfoForm() {
                 className="mx-auto w-full max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[100%] xl:max-w-[70%]"
               />
             </div>
-
-
-
-
             <div className="lg:w-1/2 lg:pl-8 justify-center flex items-center">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {step === 1 && (
@@ -218,10 +218,10 @@ export default function StudentInitialInfoForm() {
                       Enter Your Phone Number?
                     </h2>
 
-
                     <p className="text-gray-600 text-center mb-6">
                       We need to register your phone number before getting started!
                     </p>
+
                     <div className="flex items-center mb-4 border border-input rounded-md">
                       <Select
                         value="+91"
@@ -236,7 +236,7 @@ export default function StudentInitialInfoForm() {
                           <SelectItem value="+44">+44</SelectItem>
                         </SelectContent>
                       </Select>
-                      <div className="h-8 w-[1px] bg-gray-500 rounded-l-md"></div>
+
                       <input
                         type="tel"
                         name="phone"
@@ -244,20 +244,33 @@ export default function StudentInitialInfoForm() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="flex items-center px-4 py-2 h-11 bg-background w-full rounded-r-md border-none focus:outline-none focus:ring-0"
+                        required
+                        maxLength={10}
+                        pattern="[0-9]{10}"
                       />
                     </div>
 
+                    {error && (
+                      <p className="text-red-500 text-sm mb-4">{error}</p>
+                    )}
+
                     <Button
-                      onClick={step < 5 ? handleNext : handleSubmit}
+                      onClick={() => {
+                        if (!formData.phone) {
+                          setError('Phone number is required');
+                        } else if (formData.phone.length !== 10) {
+                          setError('Phone number must be exactly 10 digits');
+                        } else {
+                          setError('');
+                          handleNext();
+                        }
+                      }}
                       className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3"
                     >
-                      {step < 5 ? 'Next' : 'Finish'}
+                      {step < 5 ? 'Confirm' : 'Finish'}
                     </Button>
                   </div>
                 )}
-
-
-
                 {step === 2 && (
                   <div className="space-y-4 flex flex-col items-center justify-center">
                     <h2 className="text-3xl lg:text-4xl font-bold mb-2">What is your Gender?</h2>
@@ -279,7 +292,7 @@ export default function StudentInitialInfoForm() {
                             <RadioGroupItem value={gender} id={gender} className="sr-only" />
                             <Label
                               htmlFor={gender}
-                              className={`cursor-pointer flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.gender === gender ? 'border-purple-500' : 'border-none'} bg-gray-100`}
+                              className={`cursor-pointer flex flex-col justify-center items-center p-6 border-2 rounded-lg ${formData.gender === gender ? 'border-purple-500' : 'border-none'} bg-gray-50`}
                               style={{ width: '120px', height: '120px' }}
                             >
 
@@ -288,7 +301,7 @@ export default function StudentInitialInfoForm() {
                                 alt={gender}
                                 width={100}
                                 height={100}
-                                className="mb-2"
+                                className="mb-1"
                               />
                               <span className="capitalize text-center text-lg lg:text-xl">{gender}</span>
                             </Label>
@@ -303,14 +316,14 @@ export default function StudentInitialInfoForm() {
                           <RadioGroupItem value="Other" id="Other" className="sr-only" />
                           <Label
                             htmlFor="Other"
-                            className={`cursor-pointer flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.gender === 'Other' ? 'border-purple-500' : 'border-none'} bg-gray-100`}
+                            className={`cursor-pointer flex flex-col justify-center items-center p-6 border-2 rounded-lg ${formData.gender === 'Other' ? 'border-purple-500' : 'border-none'} bg-gray-50`}
                             style={{ width: '120px', height: '120px' }}
                           >
                             <Image
                               src={genderImages['Other']}
                               alt="Other"
-                              width={100} // Increased image width
-                              height={100} // Increased image height
+                              width={100}
+                              height={100}
                               className="mb-1"
                             />
                             <span className="capitalize text-center text-lg lg:text-xl">Other</span>
@@ -320,8 +333,6 @@ export default function StudentInitialInfoForm() {
                     </RadioGroup>
                   </div>
                 )}
-
-
                 {step === 3 && (
                   <div className="space-y-4 flex flex-col items-center justify-center">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl text-center font-bold mb-4 whitespace-nowrap">Which class are you studying?</h2>
@@ -338,7 +349,8 @@ export default function StudentInitialInfoForm() {
                               handleSelectChange('class', classOption);
                               handleNext();
                             }}
-                            className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.class === classOption ? 'border-purple-500' : 'border-none'} bg-gray-100`}
+                            className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg 
+        ${formData.class === classOption ? 'border-purple-500' : 'border-none'} bg-gray-50`}
                             style={{ width: '120px', height: '120px' }}
                           >
                             <Image
@@ -346,13 +358,12 @@ export default function StudentInitialInfoForm() {
                               alt={classOption}
                               width={113}
                               height={113}
-                              className="mb-2"
+                              className="mb-1"
                             />
                             <span className="capitalize text-base lg:text-xl">{classOption}</span>
                           </button>
                         ))}
                       </div>
-
 
                       <div className="flex justify-center">
                         <button
@@ -362,8 +373,8 @@ export default function StudentInitialInfoForm() {
                             handleSelectChange('class', 'Dropper');
                             handleNext();
                           }}
-                          className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.class === 'Dropper' ? 'border-purple-500' : 'border-none'} bg-gray-100`}
-                          style={{ width: '140px', height: '140px' }}
+                          className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.class === 'Dropper' ? 'border-purple-500' : 'border-none'} bg-gray-50`}
+                          style={{ width: '120px', height: '120px' }}
                         >
                           <Image
                             src={classImage['Dropper']}
@@ -378,9 +389,6 @@ export default function StudentInitialInfoForm() {
                     </div>
                   </div>
                 )}
-
-
-
                 {step === 4 && (
                   <div className="space-y-4 flex flex-col items-center justify-center">
                     <h2 className="text-2xl font-bold mb-2">Are your Studying for?</h2>
@@ -397,7 +405,7 @@ export default function StudentInitialInfoForm() {
                             handleSelectChange('competitiveExam', exam);
                             handleNext();
                           }}
-                          className={`relative flex flex-col justify-center items-center p-4 border-2 rounded-lg shadow-md ${formData.competitiveExam === exam ? 'border-purple-500' : 'border-none'} bg-gray-100`}
+                          className={`relative flex flex-col justify-center items-center p-4 border-2 rounded-lg shadow-md ${formData.competitiveExam === exam ? 'border-purple-500' : 'border-none'} bg-gray-50`}
                           style={{
                             width: '140px',
                             height: '180px',
@@ -438,34 +446,67 @@ export default function StudentInitialInfoForm() {
 
                   </div>
                 )}
-
                 {step === 5 && (
                   <div className="space-y-4">
                     <h1 className="text-2xl text-center font-bold mb-4">Schedule you follow?</h1>
-                    <p className="text-gray-600 text-center mb-4 text-sm sm:text-base md:text-lg">Focus on core topics with hands-on practice and real-world examples for deeper understanding.</p>
+                    <p className="text-gray-600 text-center mb-4 text-sm sm:text-base md:text-lg">
+                      Focus on core topics with hands-on practice and real-world examples for deeper understanding.
+                    </p>
+
                     <div className="flex flex-col w-full space-y-4">
                       {['School + Coaching + Self-study', 'Coaching + Self-study', 'School + Self-study', 'Only Self-study'].map((schedule, index) => (
                         <Button
                           key={index}
                           type="button"
-                          onClick={() => handleSelectChange('studentSchedule', schedule)}
+                          onClick={() => {
+                            handleSelectChange('studentSchedule', schedule);
+                            setErrors(false);
+                          }}
                           variant={formData.studentSchedule === schedule ? 'default' : 'outline'}
-                          className="w-full h-16 shadow-none flex items-center justify-start pl-4 text-[16px] font-semibold"
+                          className={`w-full h-16 shadow-none flex items-center justify-start pl-4 text-[16px] font-semibold
+        ${formData.studentSchedule === schedule ? 'border-purple-500' : 'border-none'}`}
                         >
                           {schedule}
                         </Button>
                       ))}
                     </div>
+
+                    {errors && (
+                      <p className="text-red-500 text-center mb-4">Please select a schedule to proceed.</p>
+                    )}
                     <div className="flex justify-center">
                       <Button
                         type="submit"
-                        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6"
+                        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6 flex items-center justify-center"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (!formData.studentSchedule) {
+                            setErrors(true);
+                          } else {
+                            handleSubmit(e);
+                          }
+                        }}
                       >
-                        Finish
+                        Next
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                          stroke="currentColor"
+                          className="w-5 h-5 ml-2">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
                       </Button>
+
                     </div>
                   </div>
                 )}
+
               </form>
 
             </div>
