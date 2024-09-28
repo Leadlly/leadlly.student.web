@@ -7,7 +7,7 @@ const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const DonutChart = ({ data }: { data: Chapter }) => {
   const seriesArray = [
-    data.plannerFrequency!,
+    data.overall_progress!,
     data.overall_efficiency!,
     data.total_questions_solved.percentage!,
   ];

@@ -190,6 +190,7 @@ export type UserDataProps = {
   firstname: string;
   lastname?: string;
   email: string;
+  category: 'basic' | 'pro' | 'premium' | 'free' | null;
   phone: {
     personal?: number;
     other?: number;
@@ -220,7 +221,7 @@ export type UserDataProps = {
   details?: {
     level?: { number: number };
     points?: { number: number };
-    streak?: { number: number };
+    streak?: { number: number, updatedAt: Date};
     mood?: Array<{
       day: string;
       emoji: string;
@@ -240,14 +241,24 @@ export type UserDataProps = {
   }>;
   points?: number;
   subscription: {
-    type?: string;
-    id?: string;
-    status?: string;
-    dateOfActivation?: Date;
+    id?: string; 
+    status?: string; 
+    planId?: string; 
+    duration: number; 
+    dateOfActivation?: Date; 
+    dateOfDeactivation?: Date; 
+    coupon?: string;
+  
+    upgradation?: {
+      previousPlanId?: string; 
+      previousDuration?: number; 
+      dateOfUpgradation?: Date; 
+      addedDuration?: number; 
+    };
   };
   freeTrial: {
-    availed?: Boolean;
-    active?: Boolean;
+    availed?: boolean;
+    active?: boolean;
     dateOfActivation?: Date;
     dateOfDeactivation?: Date;
   };
