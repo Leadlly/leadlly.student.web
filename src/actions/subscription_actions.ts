@@ -8,7 +8,9 @@ export const buySubscription = async (planId: string) => {
 
   try {
     const res = await fetch(
+
       `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/create?planId=${planId}`,
+
       {
         method: "POST",
         headers: {
@@ -78,10 +80,17 @@ export const getFreeTrialActive = async () => {
       }
     );
 
+    // Log the response status for debugging
+    console.log(`Response status: ${res.status}`);
+
+    if (!res.ok) {
+      const errorText = await res.text(); // Capture the response text for more details
+      throw new Error(`Failed to fetch free trial: ${errorText}`);
+    }
+
     const data = await res.json();
-
     revalidateTag("userData");
-
+    
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -91,3 +100,5 @@ export const getFreeTrialActive = async () => {
     }
   }
 };
+
+
