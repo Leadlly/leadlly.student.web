@@ -149,7 +149,7 @@ export const getUser = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
+        // cache: "force-cache",
         next: {
           tags: ["userData"],
         },
