@@ -62,7 +62,7 @@ const Quiz = ({
       quizId,
       topic: { name: questions[currentQuestion].topics[0] },
       question: {
-        question: questions[currentQuestion],
+        question: questions[currentQuestion]._id,
         studentAnswer: selectedOption?.name!,
         isCorrect: selectedOption?.tag === "Correct",
         tag: "weekly_quiz",
