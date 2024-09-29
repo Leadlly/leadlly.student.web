@@ -106,7 +106,7 @@ export type TQuizQuestionProps = {
 };
 
 export type TQuizAnswerProps = {
-  question: TQuizQuestionProps;
+  question: string;
   studentAnswer: string;
   isCorrect: boolean;
   tag: string;
