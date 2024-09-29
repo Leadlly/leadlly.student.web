@@ -1,68 +1,61 @@
 import { CircleCheckBig, CircleX } from "lucide-react";
 import React from "react";
 
-const SolutionAnalysis = () => {
-  const solutions = [
-    {
-      question: "What is the capital of France?",
-      options: [
-        { answer: "Paris" },
-        { answer: "London" },
-        { answer: "Rome" },
-        { answer: "Berlin" },
-      ],
-      selected: 1,
-      correct: 0,
-    },
-    {
-      question: "What is 2 + 2?",
-      options: [
-        { answer: "3" },
-        { answer: "4" },
-        { answer: "5" },
-        { answer: "6" },
-      ],
-      selected: 2,
-      correct: 1,
-    },
-    {
-      question: "What is the capital of France?",
-      options: [
-        { answer: "Paris" },
-        { answer: "London" },
-        { answer: "Rome" },
-        { answer: "Berlin" },
-      ],
-      selected: 1,
-      correct: 1,
-    },
-    {
-      question: "What is 2 + 2?",
-      options: [
-        { answer: "3" },
-        { answer: "4" },
-        { answer: "5" },
-        { answer: "6" },
-      ],
-      selected: 1,
-      correct: 1,
-    },
-  ];
-
+const SolutionAnalysis = ({ question }: any) => {
   return (
     <section className="shadow-section my-5 rounded-[10px] flex-1 p-6 md:p-10 lg:p-20 mx-5 md:mx-10 lg:mx-20">
       <h2 className="text-2xl font-semibold mb-4 text-[#9E9E9E]">
         Solution Analysis
       </h2>
+
       <div className="space-y-5 md:space-y-10 p-2 md:p-5">
-        {solutions.map((solution, index) => (
+        {question.map((quest: any, index: any) => (
           <div key={index} className="flex flex-col gap-3">
             <p className="font-semibold text-[#7C7C7C] text-lg md:text-xl">{`Question ${index + 1}`}</p>
-            <p className="font-semibold text-lg md:text-xl">
-              {solution.question}
-            </p>
-            {solution.options.map((option, optIndex) => (
-              <div
+            <div
+              className="font-semibold text-lg md:text-xl"
+              dangerouslySetInnerHTML={{ __html: quest.question.question }}
+            ></div>
+
+            <div className="mt-2">
+              {quest.question.options.map((option: any, index: number) => (
+                <div
+                  key={option._id}
+                  className={`p-4 md:p-7 relative font-medium max-w-[600px] flex justify-between mb-2 rounded-[6px] border-2 ${
+                    option.tag === "Correct"
+                      ? "border-green-500"
+                      : quest.isCorrect
+                        ? "border-gray-200"
+                        : quest.studentAnswer === option.name
+                          ? "border-red-500"
+                          : "border-gray-200"
+                  }`}
+                >
+                  {option.images ? (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: option.images }}
+                    ></div>
+                  ) : (
+                    <>
+                      <div
+                        className="flex items-center justify-between"
+                        dangerouslySetInnerHTML={{
+                          __html: option.name,
+                        }}
+                      ></div>
+
+                      {option.tag === "Correct" ? (
+                        <CircleCheckBig className="size-5 absolute -top-[9px] right-[5%] fill-green-600 stroke-green-300" />
+                      ) : quest.studentAnswer === option.name ? (
+                        <CircleX className="size-5 absolute -top-[10px] right-[5%] fill-red-600 stroke-white bg-transparent" />
+                      ) : null}
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* <div
                 key={optIndex}
                 className={`p-4 md:p-7 relative font-medium max-w-[600px] flex justify-between mb-2 rounded-[6px] border ${
                   optIndex === solution.correct
@@ -89,13 +82,13 @@ const SolutionAnalysis = () => {
                 )}{" "}
                 {optIndex === solution.selected ? (
                   solution.selected !== solution.correct ? (
-                    <CircleX className="size-5 absolute -top-[10px] right-[5%] fill-red-600 stroke-white bg-transparent" />
+                    
                   ) : solution.selected === solution.correct ? (
                     <CircleCheckBig className="size-5 absolute -top-[9px] right-[5%] fill-green-600 stroke-green-300" />
                   ) : null
                 ) : null}
               </div>
-            ))}
+            ))} */}
           </div>
         ))}
       </div>

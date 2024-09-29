@@ -1,10 +1,8 @@
 import DateIcon from "@/components/icons/DateIcon";
-import BackButton from "./BackButton";
 import TimeIcon from "@/components/icons/TimeIcon";
 import QuestionIcon from "@/components/icons/Questionicon";
 import TrophyIcon from "@/components/icons/TrophyIcon";
 import EfficiencyIcon from "@/components/icons/EfficiencyIcon";
-
 const QuizDetails = () => {
   return (
     <>
