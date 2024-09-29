@@ -106,7 +106,7 @@ export type TQuizQuestionProps = {
 };
 
 export type TQuizAnswerProps = {
-  question: TQuizQuestionProps;
+  question: string;
   studentAnswer: string;
   isCorrect: boolean;
   tag: string;
@@ -190,6 +190,7 @@ export type UserDataProps = {
   firstname: string;
   lastname?: string;
   email: string;
+  category: 'basic' | 'pro' | 'premium' | 'free' | null;
   phone: {
     personal?: number;
     other?: number;
@@ -220,7 +221,7 @@ export type UserDataProps = {
   details?: {
     level?: { number: number };
     points?: { number: number };
-    streak?: { number: number };
+    streak?: { number: number, updatedAt: Date};
     mood?: Array<{
       day: string;
       emoji: string;
@@ -240,14 +241,24 @@ export type UserDataProps = {
   }>;
   points?: number;
   subscription: {
-    type?: string;
-    id?: string;
-    status?: string;
-    dateOfActivation?: Date;
+    id?: string; 
+    status?: string; 
+    planId?: string; 
+    duration: number; 
+    dateOfActivation?: Date; 
+    dateOfDeactivation?: Date; 
+    coupon?: string;
+  
+    upgradation?: {
+      previousPlanId?: string; 
+      previousDuration?: number; 
+      dateOfUpgradation?: Date; 
+      addedDuration?: number; 
+    };
   };
   freeTrial: {
-    availed?: Boolean;
-    active?: Boolean;
+    availed?: boolean;
+    active?: boolean;
     dateOfActivation?: Date;
     dateOfDeactivation?: Date;
   };
@@ -541,28 +552,37 @@ export interface QuestionOption {
 export interface Image {
   url: string;
   key: string;
-  _id:string
+  _id: string;
 }
 export interface EQuestion {
-    _id: string;
-    question: string;
-    options: QuestionOption[];
-    standard: number;
-    subject: string;
-    chapter: string[];
-    topics: string[];
-    subtopics: string[];
-    level: string;
-    images: Image[];
-    createdBy: string;
-    createdAt: string;
-    __v: number;
-  };
+  _id: string;
+  question: string;
+  options: QuestionOption[];
+  standard: number;
+  subject: string;
+  chapter: string[];
+  topics: string[];
+  subtopics: string[];
+  level: string;
+  images: Image[];
+  createdBy: string;
+  createdAt: string;
+  __v: number;
+}
 export interface ErrorBookQuestion {
   _id: string;
-  question: EQuestion
+  question: EQuestion;
 }
 export type ChapterErrorBookProps = {
   chapterErrorBook: ErrorBookQuestion[];
   chapterName: string;
 };
+
+export interface Plan {
+  id: string;
+  amount: number;
+  currency: string;
+  "duration(months)": string;
+  planId: string;
+  type: string;
+}

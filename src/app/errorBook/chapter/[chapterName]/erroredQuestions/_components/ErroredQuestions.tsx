@@ -8,7 +8,7 @@ const ErroredQuestions = ({
 }: {
   chapterErrorBook: ErrorBookQuestion[];
 }) => {
-  console.log(chapterErrorBook);
+  console.log(chapterErrorBook, chapterErrorBook.map(question => JSON.stringify(question.question)),"here is you erorr book");
   return (
     <section className="p-5 lg:p-10  ">
       <h2 className="text-2xl font-semibold mb-4 text-[#000000]">
@@ -25,7 +25,7 @@ const ErroredQuestions = ({
                 __html: solvedQuestion.question.question,
               }}
             ></div>
-            {solvedQuestion.question.images.map((image, index) => {
+            {solvedQuestion.question.images?.map((image, index) => {
               return (
                 <Image
                   src={image.url}

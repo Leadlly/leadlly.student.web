@@ -64,7 +64,7 @@ const QuestionDialogBox = ({
     }
 
     const formattedData: TQuizAnswerProps = {
-      question: questions[activeQuestion],
+      question: questions[activeQuestion]._id,
       studentAnswer: answer,
       isCorrect: optionTag === "Correct",
       tag: "daily_quiz",

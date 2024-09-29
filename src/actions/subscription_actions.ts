@@ -3,12 +3,14 @@
 import { revalidateTag } from "next/cache";
 import { getCookie } from "./cookie_actions";
 
-export const buySubscription = async (duration: string) => {
+export const buySubscription = async (planId: string) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscribe/create?duration=${duration}`,
+
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/create?planId=${planId}`,
+
       {
         method: "POST",
         headers: {
@@ -32,12 +34,12 @@ export const buySubscription = async (duration: string) => {
   }
 };
 
-export const getFreeTrialActive = async () => {
+export const getPricing = async (pricingType: string) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscribe/freetrial`,
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/pricing/get?pricingType=${pricingType}`,
       {
         method: "GET",
         headers: {
@@ -51,8 +53,44 @@ export const getFreeTrialActive = async () => {
 
     const data = await res.json();
 
-    revalidateTag("userData");
+    return data.pricing;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error fetching Pricing: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while fetching Pricing");
+    }
+  }
+};
 
+export const getFreeTrialActive = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/freetrial`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    // Log the response status for debugging
+    console.log(`Response status: ${res.status}`);
+
+    if (!res.ok) {
+      const errorText = await res.text(); // Capture the response text for more details
+      throw new Error(`Failed to fetch free trial: ${errorText}`);
+    }
+
+    const data = await res.json();
+    revalidateTag("userData");
+    
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -62,3 +100,5 @@ export const getFreeTrialActive = async () => {
     }
   }
 };
+
+

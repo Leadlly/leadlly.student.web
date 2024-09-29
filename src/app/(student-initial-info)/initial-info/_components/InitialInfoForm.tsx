@@ -1,371 +1,520 @@
-"use client";
+'use client'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { Button } from "@/components/ui/button"
+import EnterPhoneno from "../../../../../public/assets/images/EnterPhoneno.png";
+// import Lock from "../../../../../public/assets/images/lock.png"
+import gender from "../../../../../public/assets/images/gender.png"
+import classselection from "../../../../../public/assets/images/class.png"
+import Examselection from "../../../../../public/assets/images/exam selection.png"
+import Scheduleselection from "../../../../../public/assets/images/scheduleSelecton.png"
+import Female from "../../../../../public/assets/images/femalegender.png"
+import Male from "../../../../../public/assets/images/malegender.png"
+import Othergender from "../../../../../public/assets/images/othergender (1).png"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+// import { ArrowLeft } from 'lucide-react'
+// import OtpInput from '@/components/shared/OtpInput';
+import Elevenclass from "../../../../../public/assets/images/11thclass.png"
+import twelveclass from "../../../../../public/assets/images/12thclass.png"
+import Dropperlass from "../../../../../public/assets/images/Dropper.png"
+import jeeone from "../../../../../public/assets/images/jeeone.png"
+import jeetwo from "../../../../../public/assets/images/jeetwo.png"
+import neetone from "../../../../../public/assets/images/neetone.png"
+import neettwo from "../../../../../public/assets/images/neettwo.png"
+import neetthree from "../../../../../public/assets/images/neetthree.png"
+// import { ChevronLeft } from 'lucide-react';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { StaticImageData } from 'next/image';
+import { studentPersonalInfo } from '@/actions/user_actions';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { getFreeTrialActive } from '@/actions/subscription_actions';
 
-import { studentPersonalInfo } from "@/actions/user_actions";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import { useAppDispatch } from "@/redux/hooks";
-import { userData } from "@/redux/slices/userSlice";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-
-const InitialInfoSchema = z.object({
-  class: z.string({ required_error: "Please select your class!" }),
-  phone: z.string({ required_error: "Please enter your phone number" }).max(10),
-  gender: z.string({ required_error: "Please select your gender!" }),
-  competitiveExam: z.enum(["NEET", "JEE"], {
-    message: "Please select your type of exam!",
-  }),
-  studentSchedule: z.string({ required_error: "Please select your schedule!" }),
-  coachingType: z.enum(["online", "offline"], {
-    message: "Please select your coaching type!",
-  }),
-});
-
-const StudentInitialInfoForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const dispatch = useAppDispatch();
-
-  const router = useRouter();
-
-  const form = useForm<z.infer<typeof InitialInfoSchema>>({
-    resolver: zodResolver(InitialInfoSchema),
-  });
-
-  const onFormSubmit = async (data: z.infer<typeof InitialInfoSchema>) => {
-    setIsSubmitting(true);
-
-    const formattedData = {
-      class: Number(data.class),
-      phone: Number(data.phone),
-    };
-    try {
-      const res = await studentPersonalInfo({ ...data, ...formattedData });
-      dispatch(userData(res.user));
-
-      toast.success(res.message);
-
-      router.replace("/trial-subscription");
-    } catch (error: any) {
-      toast.error(error?.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  return (
-    <section className="flex flex-col gap-y-5 h-full w-full px-3">
-      <div className="max-w-lg w-full">
-        <Image
-          src="/assets/images/leadlly_logo.svg"
-          alt="Leadlly Logo"
-          width={130}
-          height={60}
-        />
-      </div>
-      <div className="w-full h-[calc(100dvh-50px)] flex items-center justify-center">
-        <div className="max-w-lg w-full rounded-xl shadow-2xl py-10 px-5 space-y-4">
-          <h3 className="text-xl md:text-3xl font-semibold text-center capitalize">
-            Let us know about you
-          </h3>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onFormSubmit)}
-              className="space-y-2"
-            >
-              <div className="grid grid-cols-2 gap-3">
-                <FormField
-                  control={form.control}
-                  name="class"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1">
-                      <FormLabel className="text-base lg:text-lg font-medium">
-                        Class:
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger
-                            className={cn(
-                              "text-base lg:text-lg font-medium",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            <SelectValue placeholder="Select your class" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="11">11th</SelectItem>
-                          <SelectItem value="12">12th</SelectItem>
-                          <SelectItem value="13">Dropper</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="gender"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1">
-                      <FormLabel className="text-base lg:text-lg font-medium">
-                        Gender:
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger
-                            className={cn(
-                              "capitalize text-base lg:text-lg font-medium",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            <SelectValue placeholder="Select your gender" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="text-base lg:text-lg font-medium">
-                      Phone No.:
-                    </FormLabel>
-
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder="Enter your phone no."
-                        className="text-base lg:text-lg font-medium"
-                        countryCodeClassName="text-base lg:text-lg font-medium"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="competitiveExam"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="text-base lg:text-lg font-medium">
-                      Competitive Exam:
-                    </FormLabel>
-
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex items-center gap-x-5"
-                      >
-                        <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem
-                              value="NEET"
-                              className="lg:w-5 lg:h-5"
-                              circleClassName="lg:w-3 lg:h-3"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-base lg:text-lg font-medium">
-                            NEET
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem
-                              value="JEE"
-                              className="lg:w-5 lg:h-5"
-                              circleClassName="lg:w-3 lg:h-3"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-base lg:text-lg font-medium">
-                            JEE
-                          </FormLabel>
-                        </FormItem>
-                        {/* <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem
-                              value="Board"
-                              className="lg:w-5 lg:h-5"
-                              circleClassName="lg:w-3 lg:h-3"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-base lg:text-lg font-medium">
-                            Board
-                          </FormLabel>
-                        </FormItem> */}
-                        {/* <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem
-                              value="Other"
-                              className="lg:w-5 lg:h-5"
-                              circleClassName="lg:w-3 lg:h-3"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-base lg:text-lg font-medium">
-                            Other
-                          </FormLabel>
-                        </FormItem> */}
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="studentSchedule"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="text-base lg:text-lg font-medium">
-                      Your Schedule:
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger
-                          className={cn(
-                            "text-base lg:text-lg font-medium",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          <SelectValue placeholder="Ex: Coaching + College + Self Study" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="school+coaching+self-study">
-                          School + coaching + self-study
-                        </SelectItem>
-                        <SelectItem value="school+self-study">
-                          School + self study
-                        </SelectItem>
-                        <SelectItem value="coaching+self-study">
-                          Coaching + self-study
-                        </SelectItem>
-                        <SelectItem value="only self-study">
-                          Only self-study
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="coachingType"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="text-base lg:text-lg font-medium">
-                      Coaching:
-                    </FormLabel>
-
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex items-center gap-x-5"
-                      >
-                        <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem
-                              value="online"
-                              className="lg:w-5 lg:h-5"
-                              circleClassName="lg:w-3 lg:h-3"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-base lg:text-lg font-medium">
-                            Online
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem
-                              value="offline"
-                              className="lg:w-5 lg:h-5"
-                              circleClassName="lg:w-3 lg:h-3"
-                            />
-                          </FormControl>
-                          <FormLabel className="text-base lg:text-lg font-medium">
-                            Offline
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex items-center justify-center w-full">
-                <Button
-                  type="submit"
-                  className="w-full text-base md:text-lg"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center">
-                      <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-                      Submitting
-                    </span>
-                  ) : (
-                    "Submit"
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
-      </div>
-    </section>
-  );
+type StepImage = {
+  src: StaticImageData;
+  width: number;
+  height: number;
 };
 
-export default StudentInitialInfoForm;
+type GenderImages = {
+  Female: StaticImageData;
+  Male: StaticImageData;
+  Other: StaticImageData;
+}
+
+type ClassImage = {
+  Eleven: StaticImageData;
+  Twelve: StaticImageData;
+  Dropper: StaticImageData;
+}
+type ExamImages = {
+  jee: {
+    topRight: StaticImageData;
+    bottomLeft: StaticImageData;
+  };
+  neet: {
+    topRight: StaticImageData;
+    bottomLeft: StaticImageData;
+    middleRight: StaticImageData;
+  };
+}
+
+const stepImages: Record<number, StepImage> = {
+  1: { src: EnterPhoneno, width: 400, height: 400 }, // Image for step 1
+  // 2: { src: Lock, width: 350, height: 350 },        // Image for step 2
+  2: { src: gender, width: 435, height: 435 }, // Image for step 3
+  3: { src: classselection, width: 435, height: 435 },  // Image for step 4
+  4: { src: Examselection, width: 435, height: 435 },   // Image for step 5
+  5: { src: Scheduleselection, width: 652, height: 535 } // Image for step 6
+}
+
+const genderImages: GenderImages = {
+  Female,
+  Male,
+  Other: Othergender
+};
+
+const classImage: ClassImage = {
+  Eleven: Elevenclass,
+  Twelve: twelveclass,
+  Dropper: Dropperlass
+};
+
+const examImages: ExamImages = {
+  jee: {
+    topRight: jeeone,
+    bottomLeft: jeetwo,
+  },
+  neet: {
+    topRight: neetthree,
+    bottomLeft: neettwo,
+    middleRight: neetone,
+  },
+};
+
+export default function StudentInitialInfoForm() {
+  const router = useRouter();
+  const [step, setStep] = useState(1)
+  const [error, setError] = useState('');
+  const [errors, setErrors] = useState(false);
+  const [formData, setFormData] = useState({
+    phone: '',
+    gender: '',
+    class: '',
+    competitiveExam: '',
+    studentSchedule: ''
+  })
+
+
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSelectChange = (field: string, value: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+
+  const handleNext = () => {
+    setStep(prev => Math.min(prev + 1, 6))
+  }
+
+  const handlePrevious = () => {
+    setStep(prev => Math.max(prev - 1, 1))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (step < 5) {
+      handleNext();
+      return;
+    }
+
+    const classValue = formData.class === 'Dropper' ? undefined :
+      (formData.class === 'Eleven' ? 11 :
+        (formData.class === 'Twelve' ? 12 : undefined));
+
+    const submissionData = {
+      ...formData,
+      class: classValue,
+      phone: Number(formData.phone),
+    };
+
+    try {
+      const responseData = await studentPersonalInfo(submissionData);
+      toast.success(responseData.message);
+
+      const trialData = await getFreeTrialActive();
+      toast.success(trialData.message);
+      router.push('/');
+    } catch (error) {
+      toast.error("Unable to save information! " + (error as Error).message);
+    }
+  };
+
+  <Button
+    type="submit"
+    onClick={handleSubmit}
+    className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6"
+  >
+    Finish
+  </Button>
+
+
+  const { src, width, height } = stepImages[step] || { src: '', width: 400, height: 400 }
+
+  return (
+    <>
+      <div className="flex items-center mb-2 mt-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handlePrevious}
+          className="mr-1"
+          disabled={step === 0}
+        >
+          <AiOutlineArrowLeft className="h-6 w-6" />
+        </Button>
+
+        <div className="w-full flex justify-center items-center gap-2">
+          <div className="flex items-center rounded-[5px] gap-1 sm:gap-[8px] w-[85%] sm:w-[80%] mx-auto">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="flex-1 flex items-center">
+                <div
+                  className={`h-[4px] sm:h-[6px] md:h-[8px] ${index < step ? 'bg-purple-500' : 'bg-gray-200'} rounded-[3px] transition-colors duration-300`}
+                  style={{ width: '100%' }}
+                ></div>
+                {index < 5 - 1 && <div className="w-[2px] sm:w-[3px] md:w-[4px]"></div>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex relative top-[2%] md:top-[10%] justify-between px-4 pb-4">
+        <div className="bg-white rounded-lg w-full">
+          <div className="mx-8 my-4 lg:flex justify-around">
+            <div className="lg:w-1/2 mb-8 lg:mb-0">
+              <Image
+                src={src}
+                alt="Step Image"
+                width={width}
+                height={height}
+                className="mx-auto w-full max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[100%] xl:max-w-[70%]"
+              />
+            </div>
+            <div className="lg:w-1/2 lg:pl-8 justify-center flex items-center">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {step === 1 && (
+                  <div className="mx-8 my-4 flex flex-col justify-center items-center">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl text-center font-bold mb-4 whitespace-nowrap">
+                      Enter Your Phone Number?
+                    </h2>
+
+                    <p className="text-gray-600 text-center mb-6">
+                      We need to register your phone number before getting started!
+                    </p>
+
+                    <div className="flex items-center mb-4 border border-input rounded-md">
+                      <Select
+                        value="+91"
+                        onValueChange={(value) => handleSelectChange('countryCode', value)}
+                      >
+                        <SelectTrigger className="w-[70px] px-4 py-2 h-full flex items-center justify-center border-none focus:outline-none focus:ring-0">
+                          <SelectValue placeholder="Code" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="+91">+91</SelectItem>
+                          <SelectItem value="+1">+1</SelectItem>
+                          <SelectItem value="+44">+44</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="flex items-center px-4 py-2 h-11 bg-background w-full rounded-r-md border-none focus:outline-none focus:ring-0"
+                        required
+                        maxLength={10}
+                        pattern="[0-9]{10}"
+                      />
+                    </div>
+
+                    {error && (
+                      <p className="text-red-500 text-sm mb-4">{error}</p>
+                    )}
+
+                    <Button
+                      onClick={() => {
+                        if (!formData.phone) {
+                          setError('Phone number is required');
+                        } else if (formData.phone.length !== 10) {
+                          setError('Phone number must be exactly 10 digits');
+                        } else {
+                          setError('');
+                          handleNext();
+                        }
+                      }}
+                      className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3"
+                    >
+                      {step < 5 ? 'Confirm' : 'Finish'}
+                    </Button>
+                  </div>
+                )}
+                {step === 2 && (
+                  <div className="space-y-4 flex flex-col items-center justify-center">
+                    <h2 className="text-3xl lg:text-4xl font-bold mb-2">What is your Gender?</h2>
+                    <p className="text-gray-600 text-center mb-4 text-lg lg:text-xl">
+                      Select your gender from the given below options
+                    </p>
+                    <RadioGroup
+                      onValueChange={(value) => handleSelectChange('gender', value)}
+                      value={formData.gender}
+                      className="flex flex-col items-center space-y-4"
+                    >
+                      <div className="flex gap-[50px] space-x-4">
+                        {['Female', 'Male'].map((gender) => (
+                          <button
+                            onClick={() => handleSelectChange('gender', gender)}
+                            key={gender}
+                            className="flex flex-col items-center"
+                          >
+                            <RadioGroupItem value={gender} id={gender} className="sr-only" />
+                            <Label
+                              htmlFor={gender}
+                              className={`cursor-pointer flex flex-col justify-center items-center p-6 border-2 rounded-lg ${formData.gender === gender ? 'border-purple-500' : 'border-none'} bg-gray-50`}
+                              style={{ width: '120px', height: '120px' }}
+                            >
+
+                              <Image
+                                src={genderImages[gender as keyof GenderImages]}
+                                alt={gender}
+                                width={100}
+                                height={100}
+                                className="mb-1"
+                              />
+                              <span className="capitalize text-center text-lg lg:text-xl">{gender}</span>
+                            </Label>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex justify-center">
+                        <button
+                          onClick={() => handleSelectChange('gender', 'Other')}
+                          className="flex flex-col items-center"
+                        >
+                          <RadioGroupItem value="Other" id="Other" className="sr-only" />
+                          <Label
+                            htmlFor="Other"
+                            className={`cursor-pointer flex flex-col justify-center items-center p-6 border-2 rounded-lg ${formData.gender === 'Other' ? 'border-purple-500' : 'border-none'} bg-gray-50`}
+                            style={{ width: '120px', height: '120px' }}
+                          >
+                            <Image
+                              src={genderImages['Other']}
+                              alt="Other"
+                              width={100}
+                              height={100}
+                              className="mb-1"
+                            />
+                            <span className="capitalize text-center text-lg lg:text-xl">Other</span>
+                          </Label>
+                        </button>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                )}
+                {step === 3 && (
+                  <div className="space-y-4 flex flex-col items-center justify-center">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl text-center font-bold mb-4 whitespace-nowrap">Which class are you studying?</h2>
+                    <p className="text-gray-600 text-center mb-4 text-base lg:text-xl">
+                      Focus on core topics with hands-on practice and real-world examples for deeper understanding.
+                    </p>
+                    <div className="flex flex-col items-center">
+                      <div className="flex gap-[50px] space-x-4 mb-4">
+                        {['Eleven', 'Twelve'].map((classOption) => (
+                          <button
+                            key={classOption}
+                            type="button"
+                            onClick={() => {
+                              handleSelectChange('class', classOption);
+                              handleNext();
+                            }}
+                            className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg 
+        ${formData.class === classOption ? 'border-purple-500' : 'border-none'} bg-gray-50`}
+                            style={{ width: '120px', height: '120px' }}
+                          >
+                            <Image
+                              src={classImage[classOption as keyof ClassImage]}
+                              alt={classOption}
+                              width={113}
+                              height={113}
+                              className="mb-1"
+                            />
+                            <span className="capitalize text-base lg:text-xl">{classOption}</span>
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="flex justify-center">
+                        <button
+                          key="Dropper"
+                          type="button"
+                          onClick={() => {
+                            handleSelectChange('class', 'Dropper');
+                            handleNext();
+                          }}
+                          className={`flex flex-col justify-center items-center p-4 border-2 rounded-lg ${formData.class === 'Dropper' ? 'border-purple-500' : 'border-none'} bg-gray-50`}
+                          style={{ width: '120px', height: '120px' }}
+                        >
+                          <Image
+                            src={classImage['Dropper']}
+                            alt="Dropper"
+                            width={64}
+                            height={64}
+                            className="mb-2"
+                          />
+                          <span className="capitalize text-base lg:text-xl">Dropper</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {step === 4 && (
+                  <div className="space-y-4 flex flex-col items-center justify-center">
+                    <h2 className="text-2xl font-bold mb-2">Are your Studying for?</h2>
+                    <p className="text-gray-600 text-center mb-4 text-sm sm:text-base md:text-lg">
+                      Focus on core topics with hands-on practice and real-world examples for deeper understanding.
+                    </p>
+
+                    <div className="flex justify-center gap-4 sm:gap-8 md:gap-10 lg:gap-24">
+                      {['jee', 'neet'].map((exam) => (
+                        <button
+                          key={exam}
+                          type="button"
+                          onClick={() => {
+                            handleSelectChange('competitiveExam', exam);
+                            handleNext();
+                          }}
+                          className={`relative flex flex-col justify-center items-center p-4 border-2 rounded-lg shadow-md ${formData.competitiveExam === exam ? 'border-purple-500' : 'border-none'} bg-gray-50`}
+                          style={{
+                            width: '140px',
+                            height: '180px',
+                            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                          }}
+                        >
+                          <div
+                            className="flex items-center justify-center"
+                            style={{
+                              width: '100%',
+                              height: '70%',
+                              color: exam === 'jee' ? '#2D61FD' : '#06E480',
+                              fontSize: '24px',
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            {exam.toUpperCase()}
+                          </div>
+
+                          <Image
+                            src={examImages[exam as keyof ExamImages].topRight}
+                            alt={`${exam}-top-right`}
+                            width={77}
+                            height={77}
+                            className="absolute top-[-0.5rem] right-[-0.5rem] overflow-hidden"
+                          />
+
+                          <Image
+                            src={examImages[exam as keyof ExamImages].bottomLeft}
+                            alt={`${exam}-bottom-left`}
+                            width={70}
+                            height={50}
+                            className="absolute bottom-2 left-[-0.5rem]"
+                          />
+                        </button>
+                      ))}
+                    </div>
+
+                  </div>
+                )}
+                {step === 5 && (
+                  <div className="space-y-4">
+                    <h1 className="text-2xl text-center font-bold mb-4">Schedule you follow?</h1>
+                    <p className="text-gray-600 text-center mb-4 text-sm sm:text-base md:text-lg">
+                      Focus on core topics with hands-on practice and real-world examples for deeper understanding.
+                    </p>
+
+                    <div className="flex flex-col w-full space-y-4">
+                      {['School + Coaching + Self-study', 'Coaching + Self-study', 'School + Self-study', 'Only Self-study'].map((schedule, index) => (
+                        <Button
+                          key={index}
+                          type="button"
+                          onClick={() => {
+                            handleSelectChange('studentSchedule', schedule);
+                            setErrors(false);
+                          }}
+                          variant={formData.studentSchedule === schedule ? 'default' : 'outline'}
+                          className={`w-full h-16 shadow-none flex items-center justify-start pl-4 text-[16px] font-semibold
+        ${formData.studentSchedule === schedule ? 'border-purple-500' : 'border-none'}`}
+                        >
+                          {schedule}
+                        </Button>
+                      ))}
+                    </div>
+
+                    {errors && (
+                      <p className="text-red-500 text-center mb-4">Please select a schedule to proceed.</p>
+                    )}
+                    <div className="flex justify-center">
+                      <Button
+                        type="submit"
+                        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 mt-6 flex items-center justify-center"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (!formData.studentSchedule) {
+                            setErrors(true);
+                          } else {
+                            handleSubmit(e);
+                          }
+                        }}
+                      >
+                        Next
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2"
+                          stroke="currentColor"
+                          className="w-5 h-5 ml-2">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
+                        </svg>
+                      </Button>
+
+                    </div>
+                  </div>
+                )}
+
+              </form>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </>
+
+  )
+}

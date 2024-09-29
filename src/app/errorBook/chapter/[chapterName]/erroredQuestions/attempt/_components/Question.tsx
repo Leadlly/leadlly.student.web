@@ -15,7 +15,7 @@ const Question: React.FC<QuestionProps> = ({ question }) => {
           __html: question.question,
         }}
       ></div>
-      {question.images.map((image, index) => {
+      {question.images?.map((image, index) => {
         return (
           <Image
             src={image.url}
