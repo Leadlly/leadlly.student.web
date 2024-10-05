@@ -6,7 +6,6 @@ import { TDayProps } from "@/helpers/types";
 import QuestionDialogBox from "./QuestionDialogBox";
 import Loader from "@/components/shared/Loader";
 import ToDoListButton from "./ToDoListButton";
-import { Text } from "lucide-react";
 import Player from "lottie-react";
 import loginAnimation from "../../../../../public/assets/todo_pending_animation.json";
 
