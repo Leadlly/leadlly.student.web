@@ -27,7 +27,7 @@ const DailyStreakDialogBox = ({
   const userSubjects = useAppSelector(
     (state) => state.user.user?.academic.subjects
   );
-  const [activeTab, setActiveTab] = useState(userSubjects?.[0]?.name);
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
 
   const questionData = questions[activeTab?.toLowerCase()!];
 
