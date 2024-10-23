@@ -28,7 +28,7 @@ const AccountStudyProgress = ({
   const userSubjects = userData?.academic.subjects;
   const userStandard = userData?.academic.standard;
 
-  const [activeTab, setActiveTab] = useState(userSubjects?.[0]?.name);
+  const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
 
   const handleResetForm = useCallback((resetFunction: () => void) => {
     setResetForm(() => resetFunction);
