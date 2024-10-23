@@ -42,11 +42,38 @@ const SubscriptionPlansPage = ({
       key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
       name: "Leadlly",
       order_id: subscriptionId,
-      callback_url: `/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}`,
       prefill: {
         name: user ? user.firstname : "",
         email: user ? user.email : "",
         contact: user ? user.phone : "",
+      },
+      handler: async function (response: any) {
+        // Call your API to verify the payment
+        try {
+          const res = await fetch(`/api/subscription/verify`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              order_id: subscriptionId,
+              payment_id: response.razorpay_payment_id,
+              signature: response.razorpay_signature,
+            }),
+          });
+  
+          const data = await res.json();
+          if (data.success) {
+            // Handle success, for example, redirect to the app or show success message
+            window.location.href = appRedirectParam
+              ? `${appRedirectParam}?transaction=success`
+              : "/subscription/success";
+          } else {
+            console.error("Payment verification failed", data.error);
+          }
+        } catch (error) {
+          console.error("Error verifying payment", error);
+        }
       },
       modal: {
         ondismiss: function () {
@@ -62,10 +89,11 @@ const SubscriptionPlansPage = ({
         color: "#9654f4",
       },
     };
-
+  
     const razor = new window.Razorpay(options);
     razor.open();
   };
+  
 
   useEffect(() => {
     if (subscriptionId) {
