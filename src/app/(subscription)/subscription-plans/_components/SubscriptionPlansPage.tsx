@@ -17,6 +17,7 @@ import { Plan, UserDataProps } from "@/helpers/types";
 import { useSearchParams } from "next/navigation";
 import { loadRazorpayScript } from "@/helpers/utils";
 import Script from "next/script";
+import { error } from "console";
 
 const SubscriptionPlansPage = ({
   pricing,
@@ -48,9 +49,8 @@ const SubscriptionPlansPage = ({
         contact: user ? user.phone : "",
       },
       handler: async function (response: any) {
-        // Call your API to verify the payment
         try {
-          const res = await fetch(`/api/subscription/verify`, {
+        await fetch(`/api/subscription/verify`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -61,18 +61,8 @@ const SubscriptionPlansPage = ({
               signature: response.razorpay_signature,
             }),
           });
-  
-          const data = await res.json();
-          if (data.success) {
-            // Handle success, for example, redirect to the app or show success message
-            window.location.href = appRedirectParam
-              ? `${appRedirectParam}?transaction=success`
-              : "/subscription/success";
-          } else {
-            console.error("Payment verification failed", data.error);
-          }
-        } catch (error) {
-          console.error("Error verifying payment", error);
+        } catch {
+          console.log(error)
         }
       },
       modal: {
