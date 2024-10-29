@@ -15,7 +15,7 @@ export default async function MainLayout({
   children: React.ReactNode;
 }>) {
   const { meetings }: { meetings: TMeetingsProps[] } = await getMeetings("");
-  const inCompleteMeetingsLength = meetings.length;
+  const inCompleteMeetingsLength = meetings?.length;
 
   return (
     <>

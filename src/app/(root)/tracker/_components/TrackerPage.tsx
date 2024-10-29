@@ -20,7 +20,7 @@ const TrackerPage = () => {
     (state) => state.user.user?.academic.subjects
   );
   const searchParams = useSearchParams();
-  const activeSubject = searchParams.get("subject") ?? userSubjects?.[0]?.name;
+  const activeSubject = searchParams.get("subject") ?? userSubjects?.[0].name;
 
   useEffect(() => {
     const geTrackerData = async () => {
