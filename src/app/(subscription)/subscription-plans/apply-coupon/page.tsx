@@ -1,13 +1,22 @@
-import React from "react";
+import ApplyCouponPage from "./_components/ApplyCouponPage";
 
 const ApplyCoupon = ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const { token, redirect, planId, price, category } = searchParams;
+  const { redirect, planId, price, category, existingRemainingAmount } =
+    searchParams;
 
-  return <div>ApplyCoupon</div>;
+  return (
+    <ApplyCouponPage
+      category={category}
+      planId={planId}
+      price={price}
+      redirect={redirect}
+      existingRemainingAmount={existingRemainingAmount}
+    />
+  );
 };
 
 export default ApplyCoupon;

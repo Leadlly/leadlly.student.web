@@ -5,9 +5,10 @@ import Redirecting from "./_components/Redirecting";
 const PaymentSuccess = ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string };
 }) => {
   const referenceNumber = searchParams["reference"] ?? "";
+  const appRedirect = searchParams["appRedirect"] ?? "";
   return (
     <section className="w-full h-full flex items-center justify-center">
       <div className="max-w-lg w-full rounded-xl shadow-2xl flex flex-col items-center justify-center space-y-2 py-10 bg-[url('/assets/images/girl_celebration.png')] bg-[position:top_left] bg-[length:120px] bg-no-repeat">
@@ -19,7 +20,7 @@ const PaymentSuccess = ({
         <p className="font-bold text-lg">
           <span className="font-medium">Txn id:</span> {referenceNumber}
         </p>
-        <Redirecting />
+        <Redirecting appRedirect={appRedirect} />
       </div>
     </section>
   );
