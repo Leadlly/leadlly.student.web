@@ -25,62 +25,64 @@ const SubscriptionPlansPage = ({
   pricing: Plan[];
   user: UserDataProps;
 }) => {
-  const [subscriptionId, setSubscriptionId] = useState("");
+  console.log(pricing);
 
-  const searchParams = useSearchParams();
-  const subscriptionIdParams = searchParams.get("subscriptionId");
-  const appRedirectParam = searchParams.get("redirect");
+  // const [subscriptionId, setSubscriptionId] = useState("");
 
-  useEffect(() => {
-    if (subscriptionIdParams) {
-      setSubscriptionId(subscriptionIdParams);
-    }
-  }, [subscriptionIdParams]);
+  // const searchParams = useSearchParams();
+  // const subscriptionIdParams = searchParams.get("subscriptionId");
+  // const appRedirectParam = searchParams.get("redirect");
 
-  const openRazorpayPopUp = () => {
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
-      name: "Leadlly",
-      order_id: subscriptionId,
-      callback_url: `/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}`,
-      prefill: {
-        name: user ? user.firstname : "",
-        email: user ? user.email : "",
-        contact: user ? user.phone : "",
-      },
-      modal: {
-        ondismiss: function () {
-          window.location.href = appRedirectParam
-            ? `${appRedirectParam}?transaction=cancelled`
-            : "";
-        },
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#9654f4",
-      },
-    };
+  // useEffect(() => {
+  //   if (subscriptionIdParams) {
+  //     setSubscriptionId(subscriptionIdParams);
+  //   }
+  // }, [subscriptionIdParams]);
 
-    const razor = new window.Razorpay(options);
-    razor.open();
-  };
+  // const openRazorpayPopUp = () => {
+  //   const options = {
+  //     key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
+  //     name: "Leadlly",
+  //     order_id: subscriptionId,
+  //     callback_url: `/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}`,
+  //     prefill: {
+  //       name: user ? user.firstname : "",
+  //       email: user ? user.email : "",
+  //       contact: user ? user.phone : "",
+  //     },
+  //     modal: {
+  //       ondismiss: function () {
+  //         window.location.href = appRedirectParam
+  //           ? `${appRedirectParam}?transaction=cancelled`
+  //           : "";
+  //       },
+  //     },
+  //     notes: {
+  //       address: "Razorpay Corporate Office",
+  //     },
+  //     theme: {
+  //       color: "#9654f4",
+  //     },
+  //   };
 
-  useEffect(() => {
-    if (subscriptionId) {
-      const loadAndOpenRazorpay = async () => {
-        const isLoaded = await loadRazorpayScript();
-        if (isLoaded) {
-          openRazorpayPopUp();
-        } else {
-          console.error("Razorpay script failed to load");
-        }
-      };
+  //   const razor = new window.Razorpay(options);
+  //   razor.open();
+  // };
 
-      loadAndOpenRazorpay();
-    }
-  }, [subscriptionId]);
+  // useEffect(() => {
+  //   if (subscriptionId) {
+  //     const loadAndOpenRazorpay = async () => {
+  //       const isLoaded = await loadRazorpayScript();
+  //       if (isLoaded) {
+  //         openRazorpayPopUp();
+  //       } else {
+  //         console.error("Razorpay script failed to load");
+  //       }
+  //     };
+
+  //     loadAndOpenRazorpay();
+  //   }
+  // }, [subscriptionId]);
   return (
     <>
       <Script
@@ -128,23 +130,24 @@ const SubscriptionPlansPage = ({
 
           {/* Dynamic PlanPriceBox Rendering based on pricing data */}
           <div className="flex flex-col md:flex-row justify-between md:items-end gap-5 pb-10">
-            {pricing?.map((plan: any) => (
+            {pricing?.map((plan) => (
               <PlanPriceBox
                 key={plan.planId}
-                title={
-                  plan["duration(months)"] === "3"
-                    ? "basic plan"
-                    : plan["duration(months)"] === "6"
-                      ? "professional plan"
-                      : "ultimate plan"
-                }
-                duration={plan["duration(months)"]}
-                amount={plan.amount}
-                planId={plan.planId}
-                className={
-                  plan["duration(months)"] === "6" ? "bg-primary/10" : ""
-                }
-                setSubscriptionId={setSubscriptionId}
+                plan={plan}
+                // title={
+                //   plan["duration(months)"] === 3
+                //     ? "basic plan"
+                //     : plan["duration(months)"] === 6
+                //       ? "professional plan"
+                //       : "ultimate plan"
+                // }
+                // duration={plan["duration(months)"]}
+                // amount={plan.amount}
+                // planId={plan.planId}
+                // className={
+                //   plan["duration(months)"] === 6 ? "bg-primary/10" : ""
+                // }
+                // setSubscriptionId={setSubscriptionId}
               />
             ))}
           </div>

@@ -1,5 +1,6 @@
 import React, { SVGProps } from "react";
 import { SUBJECT_COLORS } from "../constants";
+import { UseFormReset } from "react-hook-form";
 
 export type TContainerProps = {
   children: React.ReactNode;
@@ -190,7 +191,7 @@ export type UserDataProps = {
   firstname: string;
   lastname?: string;
   email: string;
-  category: 'basic' | 'pro' | 'premium' | 'free' | null;
+  category: "basic" | "pro" | "premium" | "free" | null;
   phone: {
     personal?: number;
     other?: number;
@@ -221,7 +222,7 @@ export type UserDataProps = {
   details?: {
     level?: { number: number };
     points?: { number: number };
-    streak?: { number: number, updatedAt: Date};
+    streak?: { number: number; updatedAt: Date };
     mood?: Array<{
       day: string;
       emoji: string;
@@ -241,19 +242,19 @@ export type UserDataProps = {
   }>;
   points?: number;
   subscription: {
-    id?: string; 
-    status?: string; 
-    planId?: string; 
-    duration: number; 
-    dateOfActivation?: Date; 
-    dateOfDeactivation?: Date; 
+    id?: string;
+    status?: string;
+    planId?: string;
+    duration: number;
+    dateOfActivation?: Date;
+    dateOfDeactivation?: Date;
     coupon?: string;
-  
+
     upgradation?: {
-      previousPlanId?: string; 
-      previousDuration?: number; 
-      dateOfUpgradation?: Date; 
-      addedDuration?: number; 
+      previousPlanId?: string;
+      previousDuration?: number;
+      dateOfUpgradation?: Date;
+      addedDuration?: number;
     };
   };
   freeTrial: {
@@ -579,10 +580,55 @@ export type ChapterErrorBookProps = {
 };
 
 export interface Plan {
-  id: string;
+  _id: string;
+  planId: string;
   amount: number;
   currency: string;
-  "duration(months)": string;
-  planId: string;
   type: string;
+  category: string;
+  status: string;
+  "duration(months)": number;
+  createdAt: string;
+}
+
+export interface ExistingPlan {
+  _id: string;
+  amount: number;
+  category: string;
+  createdAt: string;
+  currency: string;
+  "duration(months)": number;
+  planId: string;
+  status: string;
+  type: string;
+}
+
+export interface ICoupon {
+  _id: string;
+  category: string;
+  code: string;
+  createdAt: string;
+  discountType: string;
+  discountValue: number;
+  expiryDate: string;
+  plan: string;
+  usageLimit: number;
+}
+
+export interface SubtotalContainerProps {
+  selectedCoupon: ICoupon | null;
+  setSubTotalBlockHeight: React.Dispatch<
+    React.SetStateAction<{ width: number; height: number }>
+  >;
+  category: string | string[] | undefined;
+  price: string | string[] | undefined;
+  planId: string | string[] | undefined;
+  existingRemainingAmount: number | null;
+  isExistingRemainingAmount: boolean;
+  resetCustomCouponForm: UseFormReset<{
+    code: string;
+  }>;
+  setIsCustomCouponValid: React.Dispatch<React.SetStateAction<boolean | null>>;
+  setSelectedCoupon: React.Dispatch<React.SetStateAction<ICoupon | null>>;
+  setSubscriptionId: React.Dispatch<React.SetStateAction<string>>;
 }

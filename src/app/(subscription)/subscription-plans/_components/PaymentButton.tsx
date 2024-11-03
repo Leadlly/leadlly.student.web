@@ -7,45 +7,49 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loadRazorpayScript } from "@/helpers/utils";
 
 const PaymentButton = ({
-  title,
+  category,
+  price,
   planId,
-  setSubscriptionId,
+  // setSubscriptionId,
 }: {
-  title: string;
+  category: string;
   planId: string;
-  setSubscriptionId: (subscriptionId: string) => void;
+  price: number;
+  // setSubscriptionId: (subscriptionId: string) => void;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const subscribeHandler = async () => {
-    setIsLoading(true);
+  // const subscribeHandler = async () => {
+  //   setIsLoading(true);
 
-    try {
-      const data = await buySubscription(planId);
-      setSubscriptionId(data?.id);
-    } catch (error: any) {
-      toast.error("Error buying subscription", {
-        description: error?.message,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   try {
+  //     const data = await buySubscription(planId);
+  //     setSubscriptionId(data?.id);
+  //   } catch (error: any) {
+  //     toast.error("Error buying subscription", {
+  //       description: error?.message,
+  //     });
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <>
       <Button
         size={"sm"}
-        className={cn(
-          "h-9 lg:text-lg font-medium px-10",
-          title === "professional plan" &&
-            "bg-white text-primary hover:bg-white/40"
-        )}
-        onClick={subscribeHandler}
+        className={cn("h-9 lg:text-lg font-medium px-10")}
+        // onClick={subscribeHandler}
+        onClick={() =>
+          router.push(
+            `/subscription-plans/apply-coupon?price=${price}&category=${category}&planId=${planId}`
+          )
+        }
         disabled={isLoading}
       >
         {isLoading ? (
