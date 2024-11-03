@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const searchParams = request.nextUrl.searchParams;
 
-  if (path.startsWith("/subscription-plans") && searchParams.has("token")) {
+  if (path.startsWith("/subscription-plans/apply-coupon") && searchParams.has("token")) {
     const token = searchParams.get("token");
 
     try {
