@@ -6,8 +6,11 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const searchParams = request.nextUrl.searchParams;
 
-  if (path.startsWith("/subscription-plans/apply-coupon") && searchParams.has("token")) {
-    const token = searchParams.get("token");
+  if (
+    path.startsWith("/subscription-plans/apply-coupon") &&
+    searchParams.has("token")
+  ) {
+    const token = decodeURIComponent(searchParams.get("token") || "");
 
     try {
       const response = await verifyAuthToken(token || "");
@@ -78,7 +81,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-
   return NextResponse.next();
 }
 
@@ -108,6 +110,7 @@ export const config = {
     "/workshops",
     "/manage-account",
     "/subscription-plans",
+    "/subscription-plans/apply-coupon",
     "/paymentfailed",
     "/paymentsuccess",
     "/initial-info",

@@ -5,10 +5,9 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import useGetExistingPlanRemainingAmount from "@/hooks/useGetExistingPlanRemainingAmount";
 import CouponVoucher from "./CouponVoucher";
 import CustomCouponForm from "./CustomCouponForm";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICoupon } from "@/helpers/types";
 import { getCoupon } from "@/actions/subscription_actions";
 import ListedCouponVoucher from "./ListedCouponVoucher";
@@ -19,6 +18,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Script from "next/script";
 import { loadRazorpayScript } from "@/helpers/utils";
 import Loader from "@/components/shared/Loader";
+import { getUser } from "@/actions/user_actions";
+import { userData } from "@/redux/slices/userSlice";
 
 const CustomCouponSchema = z.object({
   code: z.string().min(1, { message: "Coupon is Required" }),
@@ -49,16 +50,32 @@ const ApplyCouponPage = ({
   });
   const [subscriptionId, setSubscriptionId] = useState("");
 
+  const dispatch = useAppDispatch();
+
   const user = useAppSelector((state) => state.user.user);
 
   const form = useForm<z.infer<typeof CustomCouponSchema>>({
     resolver: zodResolver(CustomCouponSchema),
   });
 
-  // const { existingRemainingAmount, fetchingExistingPlanPrice } =
-  //   useGetExistingPlanRemainingAmount();
+  const isRedirectUri = !!redirect;
 
   const isExistingRemainingAmount = !!Number(existingRemainingAmount);
+
+  useEffect(() => {
+    if (isRedirectUri) {
+      const getUserInfo = async () => {
+        try {
+          const userInfo = await getUser();
+          dispatch(userData(userInfo.user));
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getUserInfo();
+    }
+  }, [isRedirectUri]);
 
   useEffect(() => {
     const getCouponsData = async () => {
