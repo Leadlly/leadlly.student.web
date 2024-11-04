@@ -3,7 +3,7 @@ import ApplyCouponPage from "./_components/ApplyCouponPage";
 const ApplyCoupon = ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | undefined };
 }) => {
   const { redirect, planId, price, category, existingRemainingAmount } =
     searchParams;
@@ -13,7 +13,7 @@ const ApplyCoupon = ({
       category={category}
       planId={planId}
       price={price}
-      redirect={redirect}
+      redirect={decodeURIComponent(redirect || "")}
       existingRemainingAmount={existingRemainingAmount}
     />
   );
