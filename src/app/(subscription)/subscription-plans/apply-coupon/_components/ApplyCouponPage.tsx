@@ -38,6 +38,7 @@ const ApplyCouponPage = ({
   category: string | string[] | undefined;
   existingRemainingAmount: string | string[] | undefined;
 }) => {
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
   const [coupons, setCoupons] = useState<ICoupon[]>([]);
   const [isLoadingListedCoupons, setIsLoadingListedCoupons] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<ICoupon | null>(null);
@@ -65,11 +66,14 @@ const ApplyCouponPage = ({
   useEffect(() => {
     if (isRedirectUri) {
       const getUserInfo = async () => {
+        setIsLoadingUser(true);
         try {
           const userInfo = await getUser();
           dispatch(userData(userInfo.user));
         } catch (error) {
           console.log(error);
+        } finally {
+          setIsLoadingUser(false);
         }
       };
 
@@ -156,7 +160,7 @@ const ApplyCouponPage = ({
         className="max-w-lg mx-auto px-4 space-y-4 h-full overflow-y-auto custom__scrollbar"
         style={{ paddingBottom: subTotalBlockHeight.height + 30 }}
       >
-        {isLoadingListedCoupons ? (
+        {isLoadingListedCoupons || isLoadingUser ? (
           <Loader />
         ) : (
           <>
