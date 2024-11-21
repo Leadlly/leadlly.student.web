@@ -1,123 +1,202 @@
-import React, { useState } from "react";
-import CustomInput from "./CustomInput";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import icon from "../../../../../public/assets/images/customizequiz.png";
 import { Button } from "@/components/ui/button";
+import { MultiSelect } from "@/components/ui/multi-select";
+import CustomInput from "./CustomInput";
+import { toast } from "sonner";
+import { getSubjectChapters, getChapterTopics } from "@/actions/question_actions";
+import { useAppSelector } from "@/redux/hooks";
+import { createCustomQuiz } from "@/actions/custom_quiz_actions";
+import { IAcademic, subjectChaptersProps, Topic } from "../types";
+import { TCustomQuizProps } from "@/helpers/types/index";
 
-const subjects = ["Math", "Science"];
-const chapters = {
-  Math: ["Algebra", "Geometry"],
-  Science: ["Physics", "Chemistry"],
-};
-const topics = {
-  Algebra: ["Linear Equations", "Quadratic Equations"],
-  Geometry: ["Triangles", "Circles"],
-  Physics: ["Kinematics", "Dynamics"],
-  Chemistry: ["Organic Chemistry", "Inorganic Chemistry"],
-};
+const CustomizedQuiz = () => {
+  const userAcademic = useAppSelector((state) => state.user.user?.academic as IAcademic);
+  const [quizState, setQuizState] = useState<TCustomQuizProps>({
+    subject: "",
+    chapters: [],
+    topics: [],
+    numberOfQuestions: "",
+  });
+  const [chaptersData, setChaptersData] = useState<subjectChaptersProps["chapters"]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [creatingQuiz, setCreatingQuiz] = useState(false);
+  const [draftCount, setDraftCount] = useState(0);
 
-const CustomizedQuiz: React.FC = () => {
-  const [subjectName, setSubjectName] = useState<string>("");
-  const [chapterName, setChapterName] = useState<string>("");
-  const [topicName, setTopicName] = useState<string>("");
-  const [numberOfQuestions, setNumberOfQuestions] = useState<string>("");
-  const [difficulty, setDifficulty] = useState<string>("");
+  useEffect(() => {
+    const savedDraftCount = localStorage.getItem("draftCount");
+    if (savedDraftCount) {
+      setDraftCount(parseInt(savedDraftCount, 10));
+    }
+  }, []);
 
-  const handleCreateNow = () => {
-    // Logic for creating the quiz
-    console.log({
-      subjectName,
-      chapterName,
-      topicName,
-      numberOfQuestions,
-      difficulty,
-    });
+  useEffect(() => {
+    const fetchChapters = async () => {
+      // if (!quizState.subject || !userAcademic?.standard) return;
+      // setIsLoading(true);
+      try {
+        const data = await getSubjectChapters(quizState.subject, userAcademic.standard);
+        if (data?.chapters) {
+          setChaptersData(data.chapters);
+        }
+      } catch (error) {
+        toast.error("Unable to fetch chapters!");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchChapters();
+  }, [quizState.subject, userAcademic?.standard]);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      if (!quizState.subject || quizState.chapters.length === 0 || !userAcademic?.standard) return;
+      setIsLoading(true);
+      try {
+        const data = await getChapterTopics(
+          quizState.subject,
+          quizState.chapters[0], 
+          userAcademic.standard
+        );
+        setTopics(data.topics);
+      } catch (error) {
+        toast.error("Unable to fetch topics!");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTopics();
+  }, [quizState.subject, quizState.chapters, userAcademic?.standard]);
+
+  const handleSaveAsDraft = () => {
+    const newDraftCount = draftCount + 1;
+    setDraftCount(newDraftCount);
+    localStorage.setItem("draftCount", newDraftCount.toString());
+    toast.success("Draft saved successfully!");
   };
 
-  const handleSubjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSubjectName(e.target.value);
-    setChapterName("");
-    setTopicName("");
-  };
-
-  const handleChapterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setChapterName(e.target.value);
-    setTopicName("");
+  const handleCreateQuiz = async () => {
+    if (!quizState.subject || quizState.chapters.length === 0 || quizState.topics.length === 0) {
+      toast.error("Please select subject, chapters, and topics.");
+      return;
+    }
+    setCreatingQuiz(true);
+    try {
+      const response = await createCustomQuiz({
+        ...quizState,
+        subjects: [quizState.subject],
+        numberOfQuestions: parseInt(quizState.numberOfQuestions) || undefined,
+      });
+      if (response.success) {
+        toast.success("Custom quiz created successfully!");
+      } else {
+        toast.error(response.message || "Failed to create custom quiz.");
+      }
+    } catch (error) {
+      toast.error(`Error creating quiz: ${error instanceof Error ? error.message : "An unknown error occurred"}`);
+    } finally {
+      setCreatingQuiz(false);
+    }
   };
 
   return (
     <div className="flex flex-col items-center gap-2 p-4 border border-gray-300 rounded-lg bg-[#F4EBFF] max-w-80 lg:w-80">
       <div className="flex justify-between items-center w-full">
         <h1 className="text-xl font-medium">Customized Quiz</h1>
-        <h1 className="text-[#9654F4] font-medium">Draft(0)</h1>
+        <h1 className="text-[#9654F4] font-medium">Draft({draftCount})</h1>
       </div>
 
-      <CustomInput
-        type="select"
-        options={subjects}
-        value={subjectName}
-        onChange={handleSubjectChange}
-        label="Subject Name"
-        placeholder="Select Subject"
-      />
-      <CustomInput
-        type="select"
-        options={
-          subjectName ? chapters[subjectName as keyof typeof chapters] : []
+      <div className="flex flex-col gap-2 w-full">
+        <label htmlFor="subjectName" className="font-medium text-sm">
+          Subject Name
+        </label>
+        <select
+          id="subjectName"
+          value={quizState.subject}
+          onChange={(e) =>
+            setQuizState((prev) => ({
+              ...prev,
+              subject: e.target.value,
+              chapters: [],
+              topics: [],
+            }))
+          }
+          className="border border-gray-300 rounded p-2"
+        >
+          <option value="" disabled>
+            Select Subject
+          </option>
+          {userAcademic?.subjects?.map((subject) => (
+            <option key={subject.name} value={subject.name}>
+              {subject.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <MultiSelect
+        options={chaptersData.map((chapter) => ({
+          _id: chapter._id,
+          name: chapter.name,
+        }))}
+        onValueChange={(selectedChapters) =>
+          setQuizState((prev) => ({
+            ...prev,
+            chapters: selectedChapters,
+            topics: [], 
+          }))
         }
-        value={chapterName}
-        onChange={handleChapterChange}
-        label="Chapter Name"
-        placeholder="Select Chapter"
+        defaultValue={quizState.chapters}
+        placeholder="Select Chapters"
+        maxCount={3}
       />
-      <CustomInput
-        type="select"
-        options={chapterName ? topics[chapterName as keyof typeof topics] : []}
-        value={topicName}
-        onChange={(e: any) => setTopicName(e.target.value)}
-        label="Topic Name"
-        placeholder="Select Topic"
+
+      <MultiSelect
+        options={topics.map((topic) => ({
+          _id: topic._id,
+          name: topic.name,
+        }))}
+        onValueChange={(selectedTopics) =>
+          setQuizState((prev) => ({
+            ...prev,
+            topics: selectedTopics,
+          }))
+        }
+        defaultValue={quizState.topics}
+        placeholder="Select Topics"
+        maxCount={5}
       />
+
       <CustomInput
         type="number"
-        value={numberOfQuestions}
-        onChange={(e: any) => setNumberOfQuestions(e.target.value)}
+        value={quizState.numberOfQuestions}
+        onChange={(e) =>
+          setQuizState((prev) => ({
+            ...prev,
+            numberOfQuestions: e.target.value,
+          }))
+        }
         label="Number of Questions"
         placeholder="Enter Number of Questions"
       />
-      <div className="flex justify-between w-full gap-5">
-        <CustomInput
-          type="radio"
-          checked={difficulty === "Easy"}
-          onChange={() => setDifficulty("Easy")}
-          label="Easy"
-        />
-        <CustomInput
-          type="radio"
-          checked={difficulty === "Moderate"}
-          onChange={() => setDifficulty("Moderate")}
-          label="Moderate"
-        />
-        <CustomInput
-          type="radio"
-          checked={difficulty === "Hard"}
-          onChange={() => setDifficulty("Hard")}
-          label="Hard"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3 w-full ">
-        <Button className="" variant={"outline"} disabled={true}>
+
+      <div className="grid grid-cols-2 gap-3 w-full">
+        <Button variant="outline" onClick={handleSaveAsDraft}>
           Save as Draft
         </Button>
-        <Button onClick={handleCreateNow} className="" disabled={true}>
-          Create Now
+        <Button onClick={handleCreateQuiz} disabled={creatingQuiz || isLoading}>
+          {creatingQuiz ? "Creating..." : "Create Now"}
         </Button>
       </div>
-      <p className=" text-xs md:text-sm font-medium text-center">
-        {/* Create your own personalized quiz by giving the information related to
-        the quiz and practice! */}
-        Creating quiz coming soon...
+
+      <p className="text-xs md:text-sm font-medium text-center">
+        Click 'Create Now' to generate your custom quiz!
       </p>
+
       <Image src={icon} width={130} height={130} alt="customize quiz" />
     </div>
   );
