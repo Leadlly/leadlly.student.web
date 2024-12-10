@@ -5,8 +5,14 @@ const ApplyCoupon = ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { redirect, planId, price, category, existingRemainingAmount } =
-    searchParams;
+  const {
+    redirect,
+    planId,
+    price,
+    category,
+    existingRemainingAmount,
+    subscriptionId,
+  } = searchParams;
 
   return (
     <ApplyCouponPage
@@ -14,6 +20,7 @@ const ApplyCoupon = ({
       planId={planId}
       price={price}
       redirect={decodeURIComponent(redirect || "")}
+      subscriptionIdFromApp={decodeURIComponent(subscriptionId || "")}
       existingRemainingAmount={existingRemainingAmount}
     />
   );
