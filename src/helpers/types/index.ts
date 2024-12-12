@@ -630,5 +630,7 @@ export interface SubtotalContainerProps {
   }>;
   setIsCustomCouponValid: React.Dispatch<React.SetStateAction<boolean | null>>;
   setSelectedCoupon: React.Dispatch<React.SetStateAction<ICoupon | null>>;
-  setSubscriptionId: React.Dispatch<React.SetStateAction<string>>;
+  setSubscriptionId: React.Dispatch<
+    React.SetStateAction<string | string[] | undefined>
+  >;
 }

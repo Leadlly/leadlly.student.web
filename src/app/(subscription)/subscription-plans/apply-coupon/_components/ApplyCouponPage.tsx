@@ -31,12 +31,14 @@ const ApplyCouponPage = ({
   price,
   redirect,
   existingRemainingAmount,
+  subscriptionIdFromApp,
 }: {
   redirect: string | string[] | undefined;
   planId: string | string[] | undefined;
   price: string | string[] | undefined;
   category: string | string[] | undefined;
   existingRemainingAmount: string | string[] | undefined;
+  subscriptionIdFromApp: string | string[] | undefined;
 }) => {
   const [isLoadingUser, setIsLoadingUser] = useState(false);
   const [coupons, setCoupons] = useState<ICoupon[]>([]);
@@ -49,7 +51,9 @@ const ApplyCouponPage = ({
     width: 0,
     height: 0,
   });
-  const [subscriptionId, setSubscriptionId] = useState("");
+  const [subscriptionId, setSubscriptionId] = useState<
+    string | string[] | undefined
+  >("");
 
   const dispatch = useAppDispatch();
 
@@ -64,12 +68,13 @@ const ApplyCouponPage = ({
   const isExistingRemainingAmount = !!Number(existingRemainingAmount);
 
   useEffect(() => {
-    if (isRedirectUri) {
+    if (isRedirectUri && subscriptionIdFromApp) {
       const getUserInfo = async () => {
         setIsLoadingUser(true);
         try {
           const userInfo = await getUser();
           dispatch(userData(userInfo.user));
+          setSubscriptionId(subscriptionIdFromApp);
         } catch (error) {
           console.log(error);
         } finally {
