@@ -103,3 +103,33 @@ export const saveWeeklyQuizQuestion = async (data: {
     }
   }
 };
+
+export const getQuizReport = async (quizId: string) => {
+  try {
+    const token = await getCookie("token");
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/quiz/weekly/submission?quizId=${quizId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error in getting weekly quiz report: ${error.message}`);
+    } else {
+      throw new Error(
+        "An unknown error occurred while getting weekly quiz report!"
+      );
+    }
+  }
+};

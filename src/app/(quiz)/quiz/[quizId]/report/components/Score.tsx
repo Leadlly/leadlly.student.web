@@ -1,7 +1,12 @@
 import { ArrowUp } from "lucide-react";
 import Image from "next/image";
 
-const Score = () => {
+interface ScoreTypes {
+  score?: number;
+  questions?: number;
+}
+
+const Score = ({ score, questions }: ScoreTypes) => {
   return (
     <section className="shadow-section my-5 p-5 rounded-[10px] flex-1">
       <h2 className="text-md md:text-2xl font-semibold mb-4 text-[#9E9E9E]">
@@ -10,13 +15,15 @@ const Score = () => {
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div>
           <div className="flex justify-center items-baseline">
-            <p className="text-6xl md:text-9xl font-bold text-purple-500">47</p>
+            <p className="text-6xl md:text-9xl font-bold text-purple-500">
+              {score}
+            </p>
             <span className="font-medium text-[8px] md:text-xl text-[#939393]">
               marks
             </span>
           </div>
           <p className="font-medium text-[8px] md:text-xl text-[#939393]">
-            Scored out of 120 marks (30Q)
+            Scored out of {questions && questions * 4} marks ({questions})
           </p>
           <div className="flex font-medium justify-start items-center gap-3 md:gap-5 mt-2">
             <div className="size-2 md:size-3 rounded-full bg-[#0FD679] "></div>
