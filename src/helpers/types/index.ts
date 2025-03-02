@@ -80,6 +80,13 @@ export type TMoodEmojisProps = {
   moodImg: string;
 };
 
+export type TCustomQuizProps = {
+  subject: string;
+  chapters: string[];
+  topics: string[];
+  numberOfQuestions: string;
+}
+
 export type TQuizQuestionOptionsProps = {
   name: string;
   tag: string;
