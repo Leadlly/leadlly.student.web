@@ -1,3 +1,4 @@
+"use client";
 import { Header } from "@/components";
 import TodaysPlan from "./TodaysPlan";
 import ContinuousRevision from "./ContinuousRevision";
@@ -13,8 +14,11 @@ import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
+import { useAppSelector } from "@/redux/hooks";
+import InitialTodoBox from "./InitailTodoBox";
 
 const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
+  const user = useAppSelector((state) => state.user.user);
   return (
     <div className="h-full flex flex-col justify-start gap-4">
       <div className="flex justify-between">
@@ -28,7 +32,9 @@ const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
           <div className="space-y-4 w-1/2">
             <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">
               <Suspense fallback={<Loader />}>
-                <TodaysPlan quizData={quizTopics} />
+                {/* <TodaysPlan quizData={quizTopics} /> */}
+                {user && user.planner === false ? <InitialTodoBox /> : <TodaysPlan quizData={quizTopics} />}
+              
               </Suspense>
             </div>
             <div className="border rounded-xl h-[240px]">

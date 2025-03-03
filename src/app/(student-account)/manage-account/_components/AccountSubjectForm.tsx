@@ -40,7 +40,7 @@ import { toast } from "sonner";
 import { getChapterTopics } from "@/actions/question_actions";
 import { saveStudyData } from "@/actions/studyData_actions";
 import { AccountStudyFormSchema } from "@/schemas/accountStudyFormSchema";
-import { allocateBackTopics } from "@/actions/planner_actions";
+import { allocateBackTopics, createPlanner } from "@/actions/planner_actions";
 
 const AccountSubjectForm = ({
   subjectChapters,
@@ -56,6 +56,7 @@ const AccountSubjectForm = ({
   const [topics, setTopics] = useState([]);
   const [isAdding, setIsAdding] = useState(false);
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
+  const [plannerCreated, setPlannerCreated] = useState(false); 
 
   const form = useForm<z.infer<typeof AccountStudyFormSchema>>({
     resolver: zodResolver(AccountStudyFormSchema),
@@ -94,6 +95,19 @@ const AccountSubjectForm = ({
 
   const onFormSubmit = async (data: z.infer<typeof AccountStudyFormSchema>) => {
     setIsAdding(true);
+    if (!plannerCreated) {
+      try {
+        await createPlanner();
+        setPlannerCreated(true);
+      } catch (error: any) {
+        toast.error("Error creating planner", {
+          description: error.message,
+        });
+        setIsAdding(false);
+        return;
+      }
+    }
+
 
     const formattedData = {
       tag: "unrevised_topic",
