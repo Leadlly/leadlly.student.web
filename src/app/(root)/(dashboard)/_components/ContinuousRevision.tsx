@@ -1,13 +1,10 @@
 "use client";
 
-import { ChatIcon, VideoChatIcon, RequestMeetingIcon } from "@/components";
-import Link from "next/link";
 import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import ContinuousRevisionForm from "./ContinuousRevisionForm";
-import { ISubject } from "@/helpers/types";
 
 const ContinuousRevision = () => {
   const [activeSubject, setActiveSubject] = useState<string | null>(null);

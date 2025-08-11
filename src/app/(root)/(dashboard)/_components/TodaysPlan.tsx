@@ -11,7 +11,9 @@ import loginAnimation from "../../../../../public/assets/todo_pending_animation.
 
 const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
-  const [topic, setTopic] = useState<{ name: string; _id: string } | null>(null);
+  const [topic, setTopic] = useState<{ name: string; _id: string } | null>(
+    null
+  );
   const [hasTopics, setHasTopics] = useState(false);
   useEffect(() => {
     if (quizData) {
@@ -20,31 +22,31 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
         quizData.continuousRevisionTopics.length > 0;
       setHasTopics(hasTopicsData);
     }
-    console.log('quizData:', quizData);
-    console.log('hasTopics:', hasTopics);
+    console.log("quizData:", quizData);
+    console.log("hasTopics:", hasTopics);
   }, [quizData, hasTopics]);
-  
+
   if (!quizData) {
     return (
       <div className="h-full rounded-xl p-8 bg-primary/[0.12] flex flex-col items-center justify-center gap-4">
-       <div className="w-full text-start space-y-4 ">
-  <h2 className="text-2xl text-primary font-bold">
-    Please hold on...
-  </h2>
-  <p className="text-sm text-gray-600">
-    While your plan is being generated, your itinerary will be ready shortly.
-  </p>
-  <div className="flex items-center justify-center">
-  <Player
-    autoplay
-    loop
-    animationData={loginAnimation}
-    
-  />
-</div>
-
-</div>
-
+        <div className="w-full text-start space-y-4 ">
+          <h2 className="text-2xl text-primary font-bold">Please hold on...</h2>
+          <p className="text-sm text-gray-600">
+            While your plan is being generated, your itinerary will be ready
+            shortly.
+          </p>
+          <div className="flex items-center justify-center">
+            <div className="size-24">
+              <Player
+                autoplay
+                loop
+                animationData={loginAnimation}
+                width={"100%"}
+                height={"100%"}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -94,12 +96,12 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
       ) : (
         // <div className="h-full rounded-xl p-8  gap-4">
         <div className="w-full h-full text-start space-y-3 px-6 bg-primary/[0.12] flex flex-col justify-center">
- 
-        <h2 className="text-2xl text-primary font-bold mt-4 md:mt-4 sm:mt-2">
+          <h2 className="text-2xl text-primary font-bold mt-4 md:mt-4 sm:mt-2">
             Please hold on...
           </h2>
           <p className="text-sm text-gray-600 pr-8">
-            While your plan is being generated, your itinerary will be ready shortly.
+            While your plan is being generated, your itinerary will be ready
+            shortly.
           </p>
           <div className="flex items-center justify-center">
             <Player
@@ -113,7 +115,7 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
             />
           </div>
         </div>
-      // </div>
+        // </div>
       )}
 
       {openQuestionDialogBox && topic && (

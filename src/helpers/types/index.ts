@@ -165,6 +165,16 @@ export type subjectChaptersProps = {
   }[];
 };
 
+export type TopicsWithSubtopicsProps = {
+  _id: string;
+  chapterId: string;
+  name: string;
+  subtopics: Array<{
+    _id: string;
+    name: string;
+  }>;
+};
+
 export interface ISubject {
   name: string;
   overall_efficiency: number;
@@ -437,7 +447,20 @@ export type PlannerDataProps = {
 export type DataProps = {
   data: PlannerDataProps;
 };
+
 export type Subject = keyof typeof SUBJECT_COLORS;
+
+export type SubItem = {
+  _id: string;
+  name: string;
+};
+
+export type Item = {
+  _id: string;
+  name: string;
+  subItems?: SubItem[];
+};
+
 export interface AttemptedWeeklyQuiz {
   id: number;
   description: string;

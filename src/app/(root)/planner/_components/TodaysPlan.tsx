@@ -12,6 +12,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Player from "lottie-react";
+import NoTopic from "../../../../../public/assets/no_topics_animations.json";
 
 const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
   const userSubjects = useAppSelector(
@@ -59,7 +61,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom__scrollbar">
+      <div className="flex-1 max-h-[365px] overflow-y-auto custom__scrollbar">
         <ul className="h-full flex flex-col justify-start">
           {userSubjects?.map((subject) => (
             <li
@@ -72,11 +74,11 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <p className="text-xs md:text-sm leading-tight font-normal truncate text-[#454545] cursor-pointer">
+                    <>
                       {todaysTopics &&
                       (todaysTopics?.backRevisionTopics.length > 0 ||
                         todaysTopics.continuousRevisionTopics.length > 0) ? (
-                        <>
+                        <p className="text-xs md:text-sm leading-tight font-normal truncate text-[#454545] cursor-pointer">
                           {getContinuousRevisionTopicsForSubject(subject.name)}
                           {todaysTopics?.backRevisionTopics.length &&
                           todaysTopics.continuousRevisionTopics.length
@@ -85,11 +87,18 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
                               ? ""
                               : "."}
                           {getBackRevisionTopicsForSubject(subject.name)}
-                        </>
+                        </p>
                       ) : (
-                        "No plans today!"
+                        <div className="flex flex-col items-center justify-center gap-y-2">
+                          <div className="size-16">
+                            <Player animationData={NoTopic} autoPlay loop />
+                          </div>
+                          <p className="text-secondary-text font-mada-medium -mt-4">
+                            No topics for today!
+                          </p>
+                        </div>
                       )}
-                    </p>
+                    </>
                   </TooltipTrigger>
                   <TooltipContent className="max-w-md w-full">
                     <p className="text-xs md:text-sm leading-tight font-normal whitespace-normal text-[#454545]">

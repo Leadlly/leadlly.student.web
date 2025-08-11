@@ -5,10 +5,19 @@ import { getCookie } from "./cookie_actions";
 
 type StudyDataProps = {
   tag: string;
-  topics: Array<{ name: string }>;
-  chapter: {
+  topics: Array<{
+    _id: string;
     name: string;
-    level?: string;
+    subtopics:
+      | {
+          _id: string;
+          name: string;
+        }[]
+      | undefined;
+  }>;
+  chapter: {
+    _id?: string;
+    name?: string;
   };
   subject: string;
   standard: number;
@@ -41,6 +50,44 @@ export const saveStudyData = async (data: StudyDataProps) => {
       throw new Error(`Error saving study data: ${error.message}`);
     } else {
       throw new Error("An unknown error occurred saving study data!");
+    }
+  }
+};
+
+export const setUnrevisedTopics = async (data: {
+  chapterIds: string[];
+  tag: string;
+  subject: string;
+  standard: number;
+}) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/unrevisedtopics/save`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+
+    revalidateTag("unrevised_topics");
+
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error saving unrevised topics: ${error.message}`);
+    } else {
+      throw new Error(
+        "An unknown error occurred while saving unrevised topics!"
+      );
     }
   }
 };

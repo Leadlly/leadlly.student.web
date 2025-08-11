@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { subjectChaptersProps, TRevisionProps } from "@/helpers/types";
-import { getSubjectChapters } from "@/actions/question_actions";
-import { toast } from "sonner";
+import { TRevisionProps } from "@/helpers/types";
 import { useAppSelector } from "@/redux/hooks";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import Image from "next/image";
@@ -18,9 +16,6 @@ const InitialStudyDataPage = ({
 }: {
   unrevisedTopics: TRevisionProps[];
 }) => {
-  const [activeTabChapters, setActiveTabChapters] = useState<
-    subjectChaptersProps[]
-  >([]);
   const [resetForm, setResetForm] = useState<() => void>(() => {
     return () => {};
   });
@@ -34,25 +29,6 @@ const InitialStudyDataPage = ({
   const handleResetForm = useCallback((resetFunction: () => void) => {
     setResetForm(() => resetFunction);
   }, []);
-
-  useEffect(() => {
-    const chapters = async () => {
-      try {
-        const data = await getSubjectChapters(
-          activeSubject!,
-          userAcademic?.standard!
-        );
-
-        setActiveTabChapters(data.chapters);
-      } catch (error: any) {
-        toast.error("Unable to fetch chapters!", {
-          description: error.message,
-        });
-      }
-    };
-
-    chapters();
-  }, [activeSubject, userAcademic?.standard]);
 
   return (
     <section className="flex flex-col w-full">
@@ -106,7 +82,6 @@ const InitialStudyDataPage = ({
 
         <AccountSubjectForm
           activeSubject={activeSubject!}
-          subjectChapters={activeTabChapters}
           userStandard={userAcademic?.standard!}
           onResetForm={handleResetForm}
         />

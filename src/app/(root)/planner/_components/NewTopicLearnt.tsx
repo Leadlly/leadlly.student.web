@@ -8,9 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { cn } from "@/lib/utils";
 
-import { Check, ChevronDown, Loader2 } from "lucide-react";
+import { Check, ChevronDown, Loader2, Loader2Icon } from "lucide-react";
 
-import { LeftArrowIcon, MenuIcon } from "@/components";
+import { LeftArrowIcon } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -32,20 +32,19 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { MultiSelect } from "@/components/ui/multi-select";
 
-import {
-  getChapterTopics,
-  getSubjectChapters,
-} from "@/actions/question_actions";
-
-import { ISubject, subjectChaptersProps } from "@/helpers/types";
+import { ISubject, Item } from "@/helpers/types";
 
 import { toast } from "sonner";
 import { saveStudyData } from "@/actions/studyData_actions";
-import { getPlanner, updatePlanner } from "@/actions/planner_actions";
+import { updatePlanner } from "@/actions/planner_actions";
 import { useRouter } from "next/navigation";
 import { NewTopicLearntSchema } from "@/schemas/newTopicLearntSchema";
+import {
+  useGetChapters,
+  useGetTopicsWithSubtopic,
+} from "@/queries/studyDataQueries";
+import { NestedMultiSelect } from "@/components/ui/nested-multi-select";
 
 const NewTopicLearnt = ({
   setNewTopicLearnt,
@@ -57,12 +56,9 @@ const NewTopicLearnt = ({
   userStandard: number;
 }) => {
   const [activeSubject, setActiveSubject] = useState(userSubjects?.[0]?.name);
-  const [activeTabChapters, setActiveTabChapters] = useState<
-    subjectChaptersProps[]
-  >([]);
-  const [topics, setTopics] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
+  const [selectedValues, setSelectedValues] = useState<Item[]>([]);
 
   const router = useRouter();
 
@@ -72,17 +68,40 @@ const NewTopicLearnt = ({
 
   const selectedChapter = form.watch("chapterName");
 
+  const { data: activeTabChapters, isLoading } = useGetChapters({
+    activeSubject,
+    userStandard,
+  });
+
+  const { data: topics } = useGetTopicsWithSubtopic({
+    activeSubject,
+    userStandard,
+    selectedChapter: selectedChapter?._id!,
+  });
+
+  useEffect(() => {
+    form.reset({
+      chapterName: null,
+      topicNames: [],
+    });
+  }, [activeSubject]);
+
   const onSubmit = async (data: z.infer<typeof NewTopicLearntSchema>) => {
     setIsSubmitting(true);
 
     const formattedData = {
       tag: "continuous_revision",
-      topics: data.topicNames.map((topic) => ({ name: topic })),
+      topics: data.topicNames.map((topic) => ({
+        _id: topic._id,
+        name: topic.name,
+        subtopics: topic.subItems,
+      })),
       chapter: {
-        name: data.chapterName,
+        _id: data?.chapterName?._id,
+        name: data?.chapterName?.name,
       },
-      subject: activeSubject,
-      standard: userStandard,
+      subject: activeSubject!,
+      standard: userStandard!,
     };
 
     try {
@@ -101,41 +120,6 @@ const NewTopicLearnt = ({
     }
   };
 
-  useEffect(() => {
-    const chapters = async () => {
-      try {
-        const data = await getSubjectChapters(activeSubject, userStandard);
-
-        setActiveTabChapters(data.chapters);
-      } catch (error: any) {
-        toast.error("Unable to fetch chapters!", {
-          description: error.message,
-        });
-      }
-    };
-
-    chapters();
-  }, [activeSubject, userStandard]);
-
-  useEffect(() => {
-    const topics = async () => {
-      try {
-        const data = await getChapterTopics(
-          activeSubject,
-          selectedChapter,
-          userStandard
-        );
-        setTopics(data.topics);
-      } catch (error: any) {
-        toast.error("Unable to fetch topics!", {
-          description: error.message,
-        });
-      }
-    };
-
-    topics();
-  }, [activeSubject, selectedChapter, userStandard]);
-
   return (
     <div className="w-full px-3 lg:px-7 space-y-6">
       <div className="w-full flex items-center justify-between">
@@ -151,7 +135,7 @@ const NewTopicLearnt = ({
               )}
               onClick={() => {
                 setActiveSubject(item.name);
-                form.setValue("chapterName", "");
+                form.setValue("chapterName", null);
                 form.setValue("topicNames", []);
               }}
             >
@@ -183,8 +167,8 @@ const NewTopicLearnt = ({
                         )}
                       >
                         {field.value
-                          ? activeTabChapters.find(
-                              (chapter) => chapter.name === field.value
+                          ? activeTabChapters?.chapters?.find(
+                              (chapter) => chapter._id === field.value?._id
                             )?.name
                           : "Select chapter"}
                         <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
@@ -197,27 +181,36 @@ const NewTopicLearnt = ({
                       <CommandList>
                         <CommandEmpty>No chapter found.</CommandEmpty>
                         <CommandGroup>
-                          {activeTabChapters?.map((chapter) => (
-                            <CommandItem
-                              value={chapter.name}
-                              key={chapter._id}
-                              onSelect={() => {
-                                form.setValue("chapterName", chapter.name);
-                                setChapterPopoverOpen(false);
-                              }}
-                              className="cursor-pointer"
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  chapter.name === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {chapter.name}
+                          {isLoading ? (
+                            <CommandItem>
+                              <Loader2Icon className="animate-spin size-4" />
                             </CommandItem>
-                          ))}
+                          ) : (
+                            activeTabChapters?.chapters?.map((chapter) => (
+                              <CommandItem
+                                value={chapter.name}
+                                key={chapter._id}
+                                onSelect={() => {
+                                  form.setValue("chapterName", {
+                                    _id: chapter._id,
+                                    name: chapter.name,
+                                  });
+                                  setChapterPopoverOpen(false);
+                                }}
+                                className="cursor-pointer"
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    chapter._id === field.value?._id
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {chapter.name}
+                              </CommandItem>
+                            ))
+                          )}
                         </CommandGroup>
                       </CommandList>
                     </Command>
@@ -234,13 +227,19 @@ const NewTopicLearnt = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <MultiSelect
-                    options={topics}
+                  <NestedMultiSelect
+                    options={
+                      topics?.topics?.map((topic) => ({
+                        _id: topic._id,
+                        name: topic.name,
+                        subItems: topic.subtopics,
+                      })) || []
+                    }
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    selectedValues={selectedValues}
+                    setSelectedValues={setSelectedValues}
                     placeholder="Select topics"
-                    variant={"inverted"}
-                    animation={2}
                   />
                 </FormControl>
 

@@ -1,16 +1,18 @@
-import axios from 'axios';
+import { getCookie } from "@/actions/cookie_actions";
+import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL, 
-  withCredentials: true, 
+  baseURL: process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL,
+  withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 apiClient.interceptors.request.use(
-  (config) => {
-    // config.headers.Authorization = `Bearer ${yourToken}`;
+  async (config) => {
+    const token = await getCookie("token");
+    config.headers.Cookie = `token=${token}`;
     return config;
   },
   (error) => {

@@ -16,6 +16,7 @@ import {
   getOverallReport,
   getWeeklyReport,
 } from "@/actions/student_report_actions";
+import QueryProvider from "./QueryProvider";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -56,14 +57,16 @@ export default async function RootLayout({
           monthlyReport={monthlyReport.monthlyReport}
           overallReport={overallReport.overallReport}
         >
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
-          >
-            <Container className="py-3">
-              <main className="h-main-height">{children}</main>
-            </Container>
-            <Toaster richColors position="top-center" />
-          </GoogleOAuthProvider>
+          <QueryProvider>
+            <GoogleOAuthProvider
+              clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+            >
+              <Container className="py-3">
+                <main className="h-main-height">{children}</main>
+              </Container>
+              <Toaster richColors position="top-center" />
+            </GoogleOAuthProvider>
+          </QueryProvider>
         </StoreProvider>
       </body>
     </html>

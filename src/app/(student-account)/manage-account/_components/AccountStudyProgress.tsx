@@ -1,14 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import AccountSubjectForm from "./AccountSubjectForm";
 
 import { TabContent } from "@/components";
 
 import AccountChaptersList from "./AccountChaptersList";
-import { getSubjectChapters } from "@/actions/question_actions";
-import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import { cn } from "@/lib/utils";
@@ -19,7 +17,6 @@ const AccountStudyProgress = ({
 }: {
   unrevisedTopics: TRevisionProps[];
 }) => {
-  const [activeTabChapters, setActiveTabChapters] = useState([]);
   const [resetForm, setResetForm] = useState<() => void>(() => {
     return () => {};
   });
@@ -33,20 +30,6 @@ const AccountStudyProgress = ({
   const handleResetForm = useCallback((resetFunction: () => void) => {
     setResetForm(() => resetFunction);
   }, []);
-
-  useEffect(() => {
-    const chapters = async () => {
-      try {
-        const data = await getSubjectChapters(activeTab!, userStandard!);
-        setActiveTabChapters(data.chapters);
-      } catch (error: any) {
-        toast.error("Unable to fetch chapters!", {
-          description: error.message,
-        });
-      }
-    };
-    chapters();
-  }, [activeTab, userStandard]);
 
   return (
     <section className="border rounded-xl h-full shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">
@@ -88,7 +71,6 @@ const AccountStudyProgress = ({
 
       <TabContent id={activeTab!} activeTab={activeTab!} className="h-auto">
         <AccountSubjectForm
-          subjectChapters={activeTabChapters}
           activeSubject={activeTab!}
           userStandard={userStandard!}
           onResetForm={handleResetForm}

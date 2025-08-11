@@ -10,6 +10,8 @@ import {
 } from "@/helpers/utils";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import Player from "lottie-react";
+import NoPlanner from "../../../../../public/assets/planner_waiting_animation.json";
 
 const WeeklyPlan = ({
   data,
@@ -22,7 +24,7 @@ const WeeklyPlan = ({
 
   return (
     <div className="w-full flex flex-col justify-start gap-5 h-full py-4 border rounded-xl overflow-x-hidden overflow-y-auto custom__scrollbar">
-      <div className="w-full flex items-center justify-between gap-0 md:gap-4 py-2 xl:flex-col xl:items-start xl:justify-normal">
+      <div className="w-full flex justify-between gap-0 md:gap-4 py-2 flex-col items-start xl:justify-normal">
         <div className="px-3 md:px-7">
           <h4 className="text-base md:text-2xl xl:text-3xl leading-none font-semibold text-black">
             Weekly Plan
@@ -59,8 +61,17 @@ const WeeklyPlan = ({
             </div>
           </div>
         ) : (
-          <div className="text-center text-muted-foreground font-medium px-3 md:px-7">
-            <p>Planner will generate shortly...</p>
+          <div className="text-center text-muted-foreground font-medium px-3 md:px-7 w-full h-full flex flex-col items-center justify-center gap-y-5">
+            <div className="size-60">
+              <Player animationData={NoPlanner} autoPlay loop />
+            </div>
+            <p className="text-xl text-primary font-mada-Bold leading-tight px-5">
+              Planner will generate shortly...
+            </p>
+            <p className="text-sm leading-tight font-mada-regular text-tab-item-gray px-5">
+              Please hold on.. while your plan is being generated, your
+              itinerary will be ready shortly
+            </p>
           </div>
         )}
       </div>
