@@ -5,7 +5,7 @@ import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
 
 export const saveDailyQuiz = async (data: {
-  topic: { name: string };
+  data: { name: string; _id: string; isSubtopic: boolean };
   questions: TQuizAnswerProps[];
 }) => {
   const token = await getCookie("token");

@@ -2,6 +2,62 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getUser, verifyAuthToken } from "./actions/user_actions";
 
+const userCache: Record<
+  string,
+  {
+    userData: any;
+    expires: number;
+    timestamp: number;
+  }
+> = {};
+
+const CACHE_DURATION = 3 * 60 * 1000; // 3 minutes cache
+const MAX_CACHE_SIZE = 1000; // Prevent memory leaks
+
+function cleanupCache() {
+  const now = Date.now();
+  const keys = Object.keys(userCache);
+
+  keys.forEach((key) => {
+    if (userCache[key].expires < now) {
+      delete userCache[key];
+    }
+  });
+}
+
+async function getCachedUserData(token: string) {
+  // Check cache first
+  const cached = userCache[token];
+  if (cached && cached.expires > Date.now()) {
+    return cached.userData;
+  }
+
+  try {
+    // Only call getUser() if not in cache or expired
+    const userData = await getUser();
+
+    // Cache the result
+    userCache[token] = {
+      userData,
+      expires: Date.now() + CACHE_DURATION,
+      timestamp: Date.now(),
+    };
+
+    // Cleanup if cache gets too large
+    const cacheSize = Object.keys(userCache).length;
+    if (cacheSize > MAX_CACHE_SIZE) {
+      cleanupCache();
+    }
+
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    // Remove invalid token from cache
+    delete userCache[token];
+    return null;
+  }
+}
+
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const searchParams = request.nextUrl.searchParams;
@@ -36,7 +92,6 @@ export async function middleware(request: NextRequest) {
   }
 
   const token = getTokenFromStorage(request);
-  const userData = await getUser();
 
   const isPublicPath =
     path.startsWith("/login") ||
@@ -55,6 +110,16 @@ export async function middleware(request: NextRequest) {
 
   // initial personal info middleware
   if (token && !isPublicPath) {
+    const userData = await getCachedUserData(token);
+
+    if (!userData || !userData.user) {
+      const response = NextResponse.redirect(
+        new URL("/login", request.nextUrl)
+      );
+      response.cookies.delete("token");
+      return response;
+    }
+
     const hasSubmittedInitialInfo = !!userData.user?.academic.standard;
 
     if (!hasSubmittedInitialInfo && path !== "/initial-info") {
@@ -64,24 +129,33 @@ export async function middleware(request: NextRequest) {
     if (hasSubmittedInitialInfo && path === "/initial-info") {
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
-  }
 
-  // free trial activation middleware
-  if (token && !isPublicPath && path !== "/initial-info") {
+    // free trial activation middleware
+    if (path !== "/initial-info") {
+      const isSubscribed =
+        userData.user?.freeTrial.active === true ||
+        userData?.user?.subscription?.status === "active";
+
+      if (!isSubscribed && path !== "/trial-subscription") {
+        return NextResponse.redirect(
+          new URL("/trial-subscription", request.nextUrl)
+        );
+      }
+
+      if (isSubscribed && path === "/trial-subscription") {
+        return NextResponse.redirect(new URL("/", request.nextUrl));
+      }
+    }
+
+    // Add user context to headers for server components
+    const response = NextResponse.next();
+    response.headers.set("x-user-id", userData.user?.id || "");
     const isSubscribed =
-      userData.user?.freeTrial.active === true ||
+      userData.user?.freeTrial?.active === true ||
       userData?.user?.subscription?.status === "active";
-    console.log("Free trial activation middleware ======> ", isSubscribed);
+    response.headers.set("x-user-subscribed", isSubscribed ? "true" : "false");
 
-    if (!isSubscribed && path !== "/trial-subscription") {
-      return NextResponse.redirect(
-        new URL("/trial-subscription", request.nextUrl)
-      );
-    }
-
-    if (isSubscribed && path === "/trial-subscription") {
-      return NextResponse.redirect(new URL("/", request.nextUrl));
-    }
+    return response;
   }
 
   return NextResponse.next();
@@ -89,8 +163,7 @@ export async function middleware(request: NextRequest) {
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
-  // console.log("====cookies are coming here =======>",cookies, "===========>")
-  const token = cookies.get("token");
+  const token = cookies.get("token")?.value;
   return token;
 }
 

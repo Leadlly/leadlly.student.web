@@ -198,6 +198,7 @@ export interface IAcademic {
 }
 
 export type UserDataProps = {
+  _id: string;
   firstname: string;
   lastname?: string;
   email: string;
@@ -213,11 +214,37 @@ export type UserDataProps = {
     public_id?: string;
     url?: string;
   };
-  planner: Boolean;
+  planner: boolean;
+  preferences: {
+    continuousData: { nextDay: boolean }; // to decide continuous topic placing in planner
+    dailyQuestions: number;
+    backRevisionTopics: number;
+  };
   parent: {
     name?: string;
     phone?: string;
   };
+  mentor: {
+    _id?: string;
+  };
+  institute: {
+    _id: string | null;
+    name?: string | null;
+    logo?: {
+      key?: string | null;
+      url?: string | null;
+    };
+  };
+  batches: Array<{
+    _id: string;
+    status: "pending" | "accepted" | "rejected";
+    requestedAt: Date;
+  }>;
+  classes: Array<{
+    _id: string;
+    status: "pending" | "accepted" | "rejected";
+    requestedAt: Date;
+  }>;
   address: {
     country?: string;
     addressLine?: string;
@@ -229,13 +256,15 @@ export type UserDataProps = {
     gender: string;
   };
   role?: string;
-  details?: {
+  details: {
     level?: { number: number };
     points?: { number: number };
     streak?: { number: number; updatedAt: Date };
     mood?: Array<{
+      _id?: string;
       day: string;
-      emoji: string;
+      date: string | null;
+      emoji: string | null;
     }>;
     report?: {
       dailyReport?: {
@@ -279,7 +308,9 @@ export type UserDataProps = {
     status?: string;
     amount?: string;
   };
+  disabled: boolean;
   createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type ProgressAnalyticsDataProps = {
@@ -379,6 +410,7 @@ export interface Questions {
 }
 
 export type Topic = {
+  id: string;
   name: string;
   plannerFrequency?: number;
   level?: string;
@@ -410,11 +442,24 @@ export type subject = {
   overall_efficiency?: number;
 };
 
+export type SubTopic = {
+  id: string;
+  name: string;
+  plannerFrequency?: number;
+  level?: string;
+  overall_efficiency?: number;
+  studiedAt: {
+    date?: Date;
+    efficiency?: number;
+  }[];
+};
+
 export type TRevisionProps = {
   _id: string;
   user: string;
   tag: string;
   topic: Topic;
+  subtopic: SubTopic;
   chapter: Chapter;
   subject: subject;
   standard: number;
@@ -425,14 +470,24 @@ export type TRevisionProps = {
   weeklyTestScore?: number;
 };
 
+export type TChapterRevisionProps = {
+  id: string;
+  name: string;
+  quizId: string;
+  subject: string;
+};
+
 export type TDayProps = {
   date: string;
   day: string;
   continuousRevisionTopics: TRevisionProps[];
+  continuousRevisionSubTopics: TRevisionProps[];
   backRevisionTopics: TRevisionProps[];
+  lowAccuracyTopics: TRevisionProps[];
+  chapters: TChapterRevisionProps[];
   questions: { [key: string]: any };
-  completedTopics: any[];
-  incompletedTopics: any[];
+  completedTopics: string[];
+  incompletedTopics: string[];
   _id: string;
 };
 
@@ -657,3 +712,15 @@ export interface SubtotalContainerProps {
     React.SetStateAction<string | string[] | undefined>
   >;
 }
+
+export type TInstituteProps = {
+  _id: string;
+  name: string;
+  logo: { key: string; url: string } | null;
+  subjects: string[];
+  standards: string[];
+  admins: string[];
+  batches: string[];
+  createdAt: string;
+  updatedAt: string;
+};

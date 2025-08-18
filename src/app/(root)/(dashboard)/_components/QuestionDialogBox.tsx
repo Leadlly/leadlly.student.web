@@ -16,7 +16,7 @@ import { sanitizedHtml } from "@/helpers/utils";
 import { toast } from "sonner";
 import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
 import { getUser } from "@/actions/user_actions";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import {
   getMonthlyReport,
@@ -26,6 +26,11 @@ import {
 import { weeklyData } from "@/redux/slices/weeklyReportSlice";
 import { monthlyData } from "@/redux/slices/monthlyReportSlice";
 import { overallData } from "@/redux/slices/overallReportSlice";
+import {
+  dailyQuizAttemptedQuestions,
+  filterCompletedTopics,
+} from "@/redux/slices/dailyQuizSlice";
+import Image from "next/image";
 
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
@@ -35,15 +40,20 @@ const QuestionDialogBox = ({
   openQuestionDialogBox: boolean;
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
   questions: TQuizQuestionProps[];
-  topic: { name: string; _id: string } | null;
+  topic: { name: string; _id: string; isSubtopic: boolean } | null;
 }) => {
-  const [activeQuestion, setActiveQuestion] = useState(0);
-  const [attemptedQuestionIndex, setAttemptedQuestionIndex] = useState<
-    number[]
-  >([]);
-  const [attemptedQuestion, setAttemptedQuestion] = useState<
-    TQuizAnswerProps[]
-  >([]);
+  const dispatch = useAppDispatch();
+
+  const { dailyQuizzes } = useAppSelector((state) => state.dailyQuizzes);
+
+  const dailyQuizCurrentTopic = dailyQuizzes.find(
+    (quiz) => quiz.topicName === topic?.name
+  );
+
+  const [activeQuestion, setActiveQuestion] = useState(
+    dailyQuizCurrentTopic ? dailyQuizCurrentTopic?.attemptedQuestions.length : 0
+  );
+
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
     null
@@ -51,27 +61,30 @@ const QuestionDialogBox = ({
   const [optionSelected, setOptionSelected] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const dispatch = useAppDispatch();
-
   const onAnswerSelect = (answer: string, optionTag: string, index: number) => {
     setSelectedAnswerIndex(index);
 
     setSelectedAnswer(answer);
     setOptionSelected(true);
 
-    if (!attemptedQuestionIndex.includes(activeQuestion) && !selectedAnswer) {
-      setAttemptedQuestionIndex((prev) => [...prev, activeQuestion]);
-    }
-
     const formattedData: TQuizAnswerProps = {
-      question: questions[activeQuestion]._id,
+      question: questions[activeQuestion]?._id,
       studentAnswer: answer,
       isCorrect: optionTag === "Correct",
       tag: "daily_quiz",
     };
 
-    if (!attemptedQuestion.includes(formattedData)) {
-      setAttemptedQuestion((prev) => [...prev, formattedData]);
+    if (
+      !dailyQuizCurrentTopic?.attemptedQuestions.some(
+        (quiz) => quiz.question === formattedData.question
+      )
+    ) {
+      dispatch(
+        dailyQuizAttemptedQuestions({
+          topicName: topic?.name!,
+          attemptedQuestions: [formattedData],
+        })
+      );
     }
   };
 
@@ -90,8 +103,12 @@ const QuestionDialogBox = ({
 
     try {
       const res = await saveDailyQuiz({
-        topic: { name: topic?.name! },
-        questions: attemptedQuestion,
+        data: {
+          name: topic?.name!,
+          _id: topic?._id!,
+          isSubtopic: topic?.isSubtopic!,
+        },
+        questions: dailyQuizCurrentTopic?.attemptedQuestions!,
       });
 
       if (res.success) {
@@ -112,6 +129,13 @@ const QuestionDialogBox = ({
         dispatch(weeklyData(weeklyReport.weeklyReport));
         dispatch(monthlyData(monthlyReport.monthlyReport));
         dispatch(overallData(overallReport.overallReport));
+
+        if (
+          dailyQuizCurrentTopic &&
+          dailyQuizCurrentTopic.attemptedQuestions.length === questions.length
+        ) {
+          dispatch(filterCompletedTopics({ topicName: topic?.name! }));
+        }
         toast.success(res.message);
 
         setOpenQuestionDialogBox(false);
@@ -125,6 +149,19 @@ const QuestionDialogBox = ({
     }
   };
 
+  const handleBackSubmit = async () => {
+    if (
+      questions &&
+      questions.length > 0 &&
+      dailyQuizCurrentTopic &&
+      dailyQuizCurrentTopic?.attemptedQuestions?.length > 0
+    ) {
+      await onHandleSubmit();
+    } else {
+      setOpenQuestionDialogBox(false);
+    }
+  };
+
   return (
     <Modal setOpenDialogBox={setOpenQuestionDialogBox}>
       {questions && questions.length > 0 && questions[activeQuestion] ? (
@@ -132,18 +169,26 @@ const QuestionDialogBox = ({
           <div className="h-20 bg-primary/[0.2] rounded-b-xl flex items-center justify-between gap-5 md:gap-28 px-5 md:px-12">
             <div
               className="w-6 h-6 md:w-10 md:h-10 rounded-md bg-white flex items-center justify-center border border-gray-300 cursor-pointer"
-              onClick={() => setOpenQuestionDialogBox(false)}
+              onClick={handleBackSubmit}
             >
               <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
             </div>
 
             <div className="flex-1 flex items-center gap-2 md:gap-5">
               <Progress
-                value={(attemptedQuestionIndex.length / questions.length) * 100}
+                value={
+                  (dailyQuizCurrentTopic
+                    ? dailyQuizCurrentTopic?.attemptedQuestions?.length /
+                      questions?.length
+                    : 0) * 100
+                }
                 className="h-2"
               />
               <p className="text-xs md:text-lg font-bold">
-                {attemptedQuestionIndex.length}/{questions.length}
+                {dailyQuizCurrentTopic
+                  ? dailyQuizCurrentTopic?.attemptedQuestions?.length
+                  : 0}
+                /{questions.length}
               </p>
             </div>
 
@@ -176,8 +221,9 @@ const QuestionDialogBox = ({
                       className={cn(
                         "relative px-4 py-1 text-base md:text-lg font-medium cursor-pointer",
                         activeQuestion === index && "text-white",
-                        attemptedQuestionIndex.includes(index) &&
-                          "pointer-events-none opacity-30"
+                        dailyQuizCurrentTopic?.attemptedQuestions.some(
+                          (quiz) => quiz.question === ques._id
+                        ) && "pointer-events-none opacity-30"
                       )}
                       onClick={() => {
                         setSelectedAnswerIndex(null);
@@ -211,6 +257,21 @@ const QuestionDialogBox = ({
                     }}
                   />
                 </p>
+
+                {questions[activeQuestion].images.length > 0 ? (
+                  <div className="gap-y-2">
+                    {questions[activeQuestion].images.map((image) => (
+                      <div key={image._id} className="relative w-full h-32">
+                        <Image
+                          src={image.url}
+                          alt="Question Images"
+                          fill
+                          className="w-full object-contain"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
 
                 <ul className="flex flex-col justify-start gap-2 px-3 md:px-5">
                   {questions[activeQuestion].options.map((option, index) => (

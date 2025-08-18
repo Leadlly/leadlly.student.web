@@ -25,11 +25,14 @@ const MobileUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
         </div>
       </div>
 
-      <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[233px]">
+      <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-full">
         <Suspense fallback={<Loader />}>
           {/* <TodaysPlan quizData={quizTopics} /> */}
-          {user && user.planner === false ? <InitialTodoBox /> : <TodaysPlan quizData={quizTopics} />}
-              
+          {user && user.planner === false ? (
+            <InitialTodoBox />
+          ) : (
+            <TodaysPlan quizData={quizTopics} />
+          )}
         </Suspense>
       </div>
 

@@ -30,14 +30,17 @@ const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
       <div className="flex-1 flex flex-col justify-start gap-4 md:overflow-y-auto custom__scrollbar pr-3">
         <div className="flex gap-4">
           <div className="space-y-4 w-1/2">
-            <div className="border rounded-xl flex flex-col justify-start gap-3 overflow-hidden h-[330px]">
+            <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-full">
               <Suspense fallback={<Loader />}>
                 {/* <TodaysPlan quizData={quizTopics} /> */}
-                {user && user.planner === false ? <InitialTodoBox /> : <TodaysPlan quizData={quizTopics} />}
-              
+                {user && user.planner === false ? (
+                  <InitialTodoBox />
+                ) : (
+                  <TodaysPlan quizData={quizTopics} />
+                )}
               </Suspense>
             </div>
-            <div className="border rounded-xl h-[240px]">
+            <div className="border rounded-xl h-20">
               <ContinuousRevision />
             </div>
             <div className="border rounded-xl h-[270px] ">
@@ -50,11 +53,11 @@ const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
 
             <PointsBox />
 
-            <TodaysVibe />
+            {/* <TodaysVibe />
 
             <DailyStreakQuestions />
 
-            <UpcomingWorkshops />
+            <UpcomingWorkshops /> */}
 
             <div className="border rounded-xl">
               <DailyReport />

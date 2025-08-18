@@ -5,9 +5,11 @@ import { useAppSelector } from "@/redux/hooks";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import ContinuousRevisionForm from "./ContinuousRevisionForm";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ChevronRightIcon, NotebookTextIcon } from "lucide-react";
 
 const ContinuousRevision = () => {
-  const [activeSubject, setActiveSubject] = useState<string | null>(null);
+  const [activeSubject, setActiveSubject] = useState("");
 
   const userSubjects = useAppSelector(
     (state) => state.user.user?.academic.subjects
@@ -18,44 +20,37 @@ const ContinuousRevision = () => {
   );
 
   return (
-    <div className="px-4 md:px-6 py-2 space-y-2 h-full">
-      {!activeSubject ? (
-        <>
-          <h4 className="text-2xl text-primary font-bold">
-            What did you Learnt New Today?
-          </h4>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          variant={"outline"}
+          className="w-full border-0 h-full bg-transparent"
+          onClick={() => setActiveSubject(userSubjects?.[0].name || "")}
+        >
+          <span className="flex items-center justify-between w-full">
+            <span className="flex items-center gap-2">
+              <NotebookTextIcon className="size-7" />
+              <span className="flex-1">
+                <p className="text-lg font-semibold">Learned something new?</p>
+                <p className="text-sm text-left text-secondary-foreground">
+                  Add topics to your planner
+                </p>
+              </span>
+            </span>
+            <ChevronRightIcon className="size-5" />
+          </span>
+        </Button>
+      </DialogTrigger>
 
-          <div className="flex items-center justify-center">
-            <Image
-              alt="Leadlly student studying"
-              src="/assets/images/revision_zone.png"
-              width={110}
-              height={110}
-            />
-          </div>
-
-          <div className="flex items-center justify-center gap-3 w-full">
-            {userSubjects?.map((subject) => (
-              <Button
-                key={subject.name}
-                variant={"outline"}
-                className="capitalize"
-                onClick={() => setActiveSubject(subject.name)}
-              >
-                {subject.name}
-              </Button>
-            ))}
-          </div>
-        </>
-      ) : (
+      <DialogContent>
         <ContinuousRevisionForm
           activeSubject={activeSubject}
           setActiveSubject={setActiveSubject}
           userStandard={userStandard!}
           userSubjects={userSubjects!}
         />
-      )}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

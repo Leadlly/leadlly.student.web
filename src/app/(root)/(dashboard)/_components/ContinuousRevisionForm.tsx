@@ -38,6 +38,7 @@ import {
   useGetChapters,
   useGetTopicsWithSubtopic,
 } from "@/queries/studyDataQueries";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 
 const ContinuousRevisionForm = ({
   activeSubject,
@@ -46,7 +47,7 @@ const ContinuousRevisionForm = ({
   userSubjects,
 }: {
   activeSubject: string;
-  setActiveSubject: (activeSubject: string | null) => void;
+  setActiveSubject: (activeSubject: string) => void;
   userStandard: number;
   userSubjects: ISubject[];
 }) => {
@@ -241,19 +242,22 @@ const ContinuousRevisionForm = ({
             )}
           />
 
-          <div className="flex items-center justify-between">
-            <Button
-              variant={"outline"}
-              className="gap-x-2"
-              onClick={() => {
-                setActiveSubject(null);
-                form.setValue("chapterName", null);
-                form.setValue("topicNames", []);
-              }}
-            >
-              <LeftArrowIcon className="w-2 h-2" />
-              Back
-            </Button>
+          <DialogFooter className="flex items-center sm:justify-between w-full">
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant={"outline"}
+                className="gap-x-2"
+                onClick={() => {
+                  setActiveSubject("");
+                  form.setValue("chapterName", null);
+                  form.setValue("topicNames", []);
+                }}
+              >
+                <LeftArrowIcon className="w-2 h-2" />
+                Back
+              </Button>
+            </DialogClose>
 
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
@@ -264,7 +268,7 @@ const ContinuousRevisionForm = ({
                 "Submit"
               )}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </Form>
     </div>
