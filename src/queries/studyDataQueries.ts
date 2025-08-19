@@ -1,3 +1,4 @@
+import apiClient from "@/apiClient/apiClient";
 import {
   subjectChaptersProps,
   TopicsWithSubtopicsProps,
@@ -15,11 +16,10 @@ export const useGetChapters = ({
     queryKey: ["chapters", activeSubject, userStandard],
     queryFn: async () => {
       try {
-        const res = await fetch(
-          `/api/chapters?subject=${activeSubject}&standard=${userStandard}`
+        const res = await apiClient.get<{ chapters: subjectChaptersProps[] }>(
+          `/api/questionbank/chapter?subjectName=${activeSubject}&standard=${userStandard}`
         );
-        const data: { chapters: subjectChaptersProps[] } = await res.json();
-        return data;
+        return res.data;
       } catch (error: any) {
         throw new Error(`${error.message}`);
       }
@@ -41,11 +41,10 @@ export const useGetTopicsWithSubtopic = ({
     queryKey: ["topics", activeSubject, userStandard, selectedChapter],
     queryFn: async () => {
       try {
-        const res = await fetch(
-          `/api/topics?subjectName=${activeSubject}&chapterId=${selectedChapter}&standard=${userStandard}`
+        const res = await apiClient.get<{ topics: TopicsWithSubtopicsProps[] }>(
+          `/api/questionbank/topicwithsubtopic?subjectName=${activeSubject}&chapterId=${selectedChapter}&standard=${userStandard}`
         );
-        const data: { topics: TopicsWithSubtopicsProps[] } = await res.json();
-        return data;
+        return res.data;
       } catch (error: any) {
         throw new Error(`${error.message}`);
       }

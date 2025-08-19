@@ -24,7 +24,7 @@ const SetInstitute = () => {
     if (user?.institute._id && (!institute || !institute._id)) {
       setUserInstitute();
     }
-  }, [dispatch]);
+  }, [dispatch, institute, user?.institute._id]);
   return null;
 };
 

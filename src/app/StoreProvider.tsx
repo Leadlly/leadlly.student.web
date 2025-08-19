@@ -26,7 +26,7 @@ export default function StoreProvider({
   monthlyReport: TStudentReportProps | null;
   overallReport: TStudentOverallReportProps[] | null;
 }) {
-  const storeRef = useRef<AppStore>();
+  const storeRef = useRef<AppStore>(undefined);
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore();

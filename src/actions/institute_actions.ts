@@ -1,27 +1,12 @@
 "use server";
 
-import { getCookie } from "./cookie_actions";
+import apiClient from "@/apiClient/apiClient";
 
 export const getUserInstitute = async () => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/institute/info`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["instituteData"],
-        },
-      }
-    );
+    const res = await apiClient.get(`/api/user/institute/info`);
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error) {

@@ -31,19 +31,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Provider>
-          <QueryProvider>
-            <GoogleOAuthProvider
-              clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
-            >
-              <SetInstitute />
-              <Container className="py-3">
-                <main className="h-main-height">{children}</main>
-              </Container>
-              <Toaster richColors position="top-center" />
-            </GoogleOAuthProvider>
-          </QueryProvider>
-        </Provider>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+        >
+          <Container className="py-3">
+            <main className="h-main-height">{children}</main>
+          </Container>
+          <Toaster richColors position="top-center" />
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

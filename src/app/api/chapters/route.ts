@@ -1,5 +1,4 @@
 import apiClient from "@/apiClient/apiClient";
-import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -19,8 +18,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         message:
-          error instanceof AxiosError
-            ? error.response?.data?.message
+          error instanceof Error && "response" in error
+            ? error.message
             : "Unable to fetch chapters",
       },
       { status: error.response?.status || 500 }

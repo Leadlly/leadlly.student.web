@@ -87,12 +87,11 @@ const RadialBarChart = ({
 
       <div
         className={cn(
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-          dataLabel === "questions" ? "-mt-3" : ""
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         )}
       >
         {labels.includes("No. of Questions Solved") && (
-          <p className="text-2xl leading-none font-semibold text-center">
+          <p className="text-2xl font-semibold text-center">
             {subject?.total_questions_solved.number! > 120
               ? "120+"
               : subject?.total_questions_solved.number}
@@ -100,9 +99,9 @@ const RadialBarChart = ({
         )}
         <p
           className={cn(
-            "text-sm leading-none font-medium mt-2 capitalize",
-            dataLabel === "overall" ? "text-[10px] text-[#a9a9a9] -mt-1" : "",
-            dataLabel === "questions" ? "-mt-[1px]" : ""
+            "text-sm font-medium mt-8 capitalize",
+            dataLabel === "overall" ? "text-[10px] text-[#a9a9a9]" : "",
+            dataLabel === "questions" ? "-mt-[2px]" : ""
           )}
         >
           {dataLabel}

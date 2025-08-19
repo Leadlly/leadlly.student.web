@@ -1,7 +1,7 @@
 "use server";
 
+import apiClient from "@/apiClient/apiClient";
 import { revalidateTag } from "next/cache";
-import { getCookie } from "./cookie_actions";
 
 type StudyDataProps = {
   tag: string;
@@ -24,23 +24,10 @@ type StudyDataProps = {
 };
 
 export const saveStudyData = async (data: StudyDataProps) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/progress/save`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.post(`/api/user/progress/save`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     revalidateTag("unrevised_topics");
 
@@ -60,23 +47,10 @@ export const setUnrevisedTopics = async (data: {
   subject: string;
   standard: number;
 }) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/unrevisedtopics/save`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.post(`/api/user/unrevisedtopics/save`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     revalidateTag("unrevised_topics");
 
@@ -93,26 +67,15 @@ export const setUnrevisedTopics = async (data: {
 };
 
 export const getUnrevisedTopics = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/topics/get`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["unrevised_topics"],
-        },
-      }
-    );
+    const res = await apiClient.get(`/api/user/topics/get`, {
+      cache: "force-cache",
+      next: {
+        tags: ["unrevised_topics"],
+      },
+    });
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error: unknown) {
@@ -127,24 +90,12 @@ export const getUnrevisedTopics = async () => {
 };
 
 export const deleteUnrevisedTopics = async (data: { chapterName: string }) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/topics/delete`,
-      {
-        method: "DELETE",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
+    const res = await apiClient.delete(`/api/user/topics/delete`, {
+      data,
+    });
 
-        credentials: "include",
-      }
-    );
-
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     revalidateTag("unrevised_topics");
 

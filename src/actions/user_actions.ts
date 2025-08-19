@@ -5,27 +5,16 @@ import {
   ResetPasswordProps,
   SignUpDataProps,
   StudentPersonalInfoProps,
+  UserDataProps,
 } from "@/helpers/types";
-import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
-import apiClient from "@/apiClient/apiClient";
+import apiClient, { ApiResponse } from "@/apiClient/apiClient";
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const response = await apiClient.post("/api/auth/register", data);
 
-    const responseData = await response.json();
+    const responseData = await response.data;
 
     return responseData;
   } catch (error) {
@@ -54,20 +43,9 @@ export const resendOtp = async (email: string) => {
 
 export const forgotPassword = async (data: ForgotPasswordProps) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/forgetpassword`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const res = await apiClient.post(`/api/auth/forgetpassword`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -87,20 +65,9 @@ export const resetPassword = async (
   token: string
 ) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/resetpassword/${token}`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const res = await apiClient.post(`/api/auth/resetpassword/${token}`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -113,20 +80,9 @@ export const resetPassword = async (
 
 export const verifyAuthToken = async (token: string) => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/token/verify`,
-      {
-        method: "POST",
-        body: JSON.stringify({ token }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const res = await apiClient.post(`/api/auth/token/verify`, { token });
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -138,25 +94,15 @@ export const verifyAuthToken = async (token: string) => {
 };
 
 export const getUser = async () => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/auth/user`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["userData"],
-        },
-      }
-    );
+    const res = await apiClient.get<{ user: UserDataProps }>(`/api/auth/user`, {
+      cache: "force-cache",
+      next: {
+        tags: ["userData"],
+      },
+    });
 
-    const data = await res.json();
+    const data = res.data;
 
     return data;
   } catch (error: unknown) {
@@ -171,22 +117,10 @@ export const getUser = async () => {
 };
 
 export const studentPersonalInfo = async (data: StudentPersonalInfoProps) => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/profile/save`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.post(`/api/user/profile/save`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     revalidateTag("userData");
 
@@ -201,22 +135,10 @@ export const studentPersonalInfo = async (data: StudentPersonalInfoProps) => {
 };
 
 export const setTodaysVibe = async (data: { todaysVibe: string }) => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/todaysVibe/save`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.post(`/api/user/todaysVibe/save`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     revalidateTag("userData");
 
     return responseData;

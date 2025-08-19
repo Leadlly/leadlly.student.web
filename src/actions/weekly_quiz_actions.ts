@@ -1,26 +1,13 @@
 "use server";
 
-import { getCookie } from "@/actions/cookie_actions";
+import apiClient from "@/apiClient/apiClient";
 import { TQuizAnswerProps } from "@/helpers/types";
 
 export const getWeeklyQuiz = async (query: string) => {
   try {
-    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/quiz/weekly/get?attempted=${query}`);
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/quiz/weekly/get?attempted=${query}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-      }
-    );
-
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error) {
@@ -38,22 +25,11 @@ export const getWeeklyQuiz = async (query: string) => {
 
 export const getWeeklyQuizQuestions = async (quizId: string) => {
   try {
-    const token = await getCookie("token");
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/quiz/weekly/questions/get?quizId=${quizId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-      }
+    const res = await apiClient.get(
+      `/api/quiz/weekly/questions/get?quizId=${quizId}`
     );
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error) {
@@ -75,22 +51,9 @@ export const saveWeeklyQuizQuestion = async (data: {
   question: TQuizAnswerProps;
 }) => {
   try {
-    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/quiz/weekly/questions/save`, data);
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/quiz/weekly/questions/save`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
-
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error) {

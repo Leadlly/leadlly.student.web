@@ -724,3 +724,37 @@ export type TInstituteProps = {
   createdAt: string;
   updatedAt: string;
 };
+
+export interface IClassesProps {
+  _id: string;
+  acceptingResponses: boolean;
+  batch: {
+    _id: string;
+    name: string;
+    standard: string;
+  };
+  classReport: {
+    _id: string;
+    lastUpdated: string;
+    syllabusCompleted: number;
+    totalDuration: number;
+    totalLectures: number;
+  };
+  createdAt: string;
+  description: string | null;
+  meetingLink: string | null;
+  notes: string | null;
+  recordingLink: string | null;
+  resources: any[];
+  requestedAt: string;
+  shareCode: string;
+  shareLink: string;
+  status: string;
+  subject: string;
+  teacher: {
+    _id: string;
+    firstname: string;
+    lastname: string;
+  };
+  updatedAt: string;
+}

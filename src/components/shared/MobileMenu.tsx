@@ -22,13 +22,14 @@ const MobileMenu = ({ meetingsLength }: { meetingsLength: number }) => {
       }
     };
 
-    if (navbarRef.current) {
-      navbarRef.current.addEventListener("scroll", handleScroll);
+    const element = navbarRef.current;
+    if (element) {
+      element.addEventListener("scroll", handleScroll);
     }
 
     return () => {
-      if (navbarRef.current) {
-        navbarRef.current.removeEventListener("scroll", handleScroll);
+      if (element) {
+        element.removeEventListener("scroll", handleScroll);
       }
     };
   }, []);

@@ -1,30 +1,17 @@
 "use server";
 
 import { TQuizAnswerProps } from "@/helpers/types";
-import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
+import apiClient from "@/apiClient/apiClient";
 
 export const saveDailyQuiz = async (data: {
   data: { name: string; _id: string; isSubtopic: boolean };
   questions: TQuizAnswerProps[];
 }) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/quiz/save`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.post(`/api/quiz/save`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     revalidateTag("userData");
     revalidateTag("weeklyReport");
     revalidateTag("monthlyReport");
@@ -43,23 +30,10 @@ export const saveDailyQuiz = async (data: {
 };
 
 export const getDailyStreakQuestions = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/questionbank/streakquestion`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-      }
-    );
+    const res = await apiClient.get(`/api/questionbank/streakquestion`);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error) {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/apiClient/apiClient";
-import { AxiosError } from "axios";
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,8 +19,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         message:
-          error instanceof AxiosError
-            ? error.response?.data?.message
+          error instanceof Error && "response" in error
+            ? error.message
             : "Unable to fetch topics",
       },
       { status: error.response?.status || 500 }

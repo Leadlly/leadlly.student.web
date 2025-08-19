@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       | string
       | null;
 
-    const token = cookies().get("token")?.value ?? "";
+    const token = (await cookies()).get("token")?.value ?? "";
 
     const backendApiUrl = `/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}`;
     const response = await apiClient.post(
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
           "Content-Type": "application/json",
           Cookie: `token=${token}`,
         },
-        withCredentials: true,
+        credentials: "include",
       }
     );
 
@@ -43,7 +43,10 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     return NextResponse.json(
       {
-        message: error.response?.data?.message || error.message,
+        message:
+          error instanceof Error && "response" in error
+            ? error.message
+            : "Unable to verify subscription",
       },
       {
         status: error.response?.status || 500,
