@@ -1,26 +1,13 @@
 import { cn } from "@/lib/utils";
 import PaymentButton from "./PaymentButton";
-import { Plan, UserDataProps } from "@/helpers/types";
+import { Plan } from "@/helpers/types";
 
 type PlanPriceProps = {
-  // title: string;
-  // duration: number;
-  // amount: number;
-  // planId: string;
   className?: string;
-  // setSubscriptionId: (subscriptionId: string) => void;
   plan: Plan;
 };
 
-const PlanPriceBox = async ({
-  // title,
-  // duration,
-  // amount,
-  // planId,
-  className,
-  // setSubscriptionId,
-  plan,
-}: PlanPriceProps) => {
+const PlanPriceBox = ({ className, plan }: PlanPriceProps) => {
   return (
     <div
       className={cn(

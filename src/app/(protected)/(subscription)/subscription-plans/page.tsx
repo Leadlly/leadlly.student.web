@@ -5,7 +5,7 @@ import SubscriptionPlansPage from "./_components/SubscriptionPlansPage";
 const SubscriptionPlans = async () => {
   const userData = getUser();
 
-  const pricingData = getPricing("main");
+  const pricingData = getPricing("pro");
 
   const [userInfo, pricingInfo] = await Promise.all([userData, pricingData]);
 

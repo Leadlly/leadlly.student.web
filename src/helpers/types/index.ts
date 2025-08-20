@@ -659,14 +659,18 @@ export type ChapterErrorBookProps = {
 
 export interface Plan {
   _id: string;
-  planId: string;
   amount: number;
-  currency: string;
-  type: string;
+  title: string;
   category: string;
-  status: string;
-  "duration(months)": number;
   createdAt: string;
+  currency: string;
+  "duration(months)": number;
+  planId: string;
+  status: string;
+  type: string;
+  exam: string[];
+  discountPercentage: number;
+  initialPrice: number;
 }
 
 export interface ExistingPlan {

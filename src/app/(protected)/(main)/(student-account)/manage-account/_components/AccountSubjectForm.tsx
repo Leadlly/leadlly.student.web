@@ -62,7 +62,7 @@ const AccountSubjectForm = ({
 
     const formattedData = {
       tag: "unrevised_topic",
-      chapterIds: data.chapters,
+      chapterIds: data.chapters.map((chapter) => chapter._id),
       subject: activeSubject,
       standard: userStandard,
     };
