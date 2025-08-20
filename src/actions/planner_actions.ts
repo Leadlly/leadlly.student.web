@@ -1,57 +1,29 @@
 "use server";
 
-import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
+import apiClient from "@/apiClient/apiClient";
 
 export const getPlanner = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/planner/get`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        // cache: "force-cache",
-        next: {
-          tags: ["plannerData"],
-        },
-      }
-    );
+    const res = await apiClient.get(`/api/planner/get`);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      throw new Error(`Error fetching planner data: ${error.message}`);
+      console.log(`Error fetching planner data: ${error.message}`);
     } else {
-      throw new Error("An unknown error occurred while fetching planner data!");
+      console.log("An unknown error occurred while fetching planner data!");
     }
   }
 };
 
 export const createPlanner = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/planner/create`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.get(`/api/planner/create`);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error: unknown) {
@@ -64,22 +36,11 @@ export const createPlanner = async () => {
 };
 
 export const updatePlanner = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/planner/update`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.get(`/api/planner/update`);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
+
     revalidateTag("plannerData");
 
     return responseData;
@@ -93,22 +54,10 @@ export const updatePlanner = async () => {
 };
 
 export const allocateBackTopics = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/planner/allocateTopics`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.get(`/api/planner/allocateTopics`);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     revalidateTag("plannerData");
 
     return responseData;

@@ -5,15 +5,19 @@ import weeklyReportReducer from "@/redux/slices/weeklyReportSlice";
 import monthlyReportReducer from "@/redux/slices/monthlyReportSlice";
 import overallReportReducer from "@/redux/slices/overallReportSlice";
 import weeklyQuizReducer from "@/redux/slices/weeklyQuizSlice";
+import dailyQuizReducer from "@/redux/slices/dailyQuizSlice";
+import instituteReducer from "@/redux/slices/instituteSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       user: userReducer,
+      dailyQuizzes: dailyQuizReducer,
       weeklyReport: weeklyReportReducer,
       monthlyReport: monthlyReportReducer,
       overallReport: overallReportReducer,
       weeklyQuizzes: weeklyQuizReducer,
+      institute: instituteReducer,
     },
   });
 };

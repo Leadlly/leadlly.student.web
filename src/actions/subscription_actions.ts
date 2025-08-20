@@ -1,29 +1,21 @@
 "use server";
 
+import apiClient from "@/apiClient/apiClient";
 import { revalidateTag } from "next/cache";
-import { getCookie } from "./cookie_actions";
 
 export const buySubscription = async (data: {
   planId: string | string[] | undefined;
   coupon?: string;
 }) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/create?planId=${data.planId}&coupon=${data.coupon}`,
+    const res = await apiClient.post(
+      `/api/subscription/create?planId=${data.planId}&coupon=${data.coupon}`,
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
         cache: "no-store",
       }
     );
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData.subscription;
   } catch (error: unknown) {
@@ -36,23 +28,15 @@ export const buySubscription = async (data: {
 };
 
 export const getPricing = async (pricingType: string) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/pricing/get?pricingType=${pricingType}`,
+    const res = await apiClient.get(
+      `/api/subscription/pricing/get?pricingType=${pricingType}`,
       {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
         cache: "no-store",
       }
     );
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data.pricing;
   } catch (error: unknown) {
@@ -65,23 +49,12 @@ export const getPricing = async (pricingType: string) => {
 };
 
 export const getFreeTrialActive = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/freetrial`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const res = await apiClient.get(`/api/subscription/freetrial`, {
+      cache: "no-store",
+    });
 
-    const data = await res.json();
+    const data = await res.data;
 
     revalidateTag("userData");
 
@@ -96,23 +69,15 @@ export const getFreeTrialActive = async () => {
 };
 
 export const getSubscriptionPricingByPlanId = async (planId: string) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/pricing/plan/${planId}`,
+    const res = await apiClient.get(
+      `/api/subscription/pricing/plan/${planId}`,
       {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
         cache: "no-store",
       }
     );
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -131,23 +96,15 @@ export const getCoupon = async (data: {
   plan: string | string[] | undefined;
   category: string;
 }) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/coupons/get?plan=${data.plan}&category=${data.category}`,
+    const res = await apiClient.get(
+      `/api/subscription/coupons/get?plan=${data.plan}&category=${data.category}`,
       {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
         cache: "no-store",
       }
     );
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -159,24 +116,12 @@ export const getCoupon = async (data: {
 };
 
 export const validateCustomCoupon = async (data: { code: string }) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/subscription/coupons/check`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        body: JSON.stringify(data),
-        credentials: "include",
-        cache: "no-store",
-      }
-    );
+    const res = await apiClient.post(`/api/subscription/coupons/check`, data, {
+      cache: "no-store",
+    });
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {

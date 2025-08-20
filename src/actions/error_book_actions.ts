@@ -1,57 +1,33 @@
 "use server";
 
-import { getCookie } from "./cookie_actions";
-import { revalidatePath, revalidateTag } from "next/cache";
+import apiClient from "@/apiClient/apiClient";
+import { revalidatePath } from "next/cache";
 
 export const getErrorBook = async () => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/errorBook/get`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        next: {
-          tags: ["errorBookData"],
-        },
-      }
-    );
+    const res = await apiClient.get(`/api/errorBook/get`);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      throw new Error(`Error fetching Error Book: ${error.message}`);
+      console.log(`Error fetching Error Book: ${error.message}`);
     } else {
-      throw new Error("An unknown error occurred while fetching Error Book!");
+      console.log("An unknown error occurred while fetching Error Book!");
     }
   }
 };
+
 export const getChapterErrorBook = async ({ chapter }: { chapter: string }) => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/errorBook/chapter/${chapter}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        next: {
-          tags: ["chapterErrorBookData", chapter],
-        },
-      }
-    );
+    const res = await apiClient.get(`/api/errorBook/chapter/${chapter}`, {
+      next: {
+        tags: ["chapterErrorBookData", chapter],
+      },
+    });
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -61,23 +37,14 @@ export const getChapterErrorBook = async ({ chapter }: { chapter: string }) => {
     }
   }
 };
-export const createErrorNote = async ({ errorNote }: { errorNote: string }) => {
-  const token = await getCookie("token");
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/errorBook/errorNote`,
-      {
-        method: "POST",
-        body: JSON.stringify({ note: errorNote }),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
 
-    const responseData = await res.json();
+export const createErrorNote = async ({ errorNote }: { errorNote: string }) => {
+  try {
+    const res = await apiClient.post(`/api/errorBook/errorNote`, {
+      note: errorNote,
+    });
+
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -89,26 +56,18 @@ export const createErrorNote = async ({ errorNote }: { errorNote: string }) => {
     revalidatePath("/error-notes");
   }
 };
+
 export const toggleErrorNote = async ({
   errorNoteId,
 }: {
   errorNoteId: string;
 }) => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/errorBook/errorNote/toggle/${errorNoteId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
+    const res = await apiClient.put(
+      `/api/errorBook/errorNote/toggle/${errorNoteId}`
     );
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -120,27 +79,18 @@ export const toggleErrorNote = async ({
     revalidatePath("/error-notes");
   }
 };
+
 export const updateErrorNote = async ({
   questionIds,
 }: {
   questionIds: string[];
 }) => {
-  const token = await getCookie("token");
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/errorBook/update`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({ solvedQuestions: questionIds }),
-      }
-    );
+    const res = await apiClient.put(`/api/errorBook/update`, {
+      solvedQuestions: questionIds,
+    });
 
-    const responseData = await res.json();
+    const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {

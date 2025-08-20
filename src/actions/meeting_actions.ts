@@ -1,7 +1,7 @@
 "use server";
 
+import apiClient from "@/apiClient/apiClient";
 import { revalidateTag } from "next/cache";
-import { getCookie } from "./cookie_actions";
 
 type DataProps = {
   date: Date;
@@ -10,23 +10,10 @@ type DataProps = {
 };
 
 export const requestMeeting = async (data: DataProps) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/meeting/request`,
-      {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
-    );
+    const res = await apiClient.post(`/api/meeting/request`, data);
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     revalidateTag("meetingData");
 
@@ -41,25 +28,10 @@ export const requestMeeting = async (data: DataProps) => {
 };
 
 export const getMeetings = async (meeting: string) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/meeting/get?meeting=${meeting}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        next: {
-          tags: ["meetingData"],
-        },
-      }
-    );
+    const res = await apiClient.post(`/api/meeting/get?meeting=${meeting}`, {});
 
-    const responseData = await res.json();
+    const responseData = await res.data;
 
     return responseData;
   } catch (error: unknown) {

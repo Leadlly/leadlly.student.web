@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getUser, verifyAuthToken } from "./actions/user_actions";
+import { verifyAuthToken } from "./actions/user_actions";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -36,7 +36,6 @@ export async function middleware(request: NextRequest) {
   }
 
   const token = getTokenFromStorage(request);
-  const userData = await getUser();
 
   const isPublicPath =
     path.startsWith("/login") ||
@@ -53,42 +52,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   }
 
-  // initial personal info middleware
-  if (token && !isPublicPath) {
-    const hasSubmittedInitialInfo = !!userData.user?.academic.standard;
-
-    if (!hasSubmittedInitialInfo && path !== "/initial-info") {
-      return NextResponse.redirect(new URL("/initial-info", request.nextUrl));
-    }
-
-    if (hasSubmittedInitialInfo && path === "/initial-info") {
-      return NextResponse.redirect(new URL("/", request.nextUrl));
-    }
-  }
-
-  // free trial activation middleware
-  if (token && !isPublicPath && path !== "/initial-info") {
-    const isSubscribed = userData.user?.freeTrial.active === true;
-    console.log("Free trial activation middleware ======> ", isSubscribed);
-
-    if (!isSubscribed && path !== "/trial-subscription") {
-      return NextResponse.redirect(
-        new URL("/trial-subscription", request.nextUrl)
-      );
-    }
-
-    if (isSubscribed && path === "/trial-subscription") {
-      return NextResponse.redirect(new URL("/", request.nextUrl));
-    }
-  }
-
   return NextResponse.next();
 }
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
-  // console.log("====cookies are coming here =======>",cookies, "===========>")
-  const token = cookies.get("token");
+  const token = cookies.get("token")?.value;
   return token;
 }
 

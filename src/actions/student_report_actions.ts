@@ -1,28 +1,17 @@
 "use server";
 
-import { getCookie } from "./cookie_actions";
+import apiClient from "@/apiClient/apiClient";
 
 export const getWeeklyReport = async () => {
   try {
-    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/user/report/week`, {
+      cache: "force-cache",
+      next: {
+        tags: ["weeklyReport"],
+      },
+    });
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/report/week`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["weeklyReport"],
-        },
-      }
-    );
-
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
@@ -40,25 +29,14 @@ export const getWeeklyReport = async () => {
 
 export const getMonthlyReport = async () => {
   try {
-    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/user/report/month`, {
+      cache: "force-cache",
+      next: {
+        tags: ["monthlyReport"],
+      },
+    });
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/report/month`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["monthlyReport"],
-        },
-      }
-    );
-
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
@@ -76,35 +54,24 @@ export const getMonthlyReport = async () => {
 
 export const getOverallReport = async () => {
   try {
-    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/user/report/overall`, {
+      cache: "force-cache",
+      next: {
+        tags: ["overallReport"],
+      },
+    });
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/user/report/overall`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["overallReport"],
-        },
-      }
-    );
-
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new Error(
-        `Error in fetching student monthly report: ${error.message}`
+        `Error in fetching student overall report: ${error.message}`
       );
     } else {
       throw new Error(
-        "An unknown error occurred while fetching student monthly report"
+        "An unknown error occurred while fetching student overall report"
       );
     }
   }

@@ -32,7 +32,7 @@ const useGetExistingPlanRemainingAmount = () => {
     };
 
     getUserData();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const getExistingPlan = async () => {

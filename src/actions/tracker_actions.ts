@@ -1,27 +1,17 @@
 "use server";
 
-import { getCookie } from "./cookie_actions";
+import apiClient from "@/apiClient/apiClient";
 
 export const getUserTracker = async (subject: string | string[]) => {
-  const token = await getCookie("token");
-
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/tracker/get?subject=${subject}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-        next: {
-          tags: ["userTracker"],
-        },
-      }
-    );
+    const res = await apiClient.get(`/api/tracker/get?subject=${subject}`, {
+      cache: "force-cache",
+      next: {
+        tags: ["userTracker"],
+      },
+    });
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
