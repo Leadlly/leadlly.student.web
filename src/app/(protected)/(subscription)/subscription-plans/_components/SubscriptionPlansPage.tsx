@@ -2,9 +2,12 @@
 
 import { Header } from "@/components";
 import {
+  mentorWordMap,
+  planFeatures,
   subscriptionExpertBenefits,
   subscriptionLearningBenefits,
   subscriptionPlanningBenefits,
+  subscriptionTabs,
 } from "@/helpers/constants";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -12,90 +15,49 @@ import BenefitsBox from "./BenefitsBox";
 import PlanPriceBox from "./PlanPriceBox";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { Plan, UserDataProps } from "@/helpers/types";
-import { useSearchParams } from "next/navigation";
-import { loadRazorpayScript } from "@/helpers/utils";
+import { ArrowLeft, CheckIcon, X } from "lucide-react";
 import Script from "next/script";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useGetSubscriptionPricing } from "@/queries/subscriptionQueries";
+import { Plan } from "@/helpers/types";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { selectedPlan } from "@/redux/slices/selectedPlanSlice";
 
-const SubscriptionPlansPage = ({
-  pricing,
-  user,
-}: {
-  pricing: Plan[];
-  user: UserDataProps;
-}) => {
-  console.log(pricing);
+const SubscriptionPlansPage = () => {
+  const { user } = useAppSelector((state) => state.user);
+  const { institute } = useAppSelector((state) => state.institute);
 
-  // const [subscriptionId, setSubscriptionId] = useState("");
+  const [activePlanTab, setActivePlanTab] = useState(
+    institute && institute._id ? subscriptionTabs[1] : subscriptionTabs[0]
+  );
 
-  // const searchParams = useSearchParams();
-  // const subscriptionIdParams = searchParams.get("subscriptionId");
-  // const appRedirectParam = searchParams.get("redirect");
+  const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   if (subscriptionIdParams) {
-  //     setSubscriptionId(subscriptionIdParams);
-  //   }
-  // }, [subscriptionIdParams]);
+  const { data: pricingData, isLoading: fetchingPricing } =
+    useGetSubscriptionPricing(activePlanTab.id);
 
-  // const openRazorpayPopUp = () => {
-  //   const options = {
-  //     key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY,
-  //     name: "Leadlly",
-  //     order_id: subscriptionId,
-  //     callback_url: `/api/subscription/verify?appRedirectURI=${appRedirectParam ? encodeURIComponent(appRedirectParam) : ""}`,
-  //     prefill: {
-  //       name: user ? user.firstname : "",
-  //       email: user ? user.email : "",
-  //       contact: user ? user.phone : "",
-  //     },
-  //     modal: {
-  //       ondismiss: function () {
-  //         window.location.href = appRedirectParam
-  //           ? `${appRedirectParam}?transaction=cancelled`
-  //           : "";
-  //       },
-  //     },
-  //     notes: {
-  //       address: "Razorpay Corporate Office",
-  //     },
-  //     theme: {
-  //       color: "#9654f4",
-  //     },
-  //   };
+  useEffect(() => {
+    if (fetchingPricing) return;
 
-  //   const razor = new window.Razorpay(options);
-  //   razor.open();
-  // };
+    if (pricingData && pricingData.pricing && pricingData.pricing.length > 0) {
+      dispatch(selectedPlan(pricingData.pricing[2]));
+    }
+  }, [pricingData, fetchingPricing]);
 
-  // useEffect(() => {
-  //   if (subscriptionId) {
-  //     const loadAndOpenRazorpay = async () => {
-  //       const isLoaded = await loadRazorpayScript();
-  //       if (isLoaded) {
-  //         openRazorpayPopUp();
-  //       } else {
-  //         console.error("Razorpay script failed to load");
-  //       }
-  //     };
+  const examType = user?.academic.competitiveExam!;
 
-  //     loadAndOpenRazorpay();
-  //   }
-  // }, [subscriptionId]);
+  const mentorWord = mentorWordMap[examType as keyof typeof mentorWordMap];
+
   return (
     <>
       <Script
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
-      <section>
+      <section className="relative">
         <div className="px-3 lg:px-5 py-2 mb-6 flex items-center gap-5">
-          <Link href="/">
-            <Button variant="outline">
-              <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
-            </Button>
-          </Link>
           <Image
             src="/assets/images/leadlly_logo.svg"
             alt="Leadlly"
@@ -110,47 +72,110 @@ const SubscriptionPlansPage = ({
           titleClassName=" text-2xl md:text-4xl lg:text-page-title"
         />
 
-        <div className="px-3 xl:px-14">
-          <div className="w-full rounded-xl shadow-[0_0_36.8px_0_rgba(150,84,244,0.19)] px-5 xl:px-12 py-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5 my-7 md:my-12">
-            <BenefitsBox
-              title="planning & organization:"
-              subscriptionBenefits={subscriptionPlanningBenefits}
-            />
+        <div className="text-center px-3 lg:px-5 mb-8 mt-2">
+          <p className="text-primary font-semibold text-base sm:text-lg">
+            Choose the plan that works for you {":)"}
+          </p>
+        </div>
 
-            <BenefitsBox
-              title="expert guidance & support:"
-              subscriptionBenefits={subscriptionExpertBenefits}
-            />
+        <div className="sticky top-0 z-50 grid place-items-center px-3 lg:px-5 py-3">
+          {institute && institute._id ? (
+            <Button className="max-w-80 h-10 w-full rounded-full bg-primary">
+              {activePlanTab.label} Plan
+            </Button>
+          ) : (
+            <div className="max-w-80 h-10 w-full mx-auto bg-white border border-primary rounded-full flex items-center justify-between">
+              {subscriptionTabs.map((item) => (
+                <Button
+                  key={item.id}
+                  onClick={() => setActivePlanTab(item)}
+                  className={cn(
+                    "flex-1 rounded-full font-medium sm:text-lg",
+                    activePlanTab.id === item.id
+                      ? "bg-primary text-white"
+                      : "bg-transparent text-primary hover:bg-transparent"
+                  )}
+                >
+                  {item.label}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
 
-            <BenefitsBox
-              title="learning optimization:"
-              subscriptionBenefits={subscriptionLearningBenefits}
-            />
+        <div>
+          {fetchingPricing ? (
+            <div className="flex items-center justify-center gap-4 flex-wrap max-w-5xl w-full mx-auto h-52 px-3 lg:px-5">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="flex-1 bg-slate-100" />
+              ))}
+            </div>
+          ) : (
+            <div>
+              {pricingData &&
+              pricingData.pricing &&
+              pricingData.pricing.length > 0 ? (
+                <div className="flex items-center justify-center gap-4 flex-wrap max-w-5xl w-full mx-auto my-8 px-3 lg:px-5">
+                  {pricingData.pricing
+                    .sort(
+                      (a, b) => a["duration(months)"] - b["duration(months)"]
+                    )
+                    .map((plan) => (
+                      <PlanPriceBox key={plan?._id} plan={plan} />
+                    ))}
+                </div>
+              ) : null}
+            </div>
+          )}
+        </div>
+
+        <div className="max-w-5xl w-full mx-auto px-3 lg:px-5 pt-5 pb-20">
+          <div className="flex items-center gap-2">
+            <span className="text-primary font-medium whitespace-nowrap">
+              View Benefits
+            </span>
+
+            <div className="w-full h-0.5 bg-primary"></div>
           </div>
 
-          {/* Dynamic PlanPriceBox Rendering based on pricing data */}
-          <div className="flex flex-col md:flex-row justify-between md:items-end gap-5 pb-10">
-            {pricing?.map((plan) => (
-              <PlanPriceBox
-                key={plan.planId}
-                plan={plan}
-                // title={
-                //   plan["duration(months)"] === 3
-                //     ? "basic plan"
-                //     : plan["duration(months)"] === 6
-                //       ? "professional plan"
-                //       : "ultimate plan"
-                // }
-                // duration={plan["duration(months)"]}
-                // amount={plan.amount}
-                // planId={plan.planId}
-                // className={
-                //   plan["duration(months)"] === 6 ? "bg-primary/10" : ""
-                // }
-                // setSubscriptionId={setSubscriptionId}
-              />
-            ))}
-          </div>
+          <Card className="bg-[#F7F2FF] pt-6 mt-4 rounded-3xl">
+            <CardContent className="flex gap-2 flex-wrap">
+              {planFeatures.map((feat, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "flex-1 min-w-[50%] bg-white py-3 flex items-center rounded-sm",
+                    i === 0 && "rounded-t-2xl",
+                    planFeatures.length - 1 === i && "rounded-b-2xl"
+                  )}
+                >
+                  <div className="max-w-20 w-full h-full grid place-items-center border-r">
+                    {activePlanTab.features.includes(feat.title) ? (
+                      <CheckIcon className="text-green-500" />
+                    ) : (
+                      <X className="text-red-500" />
+                    )}
+                  </div>
+
+                  <div className="px-4">
+                    <p>{feat.title.replace("{mentor}", mentorWord)}</p>
+                    <p>{feat.subtitle.replace("{mentor}", mentorWord)}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="fixed bottom-0 inset-x-0 py-5 px-3 lg:px-5 grid place-items-center ">
+          <Link
+            href={`/subscription-plans/apply-coupon`}
+            className="max-w-80 w-full h-14"
+          >
+            <Button className="w-full h-full rounded-2xl text-base sm:text-lg font-semibold">
+              Find Coupon
+            </Button>
+          </Link>
         </div>
       </section>
     </>

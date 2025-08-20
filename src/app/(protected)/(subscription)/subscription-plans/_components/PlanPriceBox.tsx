@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
-import PaymentButton from "./PaymentButton";
 import { Plan } from "@/helpers/types";
+import { Card, CardContent } from "@/components/ui/card";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { selectedPlan } from "@/redux/slices/selectedPlanSlice";
 
 type PlanPriceProps = {
   className?: string;
@@ -8,42 +10,82 @@ type PlanPriceProps = {
 };
 
 const PlanPriceBox = ({ className, plan }: PlanPriceProps) => {
+  const user = useAppSelector((state) => state.user.user);
+  const { selectedPlan: selectedPlanState } = useAppSelector(
+    (state) => state.selectedPlan
+  );
+  const dispatch = useAppDispatch();
+
   return (
-    <div
+    <Card
+      role="button"
+      onClick={() => dispatch(selectedPlan(plan))}
       className={cn(
-        "w-full md:w-72 bg-white rounded-xl shadow-[0_0_95px_-27px_rgba(150,84,244,0.2)] overflow-hidden",
+        "flex-1 min-w-64 rounded-xl p-0.5",
+        selectedPlanState?._id === plan._id
+          ? "bg-gradient-to-r from-[#FAAE64] via-primary to-[#FAAE64]"
+          : "bg-[rgba(98,_0,_238,_0.05)]",
+
         className
       )}
     >
-      {plan.category === "pro" && (
-        <div className="bg-primary text-white text-base lg:text-lg font-semibold capitalize text-center py-2">
-          <p>recommended !</p>
-        </div>
-      )}
-      <div className="px-4 py-5 space-y-5">
+      <CardContent
+        className={cn(
+          "relative bg-white px-4 py-5 rounded-lg flex items-center justify-between",
+          user &&
+            user.subscription.status === "active" &&
+            user?.subscription.planId === plan?.planId
+            ? "border-2 border-primary"
+            : ""
+        )}
+      >
+        {plan.category === "premium" && plan["duration(months)"] === 1 && (
+          <div className="absolute -top-4 right-3 z-20 bg-gradient-to-r from-primary to-[#BB76B2] text-white text-sm font-semibold capitalize text-center px-3 py-1 rounded-full">
+            <p>Special Discount</p>
+          </div>
+        )}
+
+        {plan.category === "pro" && plan["duration(months)"] === 12 && (
+          <div className="absolute -top-4 right-3 z-20 bg-gradient-to-r from-primary to-[#BB76B2] text-white text-sm font-semibold capitalize text-center px-3 py-1 rounded-full">
+            <p>Most Popular</p>
+          </div>
+        )}
+
+        {user &&
+        user.subscription.status === "active" &&
+        user.subscription.planId === plan?.planId ? (
+          <div className="absolute -top-4 left-3 z-20 bg-gradient-to-r from-primary to-[#BB76B2] text-white text-sm font-semibold capitalize text-center px-3 py-1 rounded-full">
+            <p>Active Plan</p>
+          </div>
+        ) : null}
+
         <p className="capitalize text-xl lg:text-2xl font-semibold text-[#626262]">
-          {plan.category} plan
+          {plan["duration(months)"] < 12
+            ? `${plan["duration(months)"]} month${plan["duration(months)"] > 1 ? "s" : ""}`
+            : `Till ${user?.academic.competitiveExam?.toUpperCase()} ${new Date().getFullYear() + 1}`}
         </p>
 
-        <div className="text-center">
-          <p className="text-3xl lg:text-4xl font-semibold capitalize">
-            ₹ {plan.amount}/-
-          </p>
-          {/* <p className="text-lg lg:text-xl font-semibold text-[#6d6a6a]">
-            70% OFF <span></span>
-          </p> */}
+        <div>
+          <span className="font-mada-semibold text-lg sm:text-xl">
+            ₹
+            {Math.round(
+              Number(plan?.amount) / Number(plan?.["duration(months)"])
+            )}{" "}
+            <span className="font-mada-medium text-base">
+              {plan["duration(months)"] <= 1 ? "for a month" : "/ month"}
+            </span>
+          </span>
+          <div className="flex justify-end gap-x-2">
+            <p className="text-base sm:text-lg text-neutral-500 font-medium line-through capitalize">
+              ₹{Math.round(Number(plan?.initialPrice))}
+            </p>
+            <p className="text-base sm:text-lg font-medium text-[#6d6a6a]">
+              ₹{plan?.amount}
+            </p>
+          </div>
         </div>
-
-        <div className="grid place-items-center">
-          <PaymentButton
-            price={plan.amount}
-            planId={plan.planId}
-            category={plan.category}
-            // setSubscriptionId={setSubscriptionId}
-          />
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
