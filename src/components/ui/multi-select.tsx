@@ -42,16 +42,22 @@ const multiSelectVariants = cva(
   }
 );
 
-interface MultiSelectProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof multiSelectVariants> {
+interface MultiSelectProps extends VariantProps<typeof multiSelectVariants> {
   options: {
     _id: string;
     name: string;
     icon?: React.ComponentType<{ className?: string }>;
   }[];
-  onValueChange: (value: string[]) => void;
-  defaultValue: string[];
+  onValueChange: (
+    value: Array<{
+      _id: string;
+      name: string | number;
+    }>
+  ) => void;
+  defaultValue: Array<{
+    _id: string;
+    name: string | number;
+  }>;
   placeholder?: string;
   animation?: number;
   maxCount?: number;
@@ -78,15 +84,24 @@ export const MultiSelect = React.forwardRef<
     },
     ref
   ) => {
-    const [selectedValues, setSelectedValues] =
-      React.useState<string[]>(defaultValue);
+    const [selectedValues, setSelectedValues] = React.useState<
+      Array<{
+        _id: string;
+        name: string | number;
+      }>
+    >(defaultValue);
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+    const prevDefaultValueRef = React.useRef(defaultValue);
 
     React.useEffect(() => {
-      if (JSON.stringify(selectedValues) !== JSON.stringify(defaultValue)) {
+      if (
+        JSON.stringify(prevDefaultValueRef.current) !==
+        JSON.stringify(defaultValue)
+      ) {
         setSelectedValues(defaultValue);
+        prevDefaultValueRef.current = defaultValue;
       }
-    }, [defaultValue, selectedValues]);
+    }, [defaultValue]);
 
     const handleInputKeyDown = (
       event: React.KeyboardEvent<HTMLInputElement>
@@ -101,12 +116,17 @@ export const MultiSelect = React.forwardRef<
       }
     };
 
-    const toggleOption = (value: string) => {
-      const newSelectedValues = selectedValues.includes(value)
-        ? selectedValues.filter((v) => v !== value)
-        : [...selectedValues, value];
-      setSelectedValues(newSelectedValues);
-      onValueChange(newSelectedValues);
+    const toggleOption = (value: { _id: string; name: string | number }) => {
+      setSelectedValues((prevValues) => {
+        const valueIndex = prevValues.findIndex((v) => v._id === value._id);
+        const newSelectedValues =
+          valueIndex >= 0
+            ? prevValues.filter((_, index) => index !== valueIndex)
+            : [...prevValues, value];
+
+        onValueChange(newSelectedValues);
+        return newSelectedValues;
+      });
     };
 
     const handleClear = () => {
@@ -128,7 +148,10 @@ export const MultiSelect = React.forwardRef<
       if (selectedValues.length === options.length) {
         handleClear();
       } else {
-        const allValues = options.map((option) => option.name);
+        const allValues = options.map((item) => ({
+          _id: item._id,
+          name: item.name,
+        }));
         setSelectedValues(allValues);
         onValueChange(allValues);
       }
@@ -150,11 +173,11 @@ export const MultiSelect = React.forwardRef<
               <div className="flex justify-between items-center w-full">
                 <div className="max-w-48 w-full flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
-                    const option = options?.find((o) => o.name === value);
+                    const option = options?.find((o) => o._id === value._id);
                     const IconComponent = option?.icon;
                     return (
                       <Badge
-                        key={value}
+                        key={value._id}
                         className={cn(
                           "max-w-96 w-full text-left",
                           multiSelectVariants({ variant, className })
@@ -251,11 +274,15 @@ export const MultiSelect = React.forwardRef<
                   <span>(Select All)</span>
                 </CommandItem>
                 {options?.map((option) => {
-                  const isSelected = selectedValues.includes(option?.name);
+                  const isSelected = selectedValues.some(
+                    (v) => v._id === option?._id
+                  );
                   return (
                     <CommandItem
                       key={option?._id}
-                      onSelect={() => toggleOption(option?.name)}
+                      onSelect={() =>
+                        toggleOption({ _id: option?._id, name: option?.name })
+                      }
                       style={{
                         pointerEvents: "auto",
                         opacity: 1,

@@ -1,6 +1,7 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
+import { Plan } from "@/helpers/types";
 import { revalidateTag } from "next/cache";
 
 export const buySubscription = async (data: {
@@ -36,7 +37,7 @@ export const getPricing = async (pricingType: string) => {
       }
     );
 
-    const data = await res.data;
+    const data: { pricing: Plan[]; success: boolean } = res.data;
 
     return data.pricing;
   } catch (error: unknown) {
