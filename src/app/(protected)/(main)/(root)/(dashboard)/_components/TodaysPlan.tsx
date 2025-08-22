@@ -117,7 +117,13 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
               </ul>
             </div>
 
-            <Accordion type="single" collapsible>
+            <Accordion
+              defaultValue={
+                quizData.backRevisionTopics.length > 0 ? "item-1" : ""
+              }
+              type="single"
+              collapsible
+            >
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-4">
                   <h4 className="text-base font-medium text-[#787878] mb-2">

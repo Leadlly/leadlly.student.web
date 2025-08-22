@@ -693,8 +693,10 @@ export interface ICoupon {
   discountType: string;
   discountValue: number;
   expiryDate: string;
-  plan: string;
+  plan: string[];
   usageLimit: number;
+  createdBy: string;
+  updatedAt: string;
 }
 
 export interface SubtotalContainerProps {
@@ -762,3 +764,18 @@ export interface IClassesProps {
   };
   updatedAt: string;
 }
+
+export type TReferralStats = {
+  premiumReferrals: number;
+  proReferrals: number;
+  referralHistory: Array<{
+    referredUser: string;
+    planId: string;
+    planType: string;
+    rewardEarned: number;
+    date: string;
+  }>;
+  totalCouponsUsed: number;
+  totalReferrals: number;
+  totalRewardsEarned: number;
+};

@@ -1,7 +1,6 @@
 import React from "react";
 import Provider from "../provider";
 import QueryProvider from "../QueryProvider";
-import SetInstitute from "@/components/shared/SetInstitute";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -19,10 +18,7 @@ export default async function ProtectedLayout({
 
   return (
     <Provider>
-      <QueryProvider>
-        <SetInstitute />
-        {children}
-      </QueryProvider>
+      <QueryProvider>{children}</QueryProvider>
     </Provider>
   );
 }

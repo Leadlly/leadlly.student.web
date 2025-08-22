@@ -268,3 +268,10 @@ export const meetingTabs = [
     label: "done",
   },
 ];
+
+export const referralTerms = [
+  "Only applicable on 6 months and full plan.",
+  "You receive 10% of each subscription purchased with your referral code.",
+  "Your friend gets a 20% discount when they use your code.",
+  "Referral rewards are credited after your friend’s payment is confirmed.",
+];

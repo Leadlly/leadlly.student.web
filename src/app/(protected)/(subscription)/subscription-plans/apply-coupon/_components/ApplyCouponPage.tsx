@@ -9,7 +9,6 @@ import CouponVoucher from "./CouponVoucher";
 import CustomCouponForm from "./CustomCouponForm";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ICoupon } from "@/helpers/types";
-import { getCoupon } from "@/actions/subscription_actions";
 import ListedCouponVoucher from "./ListedCouponVoucher";
 import SubtotalContainer from "./SubtotalContainer";
 import { useForm } from "react-hook-form";
@@ -22,15 +21,16 @@ import { getUser } from "@/actions/user_actions";
 import { userData } from "@/redux/slices/userSlice";
 import { Header } from "@/components";
 import { useRouter } from "next/navigation";
+import { useGetCoupon } from "@/queries/subscriptionQueries";
 
 const CustomCouponSchema = z.object({
   code: z.string().min(1, { message: "Coupon is Required" }),
 });
 
 const ApplyCouponPage = ({
-  category,
-  planId,
-  price,
+  // category,
+  // planId,
+  // price,
   redirect,
   existingRemainingAmount,
   subscriptionIdFromApp,
@@ -43,8 +43,6 @@ const ApplyCouponPage = ({
   subscriptionIdFromApp: string | string[] | undefined;
 }) => {
   const [isLoadingUser, setIsLoadingUser] = useState(false);
-  const [coupons, setCoupons] = useState<ICoupon[]>([]);
-  const [isLoadingListedCoupons, setIsLoadingListedCoupons] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<ICoupon | null>(null);
   const [isCustomCouponValid, setIsCustomCouponValid] = useState<
     boolean | null
@@ -75,10 +73,10 @@ const ApplyCouponPage = ({
   const isExistingRemainingAmount = !!Number(existingRemainingAmount);
 
   useEffect(() => {
-    if (!category && !selectedPlan) {
+    if (!selectedPlan) {
       router.replace("/subscription-plans");
     }
-  }, [category, selectedPlan]);
+  }, [selectedPlan]);
 
   useEffect(() => {
     if (isRedirectUri && subscriptionIdFromApp) {
@@ -99,29 +97,10 @@ const ApplyCouponPage = ({
     }
   }, [isRedirectUri, dispatch, subscriptionIdFromApp]);
 
-  useEffect(() => {
-    const getCouponsData = async () => {
-      try {
-        setIsLoadingListedCoupons(true);
-        const data: { coupons: ICoupon[]; success: boolean } = await getCoupon({
-          plan: category ? category : selectedPlan?.category,
-          category: "listed",
-        });
-
-        const filteredCoupons = data.coupons.filter(
-          (coupon) => coupon.usageLimit > 0
-        );
-
-        setCoupons(filteredCoupons);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoadingListedCoupons(false);
-      }
-    };
-
-    getCouponsData();
-  }, [category, selectedPlan]);
+  const { data, isLoading } = useGetCoupon({
+    plan: selectedPlan?.category!,
+    category: "listed",
+  });
 
   const openRazorpayPopUp = useCallback(() => {
     const options = {
@@ -178,7 +157,7 @@ const ApplyCouponPage = ({
         className="max-w-lg mx-auto px-4 space-y-4 h-full overflow-y-auto custom__scrollbar"
         style={{ paddingBottom: subTotalBlockHeight.height + 30 }}
       >
-        {isLoadingListedCoupons || isLoadingUser ? (
+        {isLoading || isLoadingUser ? (
           <Loader />
         ) : (
           <>
@@ -217,7 +196,7 @@ const ApplyCouponPage = ({
                       alt="discount-gift"
                       width={80}
                       height={80}
-                      objectFit="contain"
+                      className="object-contain"
                     />
                   </div>
                 </div>
@@ -234,8 +213,11 @@ const ApplyCouponPage = ({
               </div>
             </CouponVoucher>
 
-            {!isExistingRemainingAmount && coupons && coupons.length > 0 ? (
-              coupons.map((coupon, index) => (
+            {!isExistingRemainingAmount &&
+            data &&
+            data?.coupons &&
+            data?.coupons.length > 0 ? (
+              data?.coupons.map((coupon, index) => (
                 <ListedCouponVoucher
                   key={coupon._id}
                   index={index}
@@ -262,9 +244,9 @@ const ApplyCouponPage = ({
             )}
 
             <SubtotalContainer
-              category={category ? category : selectedPlan?.category}
-              price={price ? price : selectedPlan?.amount.toString()}
-              planId={planId ? planId : selectedPlan?.planId}
+              category={selectedPlan?.category}
+              price={selectedPlan?.amount.toString()}
+              planId={selectedPlan?.planId}
               selectedCoupon={selectedCoupon}
               setSubTotalBlockHeight={setSubTotalBlockHeight}
               resetCustomCouponForm={form.reset}
