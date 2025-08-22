@@ -145,6 +145,88 @@ export const subscriptionLearningBenefits = [
     label: "know your mistakes",
   },
 ];
+
+export const planFeatures = [
+  {
+    title: "Personalised revision planner",
+    subtitle: "A dynamic planner that adapts to your efficiency levels.",
+  },
+  {
+    title: "Syllabus tracking",
+    subtitle:
+      "Track your revision count and efficiency for every chapter and topic.",
+  },
+  {
+    title: "Growth meter",
+    subtitle:
+      "See how much you’ve improved with daily, weekly, and monthly progress insights.",
+  },
+  {
+    title: "Daily quizzes",
+    subtitle: "Revise everyday topics by solving questions.",
+  },
+  {
+    title: "Weekly revision quizzes",
+    subtitle: "Review the entire week with weekend quizzes.",
+  },
+  {
+    title: "Error book",
+    subtitle: "See all your wrong questions and mistakes at one place",
+  },
+  {
+    title: "{mentor} as Personal mentor",
+    subtitle: "Get guide from {mentor} who understand your journey.",
+  },
+  {
+    title: "Active monitoring by {mentor}",
+    subtitle: "Regular progress checks by your mentor.",
+  },
+  {
+    title: "Weekly Sessions",
+    subtitle: "Study tips and exam insights shared directly by {mentor}",
+  },
+  {
+    title: "On demand sessions",
+    subtitle: "{mentor} just a message away.",
+  },
+];
+
+export const subscriptionTabs = [
+  {
+    id: "pro",
+    label: "Pro",
+    features: [
+      "Personalised revision planner",
+      "Syllabus tracking",
+      "Growth meter",
+      "Daily quizzes",
+      "Weekly revision quizzes",
+      "Error book",
+    ],
+  },
+  {
+    id: "premium",
+    label: "Premium",
+    features: [
+      "Personalised revision planner",
+      "Syllabus tracking",
+      "Growth meter",
+      "Daily quizzes",
+      "Weekly revision quizzes",
+      "Error book",
+      "{mentor} as Personal mentor",
+      "Active monitoring by {mentor}",
+      "Weekly Sessions",
+      "On demand sessions",
+    ],
+  },
+];
+
+export const mentorWordMap = {
+  jee: "IITian",
+  neet: "GMCian",
+};
+
 export interface EfficiencyOption {
   min?: number;
   max?: number;

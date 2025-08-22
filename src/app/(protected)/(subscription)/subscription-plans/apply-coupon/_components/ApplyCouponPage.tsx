@@ -20,6 +20,8 @@ import { loadRazorpayScript } from "@/helpers/utils";
 import Loader from "@/components/shared/Loader";
 import { getUser } from "@/actions/user_actions";
 import { userData } from "@/redux/slices/userSlice";
+import { Header } from "@/components";
+import { useRouter } from "next/navigation";
 
 const CustomCouponSchema = z.object({
   code: z.string().min(1, { message: "Coupon is Required" }),
@@ -56,16 +58,27 @@ const ApplyCouponPage = ({
   >("");
 
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const user = useAppSelector((state) => state.user.user);
+  const { selectedPlan } = useAppSelector((state) => state.selectedPlan);
 
   const form = useForm<z.infer<typeof CustomCouponSchema>>({
     resolver: zodResolver(CustomCouponSchema),
+    defaultValues: {
+      code: "",
+    },
   });
 
   const isRedirectUri = !!redirect;
 
   const isExistingRemainingAmount = !!Number(existingRemainingAmount);
+
+  useEffect(() => {
+    if (!category && !selectedPlan) {
+      router.replace("/subscription-plans");
+    }
+  }, [category, selectedPlan]);
 
   useEffect(() => {
     if (isRedirectUri && subscriptionIdFromApp) {
@@ -91,7 +104,7 @@ const ApplyCouponPage = ({
       try {
         setIsLoadingListedCoupons(true);
         const data: { coupons: ICoupon[]; success: boolean } = await getCoupon({
-          plan: category,
+          plan: category ? category : selectedPlan?.category,
           category: "listed",
         });
 
@@ -108,7 +121,7 @@ const ApplyCouponPage = ({
     };
 
     getCouponsData();
-  }, [category]);
+  }, [category, selectedPlan]);
 
   const openRazorpayPopUp = useCallback(() => {
     const options = {
@@ -169,11 +182,18 @@ const ApplyCouponPage = ({
           <Loader />
         ) : (
           <>
-            <Link href={redirect ? `${redirect}` : "/subscription-plans"}>
-              <Button variant="outline">
-                <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
-              </Button>
-            </Link>
+            <div className="flex items-center gap-5">
+              <Link href={redirect ? `${redirect}` : "/subscription-plans"}>
+                <Button variant="outline">
+                  <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
+                </Button>
+              </Link>
+
+              <Header
+                title="Apply Coupon"
+                titleClassName=" text-lg md:text-3xl"
+              />
+            </div>
 
             <CouponVoucher className="h-48 bg-gradient-to-b from-primary/50 to-primary">
               <div className="px-4">
@@ -242,9 +262,9 @@ const ApplyCouponPage = ({
             )}
 
             <SubtotalContainer
-              category={category}
-              price={price}
-              planId={planId}
+              category={category ? category : selectedPlan?.category}
+              price={price ? price : selectedPlan?.amount.toString()}
+              planId={planId ? planId : selectedPlan?.planId}
               selectedCoupon={selectedCoupon}
               setSubTotalBlockHeight={setSubTotalBlockHeight}
               resetCustomCouponForm={form.reset}
