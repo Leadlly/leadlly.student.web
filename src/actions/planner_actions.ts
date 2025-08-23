@@ -5,7 +5,12 @@ import apiClient from "@/apiClient/apiClient";
 
 export const getPlanner = async () => {
   try {
-    const res = await apiClient.get(`/api/planner/get`);
+    const res = await apiClient.get(`/api/planner/get`, {
+      cache: "force-cache",
+      next: {
+        tags: ["plannerData"],
+      },
+    });
 
     const responseData = await res.data;
 
