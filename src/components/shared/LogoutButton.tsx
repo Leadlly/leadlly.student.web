@@ -10,6 +10,8 @@ import { Button } from "../ui/button";
 
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
+import { clearInstitute } from "@/redux/slices/instituteSlice";
+import apiClient from "@/apiClient/apiClient";
 
 const LogoutButton = () => {
   const router = useRouter();
@@ -18,17 +20,13 @@ const LogoutButton = () => {
 
   const logoutHandler = async () => {
     try {
-      const response = await fetch("/api/auth/logout", {
-        method: "Get",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await apiClient.get("/api/auth/logout");
 
-      const responseData = await response.json();
+      const responseData = response.data;
       toast.success(responseData.message);
       router.push("/login");
       dispatch(userData(null));
+      dispatch(clearInstitute());
     } catch (error: any) {
       toast.error("Logout Failed!", {
         description: error?.message,

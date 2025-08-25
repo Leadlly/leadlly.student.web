@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { IndianRupee } from "lucide-react";
+import ReferAndEarnContent from "@/components/shared/referral/ReferAndEarnContent";
 
 const ReferAndEarn = () => {
   return (
@@ -21,6 +22,8 @@ const ReferAndEarn = () => {
           </span>
         </Button>
       </DialogTrigger>
+
+      <ReferAndEarnContent />
     </Dialog>
   );
 };

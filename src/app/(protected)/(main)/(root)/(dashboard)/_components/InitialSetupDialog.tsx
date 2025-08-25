@@ -10,8 +10,6 @@ const InitialSetupDialog = ({
 }: {
   openOnMount?: boolean;
 }) => {
-  console.log({ openOnMount });
-
   const [open, setOpen] = useState(false);
 
   const elementRef = useRef<HTMLDivElement>(null);
@@ -19,7 +17,6 @@ const InitialSetupDialog = ({
     width: 0,
     height: 0,
   });
-  console.log(dimensions);
 
   const searchParams = useSearchParams();
 

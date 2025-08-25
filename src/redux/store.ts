@@ -8,6 +8,7 @@ import weeklyQuizReducer from "@/redux/slices/weeklyQuizSlice";
 import dailyQuizReducer from "@/redux/slices/dailyQuizSlice";
 import instituteReducer from "@/redux/slices/instituteSlice";
 import selectedPlanReducer from "@/redux/slices/selectedPlanSlice";
+import referralReducer from "@/redux/slices/referralSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -19,6 +20,7 @@ export const makeStore = () => {
       overallReport: overallReportReducer,
       weeklyQuizzes: weeklyQuizReducer,
       institute: instituteReducer,
+      referral: referralReducer,
       selectedPlan: selectedPlanReducer,
     },
   });
