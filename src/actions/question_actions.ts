@@ -1,5 +1,6 @@
 "use server";
 
+import apiClient from "@/apiClient/apiClient";
 import { getCookie } from "./cookie_actions";
 
 //====== Fetching Chapters ======//
@@ -10,19 +11,11 @@ export const getSubjectChapters = async (
   const token = await getCookie("token");
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/questionbank/chapter?subjectName=${subject}&standard=${standard}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
+    const res = await apiClient.get(
+      `/api/questionbank/chapter?subjectName=${subject}&standard=${standard}`
     );
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
@@ -43,19 +36,11 @@ export const getChapterTopics = async (
   const token = await getCookie("token");
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/questionbank/topic?subjectName=${subject}&chapterName=${chapterName}&standard=${standard}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
+    const res = await apiClient.get(
+      `/api/questionbank/topic?subjectName=${subject}&chapterName=${chapterName}&standard=${standard}`
     );
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
