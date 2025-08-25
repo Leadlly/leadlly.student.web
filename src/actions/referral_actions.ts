@@ -1,7 +1,25 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
-import { ICoupon } from "@/helpers/types";
+import { TReferralStats, ICoupon } from "@/helpers/types";
+
+//====== Fetching User Referral Stats ======//
+export const getUserReferralStats = async () => {
+  try {
+    const res = await apiClient.get<{
+      message: string;
+      success: boolean;
+      stats: TReferralStats;
+    }>("/api/refer/stats");
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`${error.message}`);
+    } else {
+      throw new Error("An unknown error while fetching referral stats!!");
+    }
+  }
+};
 
 export const generateReferralCode = async (data: {
   ReferralCode?: string;

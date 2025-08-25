@@ -1,7 +1,7 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
-import { Plan } from "@/helpers/types";
+import { Plan, ICoupon } from "@/helpers/types";
 import { revalidateTag } from "next/cache";
 
 export const buySubscription = async (data: {
@@ -94,7 +94,7 @@ export const getSubscriptionPricingByPlanId = async (planId: string) => {
 };
 
 export const getCoupon = async (data: {
-  plan: string | string[] | undefined;
+  plan: string;
   category: string;
 }) => {
   try {
@@ -105,7 +105,7 @@ export const getCoupon = async (data: {
       }
     );
 
-    const responseData = await res.data;
+    const responseData: { coupons: ICoupon[]; success: boolean } = res.data;
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -134,3 +134,26 @@ export const validateCustomCoupon = async (data: { code: string }) => {
     }
   }
 };
+
+//====== Fetching Subscription Pricing ======//
+export const getSubscriptionPricing = async (pricingType: string) => {
+  try {
+    const res = await apiClient.get(
+      `/api/subscription/pricing/get?pricingType=${pricingType}`
+    );
+
+    const responseData: { pricing: Plan[]; success: boolean } = res.data;
+
+    return responseData;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`${error.message}`);
+    } else {
+      throw new Error(
+        "An unknown error while fetching subscription pricing!"
+      );
+    }
+  }
+};
+
+

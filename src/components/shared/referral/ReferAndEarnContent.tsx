@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DialogClose,
   DialogContent,
@@ -23,7 +23,7 @@ import ReferralCodeInput from "./ReferralCodeInput";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
 import RefreshReferralCode from "./RefreshReferralCode";
-import { useGetUserReferralStats } from "@/queries/referralQueries";
+import { getUserReferralStats } from "@/actions/referral_actions";
 import ReferralRewardEarned from "./ReferralRewardEarned";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,9 +32,25 @@ import { cn } from "@/lib/utils";
 
 const ReferAndEarnContent = () => {
   const [toggleCodeInput, setToggleCodeInput] = useState(false);
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const referral = useAppSelector((state) => state.referral.referral);
 
-  const { data, isLoading } = useGetUserReferralStats();
+  useEffect(() => {
+    const fetchReferralStats = async () => {
+      setIsLoading(true);
+      try {
+        const result = await getUserReferralStats();
+        setData(result);
+      } catch (error: any) {
+        console.error("Error fetching referral stats:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReferralStats();
+  }, []);
 
   const handleCopyToClipboard = async () => {
     if (referral?.code) {
