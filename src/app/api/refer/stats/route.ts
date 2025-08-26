@@ -1,9 +1,25 @@
 import apiClient from "@/apiClient/apiClient";
 import { NextResponse } from "next/server";
+import { getCookie } from "@/actions/cookie_actions";
 
 export async function GET() {
   try {
-    const response = await apiClient.get(`/api/refer/stats`);
+    const token = await getCookie("token");
+
+    if (!token) {
+      return NextResponse.json(
+        {
+          message: "No token provided",
+        },
+        { status: 401 }
+      );
+    }
+
+    const response = await apiClient.get(`/api/refer/stats`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     return NextResponse.json(response.data);
   } catch (error: any) {

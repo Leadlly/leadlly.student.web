@@ -102,7 +102,7 @@ export const getUser = async () => {
       headers: {
         Cookie: `token=${token}`,
       },
-      cache: "force-cache",
+      cache: "no-store",
       next: {
         tags: ["userData"],
       },
