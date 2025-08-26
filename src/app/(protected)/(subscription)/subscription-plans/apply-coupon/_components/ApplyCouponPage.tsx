@@ -21,7 +21,7 @@ import { getUser } from "@/actions/user_actions";
 import { userData } from "@/redux/slices/userSlice";
 import { Header } from "@/components";
 import { useRouter } from "next/navigation";
-import { useGetCoupon } from "@/queries/subscriptionQueries";
+import { getCoupon } from "@/actions/subscription_actions";
 
 const CustomCouponSchema = z.object({
   code: z.string().min(1, { message: "Coupon is Required" }),
@@ -54,6 +54,8 @@ const ApplyCouponPage = ({
   const [subscriptionId, setSubscriptionId] = useState<
     string | string[] | undefined
   >("");
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -97,10 +99,26 @@ const ApplyCouponPage = ({
     }
   }, [isRedirectUri, dispatch, subscriptionIdFromApp]);
 
-  const { data, isLoading } = useGetCoupon({
-    plan: selectedPlan?.category!,
-    category: "listed",
-  });
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      if (selectedPlan?.category) {
+        setIsLoading(true);
+        try {
+          const result = await getCoupon({
+            plan: selectedPlan.category,
+            category: "listed",
+          });
+          setData(result);
+        } catch (error: any) {
+          console.error("Error fetching coupons:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchCoupons();
+  }, [selectedPlan?.category]);
 
   const openRazorpayPopUp = useCallback(() => {
     const options = {
@@ -217,7 +235,7 @@ const ApplyCouponPage = ({
             data &&
             data?.coupons &&
             data?.coupons.length > 0 ? (
-              data?.coupons.map((coupon, index) => (
+              data?.coupons.map((coupon: any, index: number) => (
                 <ListedCouponVoucher
                   key={coupon._id}
                   index={index}
