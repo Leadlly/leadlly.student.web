@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const url = req.url;
-    console.log(url);
+
     const searchParams = new URL(url).searchParams;
-    const subject = searchParams.get("subject");
+    const subject = searchParams.get("subjectName");
     const standard = searchParams.get("standard");
 
     const response = await apiClient.get(

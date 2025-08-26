@@ -1,5 +1,3 @@
-import { getCookie } from "@/actions/cookie_actions";
-
 // Type definitions
 interface ApiClientConfig {
   baseURL?: string;
@@ -64,17 +62,6 @@ class ApiClient {
 
   private async prepareHeaders(): Promise<Record<string, string>> {
     const headers = { ...this.defaultHeaders };
-
-    try {
-      if (typeof window === "undefined") {
-        const token = await getCookie("token");
-        if (token) {
-          headers.Cookie = `token=${token}`;
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to get token from cookie:", error);
-    }
 
     return headers;
   }

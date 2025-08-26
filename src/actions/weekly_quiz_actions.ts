@@ -2,10 +2,16 @@
 
 import apiClient from "@/apiClient/apiClient";
 import { TQuizAnswerProps } from "@/helpers/types";
+import { getCookie } from "./cookie_actions";
 
 export const getWeeklyQuiz = async (query: string) => {
   try {
-    const res = await apiClient.get(`/api/quiz/weekly/get?attempted=${query}`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/quiz/weekly/get?attempted=${query}`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -25,8 +31,14 @@ export const getWeeklyQuiz = async (query: string) => {
 
 export const getWeeklyQuizQuestions = async (quizId: string) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(
-      `/api/quiz/weekly/questions/get?quizId=${quizId}`
+      `/api/quiz/weekly/questions/get?quizId=${quizId}`,
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
+      }
     );
 
     const responseData = await res.data;
@@ -51,7 +63,12 @@ export const saveWeeklyQuizQuestion = async (data: {
   question: TQuizAnswerProps;
 }) => {
   try {
-    const res = await apiClient.post(`/api/quiz/weekly/questions/save`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/quiz/weekly/questions/save`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 

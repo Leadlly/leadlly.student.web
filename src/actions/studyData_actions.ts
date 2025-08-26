@@ -2,6 +2,7 @@
 
 import apiClient from "@/apiClient/apiClient";
 import { revalidateTag } from "next/cache";
+import { getCookie } from "./cookie_actions";
 
 type StudyDataProps = {
   tag: string;
@@ -25,7 +26,12 @@ type StudyDataProps = {
 
 export const saveStudyData = async (data: StudyDataProps) => {
   try {
-    const res = await apiClient.post(`/api/user/progress/save`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/user/progress/save`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -48,7 +54,12 @@ export const setUnrevisedTopics = async (data: {
   standard: number;
 }) => {
   try {
-    const res = await apiClient.post(`/api/user/unrevisedtopics/save`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/user/unrevisedtopics/save`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -68,10 +79,14 @@ export const setUnrevisedTopics = async (data: {
 
 export const getUnrevisedTopics = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/user/topics/get`, {
       cache: "force-cache",
       next: {
         tags: ["unrevised_topics"],
+      },
+      headers: {
+        Cookie: `token=${token}`,
       },
     });
 
@@ -91,8 +106,12 @@ export const getUnrevisedTopics = async () => {
 
 export const deleteUnrevisedTopics = async (data: { chapterName: string }) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.delete(`/api/user/topics/delete`, {
       data,
+      headers: {
+        Cookie: `token=${token}`,
+      },
     });
 
     const responseData = await res.data;

@@ -2,6 +2,7 @@
 
 import apiClient from "@/apiClient/apiClient";
 import { ICoupon } from "@/helpers/types";
+import { getCookie } from "./cookie_actions";
 
 export const generateReferralCode = async (data: {
   ReferralCode?: string;
@@ -9,11 +10,17 @@ export const generateReferralCode = async (data: {
   expiredBy?: string;
 }) => {
   try {
+    const token = await getCookie("token");
+
     const res = await apiClient.post<{
       success: boolean;
       message: string;
       referralCode: ICoupon;
-    }>("/api/refer/code/generate", data);
+    }>("/api/refer/code/generate", data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     return res.data;
   } catch (error) {
@@ -29,10 +36,19 @@ export const generateReferralCode = async (data: {
 
 export const requestCashOut = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.post<{
       success: boolean;
       message: string;
-    }>("/api/refer/cashout");
+    }>(
+      "/api/refer/cashout",
+      {},
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
+      }
+    );
 
     return res.data;
   } catch (error) {

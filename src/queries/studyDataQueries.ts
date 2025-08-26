@@ -16,10 +16,17 @@ export const useGetChapters = ({
     queryKey: ["chapters", activeSubject, userStandard],
     queryFn: async () => {
       try {
-        const res = await apiClient.get<{ chapters: subjectChaptersProps[] }>(
-          `/api/questionbank/chapter?subjectName=${activeSubject}&standard=${userStandard}`
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/chapters?subjectName=${activeSubject}&standard=${userStandard}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
-        return res.data;
+        const data: { chapters: subjectChaptersProps[] } = await res.json();
+        return data;
       } catch (error: any) {
         throw new Error(`${error.message}`);
       }
@@ -41,10 +48,17 @@ export const useGetTopicsWithSubtopic = ({
     queryKey: ["topics", activeSubject, userStandard, selectedChapter],
     queryFn: async () => {
       try {
-        const res = await apiClient.get<{ topics: TopicsWithSubtopicsProps[] }>(
-          `/api/questionbank/topicwithsubtopic?subjectName=${activeSubject}&chapterId=${selectedChapter}&standard=${userStandard}`
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/topics?subjectName=${activeSubject}&chapterId=${selectedChapter}&standard=${userStandard}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
-        return res.data;
+        const data: { topics: TopicsWithSubtopicsProps[] } = await res.json();
+        return data;
       } catch (error: any) {
         throw new Error(`${error.message}`);
       }

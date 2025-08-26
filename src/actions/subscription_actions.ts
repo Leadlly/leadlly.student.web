@@ -3,16 +3,23 @@
 import apiClient from "@/apiClient/apiClient";
 import { Plan } from "@/helpers/types";
 import { revalidateTag } from "next/cache";
+import { getCookie } from "./cookie_actions";
 
 export const buySubscription = async (data: {
   planId: string | string[] | undefined;
   coupon?: string;
 }) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.post(
       `/api/subscription/create?planId=${data.planId}&coupon=${data.coupon}`,
       {
         cache: "no-store",
+      },
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
       }
     );
 
@@ -30,10 +37,14 @@ export const buySubscription = async (data: {
 
 export const getPricing = async (pricingType: string) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(
       `/api/subscription/pricing/get?pricingType=${pricingType}`,
       {
         cache: "no-store",
+        headers: {
+          Cookie: `token=${token}`,
+        },
       }
     );
 
@@ -51,8 +62,12 @@ export const getPricing = async (pricingType: string) => {
 
 export const getFreeTrialActive = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/subscription/freetrial`, {
       cache: "no-store",
+      headers: {
+        Cookie: `token=${token}`,
+      },
     });
 
     const data = await res.data;
@@ -71,10 +86,14 @@ export const getFreeTrialActive = async () => {
 
 export const getSubscriptionPricingByPlanId = async (planId: string) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(
       `/api/subscription/pricing/plan/${planId}`,
       {
         cache: "no-store",
+        headers: {
+          Cookie: `token=${token}`,
+        },
       }
     );
 
@@ -98,10 +117,14 @@ export const getCoupon = async (data: {
   category: string;
 }) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(
       `/api/subscription/coupons/get?plan=${data.plan}&category=${data.category}`,
       {
         cache: "no-store",
+        headers: {
+          Cookie: `token=${token}`,
+        },
       }
     );
 
@@ -118,8 +141,12 @@ export const getCoupon = async (data: {
 
 export const validateCustomCoupon = async (data: { code: string }) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.post(`/api/subscription/coupons/check`, data, {
       cache: "no-store",
+      headers: {
+        Cookie: `token=${token}`,
+      },
     });
 
     const responseData = await res.data;

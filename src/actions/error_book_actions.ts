@@ -2,10 +2,16 @@
 
 import apiClient from "@/apiClient/apiClient";
 import { revalidatePath } from "next/cache";
+import { getCookie } from "./cookie_actions";
 
 export const getErrorBook = async () => {
   try {
-    const res = await apiClient.get(`/api/errorBook/get`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/errorBook/get`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -21,9 +27,13 @@ export const getErrorBook = async () => {
 
 export const getChapterErrorBook = async ({ chapter }: { chapter: string }) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/errorBook/chapter/${chapter}`, {
       next: {
         tags: ["chapterErrorBookData", chapter],
+      },
+      headers: {
+        Cookie: `token=${token}`,
       },
     });
 
@@ -40,9 +50,18 @@ export const getChapterErrorBook = async ({ chapter }: { chapter: string }) => {
 
 export const createErrorNote = async ({ errorNote }: { errorNote: string }) => {
   try {
-    const res = await apiClient.post(`/api/errorBook/errorNote`, {
-      note: errorNote,
-    });
+    const token = await getCookie("token");
+    const res = await apiClient.post(
+      `/api/errorBook/errorNote`,
+      {
+        note: errorNote,
+      },
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
+      }
+    );
 
     const responseData = await res.data;
     return responseData;
@@ -63,8 +82,15 @@ export const toggleErrorNote = async ({
   errorNoteId: string;
 }) => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.put(
-      `/api/errorBook/errorNote/toggle/${errorNoteId}`
+      `/api/errorBook/errorNote/toggle/${errorNoteId}`,
+      {},
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
+      }
     );
 
     const responseData = await res.data;
@@ -86,9 +112,18 @@ export const updateErrorNote = async ({
   questionIds: string[];
 }) => {
   try {
-    const res = await apiClient.put(`/api/errorBook/update`, {
-      solvedQuestions: questionIds,
-    });
+    const token = await getCookie("token");
+    const res = await apiClient.put(
+      `/api/errorBook/update`,
+      {
+        solvedQuestions: questionIds,
+      },
+      {
+        headers: {
+          Cookie: `token=${token}`,
+        },
+      }
+    );
 
     const responseData = await res.data;
     return responseData;

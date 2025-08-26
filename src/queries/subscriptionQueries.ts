@@ -7,11 +7,18 @@ export const useGetSubscriptionPricing = (pricingType: string) => {
     queryKey: ["subscriptionPricing", pricingType],
     queryFn: async () => {
       try {
-        const res = await apiClient.get(
-          `/api/subscription/pricing/get?pricingType=${pricingType}`
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/subscription/pricing?pricingType=${pricingType}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
 
-        const responseData: { pricing: Plan[]; success: boolean } = res.data;
+        const responseData: { pricing: Plan[]; success: boolean } =
+          await res.json();
 
         return responseData;
       } catch (error) {
@@ -32,11 +39,22 @@ export const useGetCoupon = (data: { plan: string; category: string }) => {
     queryKey: ["coupon", data.plan],
     queryFn: async () => {
       try {
-        const res = await apiClient.get(
-          `/api/subscription/coupons/get?plan=${data.plan}&category=${data.category}`
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/subscription/coupons?plan=${data.plan}&category=${data.category}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
 
-        const responseData: { coupons: ICoupon[]; success: boolean } = res.data;
+        const responseData: { coupons: ICoupon[]; success: boolean } =
+          await res.json();
+
+        if (!responseData.success) {
+          throw new Error("Failed to fetch coupons!");
+        }
 
         return responseData;
       } catch (error) {

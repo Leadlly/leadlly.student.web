@@ -1,13 +1,18 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
+import { getCookie } from "./cookie_actions";
 
 export const getWeeklyReport = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/user/report/week`, {
       cache: "force-cache",
       next: {
         tags: ["weeklyReport"],
+      },
+      headers: {
+        Cookie: `token=${token}`,
       },
     });
 
@@ -29,10 +34,14 @@ export const getWeeklyReport = async () => {
 
 export const getMonthlyReport = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/user/report/month`, {
       cache: "force-cache",
       next: {
         tags: ["monthlyReport"],
+      },
+      headers: {
+        Cookie: `token=${token}`,
       },
     });
 
@@ -54,10 +63,14 @@ export const getMonthlyReport = async () => {
 
 export const getOverallReport = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/user/report/overall`, {
       cache: "force-cache",
       next: {
         tags: ["overallReport"],
+      },
+      headers: {
+        Cookie: `token=${token}`,
       },
     });
 

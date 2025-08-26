@@ -1,17 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/apiClient/apiClient";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
     const url = req.url;
 
     const searchParams = new URL(url).searchParams;
-    const subject = searchParams.get("subjectName");
-    const chapterId = searchParams.get("chapterId");
-    const standard = searchParams.get("standard");
+    const plan = searchParams.get("plan");
+    const category = searchParams.get("category");
 
     const response = await apiClient.get(
-      `/api/questionbank/topicwithsubtopic?subjectName=${subject}&chapterId=${chapterId}&standard=${standard}`
+      `/api/subscription/coupons/get?plan=${plan}&category=${category}`
     );
 
     return NextResponse.json(response.data);
@@ -21,7 +20,7 @@ export async function GET(req: NextRequest) {
         message:
           error instanceof Error && "response" in error
             ? error.message
-            : "Unable to fetch topics",
+            : "Unable to fetch subscription coupons",
       },
       { status: error.response?.status || 500 }
     );

@@ -6,8 +6,16 @@ export const useGetWeeklyReport = () => {
     queryKey: ["weeklyReport"],
     queryFn: async () => {
       try {
-        const res = await apiClient.get(`/api/user/report/week`);
-        const data = await res.data;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/user/report/week`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
         return data;
       } catch (error) {
         if (error instanceof Error) {
@@ -27,8 +35,16 @@ export const useGetMonthlyReport = () => {
     queryKey: ["monthlyReport"],
     queryFn: async () => {
       try {
-        const res = await apiClient.get(`/api/user/report/month`);
-        const data = await res.data;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/user/report/month`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
         return data;
       } catch (error) {
         if (error instanceof Error) {
@@ -48,8 +64,16 @@ export const useGetOverallReport = () => {
     queryKey: ["overallReport"],
     queryFn: async () => {
       try {
-        const res = await apiClient.get(`/api/user/report/overall`);
-        const data = await res.data;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/user/report/overall`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
         return data;
       } catch (error) {
         if (error instanceof Error) {

@@ -8,7 +8,8 @@ import {
   UserDataProps,
 } from "@/helpers/types";
 import { revalidateTag } from "next/cache";
-import apiClient, { ApiResponse } from "@/apiClient/apiClient";
+import apiClient from "@/apiClient/apiClient";
+import { getCookie } from "./cookie_actions";
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
@@ -95,7 +96,12 @@ export const verifyAuthToken = async (token: string) => {
 
 export const getUser = async () => {
   try {
+    const token = await getCookie("token");
+
     const res = await apiClient.get<{ user: UserDataProps }>(`/api/auth/user`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
       cache: "force-cache",
       next: {
         tags: ["userData"],
@@ -118,7 +124,12 @@ export const getUser = async () => {
 
 export const studentPersonalInfo = async (data: StudentPersonalInfoProps) => {
   try {
-    const res = await apiClient.post(`/api/user/profile/save`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/user/profile/save`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -136,7 +147,12 @@ export const studentPersonalInfo = async (data: StudentPersonalInfoProps) => {
 
 export const setTodaysVibe = async (data: { todaysVibe: string }) => {
   try {
-    const res = await apiClient.post(`/api/user/todaysVibe/save`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/user/todaysVibe/save`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
     revalidateTag("userData");

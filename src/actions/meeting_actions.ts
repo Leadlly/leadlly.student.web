@@ -2,6 +2,7 @@
 
 import apiClient from "@/apiClient/apiClient";
 import { revalidateTag } from "next/cache";
+import { getCookie } from "./cookie_actions";
 
 type DataProps = {
   date: Date;
@@ -11,7 +12,12 @@ type DataProps = {
 
 export const requestMeeting = async (data: DataProps) => {
   try {
-    const res = await apiClient.post(`/api/meeting/request`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/meeting/request`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -29,7 +35,12 @@ export const requestMeeting = async (data: DataProps) => {
 
 export const getMeetings = async (meeting: string) => {
   try {
-    const res = await apiClient.post(`/api/meeting/get?meeting=${meeting}`, {});
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/meeting/get?meeting=${meeting}`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 

@@ -1,10 +1,16 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
+import { getCookie } from "./cookie_actions";
 
 export const getUserInstitute = async () => {
   try {
-    const res = await apiClient.get(`/api/user/institute/info`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/user/institute/info`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const data = await res.data;
 

@@ -2,13 +2,18 @@
 
 import { revalidateTag } from "next/cache";
 import apiClient from "@/apiClient/apiClient";
+import { getCookie } from "./cookie_actions";
 
 export const getPlanner = async () => {
   try {
+    const token = await getCookie("token");
     const res = await apiClient.get(`/api/planner/get`, {
       cache: "force-cache",
       next: {
         tags: ["plannerData"],
+      },
+      headers: {
+        Cookie: `token=${token}`,
       },
     });
 
@@ -26,7 +31,13 @@ export const getPlanner = async () => {
 
 export const createPlanner = async () => {
   try {
-    const res = await apiClient.get(`/api/planner/create`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/planner/create`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
+    revalidateTag("plannerData");
 
     const responseData = await res.data;
 
@@ -42,7 +53,12 @@ export const createPlanner = async () => {
 
 export const updatePlanner = async () => {
   try {
-    const res = await apiClient.get(`/api/planner/update`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/planner/update`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
@@ -60,7 +76,12 @@ export const updatePlanner = async () => {
 
 export const allocateBackTopics = async () => {
   try {
-    const res = await apiClient.get(`/api/planner/allocateTopics`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/planner/allocateTopics`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
     revalidateTag("plannerData");

@@ -7,12 +7,26 @@ export const useGetUserReferralStats = () => {
     queryKey: ["referral_stats"],
     queryFn: async () => {
       try {
-        const res = await apiClient.get<{
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_STUDENT_WEB_BASE_URL}/api/refer/stats`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data: {
           message: string;
           success: boolean;
           stats: TReferralStats;
-        }>("/api/refer/stats");
-        return res.data;
+        } = await res.json();
+
+        if (!data.success) {
+          throw new Error(data.message);
+        }
+
+        return data;
       } catch (error) {
         if (error instanceof Error) {
           throw new Error(`${error.message}`);

@@ -3,13 +3,19 @@
 import { TQuizAnswerProps } from "@/helpers/types";
 import { revalidateTag } from "next/cache";
 import apiClient from "@/apiClient/apiClient";
+import { getCookie } from "./cookie_actions";
 
 export const saveDailyQuiz = async (data: {
   data: { name: string; _id: string; isSubtopic: boolean };
   questions: TQuizAnswerProps[];
 }) => {
   try {
-    const res = await apiClient.post(`/api/quiz/save`, data);
+    const token = await getCookie("token");
+    const res = await apiClient.post(`/api/quiz/save`, data, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
     revalidateTag("userData");
@@ -31,7 +37,12 @@ export const saveDailyQuiz = async (data: {
 
 export const getDailyStreakQuestions = async () => {
   try {
-    const res = await apiClient.get(`/api/questionbank/streakquestion`);
+    const token = await getCookie("token");
+    const res = await apiClient.get(`/api/questionbank/streakquestion`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+    });
 
     const responseData = await res.data;
 
