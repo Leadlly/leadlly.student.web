@@ -1,5 +1,6 @@
 "use server";
 
+import apiClient from "@/apiClient/apiClient";
 import { getCookie } from "./cookie_actions";
 
 //====== Fetching Chapters ======//
@@ -7,22 +8,14 @@ export const getSubjectChapters = async (
   subject: string | string[],
   standard: number
 ) => {
-  const token = await getCookie("token");
+  // const token = await getCookie("token");
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/questionbank/chapter?subjectName=${subject}&standard=${standard}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
+    const res = await apiClient.get(
+      `/api/questionbank/chapter?subjectName=${subject}&standard=${standard}`
     );
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
@@ -40,22 +33,14 @@ export const getChapterTopics = async (
   chapterName: string,
   standard: number
 ) => {
-  const token = await getCookie("token");
+  // const token = await getCookie("token");
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/questionbank/topic?subjectName=${subject}&chapterName=${chapterName}&standard=${standard}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `token=${token}`,
-        },
-        credentials: "include",
-      }
+    const res = await apiClient.get(
+      `/api/questionbank/topic?subjectName=${subject}&chapterName=${chapterName}&standard=${standard}`
     );
 
-    const data = await res.json();
+    const data = await res.data;
 
     return data;
   } catch (error: unknown) {
@@ -64,5 +49,36 @@ export const getChapterTopics = async (
     } else {
       throw new Error("An unknown error occurred while fetching chapters");
     }
+  }
+};
+
+//====== Fetching Chapters with React Query replacement ======//
+export const getChapters = async (
+  activeSubject: string,
+  userStandard: number
+) => {
+  try {
+    const res = await apiClient.get<{ chapters: any[] }>(
+      `/api/questionbank/chapter?subjectName=${activeSubject}&standard=${userStandard}`
+    );
+    return res.data;
+  } catch (error: any) {
+    throw new Error(`${error.message}`);
+  }
+};
+
+//====== Fetching Topics with Subtopic with React Query replacement ======//
+export const getTopicsWithSubtopic = async (
+  activeSubject: string,
+  userStandard: number,
+  selectedChapter: string
+) => {
+  try {
+    const res = await apiClient.get<{ topics: any[] }>(
+      `/api/questionbank/topicwithsubtopic?subjectName=${activeSubject}&chapterId=${selectedChapter}&standard=${userStandard}`
+    );
+    return res.data;
+  } catch (error: any) {
+    throw new Error(`${error.message}`);
   }
 };

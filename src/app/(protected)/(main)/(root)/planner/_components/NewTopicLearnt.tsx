@@ -41,9 +41,9 @@ import { updatePlanner } from "@/actions/planner_actions";
 import { useRouter } from "next/navigation";
 import { NewTopicLearntSchema } from "@/schemas/newTopicLearntSchema";
 import {
-  useGetChapters,
-  useGetTopicsWithSubtopic,
-} from "@/queries/studyDataQueries";
+  getChapters,
+  getTopicsWithSubtopic,
+} from "@/actions/question_actions";
 import { NestedMultiSelect } from "@/components/ui/nested-multi-select";
 
 const NewTopicLearnt = ({
@@ -59,6 +59,9 @@ const NewTopicLearnt = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
   const [selectedValues, setSelectedValues] = useState<Item[]>([]);
+  const [activeTabChapters, setActiveTabChapters] = useState<any>(null);
+  const [topics, setTopics] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -68,16 +71,42 @@ const NewTopicLearnt = ({
 
   const selectedChapter = form.watch("chapterName");
 
-  const { data: activeTabChapters, isLoading } = useGetChapters({
-    activeSubject,
-    userStandard,
-  });
+  useEffect(() => {
+    const fetchChapters = async () => {
+      if (activeSubject && userStandard) {
+        setIsLoading(true);
+        try {
+          const data = await getChapters(activeSubject, userStandard);
+          setActiveTabChapters(data);
+        } catch (error: any) {
+          toast.error("Error fetching chapters", {
+            description: error.message,
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
 
-  const { data: topics } = useGetTopicsWithSubtopic({
-    activeSubject,
-    userStandard,
-    selectedChapter: selectedChapter?._id!,
-  });
+    fetchChapters();
+  }, [activeSubject, userStandard]);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      if (activeSubject && userStandard && selectedChapter?._id) {
+        try {
+          const data = await getTopicsWithSubtopic(activeSubject, userStandard, selectedChapter._id);
+          setTopics(data);
+        } catch (error: any) {
+          toast.error("Error fetching topics", {
+            description: error.message,
+          });
+        }
+      }
+    };
+
+    fetchTopics();
+  }, [activeSubject, userStandard, selectedChapter?._id]);
 
   useEffect(() => {
     form.reset({
@@ -168,7 +197,7 @@ const NewTopicLearnt = ({
                       >
                         {field.value
                           ? activeTabChapters?.chapters?.find(
-                              (chapter) => chapter._id === field.value?._id
+                              (chapter: any) => chapter._id === field.value?._id
                             )?.name
                           : "Select chapter"}
                         <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
@@ -186,7 +215,7 @@ const NewTopicLearnt = ({
                               <Loader2Icon className="animate-spin size-4" />
                             </CommandItem>
                           ) : (
-                            activeTabChapters?.chapters?.map((chapter) => (
+                            activeTabChapters?.chapters?.map((chapter: any) => (
                               <CommandItem
                                 value={chapter.name}
                                 key={chapter._id}
@@ -229,7 +258,7 @@ const NewTopicLearnt = ({
                 <FormControl>
                   <NestedMultiSelect
                     options={
-                      topics?.topics?.map((topic) => ({
+                      topics?.topics?.map((topic: any) => ({
                         _id: topic._id,
                         name: topic.name,
                         subItems: topic.subtopics,

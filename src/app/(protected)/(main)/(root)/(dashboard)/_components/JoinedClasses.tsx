@@ -1,13 +1,29 @@
-import { useGetClassesByStatus } from "@/queries/instituteQueries";
+import { getClassesByStatus } from "@/actions/institute_actions";
 import { Loader2Icon } from "lucide-react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BatchItem from "./BatchItem";
 
 const JoinedClasses = ({ instituteId }: { instituteId?: string }) => {
-  const { data, isLoading } = useGetClassesByStatus({
-    instituteId,
-    status: "accepted",
-  });
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      if (instituteId) {
+        setIsLoading(true);
+        try {
+          const result = await getClassesByStatus("accepted");
+          setData(result);
+        } catch (error: any) {
+          console.error("Error fetching classes:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchClasses();
+  }, [instituteId]);
 
   return (
     <div className="h-full">
@@ -18,7 +34,7 @@ const JoinedClasses = ({ instituteId }: { instituteId?: string }) => {
       ) : (
         <div className="h-full">
           {data && data.classes && data.classes.length ? (
-            data?.classes?.map((item) => (
+            data?.classes?.map((item: any) => (
               <BatchItem item={item} key={item._id} />
             ))
           ) : (

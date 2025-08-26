@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, X } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useGetSubscriptionPricing } from "@/queries/subscriptionQueries";
+import { getSubscriptionPricing } from "@/actions/subscription_actions";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,11 +27,26 @@ const SubscriptionPlansPage = () => {
   const [activePlanTab, setActivePlanTab] = useState(
     institute && institute._id ? subscriptionTabs[1] : subscriptionTabs[0]
   );
+  const [pricingData, setPricingData] = useState<any>(null);
+  const [fetchingPricing, setFetchingPricing] = useState(false);
 
   const dispatch = useAppDispatch();
 
-  const { data: pricingData, isLoading: fetchingPricing } =
-    useGetSubscriptionPricing(activePlanTab.id);
+  useEffect(() => {
+    const fetchPricing = async () => {
+      setFetchingPricing(true);
+      try {
+        const data = await getSubscriptionPricing(activePlanTab.id);
+        setPricingData(data);
+      } catch (error: any) {
+        console.error("Error fetching pricing:", error);
+      } finally {
+        setFetchingPricing(false);
+      }
+    };
+
+    fetchPricing();
+  }, [activePlanTab.id]);
 
   useEffect(() => {
     if (fetchingPricing) return;
@@ -111,8 +126,8 @@ const SubscriptionPlansPage = () => {
             pricingData.pricing.length > 0 ? (
               <div className="flex items-center justify-center gap-4 flex-wrap max-w-5xl w-full mx-auto my-8 px-3 lg:px-5">
                 {pricingData.pricing
-                  .sort((a, b) => a["duration(months)"] - b["duration(months)"])
-                  .map((plan) => (
+                  .sort((a: any, b: any) => a["duration(months)"] - b["duration(months)"])
+                  .map((plan: any) => (
                     <PlanPriceBox key={plan?._id} plan={plan} />
                   ))}
               </div>

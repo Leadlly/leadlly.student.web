@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { setUnrevisedTopics } from "@/actions/studyData_actions";
 import { AccountStudyFormSchema } from "@/schemas/accountStudyFormSchema";
 import { allocateBackTopics, createPlanner } from "@/actions/planner_actions";
-import { useGetChapters } from "@/queries/studyDataQueries";
+import { getChapters } from "@/actions/question_actions";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 
@@ -36,6 +36,8 @@ const AccountSubjectForm = ({
   onResetForm: (resetFunction: () => void) => void;
 }) => {
   const [isAdding, setIsAdding] = useState(false);
+  const [subjectChapters, setSubjectChapters] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
@@ -44,10 +46,25 @@ const AccountSubjectForm = ({
     resolver: zodResolver(AccountStudyFormSchema),
   });
 
-  const { data: subjectChapters } = useGetChapters({
-    activeSubject,
-    userStandard,
-  });
+  useEffect(() => {
+    const fetchChapters = async () => {
+      if (activeSubject && userStandard) {
+        setIsLoading(true);
+        try {
+          const data = await getChapters(activeSubject, userStandard);
+          setSubjectChapters(data);
+        } catch (error: any) {
+          toast.error("Error fetching chapters", {
+            description: error.message,
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchChapters();
+  }, [activeSubject, userStandard]);
 
   useEffect(() => {
     onResetForm(() =>
@@ -107,7 +124,7 @@ const AccountSubjectForm = ({
                 <FormControl>
                   <MultiSelect
                     options={
-                      subjectChapters?.chapters.map((chapter) => ({
+                      subjectChapters?.chapters.map((chapter: any) => ({
                         _id: chapter._id,
                         name: chapter.name,
                       })) || []
