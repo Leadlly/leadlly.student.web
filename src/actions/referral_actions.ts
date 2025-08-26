@@ -1,7 +1,6 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
-import { ICoupon } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 
 import { TReferralStats, ICoupon } from "@/helpers/types";
