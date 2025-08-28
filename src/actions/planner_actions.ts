@@ -29,7 +29,7 @@ export const createPlanner = async () => {
     const res = await apiClient.get(`/api/planner/create`);
 
     const responseData = await res.data;
-
+    revalidateTag["plannerData"];
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
