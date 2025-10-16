@@ -42,7 +42,7 @@ export default function StoreProvider({
       };
       setUserInstitute();
     }
-  }, [storeRef.current, institute, user]);
+  }, [storeRef.current, institute, user?.institute]);
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 }

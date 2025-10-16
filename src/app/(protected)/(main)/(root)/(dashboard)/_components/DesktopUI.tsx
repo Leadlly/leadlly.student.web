@@ -21,7 +21,7 @@ import ReferAndEarn from "./referAndEarn";
 import Institute from "./institute";
 import CustomizePlanner from "./customizePlanner";
 
-const DesktopUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
+const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const { user } = useAppSelector((state) => state.user);
   const { institute } = useAppSelector((state) => state.institute);
 
@@ -39,7 +39,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
       <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
         <section className="h-full flex flex-col justify-start gap-4 py-2 xl:w-[calc(100%-268px)]">
           <div className="w-full grid grid-cols-2 gap-4">
-            <div className="max-h-full min-w-80 relative flex flex-col justify-start overflow-hidden">
+            <div className="max-h-[500px] min-w-80 relative flex flex-col justify-start overflow-hidden">
               <Suspense fallback={<Loader />}>
                 {user && user.planner === false ? (
                   <InitialTodoBox />

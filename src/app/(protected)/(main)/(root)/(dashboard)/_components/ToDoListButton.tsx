@@ -40,7 +40,10 @@ const ToDoListButton = ({
 
   const completedTopics = quizData.completedTopics;
   const incompleteTopics = quizData.incompletedTopics;
-  const totalQuestions = quizData.questions?.[topic.topic.name]?.length;
+  const totalQuestions =
+    quizData.questions?.[
+      topic.isSubtopic ? topic.subtopic.name : topic.topic.name
+    ]?.length;
 
   const handleCheckboxClick = (
     topic: string,
@@ -102,7 +105,9 @@ const ToDoListButton = ({
               "h-4 w-4 md:h-[18px] md:w-[18px] p-1 text-white border-2 rounded border-[#787878] flex items-center justify-center",
               (completedTopics &&
                 completedTopics.length > 0 &&
-                completedTopics.includes(topic.topic.name)) ||
+                completedTopics.includes(
+                  topic.isSubtopic ? topic.subtopic.id : topic.topic.id
+                )) ||
                 isNoQuestionAvailable
                 ? "bg-[#0FD679]/80 border-none"
                 : ""
@@ -110,7 +115,9 @@ const ToDoListButton = ({
           >
             {(completedTopics &&
               completedTopics.length > 0 &&
-              completedTopics.includes(topic.topic.name)) ||
+              completedTopics.includes(
+                topic.isSubtopic ? topic.subtopic.id : topic.topic.id
+              )) ||
             isNoQuestionAvailable ? (
               <Check className="w-4 h-4" />
             ) : null}

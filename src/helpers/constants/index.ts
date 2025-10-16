@@ -17,11 +17,11 @@ export const userSidebarLinks: TSidebarLink[] = [
     icon: DashboardIcon,
     href: "/",
   },
-  {
-    label: "planner",
-    icon: PlannerIcon,
-    href: "/planner",
-  },
+  // {
+  //   label: "planner",
+  //   icon: PlannerIcon,
+  //   href: "/planner",
+  // },
   {
     label: "tracker",
     icon: TrackerIcon,
@@ -274,4 +274,15 @@ export const referralTerms = [
   "You receive 10% of each subscription purchased with your referral code.",
   "Your friend gets a 20% discount when they use your code.",
   "Referral rewards are credited after your friend’s payment is confirmed.",
+];
+
+export const revisionPreferenceTabs = [
+  {
+    label: "Same Day",
+    value: false,
+  },
+  {
+    label: "Next Day",
+    value: true,
+  },
 ];

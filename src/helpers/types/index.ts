@@ -390,6 +390,9 @@ export type StudentPersonalInfoProps = {
   schoolOrCollegeAddress?: string;
   schoolOrCollegeName?: string;
   studentSchedule?: string;
+  nextDay?: boolean;
+  dailyQuestions?: number;
+  backRevisionTopics?: number;
 };
 
 export interface Option {

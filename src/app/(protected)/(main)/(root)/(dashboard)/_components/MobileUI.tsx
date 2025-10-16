@@ -13,7 +13,7 @@ import { TDayProps } from "@/helpers/types";
 import InitialTodoBox from "./InitailTodoBox";
 import { useAppSelector } from "@/redux/hooks";
 
-const MobileUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
+const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const user = useAppSelector((state) => state.user.user);
   return (
     <div className="flex flex-col justify-start gap-3">
