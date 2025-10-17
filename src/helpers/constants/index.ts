@@ -10,6 +10,7 @@ import LibertyIcon from "@/components/icons/LibertyIcon";
 import QuizIcon from "@/components/icons/QuizIcon";
 import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
 import ChatIcon3 from "@/components/icons/ChatIcon3";
+import { getHours } from "date-fns";
 
 export const userSidebarLinks: TSidebarLink[] = [
   {
@@ -286,3 +287,15 @@ export const revisionPreferenceTabs = [
     value: true,
   },
 ];
+
+const currentHour = getHours(new Date());
+
+export const getCurrentHour = () => {
+  if (currentHour >= 5 && currentHour < 12) {
+    return "Good Morning";
+  } else if (currentHour >= 12 && currentHour < 17) {
+    return "Good Afternoon";
+  } else {
+    return "Good Evening";
+  }
+};

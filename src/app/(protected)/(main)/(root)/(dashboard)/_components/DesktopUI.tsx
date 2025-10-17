@@ -20,6 +20,7 @@ import InitialTodoBox from "./InitailTodoBox";
 import ReferAndEarn from "./referAndEarn";
 import Institute from "./institute";
 import CustomizePlanner from "./customizePlanner";
+import { getCurrentHour } from "@/helpers/constants";
 
 const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const { user } = useAppSelector((state) => state.user);
@@ -29,7 +30,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
     <div className="relative h-full flex flex-col justify-start gap-3 xl:gap-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
-          <Header title={`Good Morning, ${user?.firstname}`} />
+          <Header title={`${getCurrentHour()}, ${user?.firstname}`} />
         </div>
         <div className="hidden lg:w-60 xl:w-[268px] lg:flex justify-end mr-2">
           <UpgradeSubscriptionButton />
@@ -39,7 +40,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
       <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
         <section className="h-full flex flex-col justify-start gap-4 py-2 xl:w-[calc(100%-268px)]">
           <div className="w-full grid grid-cols-2 gap-4">
-            <div className="max-h-[500px] min-w-80 relative flex flex-col justify-start overflow-hidden">
+            <div className="max-h-[550px] min-w-80 relative flex flex-col justify-start overflow-hidden">
               <Suspense fallback={<Loader />}>
                 {user && user.planner === false ? (
                   <InitialTodoBox />

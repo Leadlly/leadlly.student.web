@@ -19,6 +19,7 @@ import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
 import ReferAndEarn from "./referAndEarn";
 import CustomizePlanner from "./customizePlanner";
+import { getCurrentHour } from "@/helpers/constants";
 
 const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const user = useAppSelector((state) => state.user.user);
@@ -27,7 +28,10 @@ const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   return (
     <div className="h-full flex flex-col justify-start gap-4">
       <div className="flex justify-between">
-        <Header title="Dashboard" titleClassName="text-[36px]" />
+        <Header
+          title={`${getCurrentHour()}, ${user?.firstname}`}
+          titleClassName="text-[36px]"
+        />
 
         <UpgradeSubscriptionButton />
       </div>

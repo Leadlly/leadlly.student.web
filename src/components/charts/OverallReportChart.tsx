@@ -25,7 +25,7 @@ const OverallReportChart = ({
         <Charts
           type="area"
           width={"100%"}
-          height={140}
+          height={"100%"}
           series={[
             {
               name: "Revision Session",
@@ -37,6 +37,11 @@ const OverallReportChart = ({
             },
           ]}
           options={{
+            chart: {
+              toolbar: {
+                show: false,
+              },
+            },
             dataLabels: {
               enabled: false,
             },

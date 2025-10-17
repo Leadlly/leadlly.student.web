@@ -14,41 +14,44 @@ const DailyReport = () => {
   const userDetails = useAppSelector((state) => state.user.user?.details);
   return (
     <div className="px-3 py-2">
-      <h4 className="text-xs md:text-sm font-bold">Daily Report</h4>
+      <h4 className="text-xs md:text-sm font-bold">Today</h4>
       <div className="flex items-center justify-center">
-        {/* <RadialBarChart
-          series={[
-            userDetails?.report?.dailyReport?.date &&
-            formatDate(userDetails?.report?.dailyReport?.date!) ===
-              formatDate(new Date(Date.now()))
-              ? userDetails?.report?.dailyReport?.session!
-              : 0,
-            userDetails?.report?.dailyReport?.date &&
-            formatDate(userDetails?.report?.dailyReport?.date!) ===
-              formatDate(new Date(Date.now()))
-              ? userDetails?.report?.dailyReport?.quiz!
-              : 0,
-          ]}
-          colors={["#9654F4", "#72EFDD"]}
-          labels={["Sessions", "Quizzes"]}
-          dataLabel="overall"
-          width="90%"
-          hollowSize="45%"
-          fontSize="18px"
-        /> */}
-
-        <div className="flex-1 flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <span className=" block w-3 h-3 rounded bg-primary"></span>
-            <span className="text-xs capitalize">Sessions</span>
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="flex flex-col">
+            <span className="text-xl md:text-2xl font-semibold">
+              {userDetails?.report?.dailyReport?.date &&
+              formatDate(userDetails?.report?.dailyReport?.date!) ===
+                formatDate(new Date(Date.now()))
+                ? userDetails?.report?.dailyReport?.session!
+                : 0}
+              %
+            </span>
+            <div className="flex items-center gap-2">
+              <div className="size-3 rounded bg-primary"></div>
+              <span className="text-base md:text-lg font-medium">
+                Topics Revised
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className=" block w-3 h-3 rounded bg-[#72EFDD]"></span>
-            <span className="text-xs capitalize">Quizzes</span>
+          <div className="flex flex-col">
+            <span className="text-xl md:text-2xl font-semibold">
+              {userDetails?.report?.dailyReport?.date &&
+              formatDate(userDetails?.report?.dailyReport?.date!) ===
+                formatDate(new Date(Date.now()))
+                ? userDetails?.report?.dailyReport?.quiz!
+                : 0}
+              %
+            </span>
+            <div className="flex items-center gap-2">
+              <div className="size-3 rounded bg-[#56CFE1]"></div>
+              <span className="text-base md:text-lg font-medium">
+                Revision Accuracy
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="flex-1">
+        <div>
           <Charts
             type="bar"
             width={"50%"}
@@ -83,6 +86,9 @@ const DailyReport = () => {
               chart: {
                 type: "bar",
                 height: "100%",
+                toolbar: {
+                  show: false,
+                },
               },
               plotOptions: {
                 bar: {
@@ -99,7 +105,22 @@ const DailyReport = () => {
                 width: 3,
                 colors: ["transparent"],
               },
-
+              xaxis: {
+                axisBorder: {
+                  show: true,
+                },
+                labels: {
+                  show: false,
+                },
+              },
+              yaxis: {
+                labels: {
+                  show: false,
+                },
+              },
+              grid: {
+                show: false,
+              },
               legend: {
                 show: false,
               },
