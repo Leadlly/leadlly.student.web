@@ -60,7 +60,7 @@ const SubscriptionPlansPage = () => {
         selectedPlan(pricingData.pricing[pricingData.pricing.length - 1])
       );
     }
-  }, [pricingData, fetchingPricing]);
+  }, [pricingData, fetchingPricing, dispatch]);
 
   const examType = user?.academic.competitiveExam!;
 

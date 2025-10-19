@@ -86,6 +86,7 @@ const QuestionDialogBox = ({
         dailyQuizAttemptedQuestions({
           topicName: topic?.name!,
           attemptedQuestions: [formattedData],
+          date: new Date(Date.now()).getDate(),
         })
       );
     }
