@@ -24,13 +24,17 @@ const SubscriptionPlansPage = () => {
   const { user } = useAppSelector((state) => state.user);
   const { institute } = useAppSelector((state) => state.institute);
 
-  const [activePlanTab, setActivePlanTab] = useState(
-    institute && institute._id ? subscriptionTabs[1] : subscriptionTabs[0]
-  );
+  const [activePlanTab, setActivePlanTab] = useState(subscriptionTabs[0]);
   const [pricingData, setPricingData] = useState<any>(null);
   const [fetchingPricing, setFetchingPricing] = useState(false);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (institute && institute._id) {
+      setActivePlanTab(subscriptionTabs[1]);
+    }
+  }, [institute]);
 
   useEffect(() => {
     const fetchPricing = async () => {
@@ -52,9 +56,11 @@ const SubscriptionPlansPage = () => {
     if (fetchingPricing) return;
 
     if (pricingData && pricingData.pricing && pricingData.pricing.length > 0) {
-      dispatch(selectedPlan(pricingData.pricing[2]));
+      dispatch(
+        selectedPlan(pricingData.pricing[pricingData.pricing.length - 1])
+      );
     }
-  }, [pricingData, fetchingPricing]);
+  }, [pricingData, fetchingPricing, dispatch]);
 
   const examType = user?.academic.competitiveExam!;
 
@@ -89,11 +95,11 @@ const SubscriptionPlansPage = () => {
 
       <div className="sticky top-0 z-50 grid place-items-center px-3 lg:px-5 py-3">
         {institute && institute._id ? (
-          <Button className="max-w-80 h-10 w-full rounded-full bg-primary">
+          <Button className="max-w-60 h-12 w-full rounded-full bg-primary">
             {activePlanTab.label} Plan
           </Button>
         ) : (
-          <div className="max-w-80 h-10 w-full mx-auto bg-white border border-primary rounded-full flex items-center justify-between">
+          <div className="max-w-80 h-12 w-full mx-auto bg-white border border-primary rounded-full flex items-center justify-between px-1">
             {subscriptionTabs.map((item) => (
               <Button
                 key={item.id}
@@ -126,7 +132,10 @@ const SubscriptionPlansPage = () => {
             pricingData.pricing.length > 0 ? (
               <div className="flex items-center justify-center gap-4 flex-wrap max-w-5xl w-full mx-auto my-8 px-3 lg:px-5">
                 {pricingData.pricing
-                  .sort((a: any, b: any) => a["duration(months)"] - b["duration(months)"])
+                  .sort(
+                    (a: any, b: any) =>
+                      a["duration(months)"] - b["duration(months)"]
+                  )
                   .map((plan: any) => (
                     <PlanPriceBox key={plan?._id} plan={plan} />
                   ))}
@@ -175,14 +184,12 @@ const SubscriptionPlansPage = () => {
       </div>
 
       <div className="fixed bottom-0 inset-x-0 py-5 px-3 lg:px-5 grid place-items-center ">
-        <Link
-          href={`/subscription-plans/apply-coupon`}
-          className="max-w-80 w-full h-14"
+        <Button
+          disabled={!selectedPlan}
+          className="max-w-80 w-full h-14 rounded-2xl text-base sm:text-lg font-semibold"
         >
-          <Button className="w-full h-full rounded-2xl text-base sm:text-lg font-semibold">
-            Find Coupon
-          </Button>
-        </Link>
+          <Link href={`/subscription-plans/apply-coupon`}>Find Coupon</Link>
+        </Button>
       </div>
     </section>
   );

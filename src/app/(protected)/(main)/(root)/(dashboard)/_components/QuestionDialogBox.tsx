@@ -31,6 +31,8 @@ import {
   filterCompletedTopics,
 } from "@/redux/slices/dailyQuizSlice";
 import Image from "next/image";
+import { useQueryClient } from "@tanstack/react-query";
+import { DialogTitle } from "@/components/ui/dialog";
 
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
@@ -42,6 +44,7 @@ const QuestionDialogBox = ({
   questions: TQuizQuestionProps[];
   topic: { name: string; _id: string; isSubtopic: boolean } | null;
 }) => {
+  const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
 
   const { dailyQuizzes } = useAppSelector((state) => state.dailyQuizzes);
@@ -83,6 +86,7 @@ const QuestionDialogBox = ({
         dailyQuizAttemptedQuestions({
           topicName: topic?.name!,
           attemptedQuestions: [formattedData],
+          date: new Date(Date.now()).getDate(),
         })
       );
     }
@@ -112,23 +116,12 @@ const QuestionDialogBox = ({
       });
 
       if (res.success) {
-        const userInfo = getUser();
-        const weeklyReportInfo = getWeeklyReport();
-        const monthlyReportInfo = getMonthlyReport();
-        const overallReportInfo = getOverallReport();
-
-        const [user, weeklyReport, monthlyReport, overallReport] =
-          await Promise.all([
-            userInfo,
-            weeklyReportInfo,
-            monthlyReportInfo,
-            overallReportInfo,
-          ]);
-
-        dispatch(userData(user.user));
-        dispatch(weeklyData(weeklyReport.weeklyReport));
-        dispatch(monthlyData(monthlyReport.monthlyReport));
-        dispatch(overallData(overallReport.overallReport));
+        queryClient.invalidateQueries({ queryKey: ["plannerData"] });
+        const userInfo = await getUser();
+        dispatch(userData(userInfo.user));
+        queryClient.invalidateQueries({ queryKey: ["weeklyReport"] });
+        queryClient.invalidateQueries({ queryKey: ["monthlyReport"] });
+        queryClient.invalidateQueries({ queryKey: ["overallReport"] });
 
         if (
           dailyQuizCurrentTopic &&
@@ -209,9 +202,9 @@ const QuestionDialogBox = ({
 
           <div className="px-3 md:px-14 flex flex-col md:flex-row items-start gap-3">
             <div className="w-full space-y-5 pb-5">
-              <h3 className="text-center text-xl md:text-3xl font-semibold text-black">
+              <DialogTitle className="text-center text-xl md:text-3xl font-semibold text-black">
                 Quiz on <span className="capitalize">{topic?.name}</span>
-              </h3>
+              </DialogTitle>
 
               <div className="flex items-center justify-center w-full">
                 <ul className="flex items-center gap-3 border-2 p-1 rounded-md">

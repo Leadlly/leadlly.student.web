@@ -95,12 +95,7 @@ export const verifyAuthToken = async (token: string) => {
 
 export const getUser = async () => {
   try {
-    const res = await apiClient.get<{ user: UserDataProps }>(`/api/auth/user`, {
-      cache: "force-cache",
-      next: {
-        tags: ["userData"],
-      },
-    });
+    const res = await apiClient.get<{ user: UserDataProps }>(`/api/auth/user`);
 
     const data = res.data;
 

@@ -78,7 +78,7 @@ const ApplyCouponPage = ({
     if (!selectedPlan) {
       router.replace("/subscription-plans");
     }
-  }, [selectedPlan]);
+  }, [selectedPlan, router]);
 
   useEffect(() => {
     if (isRedirectUri && subscriptionIdFromApp) {

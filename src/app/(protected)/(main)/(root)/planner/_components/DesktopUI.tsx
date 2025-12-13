@@ -10,7 +10,7 @@ const DesktopUI = ({
   setData,
 }: {
   todaysTopics: TDayProps | null;
-  plannerData: PlannerDataProps;
+  plannerData: PlannerDataProps | null;
   setData: (data: TDayProps | null) => void;
 }) => {
   return (

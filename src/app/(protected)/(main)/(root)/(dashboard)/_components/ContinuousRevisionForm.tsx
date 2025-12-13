@@ -34,11 +34,9 @@ import { ISubject, Item } from "@/helpers/types";
 import { saveStudyData } from "@/actions/studyData_actions";
 import { updatePlanner } from "@/actions/planner_actions";
 import { NestedMultiSelect } from "@/components/ui/nested-multi-select";
-import {
-  getChapters,
-  getTopicsWithSubtopic,
-} from "@/actions/question_actions";
+import { getChapters, getTopicsWithSubtopic } from "@/actions/question_actions";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ContinuousRevisionForm = ({
   activeSubject,
@@ -57,6 +55,8 @@ const ContinuousRevisionForm = ({
   const [activeTabChapters, setActiveTabChapters] = useState<any>(null);
   const [topics, setTopics] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof NewTopicLearntSchema>>({
     resolver: zodResolver(NewTopicLearntSchema),
@@ -88,7 +88,11 @@ const ContinuousRevisionForm = ({
     const fetchTopics = async () => {
       if (activeSubject && userStandard && selectedChapter?._id) {
         try {
-          const data = await getTopicsWithSubtopic(activeSubject, userStandard, selectedChapter._id);
+          const data = await getTopicsWithSubtopic(
+            activeSubject,
+            userStandard,
+            selectedChapter._id
+          );
           setTopics(data);
         } catch (error: any) {
           toast.error("Error fetching topics", {
@@ -130,6 +134,7 @@ const ContinuousRevisionForm = ({
       const responseData = await saveStudyData(formattedData);
 
       await updatePlanner();
+      queryClient.invalidateQueries({ queryKey: ["plannerData"] });
       toast.success(responseData.message);
 
       form.reset({
@@ -188,11 +193,12 @@ const ContinuousRevisionForm = ({
                         )}
                       >
                         <span className="flex-1 truncate">
-                                                  {field.value
-                          ? activeTabChapters?.chapters?.find(
-                              (chapter: any) => chapter._id === field.value?._id
-                            )?.name
-                          : "Select chapter"}
+                          {field.value
+                            ? activeTabChapters?.chapters?.find(
+                                (chapter: any) =>
+                                  chapter._id === field.value?._id
+                              )?.name
+                            : "Select chapter"}
                         </span>
                         <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
                       </Button>

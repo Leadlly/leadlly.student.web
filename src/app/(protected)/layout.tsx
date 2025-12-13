@@ -4,6 +4,8 @@ import QueryProvider from "../QueryProvider";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProtectedLayout({
   children,
 }: Readonly<{
@@ -13,7 +15,7 @@ export default async function ProtectedLayout({
   const token = cookie.get("token")?.value;
 
   if (!token) {
-    return redirect("/login");
+    redirect("/login");
   }
 
   return (
