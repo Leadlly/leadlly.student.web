@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { sendAIChatMessage, getAIChatHistory } from "@/actions/ai_actions";
 
 import PlannerIcon from "@/components/icons/PlannerIcon";
 import TrackerIcon from "@/components/icons/TrackerIcon";
@@ -343,22 +344,10 @@ const AIMentorChat = () => {
 
   const fetchChatHistory = useCallback(async (beforeDate?: string) => {
     try {
-      const url = new URL(`${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/ai/history`);
-      url.searchParams.set('limit', '20');
-      if (beforeDate) {
-        url.searchParams.set('before', beforeDate);
-      }
-
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        credentials: 'include',
+      const data = await getAIChatHistory({
+        limit: 20,
+        before: beforeDate,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch history');
-      }
-
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error('History fetch error:', error);
@@ -475,26 +464,10 @@ const AIMentorChat = () => {
     }));
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STUDENT_API_BASE_URL}/api/ai/chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            message: userMessage.content,
-            conversationHistory,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to get response");
-      }
-
-      const data = await response.json();
+      const data = await sendAIChatMessage({
+        message: userMessage.content,
+        conversationHistory,
+      });
 
       if (data.toolResults && data.toolResults.length > 0) {
         const toolNames = data.toolResults.map((t: ToolResult) => t.tool);
