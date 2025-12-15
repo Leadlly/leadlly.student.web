@@ -2,6 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import apiClient from "@/apiClient/apiClient";
+import { PlannerDataProps } from "@/helpers/types";
 
 export const getPlanner = async () => {
   try {
@@ -12,14 +13,16 @@ export const getPlanner = async () => {
       },
     });
 
-    const responseData = await res.data;
+    const responseData: { success: boolean; data: PlannerDataProps } = res.data;
 
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log(`Error fetching planner data: ${error.message}`);
+      return { success: false, data: null };
     } else {
       console.log("An unknown error occurred while fetching planner data!");
+      return { success: false, data: null };
     }
   }
 };
@@ -29,7 +32,7 @@ export const createPlanner = async () => {
     const res = await apiClient.get(`/api/planner/create`);
 
     const responseData = await res.data;
-    revalidateTag["plannerData"];
+    revalidateTag("plannerData");
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {

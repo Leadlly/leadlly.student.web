@@ -17,7 +17,7 @@ const WeeklyPlan = ({
   data,
   setData,
 }: {
-  data: PlannerDataProps;
+  data: PlannerDataProps | null;
   setData: (data: TDayProps | null) => void;
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);

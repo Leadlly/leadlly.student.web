@@ -1,12 +1,17 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
+import {
+  TStudentOverallReportProps,
+  TStudentReportProps,
+} from "@/helpers/types";
 
 //====== Fetching Weekly Report ======//
 export const getWeeklyReport = async () => {
   try {
     const res = await apiClient.get(`/api/user/report/week`);
-    const data = await res.data;
+    const data: { success: boolean; weeklyReport: TStudentReportProps } =
+      res.data;
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -23,7 +28,8 @@ export const getWeeklyReport = async () => {
 export const getMonthlyReport = async () => {
   try {
     const res = await apiClient.get(`/api/user/report/month`);
-    const data = await res.data;
+    const data: { success: boolean; monthlyReport: TStudentReportProps } =
+      res.data;
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -40,7 +46,10 @@ export const getMonthlyReport = async () => {
 export const getOverallReport = async () => {
   try {
     const res = await apiClient.get(`/api/user/report/overall`);
-    const data = await res.data;
+    const data: {
+      success: boolean;
+      overallReport: TStudentOverallReportProps[];
+    } = res.data;
     return data;
   } catch (error) {
     if (error instanceof Error) {

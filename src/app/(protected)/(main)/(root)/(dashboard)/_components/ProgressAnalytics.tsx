@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   MonthlyReportChart,
   BarChart,
@@ -8,9 +8,13 @@ import {
   TabContent,
   TabNavItem,
 } from "@/components";
-import { useAppSelector } from "@/redux/hooks";
-import { getWeeklyReport, getMonthlyReport, getOverallReport } from "@/actions/student_report_actions";
+import {
+  getWeeklyReport,
+  getMonthlyReport,
+  getOverallReport,
+} from "@/actions/student_report_actions";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const progressAnalyticsMenus = [
   {
@@ -29,60 +33,24 @@ const progressAnalyticsMenus = [
 
 const ProgressAnalytics = () => {
   const [activeTab, setActiveTab] = useState("weekly");
-  const [weeklyReportData, setWeeklyReportData] = useState<any>(null);
-  const [monthlyReportData, setMonthlyReportData] = useState<any>(null);
-  const [overallReportData, setOverallReportData] = useState<any>(null);
-  const [weeklyReportLoading, setWeeklyReportLoading] = useState(false);
-  const [monthlyReportLoading, setMonthlyReportLoading] = useState(false);
-  const [overallReportLoading, setOverallReportLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchWeeklyReport = async () => {
-      setWeeklyReportLoading(true);
-      try {
-        const result = await getWeeklyReport();
-        setWeeklyReportData(result);
-      } catch (error: any) {
-        console.error("Error fetching weekly report:", error);
-      } finally {
-        setWeeklyReportLoading(false);
-      }
-    };
+  const { data: weeklyReportData, isLoading: weeklyReportLoading } =
+    useSuspenseQuery({
+      queryKey: ["weeklyReport"],
+      queryFn: getWeeklyReport,
+    });
 
-    fetchWeeklyReport();
-  }, []);
+  const { data: monthlyReportData, isLoading: monthlyReportLoading } =
+    useSuspenseQuery({
+      queryKey: ["monthlyReport"],
+      queryFn: getMonthlyReport,
+    });
 
-  useEffect(() => {
-    const fetchMonthlyReport = async () => {
-      setMonthlyReportLoading(true);
-      try {
-        const result = await getMonthlyReport();
-        setMonthlyReportData(result);
-      } catch (error: any) {
-        console.error("Error fetching monthly report:", error);
-      } finally {
-        setMonthlyReportLoading(false);
-      }
-    };
-
-    fetchMonthlyReport();
-  }, []);
-
-  useEffect(() => {
-    const fetchOverallReport = async () => {
-      setOverallReportLoading(true);
-      try {
-        const result = await getOverallReport();
-        setOverallReportData(result);
-      } catch (error: any) {
-        console.error("Error fetching overall report:", error);
-      } finally {
-        setOverallReportLoading(false);
-      }
-    };
-
-    fetchOverallReport();
-  }, []);
+  const { data: overallReportData, isLoading: overallReportLoading } =
+    useSuspenseQuery({
+      queryKey: ["overallReport"],
+      queryFn: getOverallReport,
+    });
 
   return (
     <div className="px-3 py-2">

@@ -8,6 +8,7 @@ import { userData } from "@/redux/slices/userSlice";
 import { getUserInstitute } from "@/actions/institute_actions";
 import { setInstitute } from "@/redux/slices/instituteSlice";
 import { setReferral } from "@/redux/slices/referralSlice";
+import { clearDailyQuizWithDate } from "@/redux/slices/dailyQuizSlice";
 
 export default function StoreProvider({
   children,
@@ -29,6 +30,11 @@ export default function StoreProvider({
   }
 
   useEffect(() => {
+    const todaysDate = new Date(Date.now()).getDate();
+    storeRef.current?.dispatch(clearDailyQuizWithDate({ date: todaysDate }));
+  }, []);
+
+  useEffect(() => {
     if (user?.institute._id && (!institute || !institute._id)) {
       const setUserInstitute = async () => {
         try {
@@ -42,7 +48,7 @@ export default function StoreProvider({
       };
       setUserInstitute();
     }
-  }, [storeRef.current, institute, user]);
+  }, [institute, user?.institute]);
 
   return <Provider store={storeRef.current}>{children}</Provider>;
 }

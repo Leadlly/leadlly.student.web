@@ -33,7 +33,7 @@ const BarChart = ({
         <Charts
           type="bar"
           width={"100%"}
-          height={140}
+          height={"100%"}
           series={[
             {
               name: "Revisions",
@@ -51,12 +51,15 @@ const BarChart = ({
           options={{
             chart: {
               type: "bar",
-              height: 350,
+              height: "100%",
+              toolbar: {
+                show: false,
+              },
             },
             plotOptions: {
               bar: {
                 horizontal: false,
-                columnWidth: "40%",
+                columnWidth: 14,
                 borderRadius: 1.5,
               },
             },

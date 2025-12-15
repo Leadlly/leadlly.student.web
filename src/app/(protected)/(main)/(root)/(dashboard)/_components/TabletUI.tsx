@@ -19,15 +19,19 @@ import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
 import ReferAndEarn from "./referAndEarn";
 import CustomizePlanner from "./customizePlanner";
+import { getCurrentHour } from "@/helpers/constants";
 
-const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
+const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const user = useAppSelector((state) => state.user.user);
   const { institute } = useAppSelector((state) => state.institute);
 
   return (
     <div className="h-full flex flex-col justify-start gap-4">
       <div className="flex justify-between">
-        <Header title="Dashboard" titleClassName="text-[36px]" />
+        <Header
+          title={`${getCurrentHour()}, ${user?.firstname}`}
+          titleClassName="text-[36px]"
+        />
 
         <UpgradeSubscriptionButton />
       </div>
@@ -35,7 +39,7 @@ const TabletUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
       <div className="flex-1 flex flex-col justify-start gap-4 md:overflow-y-auto custom__scrollbar pr-3">
         <div className="flex gap-4">
           <div className="space-y-4 w-1/2">
-            <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-full">
+            <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-[500px]">
               <Suspense fallback={<Loader />}>
                 {/* <TodaysPlan quizData={quizTopics} /> */}
                 {user && user.planner === false ? (

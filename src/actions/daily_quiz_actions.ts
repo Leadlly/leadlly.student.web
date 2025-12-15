@@ -11,12 +11,14 @@ export const saveDailyQuiz = async (data: {
   try {
     const res = await apiClient.post(`/api/quiz/save`, data);
 
-    const responseData = await res.data;
+    const responseData = res.data;
+
+    revalidateTag("plannerData");
     revalidateTag("userData");
     revalidateTag("weeklyReport");
     revalidateTag("monthlyReport");
     revalidateTag("overallReport");
-    revalidateTag("plannerData");
+
     return responseData;
   } catch (error) {
     if (error instanceof Error) {

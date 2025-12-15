@@ -12,13 +12,20 @@ import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
 import InitialTodoBox from "./InitailTodoBox";
 import { useAppSelector } from "@/redux/hooks";
+import { getCurrentHour } from "@/helpers/constants";
+import Institute from "./institute";
 
-const MobileUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
+const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const user = useAppSelector((state) => state.user.user);
+  const { institute } = useAppSelector((state) => state.institute);
+
   return (
     <div className="flex flex-col justify-start gap-3">
       <div className="flex items-center justify-between">
-        <Header title="Dashboard" titleClassName="text-2xl" />
+        <Header
+          title={`${getCurrentHour()}, ${user?.firstname}`}
+          titleClassName="text-2xl"
+        />
         <div className="flex items-center gap-2">
           <UpgradeSubscriptionButton />
           <UserProfileSheet />
@@ -40,16 +47,25 @@ const MobileUI = ({ quizTopics }: { quizTopics: TDayProps }) => {
         <ContinuousRevision />
       </div>
 
+      {institute && institute._id && (
+        <div className="w-full">
+          <div>
+            <h4 className="text-lg font-semibold mb-1">Your Institute</h4>
+          </div>
+          <Institute />
+        </div>
+      )}
+
       <div className="border rounded-xl">
         <DailyReport />
       </div>
 
-      <div className="border rounded-xl ">
-        <SubjectProgress />
+      <div className="border rounded-xl">
+        <ProgressAnalytics />
       </div>
 
       <div className="border rounded-xl mb-20">
-        <ProgressAnalytics />
+        <SubjectProgress />
       </div>
     </div>
   );

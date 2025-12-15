@@ -127,27 +127,84 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-4">
                   <h4 className="text-base font-medium text-[#787878] mb-2">
-                    Unrevised Topics
+                    Past Topics
                   </h4>
                 </AccordionTrigger>
                 <AccordionContent>
                   <ul className="w-full h-full flex flex-col justify-start gap-2 md:gap-5 xl:gap-1 max-h-96 overflow-y-auto custom__scrollbar p-4 pt-0">
-                    {quizData.backRevisionTopics.map((topicItem, index) => (
-                      <ToDoListButton
-                        key={topicItem._id}
-                        index={index}
-                        setTopic={setTopic}
-                        setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                        topic={topicItem}
-                        completedTopics={quizData.completedTopics}
-                        incompleteTopics={quizData.incompletedTopics}
-                        topicsLength={
-                          quizData.backRevisionTopics.length +
-                          quizData.continuousRevisionTopics.length
-                        }
-                        quizData={quizData}
-                      />
-                    ))}
+                    {quizData &&
+                    quizData.backRevisionTopics &&
+                    quizData.backRevisionTopics.length > 0 ? (
+                      quizData.backRevisionTopics.map((topicItem, index) => (
+                        <ToDoListButton
+                          key={topicItem._id}
+                          index={index}
+                          setTopic={setTopic}
+                          setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                          topic={topicItem}
+                          completedTopics={quizData.completedTopics}
+                          incompleteTopics={quizData.incompletedTopics}
+                          topicsLength={
+                            quizData.backRevisionTopics.length +
+                            quizData.continuousRevisionTopics.length
+                          }
+                          quizData={quizData}
+                        />
+                      ))
+                    ) : (
+                      <li className="text-center text-sm text-muted-foreground">
+                        No past topics available
+                      </li>
+                    )}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <Accordion
+              defaultValue={
+                quizData &&
+                quizData.lowAccuracyTopics &&
+                quizData.lowAccuracyTopics.length > 0
+                  ? "item-2"
+                  : ""
+              }
+              type="single"
+              collapsible
+            >
+              <AccordionItem value="item-2">
+                <AccordionTrigger className="px-4">
+                  <h4 className="text-base font-medium text-[#787878] mb-2">
+                    Low Accuracy Topics
+                  </h4>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="w-full h-full flex flex-col justify-start gap-2 md:gap-5 xl:gap-1 max-h-96 overflow-y-auto custom__scrollbar p-4 pt-0">
+                    {quizData &&
+                    quizData.lowAccuracyTopics &&
+                    quizData.lowAccuracyTopics.length > 0 ? (
+                      quizData.lowAccuracyTopics.map((topicItem, index) => (
+                        <ToDoListButton
+                          key={topicItem._id}
+                          index={index}
+                          setTopic={setTopic}
+                          setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                          topic={topicItem}
+                          completedTopics={quizData.completedTopics}
+                          incompleteTopics={quizData.incompletedTopics}
+                          topicsLength={
+                            quizData.lowAccuracyTopics.length > 0
+                              ? quizData.lowAccuracyTopics.length
+                              : 0
+                          }
+                          quizData={quizData}
+                        />
+                      ))
+                    ) : (
+                      <li className="text-center text-sm text-muted-foreground">
+                        No low accuracy topics available
+                      </li>
+                    )}
                   </ul>
                 </AccordionContent>
               </AccordionItem>

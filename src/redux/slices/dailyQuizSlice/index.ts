@@ -5,6 +5,7 @@ export interface DailyQuizProps {
   dailyQuizzes: Array<{
     topicName: string | null;
     attemptedQuestions: TQuizAnswerProps[];
+    date: number;
   }>;
 }
 
@@ -28,26 +29,24 @@ export const dailyQuizSlice = createSlice({
       state,
       action: PayloadAction<DailyQuizProps["dailyQuizzes"][0]>
     ) => {
-      if (typeof window !== undefined) {
-        const currentTopic = state.dailyQuizzes.find(
-          (quiz) => quiz.topicName === action.payload.topicName
+      const currentTopicIndex = state.dailyQuizzes.findIndex(
+        (quiz) => quiz.topicName === action.payload.topicName
+      );
+
+      if (currentTopicIndex !== -1) {
+        console.log("here");
+
+        state.dailyQuizzes[currentTopicIndex].attemptedQuestions.push(
+          ...action.payload.attemptedQuestions
         );
-
-        if (currentTopic) {
-          currentTopic.attemptedQuestions.push(
-            ...action.payload.attemptedQuestions
-          );
-
-          state.dailyQuizzes.push(currentTopic);
-        } else {
-          state.dailyQuizzes.push(action.payload);
-        }
-
-        localStorage.setItem(
-          "leadlly_daily_quiz",
-          JSON.stringify(state.dailyQuizzes)
-        );
+      } else {
+        state.dailyQuizzes.push(action.payload);
       }
+
+      localStorage.setItem(
+        "leadlly_daily_quiz",
+        JSON.stringify(state.dailyQuizzes)
+      );
     },
 
     filterCompletedTopics: (
@@ -65,6 +64,20 @@ export const dailyQuizSlice = createSlice({
       }
     },
 
+    clearDailyQuizWithDate: (
+      state,
+      action: PayloadAction<{ date: number }>
+    ) => {
+      state.dailyQuizzes = state.dailyQuizzes.filter(
+        (quiz) => quiz.date && quiz.date >= action.payload.date
+      );
+
+      localStorage.setItem(
+        "leadlly_daily_quiz",
+        JSON.stringify(state.dailyQuizzes)
+      );
+    },
+
     clearDailyQuiz: (state) => {
       state.dailyQuizzes = [];
       if (typeof window !== undefined) {
@@ -78,6 +91,7 @@ export const {
   dailyQuizAttemptedQuestions,
   filterCompletedTopics,
   clearDailyQuiz,
+  clearDailyQuizWithDate,
 } = dailyQuizSlice.actions;
 
 export default dailyQuizSlice.reducer;
