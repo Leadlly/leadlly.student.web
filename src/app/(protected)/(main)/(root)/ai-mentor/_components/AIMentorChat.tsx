@@ -588,7 +588,7 @@ const AIMentorChat = () => {
               Welcome to AI Mentor!
             </h3>
             <p className="text-muted-foreground text-sm max-w-md">
-              I'm here to help with your studies, track progress, and provide
+              I&apos;m here to help with your studies, track progress, and provide
               support. Ask me anything about your preparation!
             </p>
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
