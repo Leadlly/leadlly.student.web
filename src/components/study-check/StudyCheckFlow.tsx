@@ -74,6 +74,7 @@ const OpeningStep = ({ onStart }: { onStart: () => void }) => (
 );
 
 const StudyCheckFlow = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
   const [answers, setAnswers] = useState<StudyCheckAnswers>(defaultStudyCheckAnswers);
