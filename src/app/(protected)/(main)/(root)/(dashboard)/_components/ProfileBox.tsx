@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import ViewDnaReportButton from "@/components/study-check/ViewDnaReportButton";
 
 import { useAppSelector } from "@/redux/hooks";
 
@@ -49,16 +50,7 @@ const ProfileBox = () => {
           propelling you towards success with unwavering determination.
         </p>
 
-        <div className="w-full flex items-center justify-center xl:hidden">
-          <Link href={"/manage-account"}>
-            <Button
-              variant={"outline"}
-              className="text-primary hover:text-primary/80"
-            >
-              Manage Account
-            </Button>
-          </Link>
-        </div>
+        <ViewDnaReportButton className="w-full" />
       </div>
     </div>
   );

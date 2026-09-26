@@ -115,6 +115,9 @@ const config = {
       height: {
         "main-height": "calc(100dvh - 24px)",
       },
+      backgroundImage: {
+        leadlly: "linear-gradient(90deg, #8B5CF6 0%, #6D28D9 100%)",
+      },
       boxShadow: {
         custom: "0px 17px 37px 0px rgba(165, 92, 255, 0.0)",
         dialog: "0 0 21.5px 2px rgba(0, 0, 0, 0.29)",

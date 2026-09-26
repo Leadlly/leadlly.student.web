@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import { Header } from "@/components";
+import DashboardGreeting from "./DashboardGreeting";
 import TodaysPlan from "./TodaysPlan";
 import ContinuousRevision from "./ContinuousRevision";
 import SubjectProgress from "./SubjectProgress";
@@ -20,7 +20,6 @@ import InitialTodoBox from "./InitailTodoBox";
 import ReferAndEarn from "./referAndEarn";
 import Institute from "./institute";
 import CustomizePlanner from "./customizePlanner";
-import { getCurrentHour } from "@/helpers/constants";
 
 const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const { user } = useAppSelector((state) => state.user);
@@ -30,7 +29,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
     <div className="relative h-full flex flex-col justify-start gap-3 xl:gap-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
-          <Header title={`${getCurrentHour()}, ${user?.firstname}`} />
+          <DashboardGreeting />
         </div>
         <div className="hidden lg:w-60 xl:w-[268px] lg:flex justify-end mr-2">
           <UpgradeSubscriptionButton />
@@ -51,7 +50,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
             </div>
 
             <div className="w-full flex flex-col gap-4">
-              <div className="border rounded-xl h-20 grid place-items-center">
+              <div className="rounded-2xl border border-[#F7F2FE] shadow-[0_8px_24px_rgba(61,53,72,0.06)]">
                 <ContinuousRevision />
               </div>
               <div className="border rounded-xl ">

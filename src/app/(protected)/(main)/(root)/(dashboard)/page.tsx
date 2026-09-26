@@ -1,5 +1,6 @@
 import { getPlanner } from "@/actions/planner_actions";
 import InitialSetupDialog from "./_components/InitialSetupDialog";
+import OpenDnaReport from "./_components/OpenDnaReport";
 import Wrapper from "./_components/Wrapper";
 import {
   dehydrate,
@@ -19,6 +20,7 @@ const Dashboard = async (props: {
 }) => {
   const searchParams = await props.searchParams;
   const isInitialSetup = searchParams?.initialSetup === "true";
+  const openDna = searchParams?.dna === "1";
 
   const queryClient = new QueryClient();
 
@@ -44,6 +46,7 @@ const Dashboard = async (props: {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       {isInitialSetup && <InitialSetupDialog openOnMount />}
+      {openDna && <OpenDnaReport />}
 
       <Suspense fallback={<Loader />}>
         <Wrapper />

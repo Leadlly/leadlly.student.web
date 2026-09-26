@@ -10,7 +10,6 @@ import LibertyIcon from "@/components/icons/LibertyIcon";
 import QuizIcon from "@/components/icons/QuizIcon";
 import StudyRoomIcon from "@/components/icons/StudyRoomIcon";
 import ChatIcon3 from "@/components/icons/ChatIcon3";
-import AIMentorIcon from "@/components/icons/AIMentorIcon";
 import { getHours } from "date-fns";
 
 export const userSidebarLinks: TSidebarLink[] = [
@@ -30,14 +29,9 @@ export const userSidebarLinks: TSidebarLink[] = [
     href: "/tracker",
   },
   {
-    label: "chat",
+    label: "Mentor",
     icon: ChatIcon3,
     href: "/chat",
-  },
-  {
-    label: "AI mentor",
-    icon: AIMentorIcon,
-    href: "/ai-mentor",
   },
   {
     label: "quizzes",
@@ -107,6 +101,10 @@ export const manageAccountTabs = [
   {
     id: "study-progress",
     label: "Study Progress",
+  },
+  {
+    id: "mark-chapters",
+    label: "Mark Chapters",
   },
   // {
   //   id: "subject-overview",

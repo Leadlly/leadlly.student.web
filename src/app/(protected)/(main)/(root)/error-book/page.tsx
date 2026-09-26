@@ -1,11 +1,18 @@
 import React from "react";
 import ErrorBookContainer from "./components/ErrorBookContainer";
-import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { getErrorBook } from "@/actions/error_book_actions";
+import { getUser } from "@/actions/user_actions";
+import ErrorBookPaywall from "@/components/shared/ErrorBookPaywall";
+import { hasActiveSubscription } from "@/lib/subscription";
 
 const ErrorBook = async () => {
+  const { user } = await getUser();
+  if (!hasActiveSubscription(user)) {
+    return <ErrorBookPaywall />;
+  }
+
   const res = await getErrorBook();
 
   return (

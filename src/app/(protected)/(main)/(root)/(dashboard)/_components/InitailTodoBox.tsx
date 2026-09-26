@@ -20,7 +20,7 @@ const InitialTodoBox = () => {
 
       <div className="w-full flex items-center justify-center">
         <Link href="/manage-account?tab=study-progress">
-          <Button className="px-8 py-3 w-full sm:w-auto bg-primary text-white text-sm font-mada-semibold leading-tight rounded-md hover:bg-primary-dark transition-all duration-300">
+          <Button className="px-8 py-3 w-full sm:w-auto text-white text-sm font-mada-semibold leading-tight rounded-md transition-all duration-300">
             Start
           </Button>
         </Link>

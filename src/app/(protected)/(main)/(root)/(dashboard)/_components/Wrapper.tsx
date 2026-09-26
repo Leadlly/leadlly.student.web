@@ -8,6 +8,7 @@ import TabletUI from "./TabletUI";
 import { useMediaQuery } from "usehooks-ts";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPlanner } from "@/actions/planner_actions";
+import FreeMeetingBanner from "./FreeMeetingBanner";
 
 const Wrapper = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -21,6 +22,7 @@ const Wrapper = () => {
   if (isMobile) {
     return (
       <div className="h-full">
+        <FreeMeetingBanner />
         <MobileUI
           quizTopics={
             data?.data?.days.filter((item) =>
@@ -39,6 +41,7 @@ const Wrapper = () => {
   if (isTablet) {
     return (
       <div className="h-full pb-4">
+        <FreeMeetingBanner />
         <TabletUI
           quizTopics={
             data?.data?.days.filter((item) =>
@@ -56,6 +59,7 @@ const Wrapper = () => {
 
   return (
     <div className="h-full">
+      <FreeMeetingBanner />
       <DesktopUI
         quizTopics={
           data?.data?.days.filter((item) =>

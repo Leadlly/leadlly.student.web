@@ -41,6 +41,28 @@ export const saveStudyData = async (data: StudyDataProps) => {
   }
 };
 
+export const saveTaggedChapters = async (data: {
+  tag: string;
+  subject: string;
+  standard: number;
+  chapters: Array<{
+    chapterId: string;
+    status: string;
+    standard: number;
+  }>;
+}) => {
+  try {
+    const res = await apiClient.post(`/api/user/unrevisedtopics/save`, data);
+    revalidateTag("unrevised_topics");
+    return res.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error saving chapters: ${error.message}`);
+    }
+    throw new Error("An unknown error occurred while saving chapters!");
+  }
+};
+
 export const setUnrevisedTopics = async (data: {
   chapterIds: string[];
   tag: string;

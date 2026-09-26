@@ -1,21 +1,10 @@
-// pages/report.tsx
-import { FC } from "react";
-import DesktopView from "./components/DesktopView";
-import Defaultview from "./components/Defaultview";
+import QuizReportView from "./components/QuizReportView";
 
-const Report: FC = () => {
-  return (
-    <div>
-      <div className="hidden xl:block h-full">
-        <DesktopView />
-      </div>
+type Props = { params: Promise<{ quizId: string }> };
 
-      <div className="h-full block xl:hidden md:pb-4">
-        <Defaultview />
-      </div>
-
-    </div>
-  );
+const Report = async (props: Props) => {
+  const { quizId } = await props.params;
+  return <QuizReportView quizId={quizId} />;
 };
 
 export default Report;

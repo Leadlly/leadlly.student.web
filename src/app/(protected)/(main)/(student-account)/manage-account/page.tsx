@@ -9,8 +9,10 @@ import { cn } from "@/lib/utils";
 
 import { manageAccountTabs } from "@/helpers/constants";
 import LogoutButton from "@/components/shared/LogoutButton";
+import ViewDnaReportButton from "@/components/study-check/ViewDnaReportButton";
 import AccountUserProfile from "./_components/AccountUserProfile";
 import { getUnrevisedTopics } from "@/actions/studyData_actions";
+import MarkChapters from "./_components/MarkChapters";
 
 const ManageAccount = async (
   props: {
@@ -37,7 +39,8 @@ const ManageAccount = async (
       <section className="my-6 bg-primary/15 text-center lg:text-left lg:px-16 py-4 lg:py-8 flex flex-col lg:flex-row items-center justify-between">
         <AccountUserProfile />
 
-        <div className="flex items-center gap-10 mt-5">
+        <div className="flex items-center gap-4 mt-5">
+          <ViewDnaReportButton className="shrink-0 px-6 text-sm font-semibold" />
           <LogoutButton />
         </div>
       </section>
@@ -87,6 +90,8 @@ const ManageAccount = async (
             <AccountStudyProgress unrevisedTopics={data.data} />
           </>
         )}
+
+        {activeManageAccountTab === "mark-chapters" && <MarkChapters />}
 
         {/* {activeManageAccountTab === "subject-overview" && (
           <>

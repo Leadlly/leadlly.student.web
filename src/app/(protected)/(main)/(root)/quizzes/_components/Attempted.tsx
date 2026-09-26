@@ -1,15 +1,11 @@
 "use client";
 
 import { TabNavItem } from "@/components";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import React, { useState } from "react";
 import AttemptedWeeklyQuizzes from "./AttemptedWeeklyQuizzes";
 import AttemptedChapterWiseQuizzes from "./AttemptedChapterWiseQuiz";
-import AttemptedCustomizedQuizzes from "./AttemptedCustomizedquizzes";
 import {
   AttemptedQuizProps,
-  AttemptedWeeklyQuiz,
   WeeklyQuizProps,
 } from "@/helpers/types";
 
@@ -22,26 +18,15 @@ const AttemptTabs = [
     id: "chapterquiz",
     label: "Chapter Quiz",
   },
-  {
-    id: "customizedquiz",
-    label: "Custom Quiz",
-  },
 ];
 
-const Attempted = ({ weeklyQuizzes }: { weeklyQuizzes: WeeklyQuizProps[] }) => {
-  const [chapterQuizzes, setChapterQuizzes] = useState<AttemptedQuizProps[]>([
-    // {
-    //   id: 1,
-    //   chapterName: "Vector Algebra",
-    //   description:
-    //     "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
-    //   subject: "Maths",
-    //   questions: 30,
-    //   completedDate: "19 June 2024, at 10:30am",
-    //   efficiency: 80,
-    // },
-  ]);
-
+const Attempted = ({
+  weeklyQuizzes,
+  chapterQuizzes,
+}: {
+  weeklyQuizzes: WeeklyQuizProps[];
+  chapterQuizzes: AttemptedQuizProps[];
+}) => {
   const [activeTab, setActiveTab] = useState("weeklyquiz");
 
   return (
@@ -72,9 +57,6 @@ const Attempted = ({ weeklyQuizzes }: { weeklyQuizzes: WeeklyQuizProps[] }) => {
           )}
           {activeTab == "chapterquiz" && (
             <AttemptedChapterWiseQuizzes quizzes={chapterQuizzes} />
-          )}
-          {activeTab == "customizedquiz" && (
-            <AttemptedCustomizedQuizzes quizzes={chapterQuizzes} />
           )}
         </div>
       </div>

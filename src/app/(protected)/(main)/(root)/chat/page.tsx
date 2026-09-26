@@ -10,8 +10,11 @@ import RequestMeetingComponent from "./_components/RequestMeetingComponent";
 
 import { chatPageTabs } from "@/helpers/constants/index";
 import { getMeetings } from "@/actions/meeting_actions";
+import { getUser } from "@/actions/user_actions";
 import { toast } from "sonner";
 import Loader from "@/components/shared/Loader";
+import MentorPaywall from "@/components/shared/MentorPaywall";
+import { hasActiveSubscription } from "@/lib/subscription";
 
 const ChatPage = async (
   props: {
@@ -19,6 +22,12 @@ const ChatPage = async (
   }
 ) => {
   const searchParams = await props.searchParams;
+  const { user } = await getUser();
+
+  if (!hasActiveSubscription(user)) {
+    return <MentorPaywall />;
+  }
+
   const activeChatTab = searchParams["tab"] ?? chatPageTabs[0].title;
 
   const upcomingMeetingData = getMeetings("");
@@ -41,7 +50,7 @@ const ChatPage = async (
   return (
     <div className="flex flex-col justify-start gap-3 md:gap-6 h-full">
       <Header
-        title="Connect with mentor"
+        title="Mentor"
         titleClassName="text-xl md:text-3xl lg:text-page-title"
       />
 

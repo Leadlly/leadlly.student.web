@@ -1,113 +1,71 @@
-import { RadialBarChart } from "@/components";
-import { Progress } from "@/components/ui/progress";
 import { ISubject } from "@/helpers/types";
 
+const compact = (value: number) => {
+  if (value >= 1000) {
+    const scaled = value / 1000;
+    return `${Number.isInteger(scaled) ? scaled : scaled.toFixed(1)}K`;
+  }
+  return String(Math.round(value));
+};
+
+const Bar = ({
+  value,
+  color,
+  track,
+}: {
+  value: number;
+  color: string;
+  track: string;
+}) => (
+  <div className="h-3 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: track }}>
+    <div
+      className="h-full rounded-full"
+      style={{ width: `${Math.min(Math.max(value, 0), 100)}%`, backgroundColor: color }}
+    />
+  </div>
+);
+
 const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
+  const attempted = subject?.total_questions_solved.number ?? 0;
+  const bank = subject?.total_questions_solved.total;
+  const total = bank && bank > 0 ? bank : attempted;
+  const attemptedProgress =
+    total > 0
+      ? (attempted / total) * 100
+      : (subject?.total_questions_solved.percentage ?? 0);
+
   return (
-    <div className="rounded-xl shadow-tracker_subject_overview px-5 py-4">
-      <h2 className="text-lg md:text-2xl leading-none font-semibold text-black mb-4 lg:mb-0">
-        Subject Overview
-      </h2>
-
-      {/* ===== LARGE DEVICE LAYOUT ====== */}
-      <div className="hidden lg:flex items-center gap-4 h-48">
-        <div className="flex items-center h-full">
-          <RadialBarChart
-            series={[subject?.overall_progress!]}
-            colors={["#9654f4"]}
-            labels={["Revision Completion"]}
-            width="80%"
-            hollowSize="60%"
-            dataLabel="completed"
-            fontSize="24px"
-          />
-          <RadialBarChart
-            series={[subject?.overall_efficiency!]}
-            colors={["#72EFDD"]}
-            labels={["Revision Efficiency"]}
-            width="80%"
-            hollowSize="60%"
-            dataLabel="efficiency"
-            fontSize="24px"
-          />
-          <RadialBarChart
-            series={[subject?.total_questions_solved.percentage!]}
-            colors={["#FFDA57"]}
-            labels={["No. of Questions Solved"]}
-            width="80%"
-            hollowSize="60%"
-            dataLabel="questions"
-            subject={subject}
-          />
+    <div>
+      <h2 className="mb-4 text-2xl font-semibold text-dark-primary">Subject Overview</h2>
+      <div className="mb-2 space-y-3 rounded-2xl bg-primary/10 p-4">
+        <div>
+          <p className="mb-1 text-base font-medium">Revision Completion</p>
+          <div className="flex items-center gap-3">
+            <Bar value={subject?.overall_progress ?? 0} color="#8B5CF6" track="#EDE5F9" />
+            <span className="text-lg font-semibold">{Math.round(subject?.overall_progress ?? 0)}%</span>
+          </div>
         </div>
-
-        <div className="flex flex-col space-y-5">
+        <div>
+          <p className="mb-1 text-base font-medium">Revision Efficiency</p>
           <div className="flex items-center gap-3">
-            <span className="w-6 h-6 bg-primary rounded-md"></span>
-            <p className="text-lg leading-none font-semibold">
-              Revision Completion
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-6 bg-[#72EFDD] rounded-md"></span>
-            <p className="text-lg leading-none font-semibold">
-              Revision Efficiency
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-6 bg-[#FFDA57] rounded-md"></span>
-            <p className="text-lg leading-none font-semibold">
-              No. of Questions Solved
-            </p>
+            <Bar value={subject?.overall_efficiency ?? 0} color="#72EFDD" track="#D3E6EA" />
+            <span className="text-lg font-semibold">{Math.round(subject?.overall_efficiency ?? 0)}%</span>
           </div>
         </div>
       </div>
-
-      {/* ===== SMALL DEVICE LAYOUT ====== */}
-      <div className="lg:hidden flex flex-col space-y-3">
-        <div>
-          <h4 className="leading-none text-sm font-medium mb-1">
-            Revision Completion
-          </h4>
-          <div className="flex items-center gap-4">
-            <Progress value={subject?.overall_progress!} className="h-2" />
-            <p className="leading-none text-lg font-semibold">
-              {subject?.overall_progress}%
-            </p>
+      <div className="space-y-2 rounded-2xl bg-[#ff9900]/10 p-4">
+        <p className="text-base font-medium">Questions Attempted</p>
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="text-sm font-medium">You:</p>
+            <p className="text-2xl font-semibold">{compact(attempted)}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm font-medium">Total:</p>
+            <p className="text-2xl font-semibold">{compact(total)}</p>
           </div>
         </div>
-        <div>
-          <h4 className="leading-none text-sm font-medium mb-1">
-            Revision Efficiency
-          </h4>
-          <div className="flex items-center gap-4">
-            <Progress
-              value={subject?.overall_efficiency!}
-              className="h-2"
-              indicatorClassName="bg-[#72EFDD]"
-            />
-            <p className="leading-none text-lg font-semibold">
-              {subject?.overall_efficiency}%
-            </p>
-          </div>
-        </div>
-        <div>
-          <h4 className="leading-none text-sm font-medium mb-1">
-            No. of Questions Solved
-          </h4>
-          <div className="flex items-center gap-4">
-            <Progress
-              value={subject?.total_questions_solved.percentage}
-              className="h-2"
-              indicatorClassName="bg-[#FFDA57]"
-            />
-            <p className="leading-none text-lg font-semibold">
-              {subject?.total_questions_solved.number! > 120
-                ? "120+"
-                : subject?.total_questions_solved.number}
-            </p>
-          </div>
-        </div>
+        <Bar value={attemptedProgress} color="#ff9900" track="#FDE68A" />
       </div>
     </div>
   );

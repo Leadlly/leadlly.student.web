@@ -38,9 +38,9 @@ const ContinuousRevision = () => {
             <span className="flex items-center gap-2">
               <NotebookTextIcon className="size-7" />
               <span className="flex-1">
-                <p className="text-lg font-semibold">Learned something new?</p>
-                <p className="text-sm text-left text-secondary-foreground">
-                  Add topics to your planner
+                <p className="text-lg font-semibold text-left">What did you learn today?</p>
+                <p className="text-xs text-left text-dark-primary-active">
+                  Add what you covered in class today to your Daily Revision.
                 </p>
               </span>
             </span>
@@ -51,7 +51,7 @@ const ContinuousRevision = () => {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>What did you learned today?</DialogTitle>
+          <DialogTitle>What did you learn today?</DialogTitle>
           <DialogDescription className="sr-only">
             Add topics to your planner
           </DialogDescription>

@@ -76,9 +76,9 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
               </h4>
               <Link
                 href={"/planner"}
-                className="text-xs md:text-sm mt-[2px] md:mt-0 font-medium text-primary underline"
+                className="text-sm font-semibold text-primary"
               >
-                Full Planner
+                Full Planner &gt;
               </Link>
             </div>
           </div>
@@ -86,7 +86,7 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
           <div className="w-full flex-1 border rounded-xl overflow-y-auto custom__scrollbar">
             <div>
               <h4 className="text-base font-medium text-[#787878] mb-2 p-4 pb-1">
-                Daily Topics
+                Daily revision
               </h4>
               <ul className="w-full h-full flex flex-col justify-start gap-1 max-h-52 overflow-y-auto custom__scrollbar px-4">
                 {[
@@ -127,7 +127,7 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
               <AccordionItem value="item-1">
                 <AccordionTrigger className="px-4">
                   <h4 className="text-base font-medium text-[#787878] mb-2">
-                    Past Topics
+                    Pending revision
                   </h4>
                 </AccordionTrigger>
                 <AccordionContent>
@@ -175,7 +175,7 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
               <AccordionItem value="item-2">
                 <AccordionTrigger className="px-4">
                   <h4 className="text-base font-medium text-[#787878] mb-2">
-                    Low Accuracy Topics
+                    Accuracy based revision
                   </h4>
                 </AccordionTrigger>
                 <AccordionContent>

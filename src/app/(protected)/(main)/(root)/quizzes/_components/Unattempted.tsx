@@ -4,7 +4,6 @@ import { TabNavItem } from "@/components";
 import React, { useState } from "react";
 import UnattemptedChapterWiseQuizzes from "./UnattemptedChapterWiseQuiz";
 import UnattemptedWeeklyQuizzes from "./UnattemptedWeeklyQuizzes";
-import CustomizedQuiz from "./CustomizedQuiz";
 import { UnattemptedChapterQuizProps, WeeklyQuizProps } from "@/helpers/types";
 
 const unattemptedTabs = [
@@ -18,36 +17,15 @@ const unattemptedTabs = [
     label: "Chapter Quiz",
     mobileOnly: false,
   },
-  { id: "customizedQuiz", label: "Custom Quiz", mobileOnly: true },
 ];
 
 const Unattempted = ({
   weeklyQuizzes,
+  chapterQuizzes,
 }: {
   weeklyQuizzes: WeeklyQuizProps[];
+  chapterQuizzes: UnattemptedChapterQuizProps[];
 }) => {
-  const [chapterQuizzes, setChapterQuizzes] = useState<
-    UnattemptedChapterQuizProps[]
-  >([
-    // {
-    //   id: 1,
-    //   chapterName: "Chemical Bonding",
-    //   description:
-    //     "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
-    //   subject: "Chemistry",
-    //   questions: 40,
-    // },
-    // {
-    //   id: 2,
-    //   chapterName: "Laws of Motion",
-    //   description:
-    //     "Vector Algebra, Matrices and Determinants, Electromagnetic Induction, Laws of Motion, Chemical Bonding",
-    //   subject: "Physics",
-    //   questions: 40,
-    // },
-    // Add more quizzes here
-  ]);
-
   const [activeTab, setActiveTab] = useState("weeklyQuiz");
 
   return (
@@ -79,17 +57,8 @@ const Unattempted = ({
             )}
             {activeTab == "chapterQuiz" && (
               <UnattemptedChapterWiseQuizzes quizzes={chapterQuizzes} />
-            )}{" "}
-            {activeTab == "customizedQuiz" && (
-              <div className="flex justify-center lg:hidden">
-                {" "}
-                <CustomizedQuiz />
-              </div>
             )}
           </div>
-        </div>
-        <div className="hidden lg:block">
-          <CustomizedQuiz />
         </div>
       </div>
     </div>

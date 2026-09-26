@@ -42,3 +42,46 @@ export const getMeetings = async (meeting: string) => {
     }
   }
 };
+
+const apiMessage = (error: unknown, fallback: string) => {
+  if (error && typeof error === "object" && "response" in error) {
+    const data = (error as { response?: { data?: { message?: string } } }).response
+      ?.data;
+    if (data?.message) return data.message;
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+};
+
+export const getFreeMeetingSlots = async (date: string) => {
+  try {
+    const res = await apiClient.get(`/api/meeting/free/slots`, {
+      cache: "no-store",
+      params: { date },
+    });
+    return res.data as {
+      success: boolean;
+      date: string;
+      slots: Array<{ time: string; available: boolean }>;
+    };
+  } catch (error) {
+    throw new Error(apiMessage(error, "Could not load meeting slots."));
+  }
+};
+
+export const claimFreeMeeting = async (data: {
+  date: string;
+  time: string;
+  message: string;
+}) => {
+  try {
+    const res = await apiClient.post(`/api/meeting/free/claim`, data);
+    return res.data as {
+      success?: boolean;
+      message?: string;
+      meeting?: { _id?: string };
+    };
+  } catch (error) {
+    throw new Error(apiMessage(error, "Could not book this meeting."));
+  }
+};

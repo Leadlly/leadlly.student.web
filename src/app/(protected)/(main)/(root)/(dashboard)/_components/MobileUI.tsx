@@ -1,5 +1,5 @@
 "use client";
-import { Header } from "@/components";
+import DashboardGreeting from "./DashboardGreeting";
 import TodaysPlan from "./TodaysPlan";
 import ContinuousRevision from "./ContinuousRevision";
 import DailyReport from "./DailyReport";
@@ -12,7 +12,6 @@ import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
 import InitialTodoBox from "./InitailTodoBox";
 import { useAppSelector } from "@/redux/hooks";
-import { getCurrentHour } from "@/helpers/constants";
 import Institute from "./institute";
 
 const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
@@ -22,10 +21,7 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   return (
     <div className="flex flex-col justify-start gap-3">
       <div className="flex items-center justify-between">
-        <Header
-          title={`${getCurrentHour()}, ${user?.firstname}`}
-          titleClassName="text-2xl"
-        />
+        <DashboardGreeting />
         <div className="flex items-center gap-2">
           <UpgradeSubscriptionButton />
           <UserProfileSheet />

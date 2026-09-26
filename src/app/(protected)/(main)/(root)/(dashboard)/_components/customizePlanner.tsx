@@ -36,6 +36,7 @@ const ControlPanelFormSchema = z.object({
   backRevisionTopics: z.number({
     required_error: "Please select number of back revision topics!",
   }),
+  includeSunday: z.boolean(),
 });
 
 const CustomizePlanner = () => {
@@ -61,6 +62,7 @@ const CustomizePlanner = () => {
         user && user.preferences.backRevisionTopics
           ? user.preferences.backRevisionTopics
           : 3,
+      includeSunday: user?.preferences?.includeSunday !== false,
     },
   });
 
@@ -231,6 +233,26 @@ const CustomizePlanner = () => {
                         ))}
                       </ul>
                     </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="includeSunday"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between gap-4 rounded-xl border px-3 py-3">
+                  <FormLabel className="font-semibold text-base">
+                    Include Sunday in the planner
+                  </FormLabel>
+                  <FormControl>
+                    <input
+                      type="checkbox"
+                      checked={field.value}
+                      onChange={(event) => field.onChange(event.target.checked)}
+                      className="h-5 w-5 accent-primary"
+                    />
                   </FormControl>
                 </FormItem>
               )}

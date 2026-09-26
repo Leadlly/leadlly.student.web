@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Sidebar, MobileMenu } from "@/components";
 import { getMeetings } from "@/actions/meeting_actions";
 import { TMeetingsProps } from "@/helpers/types";
-import AIMentorFloatingButton from "@/components/shared/AIMentorFloatingButton";
 
 export const metadata: Metadata = {
   title: "Leadlly",
@@ -15,8 +14,13 @@ export default async function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { meetings }: { meetings: TMeetingsProps[] } = await getMeetings("");
-  const inCompleteMeetingsLength = meetings?.length;
+  let inCompleteMeetingsLength = 0;
+  try {
+    const { meetings }: { meetings: TMeetingsProps[] } = await getMeetings("");
+    inCompleteMeetingsLength = meetings?.length ?? 0;
+  } catch {
+    inCompleteMeetingsLength = 0;
+  }
 
   return (
     <>
@@ -28,7 +32,6 @@ export default async function MainLayout({
           {children}
         </div>
       </section>
-      <AIMentorFloatingButton />
       <section className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white shadow-[0_-1px_2px_0_rgba(0,0,0,0.1)] overflow-hidden">
         <MobileMenu meetingsLength={inCompleteMeetingsLength} />
       </section>

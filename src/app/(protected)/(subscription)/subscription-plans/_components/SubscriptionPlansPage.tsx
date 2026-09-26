@@ -24,7 +24,9 @@ const SubscriptionPlansPage = () => {
   const { user } = useAppSelector((state) => state.user);
   const { institute } = useAppSelector((state) => state.institute);
 
-  const [activePlanTab, setActivePlanTab] = useState(subscriptionTabs[0]);
+  const [activePlanTab, setActivePlanTab] = useState(
+    subscriptionTabs.find((tab) => tab.id === "premium") ?? subscriptionTabs[0]
+  );
   const [pricingData, setPricingData] = useState<any>(null);
   const [fetchingPricing, setFetchingPricing] = useState(false);
 
@@ -69,14 +71,19 @@ const SubscriptionPlansPage = () => {
   return (
     <section className="relative">
       <div className="px-3 lg:px-5 py-2 mb-6 flex items-center justify-between gap-5">
-        <Image
-          src="/assets/images/leadlly_logo.svg"
-          alt="Leadlly"
-          width={150}
-          height={50}
-        />
+        <Link href="/">
+          <Image
+            src="/assets/images/leadlly_logo.svg"
+            alt="Leadlly"
+            width={150}
+            height={50}
+          />
+        </Link>
 
-        <div>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="text-sm font-semibold text-primary">
+            Back to app
+          </Link>
           <LogoutButton />
         </div>
       </div>
@@ -94,28 +101,9 @@ const SubscriptionPlansPage = () => {
       </div>
 
       <div className="sticky top-0 z-50 grid place-items-center px-3 lg:px-5 py-3">
-        {institute && institute._id ? (
-          <Button className="max-w-60 h-12 w-full rounded-full bg-primary">
-            {activePlanTab.label} Plan
-          </Button>
-        ) : (
-          <div className="max-w-80 h-12 w-full mx-auto bg-white border border-primary rounded-full flex items-center justify-between px-1">
-            {subscriptionTabs.map((item) => (
-              <Button
-                key={item.id}
-                onClick={() => setActivePlanTab(item)}
-                className={cn(
-                  "flex-1 rounded-full font-medium sm:text-lg",
-                  activePlanTab.id === item.id
-                    ? "bg-primary text-white"
-                    : "bg-transparent text-primary hover:bg-transparent"
-                )}
-              >
-                {item.label}
-              </Button>
-            ))}
-          </div>
-        )}
+        <Button className="max-w-60 h-12 w-full rounded-full">
+          Premium Plan
+        </Button>
       </div>
 
       <div>

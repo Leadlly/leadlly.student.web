@@ -182,6 +182,7 @@ export interface ISubject {
   total_questions_solved: {
     number?: number;
     percentage?: number;
+    total?: number;
   };
 }
 
@@ -215,10 +216,17 @@ export type UserDataProps = {
     url?: string;
   };
   planner: boolean;
+  onboard?: boolean;
+  freeMeeting?: {
+    availed?: boolean;
+    claimedAt?: string | null;
+    meetingId?: string;
+  };
   preferences: {
     continuousData: { nextDay: boolean }; // to decide continuous topic placing in planner
     dailyQuestions: number;
     backRevisionTopics: number;
+    includeSunday?: boolean;
   };
   parent: {
     name?: string;
@@ -393,6 +401,8 @@ export type StudentPersonalInfoProps = {
   nextDay?: boolean;
   dailyQuestions?: number;
   backRevisionTopics?: number;
+  includeSunday?: boolean;
+  board?: string;
 };
 
 export interface Option {
@@ -530,7 +540,7 @@ export interface AttemptedWeeklyQuiz {
   questions: number;
 }
 export interface AttemptedQuizProps {
-  id: number;
+  id: number | string;
   chapterName: string;
   description: string;
   subject: Subject;
@@ -571,7 +581,7 @@ export type WeeklyQuizProps = {
 };
 
 export type UnattemptedChapterQuizProps = {
-  id: number;
+  id: number | string;
   chapterName: string;
   description: string;
   subject: Subject;

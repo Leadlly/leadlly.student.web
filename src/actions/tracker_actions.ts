@@ -4,11 +4,8 @@ import apiClient from "@/apiClient/apiClient";
 
 export const getUserTracker = async (subject: string | string[]) => {
   try {
-    const res = await apiClient.get(`/api/tracker/get?subject=${subject}`, {
-      cache: "force-cache",
-      next: {
-        tags: ["userTracker"],
-      },
+    const res = await apiClient.get(`/api/tracker/get?subject=${encodeURIComponent(String(subject))}`, {
+      cache: "no-store",
     });
 
     const data = await res.data;

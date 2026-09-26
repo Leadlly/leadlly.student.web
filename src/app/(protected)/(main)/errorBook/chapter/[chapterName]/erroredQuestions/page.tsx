@@ -3,6 +3,7 @@ import { FC } from "react";
 import DesktopView from "./_components/DesktopView";
 import Defaultview from "./_components/Defaultview";
 import { getChapterErrorBook } from "@/actions/error_book_actions";
+import PremiumGate from "@/components/shared/PremiumGate";
 
 const Report = async (props: { params: Promise<{ chapterName: string }> }) => {
   const params = await props.params;
@@ -10,6 +11,7 @@ const Report = async (props: { params: Promise<{ chapterName: string }> }) => {
     chapter: params.chapterName,
   });
   return (
+    <PremiumGate variant="errorBook">
     <div>
       <div className="hidden xl:block h-full">
         <DesktopView
@@ -25,6 +27,7 @@ const Report = async (props: { params: Promise<{ chapterName: string }> }) => {
         />
       </div>
     </div>
+    </PremiumGate>
   );
 };
 

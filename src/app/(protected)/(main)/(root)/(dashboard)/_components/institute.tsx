@@ -12,6 +12,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
 import JoinedClasses from "./JoinedClasses";
 import AllClasses from "./AllClasses";
@@ -105,6 +106,9 @@ const Institute = () => {
           <div className="min-w-0 font-semibold text-xl text-left break-words">
             {institute?.name}
           </div>
+          <Link href="/institute" className="ml-auto text-sm font-semibold text-primary">
+            Open
+          </Link>
         </div>
 
         <ul className="w-full flex items-center gap-2 border-b">

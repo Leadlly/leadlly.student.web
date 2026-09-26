@@ -5,7 +5,11 @@ import Link from "next/link";
 import React from "react";
 import Unattempted from "./_components/Unattempted";
 import Attempted from "./_components/Attempted";
-import { getWeeklyQuiz } from "@/actions/weekly_quiz_actions";
+import { getWeeklyQuiz, getChapterQuizzes } from "@/actions/weekly_quiz_actions";
+import {
+  AttemptedQuizProps,
+  UnattemptedChapterQuizProps,
+} from "@/helpers/types";
 
 const quizPageTabs = [
   {
@@ -29,10 +33,14 @@ const Quizzes = async (
   const unattemptedQuizData = getWeeklyQuiz("unattempted");
   const attemptedQuizData = getWeeklyQuiz("attempted");
 
-  const [unattemptedQuiz, attemptedQuiz] = await Promise.all([
-    unattemptedQuizData,
-    attemptedQuizData,
-  ]);
+  const emptyWeekly = { success: true, weeklyQuiz: [] as [] };
+  const [unattemptedQuiz, attemptedQuiz, unattemptedChapters, attemptedChapters] =
+    await Promise.all([
+      unattemptedQuizData.catch(() => emptyWeekly),
+      attemptedQuizData.catch(() => emptyWeekly),
+      getChapterQuizzes("unattempted").catch(() => ({ chapterQuizzes: [] })),
+      getChapterQuizzes("attempted").catch(() => ({ chapterQuizzes: [] })),
+    ]);
 
   return (
     <div className="flex flex-col justify-start gap-3 md:gap-6 h-full">
@@ -73,10 +81,25 @@ const Quizzes = async (
 
         <div className="flex flex-col max-h-full">
           {activeQuizTab === "unattempted" && (
-            <Unattempted weeklyQuizzes={unattemptedQuiz.weeklyQuiz} />
+            <Unattempted
+              weeklyQuizzes={unattemptedQuiz.weeklyQuiz}
+              chapterQuizzes={
+                (unattemptedChapters.chapterQuizzes ??
+                  []) as UnattemptedChapterQuizProps[]
+              }
+            />
           )}
           {activeQuizTab === "attempted" && (
-            <Attempted weeklyQuizzes={attemptedQuiz.weeklyQuiz} />
+            <Attempted
+              weeklyQuizzes={attemptedQuiz.weeklyQuiz}
+              chapterQuizzes={
+                (attemptedChapters.chapterQuizzes ?? []).map((quiz) => ({
+                  ...quiz,
+                  completedDate: quiz.completedDate ?? "",
+                  efficiency: quiz.efficiency ?? 0,
+                })) as AttemptedQuizProps[]
+              }
+            />
           )}
         </div>
       </div>

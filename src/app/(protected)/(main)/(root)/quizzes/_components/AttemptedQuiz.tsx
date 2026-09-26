@@ -61,7 +61,7 @@ const AttemptedQuiz = ({ quiz }: Props) => {
             <p className="text-gray-600 text-xs md:text-sm my-1 sm:hidden">
               {quiz.questions} Quiz Questions
             </p>
-            <Link href={`quiz/${quiz.id}/report`}>
+            <Link href={`/quiz/${quiz.id}/report`}>
               {" "}
               <Button className="sm:mt-2 text-xs max-sm:py-1 max-sm:px-2 max-sm:h-8 md:text-base bg-white border-black text-black hover:bg-slate-100 border-2 font-medium">
                 View Details <ChevronRight size={20} />
@@ -85,7 +85,7 @@ const AttemptedQuiz = ({ quiz }: Props) => {
             <p className="text-gray-600 text-xs md:text-sm my-1 sm:hidden">
               {quiz.questions} Quiz Questions
             </p>
-            <Link href={`quiz/${quiz.id}/report`}>
+            <Link href={`/quiz/${quiz.id}/report`}>
               {" "}
               <Button className="sm:mt-2 text-xs max-sm:py-1 max-sm:px-2 max-sm:h-8 md:text-base bg-white border-black text-black hover:bg-slate-100 border-2 font-medium">
                 View Details <ChevronRight size={20} />

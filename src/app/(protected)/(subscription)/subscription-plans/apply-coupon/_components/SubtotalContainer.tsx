@@ -168,7 +168,7 @@ const SubtotalContainer = ({
           onClick={subscribeHandler}
           disabled={isLoading}
           className={cn(
-            "w-4/5 h-11 bg-primary mx-auto flex items-center justify-center rounded-lg text-white text-base font-bold"
+            "w-4/5 h-11 mx-auto flex items-center justify-center rounded-lg text-white text-base font-bold"
           )}
         >
           {isLoading ? (
