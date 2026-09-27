@@ -73,7 +73,12 @@ const ChapterTagger = ({
         subjects.map(async (subject) => {
           try {
             const data = await getChapters(subject.name, standard);
-            next[subject.name] = (data?.chapters ?? []).map((chapter: ChapterRow) => ({
+            next[subject.name] = (data?.chapters ?? [])
+              .filter((chapter: ChapterRow) => {
+                if (!chapter.subjectName) return true;
+                return chapter.subjectName.toLowerCase() === subject.name.toLowerCase();
+              })
+              .map((chapter: ChapterRow) => ({
               ...chapter,
               _id: String(chapter._id),
               subjectName: chapter.subjectName || subject.name,

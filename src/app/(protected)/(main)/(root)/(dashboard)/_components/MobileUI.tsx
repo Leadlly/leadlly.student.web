@@ -6,7 +6,7 @@ import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
 import UserProfileSheet from "./UserProfileSheet";
-import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
+import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
@@ -23,7 +23,12 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
       <div className="flex items-center justify-between">
         <DashboardGreeting />
         <div className="flex items-center gap-2">
-          <UpgradeSubscriptionButton />
+          <Link
+            href="/manage-account"
+            className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
+          >
+            Profile
+          </Link>
           <UserProfileSheet />
         </div>
       </div>

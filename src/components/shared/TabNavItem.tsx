@@ -24,7 +24,7 @@ const TabNavItem = ({
     <li
       onClick={handleClick}
       className={cn(
-        "relative text-xs p-1 rounded cursor-pointer transition-all ease-in-out",
+        "relative cursor-pointer rounded-full px-2.5 py-1 text-xs transition-all ease-in-out",
         activeTab === id ? "text-white" : "text-black",
         className
       )}>
@@ -35,7 +35,7 @@ const TabNavItem = ({
             type: "spring",
             duration: 0.6,
           }}
-          className={cn("absolute rounded bg-primary", activeTabClassName)}
+          className={cn("absolute rounded-full bg-primary", activeTabClassName)}
         />
       )}
       <span className={cn("relative z-10", titleClassName)}>{title}</span>

@@ -4,13 +4,12 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { BookOpen, Sparkles } from "lucide-react";
 
 import { Logo } from "@/components";
 import { TSidebarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { LogOut } from "lucide-react";
-import LogoutButton from "./LogoutButton";
+import { useAppSelector } from "@/redux/hooks";
 
 const SidebarDesktop = ({
   sidebar,
@@ -20,6 +19,9 @@ const SidebarDesktop = ({
   meetingsLength: number;
 }) => {
   const pathname = usePathname();
+  const subscribed = useAppSelector(
+    (state) => state.user.user?.subscription?.status === "active"
+  );
 
   return (
     <aside className="bg-sidebar-background w-full h-full md:w-20 xl:w-sidebar md:h-main-height md:rounded-xl overflow-y-hidden shadow-xl">
@@ -35,14 +37,14 @@ const SidebarDesktop = ({
           />
         </Link>
       </div>
-      <ul className="flex flex-col justify-start items-start md:items-center xl:items-start gap-2 h-[calc(100dvh-97px)] overflow-x-hidden overflow-y-auto custom__scrollbar px-[25px] md:px-3 xl:px-[25px] py-3">
+      <ul className="flex flex-col justify-start items-start md:items-center xl:items-start gap-2 h-[calc(100dvh-168px)] overflow-x-hidden overflow-y-auto custom__scrollbar px-[25px] md:px-3 xl:px-[25px] py-3">
         {sidebar.map((item) => {
           return (
             <Link
               href={item.href}
               key={item.href}
               className={cn(
-                "relative px-4 py-3 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
+                "relative flex w-full items-center justify-start rounded-full px-4 py-3 md:justify-center xl:justify-start"
               )}
             >
               {pathname === item.href && (
@@ -52,7 +54,7 @@ const SidebarDesktop = ({
                     type: "spring",
                     duration: 0.6,
                   }}
-                  className="absolute rounded-full xl:rounded-xl h-full bg-primary inset-0"
+                  className="absolute inset-0 h-full rounded-full bg-primary"
                 />
               )}
               <li className="relative z-10 flex items-center gap-3 capitalize text-base md:text-[20px]">
@@ -90,7 +92,27 @@ const SidebarDesktop = ({
             </Link>
           );
         })}
+        <Link
+          href="/manage-account?tab=mark-chapters"
+          className="relative flex w-full items-center justify-start rounded-full px-4 py-3 md:justify-center xl:justify-start"
+        >
+          <li className="relative z-10 flex items-center gap-3 text-base capitalize text-[#5A10D9] md:text-[20px]">
+            <BookOpen className="h-5 w-5" />
+            <span className="md:hidden xl:block">Mark chapters</span>
+          </li>
+        </Link>
       </ul>
+      <div className="px-[25px] pb-4 md:px-3 xl:px-[25px]">
+        <Link
+          href="/subscription-plans"
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-leadlly text-sm font-semibold text-white"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span className="md:hidden xl:inline">
+            {subscribed ? "Your plan" : "Upgrade"}
+          </span>
+        </Link>
+      </div>
     </aside>
   );
 };

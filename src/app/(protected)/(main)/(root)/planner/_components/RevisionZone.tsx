@@ -19,7 +19,7 @@ const RevisionZone = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center h-full rounded-xl py-4 border">
+      <div className="flex h-full items-center justify-center rounded-3xl border border-[#F7F2FE] py-4">
         {!newTopicLearnt ? (
           <div className="w-full px-3 lg:px-7">
             <div className="flex items-start justify-between">

@@ -3,14 +3,13 @@ import DashboardGreeting from "./DashboardGreeting";
 import TodaysPlan from "./TodaysPlan";
 import ContinuousRevision from "./ContinuousRevision";
 import SubjectProgress from "./SubjectProgress";
-import ProfileBox from "./ProfileBox";
 import PointsBox from "./PointsBox";
 import DailyStreakQuestions from "./DailyStreakQuestions";
 import TodaysVibe from "./TodaysVibe";
 import UpcomingWorkshops from "./UpcomingWorkshops";
 import DailyReport from "./DailyReport";
 import ProgressAnalytics from "./ProgressAnalytics";
-import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
+import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
@@ -26,10 +25,17 @@ const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
 
   return (
     <div className="h-full flex flex-col justify-start gap-4">
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between gap-3">
         <DashboardGreeting />
-
-        <UpgradeSubscriptionButton />
+        <div className="flex items-center gap-3">
+          <PointsBox />
+          <Link
+            href="/manage-account"
+            className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
+          >
+            Profile
+          </Link>
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col justify-start gap-4 md:overflow-y-auto custom__scrollbar pr-3">
@@ -54,10 +60,6 @@ const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
           </div>
 
           <div className="w-1/2 space-y-4">
-            <ProfileBox />
-
-            <PointsBox />
-
             {/* <TodaysVibe />
 
             <DailyStreakQuestions />

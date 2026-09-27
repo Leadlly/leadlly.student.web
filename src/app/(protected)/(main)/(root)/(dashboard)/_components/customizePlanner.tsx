@@ -91,7 +91,7 @@ const CustomizePlanner = () => {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="rounded-xl justify-between h-auto w-full px-2"
+          className="h-auto w-full justify-between rounded-full px-3"
         >
           <span className="flex items-center gap-2">
             <div className="size-14 grid place-items-center">

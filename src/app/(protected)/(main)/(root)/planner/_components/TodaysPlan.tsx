@@ -41,7 +41,7 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
   }
 
   return (
-    <div className="rounded-xl border flex flex-col justify-start overflow-hidden">
+    <div className="flex flex-col justify-start overflow-hidden rounded-3xl border border-[#F7F2FE]">
       <div className="flex items-center justify-between px-7 py-4 bg-sidebar-background rounded-t-xl">
         <div className="flex flex-col justify-start gap-1">
           <h4 className="text-base md:text-2xl leading-none font-semibold text-black">
@@ -63,7 +63,18 @@ const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
 
       <div className="flex-1 max-h-[365px] overflow-y-auto custom__scrollbar">
         <ul className="h-full flex flex-col justify-start">
-          {userSubjects?.map((subject) => (
+          {userSubjects
+            ?.filter((subject) => {
+              const name = subject.name.toLowerCase();
+              const hasTopic = (topic: { subject?: { name?: string } }) =>
+                topic.subject?.name?.toLowerCase() === name;
+              return (
+                todaysTopics?.continuousRevisionTopics?.some(hasTopic) ||
+                todaysTopics?.backRevisionTopics?.some(hasTopic) ||
+                todaysTopics?.continuousRevisionSubTopics?.some(hasTopic)
+              );
+            })
+            .map((subject) => (
             <li
               key={subject.name}
               className="border-b md:border-none xl:border-b border-b-[#717171] border-opacity-[0.11] last:border-none py-4 px-7"

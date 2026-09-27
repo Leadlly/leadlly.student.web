@@ -207,12 +207,12 @@ const QuestionDialogBox = ({
               </DialogTitle>
 
               <div className="flex items-center justify-center w-full">
-                <ul className="flex items-center gap-3 border-2 p-1 rounded-md">
+                <ul className="flex items-center gap-2 rounded-full border p-1">
                   {questions.map((ques, index) => (
                     <li
                       key={ques._id}
                       className={cn(
-                        "relative px-4 py-1 text-base md:text-lg font-medium cursor-pointer",
+                        "relative cursor-pointer rounded-full px-4 py-1 text-base font-medium md:text-lg",
                         activeQuestion === index && "text-white",
                         dailyQuizCurrentTopic?.attemptedQuestions.some(
                           (quiz) => quiz.question === ques._id
@@ -233,7 +233,7 @@ const QuestionDialogBox = ({
                             type: "spring",
                             duration: 0.6,
                           }}
-                          className="absolute rounded-sm h-full w-full bg-primary inset-0 -z-10"
+                          className="absolute inset-0 -z-10 h-full w-full rounded-full bg-primary"
                         />
                       )}
                     </li>
@@ -315,15 +315,26 @@ const QuestionDialogBox = ({
                   ))}
                 </ul>
               </div>
-              <div className="w-full flex items-center justify-center md:justify-end mb-6 md:mb-0">
+              <div className="mb-6 flex w-full items-center justify-center gap-3 md:mb-0 md:justify-end">
                 <Button
                   type="button"
-                  className="h-7 md:h-9 px-4 md:px-6 text-base md:text-xl font-semibold"
+                  className="h-10 rounded-full px-6 text-base font-semibold"
                   disabled={activeQuestion === questions.length - 1}
                   onClick={handleNextQuestion}
                 >
                   Next
                 </Button>
+                {dailyQuizCurrentTopic?.attemptedQuestions?.length ===
+                questions.length ? (
+                  <Button
+                    type="button"
+                    className="h-10 rounded-full px-6 text-base font-semibold"
+                    onClick={onHandleSubmit}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Submit"}
+                  </Button>
+                ) : null}
               </div>
             </div>
           </div>

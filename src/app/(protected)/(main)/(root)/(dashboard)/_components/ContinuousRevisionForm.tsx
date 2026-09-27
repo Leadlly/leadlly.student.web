@@ -70,7 +70,11 @@ const ContinuousRevisionForm = ({
         setIsLoading(true);
         try {
           const data = await getChapters(activeSubject, userStandard);
-          setActiveTabChapters(data);
+          const chapters = (data?.chapters ?? []).filter((chapter: { subjectName?: string }) => {
+            if (!chapter.subjectName) return true;
+            return chapter.subjectName.toLowerCase() === activeSubject.toLowerCase();
+          });
+          setActiveTabChapters({ ...data, chapters });
         } catch (error: any) {
           toast.error("Error fetching chapters", {
             description: error.message,

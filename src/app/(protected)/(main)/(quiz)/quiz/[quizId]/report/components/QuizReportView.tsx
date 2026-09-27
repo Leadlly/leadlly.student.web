@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar, Clock, Loader2, Pencil } from "lucide-react";
-import { getQuizReport } from "@/actions/weekly_quiz_actions";
+import { getQuizReport, submitQuiz } from "@/actions/weekly_quiz_actions";
 import BackButton from "./BackButton";
 import AttemptAnalysisChart from "./AttemptAnalysisChart";
 
@@ -16,6 +16,7 @@ const QuizReportView = ({ quizId }: { quizId: string }) => {
   useEffect(() => {
     let cancelled = false;
     getQuizReport(quizId)
+      .catch(() => submitQuiz(quizId))
       .then((data) => {
         if (!cancelled) setReport(data.report);
       })

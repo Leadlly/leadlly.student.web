@@ -60,7 +60,7 @@ const ReferAndEarnContent = () => {
   };
 
   return (
-    <DialogContent className="p-0 pb-6 max-h-full overflow-y-auto custom__scrollbar">
+    <DialogContent className="p-0 pb-6 overflow-y-auto custom__scrollbar">
       <DialogHeader className="bg-primary rounded-b-3xl sm:rounded-lg sm:rounded-b-3xl p-4 pb-12 text-left">
         <DialogClose asChild>
           <Button variant={"ghost"} size={"icon"} className="text-white">

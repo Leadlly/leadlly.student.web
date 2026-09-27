@@ -7,13 +7,12 @@ import ContinuousRevision from "./ContinuousRevision";
 import SubjectProgress from "./SubjectProgress";
 import DailyReport from "./DailyReport";
 import ProgressAnalytics from "./ProgressAnalytics";
-import ProfileBox from "./ProfileBox";
 import PointsBox from "./PointsBox";
 // import TodaysVibe from "./TodaysVibe";
 // import DailyStreakQuestions from "./DailyStreakQuestions";
 // import UpcomingWorkshops from "./UpcomingWorkshops";
+import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
-import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
 import InitialTodoBox from "./InitailTodoBox";
@@ -28,16 +27,34 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   return (
     <div className="relative h-full flex flex-col justify-start gap-3 xl:gap-6">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <DashboardGreeting />
         </div>
-        <div className="hidden lg:w-60 xl:w-[268px] lg:flex justify-end mr-2">
-          <UpgradeSubscriptionButton />
+        <div className="flex items-center gap-3">
+          <PointsBox />
+          <Link
+            href="/manage-account"
+            className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
+          >
+            Profile
+          </Link>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <div className="min-w-[220px] flex-1 rounded-3xl border border-[#F7F2FE]">
+          <ContinuousRevision />
+        </div>
+        <div className="min-w-[220px] flex-1">
+          <CustomizePlanner />
+        </div>
+        <div className="min-w-[220px] flex-1">
+          <ReferAndEarn />
         </div>
       </div>
 
       <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
-        <section className="h-full flex flex-col justify-start gap-4 py-2 xl:w-[calc(100%-268px)]">
+        <section className="h-full flex w-full flex-col justify-start gap-4 py-2">
           <div className="w-full grid grid-cols-2 gap-4">
             <div className="max-h-[550px] min-w-80 relative flex flex-col justify-start overflow-hidden">
               <Suspense fallback={<Loader />}>
@@ -50,10 +67,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
             </div>
 
             <div className="w-full flex flex-col gap-4">
-              <div className="rounded-2xl border border-[#F7F2FE] shadow-[0_8px_24px_rgba(61,53,72,0.06)]">
-                <ContinuousRevision />
-              </div>
-              <div className="border rounded-xl ">
+                <div className="rounded-3xl border border-[#F7F2FE]">
                 <SubjectProgress />
               </div>
 
@@ -63,37 +77,16 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
             </div>
           </div>
 
-          <div className="border rounded-xl">
+          <div className="rounded-3xl border border-[#F7F2FE]">
             <ProgressAnalytics />
           </div>
+          {institute && institute._id ? (
+            <div className="rounded-3xl border border-[#F7F2FE] p-4">
+              <h4 className="mb-2 text-lg font-semibold">Your Institute</h4>
+              <Institute />
+            </div>
+          ) : null}
         </section>
-
-        <div className="hidden lg:w-60 xl:w-[268px] lg:block">
-          <section className="flex flex-col justify-start gap-4 py-2">
-            <ProfileBox />
-
-            <PointsBox />
-
-            {institute && institute._id && (
-              <div className="w-full">
-                <div>
-                  <h4 className="text-lg font-semibold mb-1">Your Institute</h4>
-                </div>
-                <Institute />
-              </div>
-            )}
-
-            <CustomizePlanner />
-
-            <ReferAndEarn />
-
-            {/* <TodaysVibe />
-
-            <DailyStreakQuestions />
-
-            <UpcomingWorkshops /> */}
-          </section>
-        </div>
       </div>
     </div>
   );

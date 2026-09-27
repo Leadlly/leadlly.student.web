@@ -15,7 +15,7 @@ const Modal = ({
   };
   return (
     <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
-      <DialogContent className="text-black text-3xl shadow-dialog bg-white rounded-xl max-w-4xl w-full max-h-full px-0 py-0 overflow-x-hidden overflow-y-auto custom__scrollbar">
+      <DialogContent className="text-black shadow-dialog bg-white max-w-3xl px-0 py-0 overflow-x-hidden overflow-y-auto custom__scrollbar">
         {children}
       </DialogContent>
     </Dialog>

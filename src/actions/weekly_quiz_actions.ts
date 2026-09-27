@@ -129,3 +129,15 @@ export const getQuizReport = async (quizId: string) => {
     throw new Error("An unknown error occurred while getting the quiz report!");
   }
 };
+
+export const submitQuiz = async (quizId: string) => {
+  try {
+    const res = await apiClient.get(`/api/quiz/submission?quizId=${quizId}`);
+    return res.data as Awaited<ReturnType<typeof getQuizReport>>;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Error in submitting quiz: ${error.message}`);
+    }
+    throw new Error("An unknown error occurred while submitting the quiz!");
+  }
+};

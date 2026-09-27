@@ -44,16 +44,9 @@ const SemiRadialChart = ({
                 total: {
                   show: true,
                   formatter: function (w) {
-                    const sum = w?.globals?.series.reduce(
-                      (acc: number, value: number) => acc + value,
-                      0
-                    );
-
-                    const average = sum / w?.globals?.series.length;
-
-                    const averagePercentage = Math.round((average / 100) * 100);
-
-                    return `${averagePercentage}%`;
+                    const values = (w?.globals?.series ?? []) as number[];
+                    const value = Number(values[0] ?? 0);
+                    return `${Math.round(Number.isFinite(value) ? value : 0)}%`;
                   },
                 },
               },
@@ -72,7 +65,7 @@ const SemiRadialChart = ({
       <div className="w-full flex items-center justify-center gap-1">
         <span
           className={cn(
-            "w-2 h-2 rounded-[2px] -mt-[2px]",
+            "mt-[-2px] h-2 w-2 rounded-full",
             chartLabel === "revision" ? "bg-primary" : "bg-[#56CFE1]"
           )}
         ></span>
