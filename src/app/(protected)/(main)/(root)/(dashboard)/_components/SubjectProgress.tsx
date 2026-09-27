@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { SemiRadialChart, TabContent, TabNavItem } from "@/components";
 import { getUserTracker } from "@/actions/tracker_actions";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 
 const SubjectProgress = () => {
-  const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic?.subjects
+  const user = useAppSelector((state) => state.user.user);
+  const userSubjects = subjectsForExam(
+    user?.academic?.subjects,
+    user?.academic?.competitiveExam
   );
   const [activeTab, setActiveTab] = useState(userSubjects?.[0]?.name ?? "");
   const [stats, setStats] = useState({ revision: 0, efficiency: 0 });

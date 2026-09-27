@@ -16,6 +16,7 @@ import {
   LearningCoverage,
   TaggedChapter,
 } from "@/lib/study-check/types";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { cn } from "@/lib/utils";
@@ -46,7 +47,10 @@ const ChapterTagger = ({
 }: ChapterTaggerProps) => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
-  const subjects = user?.academic?.subjects ?? [];
+  const subjects = subjectsForExam(
+    user?.academic?.subjects,
+    user?.academic?.competitiveExam
+  );
   const standard = user?.academic?.standard;
   const [activeSubject, setActiveSubject] = useState(subjects[0]?.name);
   const [lists, setLists] = useState<Record<string, ChapterRow[]>>({});

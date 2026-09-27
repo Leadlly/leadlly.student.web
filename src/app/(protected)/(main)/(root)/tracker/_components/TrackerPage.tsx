@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import TrackerComponent from "./Tracker";
 import { TTrackerProps } from "@/helpers/types";
 import { useSearchParams } from "next/navigation";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -21,8 +22,10 @@ const TrackerPage = () => {
   } | null>(null);
   const [isTrackerLoading, setIsTrackerLoading] = useState(false);
 
-  const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
+  const user = useAppSelector((state) => state.user.user);
+  const userSubjects = subjectsForExam(
+    user?.academic?.subjects,
+    user?.academic?.competitiveExam
   );
   const searchParams = useSearchParams();
   const activeSubject = searchParams.get("subject") ?? userSubjects?.[0]?.name;

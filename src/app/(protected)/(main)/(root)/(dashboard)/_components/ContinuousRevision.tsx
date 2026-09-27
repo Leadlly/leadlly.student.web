@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -18,8 +19,10 @@ import { ChevronRightIcon, NotebookTextIcon } from "lucide-react";
 const ContinuousRevision = () => {
   const [activeSubject, setActiveSubject] = useState("");
 
-  const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
+  const user = useAppSelector((state) => state.user.user);
+  const userSubjects = subjectsForExam(
+    user?.academic?.subjects,
+    user?.academic?.competitiveExam
   );
 
   const userStandard = useAppSelector(

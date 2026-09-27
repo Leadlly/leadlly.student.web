@@ -5,6 +5,7 @@ import {
   getTodaysFormattedDate,
 } from "@/helpers/utils";
 import { TDayProps } from "@/helpers/types";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 import {
   Tooltip,
@@ -16,8 +17,10 @@ import Player from "lottie-react";
 import NoTopic from "../../../../../../../public/assets/no_topics_animations.json";
 
 const TodaysPlan = ({ todaysTopics }: { todaysTopics: TDayProps | null }) => {
-  const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
+  const user = useAppSelector((state) => state.user.user);
+  const userSubjects = subjectsForExam(
+    user?.academic?.subjects,
+    user?.academic?.competitiveExam
   );
 
   function getBackRevisionTopicsForSubject(subject: string) {

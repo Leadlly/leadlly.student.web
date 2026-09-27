@@ -32,6 +32,7 @@ import {
   StepId,
   TestType,
 } from "@/lib/study-check/types";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { cn } from "@/lib/utils";
@@ -572,7 +573,10 @@ export const TestsListStep = () => {
           open={syllabusOpen}
           onClose={() => setSyllabusOpen(false)}
           standard={user.academic.standard}
-          subjects={user.academic.subjects || []}
+          subjects={subjectsForExam(
+            user.academic.subjects,
+            user.academic.competitiveExam
+          )}
           picks={draft.syllabusPicks ?? []}
           onChangePicks={(syllabusPicks) =>
             patch({ draftTest: { ...draft, syllabusPicks } })

@@ -8,13 +8,17 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import NewTopicLearnt from "./NewTopicLearnt";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 
 const RevisionZone = () => {
   const [newTopicLearnt, setNewTopicLearnt] = useState(false);
 
   const userData = useAppSelector((state) => state.user.user);
-  const userSubjects = userData?.academic.subjects;
+  const userSubjects = subjectsForExam(
+    userData?.academic.subjects,
+    userData?.academic.competitiveExam
+  );
   const userStandard = userData?.academic.standard;
 
   return (

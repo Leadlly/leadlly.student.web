@@ -7,6 +7,7 @@ import AccountSubjectForm from "./AccountSubjectForm";
 import { TabContent } from "@/components";
 
 import AccountChaptersList from "./AccountChaptersList";
+import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,10 @@ const AccountStudyProgress = ({
   });
 
   const userData = useAppSelector((state) => state.user.user);
-  const userSubjects = userData?.academic.subjects;
+  const userSubjects = subjectsForExam(
+    userData?.academic.subjects,
+    userData?.academic.competitiveExam
+  );
   const userStandard = userData?.academic.standard;
 
   const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
