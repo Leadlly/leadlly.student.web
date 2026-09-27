@@ -1,8 +1,4 @@
-import { Header } from "@/components";
-
 import ClientWrapper from "./_components/ClientWrapper";
-
-import { DataProps } from "@/helpers/types";
 
 import { getPlanner } from "@/actions/planner_actions";
 import {
@@ -25,12 +21,7 @@ const Planner = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="flex flex-col justify-start gap-4 h-full">
-        <Header
-          title="Planner"
-          titleClassName="text-2xl md:text-3xl lg:text-page-title"
-        />
-
+      <div className="h-full min-h-0">
         <Suspense fallback={<Loader />}>
           <ClientWrapper />
         </Suspense>

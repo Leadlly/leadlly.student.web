@@ -23,7 +23,7 @@ const WeeklyPlan = ({
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   return (
-    <div className="custom__scrollbar flex h-full w-full flex-col justify-start gap-5 overflow-x-hidden overflow-y-auto rounded-3xl border border-[#F7F2FE] py-4">
+    <div className="custom__scrollbar flex h-full w-full flex-col justify-start gap-4 overflow-x-hidden overflow-y-auto py-2 pr-2">
       <div className="w-full flex justify-between gap-0 md:gap-4 py-2 flex-col items-start xl:justify-normal">
         <div className="px-3 md:px-7">
           <h4 className="text-base md:text-2xl xl:text-3xl leading-none font-semibold text-black">
