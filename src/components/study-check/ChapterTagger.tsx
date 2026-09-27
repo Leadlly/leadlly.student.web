@@ -214,7 +214,7 @@ const ChapterTagger = ({
           return (
             <div
               key={chapter._id}
-              className="mb-3 rounded-[18px] border border-[#F3EEFF] bg-white"
+              className="mb-3 overflow-hidden rounded-[22px] border border-[#EFEAF8] bg-white"
             >
               <button
                 type="button"
@@ -226,7 +226,7 @@ const ChapterTagger = ({
                     {chapter.name}
                   </span>
                   <span
-                    className="mt-1 inline-block rounded-full px-2 py-0.5 text-[11px] font-medium"
+                    className="mt-2 inline-block rounded-full px-2.5 py-1 text-[11px] font-semibold"
                     style={{ backgroundColor: meta?.bg, color: meta?.color }}
                   >
                     {meta?.label}

@@ -10,16 +10,12 @@ const ReferAndEarn = () => {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="h-auto w-full justify-between rounded-full px-3"
+          className="h-16 w-full justify-start gap-3 rounded-full border-[#EFEAF8] px-4 text-lg font-semibold text-dark-primary"
         >
-          <span className="flex items-center gap-2">
-            <div className="size-14 grid place-items-center">
-              <IndianRupee />
-            </div>
-            <span className="font-semibold text-lg truncate w-full text-left">
-              Refer And Earn
-            </span>
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F3FF] text-primary">
+            <IndianRupee className="h-5 w-5" />
           </span>
+          Refer And Earn
         </Button>
       </DialogTrigger>
 

@@ -91,16 +91,12 @@ const CustomizePlanner = () => {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="h-auto w-full justify-between rounded-full px-3"
+          className="h-16 w-full justify-start gap-3 rounded-full border-[#EFEAF8] px-4 text-lg font-semibold text-dark-primary"
         >
-          <span className="flex items-center gap-2">
-            <div className="size-14 grid place-items-center">
-              <CalendarDaysIcon />
-            </div>
-            <span className="font-semibold text-lg truncate w-full text-left">
-              Customize Your Planner
-            </span>
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F3FF] text-primary">
+            <CalendarDaysIcon className="h-5 w-5" />
           </span>
+          Customize Your Planner
         </Button>
       </DialogTrigger>
 

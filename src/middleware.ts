@@ -83,6 +83,7 @@ export const config = {
     "/initial-study-data",
     "/institute",
     "/profile",
+    "/profile/:path*",
     "/quiz/:path*",
   ],
 };

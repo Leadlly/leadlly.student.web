@@ -52,7 +52,7 @@ const ProfileHub = () => {
         <CustomizePlanner />
         <ReferAndEarn />
         <Link
-          href="/manage-account?tab=mark-chapters"
+          href="/profile/mark-chapters"
           className="flex h-16 items-center gap-3 rounded-full border border-[#EFEAF8] bg-white px-4 text-lg font-semibold text-dark-primary"
         >
           <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F3FF] text-primary">
@@ -62,9 +62,9 @@ const ProfileHub = () => {
         </Link>
         <Link
           href="/subscription-plans"
-          className="flex h-16 items-center gap-3 rounded-full bg-leadlly px-4 text-lg font-semibold text-white"
+          className="flex h-16 items-center gap-3 rounded-full border border-[#EFEAF8] bg-white px-4 text-lg font-semibold text-dark-primary"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F3FF] text-primary">
             <Sparkles className="h-5 w-5" />
           </span>
           Upgrade to premium
