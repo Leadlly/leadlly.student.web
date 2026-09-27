@@ -1,215 +1,223 @@
 "use client";
 
-import type { ReactNode } from "react";
-import dynamic from "next/dynamic";
-import { Suspense, useEffect, useState } from "react";
-import { TDayProps } from "@/helpers/types";
+import Link from "next/link";
+import { Suspense, useState } from "react";
+import { Check, ChevronRightIcon } from "lucide-react";
+import { useAppSelector } from "@/redux/hooks";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import { TQuizQuestionProps } from "@/helpers/types";
+import { DailyPlan, DailyPlanItem } from "@/lib/planner/types";
 import QuestionDialogBox from "./QuestionDialogBox";
 import Loader from "@/components/shared/Loader";
-import ToDoListButton from "./ToDoListButton";
-// import Player from "lottie-react";
-import loginAnimation from "../../../../../../../public/assets/todo_pending_animation.json";
-import Link from "next/link";
-const Player = dynamic(() => import("lottie-react"), { ssr: false });
 
-const Section = ({
-  title,
-  count,
-  empty,
-  children,
-}: {
-  title: string;
-  count: number;
+const lanes: Array<{
+  id: DailyPlanItem["lane"];
+  label: string;
   empty: string;
-  children: ReactNode;
-}) => (
-  <section className="px-1">
-    <div className="mb-2 flex items-center justify-between">
-      <h4 className="text-base font-semibold text-dark-primary">{title}</h4>
-      <span className="text-sm text-secondary-text">{count}</span>
-    </div>
-    {count === 0 ? (
-      <div className="rounded-[22px] bg-[#F6F3FB] px-4 py-4 text-center text-sm text-secondary-text">
-        {empty}
-      </div>
-    ) : (
-      <ul className="flex flex-col gap-2">{children}</ul>
-    )}
-  </section>
-);
+}> = [
+  {
+    id: "CURRENT_LEARNING",
+    label: "Current learning",
+    empty: "Log what you studied in class and it will show here.",
+  },
+  {
+    id: "ACCURACY",
+    label: "Accuracy revision",
+    empty: "No weak topic is ready today.",
+  },
+  {
+    id: "PAST_REVISION",
+    label: "Past revision",
+    empty: "Nothing is due for memory revision today.",
+  },
+];
 
-const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
-  const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
-  const [topic, setTopic] = useState<{
+const asQuestions = (raw: unknown[] | undefined): TQuizQuestionProps[] =>
+  (raw || []).map((entry) => {
+    const question = entry as TQuizQuestionProps;
+    return {
+      ...question,
+      _id: String(question._id),
+      images: question.images || [],
+      options: question.options || [],
+      topics: question.topics || [],
+    };
+  });
+
+const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
+  const { dailyQuizzes } = useAppSelector((state) => state.dailyQuizzes);
+  const [active, setActive] = useState<{
     name: string;
-    _id: string;
-    isSubtopic: boolean;
+    id: string;
+    questions: TQuizQuestionProps[];
   } | null>(null);
-  const [hasTopics, setHasTopics] = useState(false);
+  const [emptyTopics, setEmptyTopics] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (quizData) {
-      const hasTopicsData =
-        quizData.backRevisionTopics.length > 0 ||
-        quizData.continuousRevisionTopics.length > 0 ||
-        quizData.continuousRevisionSubTopics.length > 0 ||
-        (quizData.lowAccuracyTopics && quizData.lowAccuracyTopics.length > 0) ||
-        quizData.chapters.length > 0;
-
-      setHasTopics(hasTopicsData);
-    }
-  }, [quizData]);
-
-  if (!quizData) {
+  if (!plan) {
     return (
-      <div className="h-full rounded-xl p-8 bg-primary/[0.12] flex flex-col items-center justify-center gap-4">
-        <div className="w-full text-start space-y-4 ">
-          <h2 className="text-2xl text-primary font-bold">Please hold on...</h2>
-          <p className="text-sm text-gray-600">
-            While your plan is being generated, your itinerary will be ready
-            shortly.
-          </p>
-          <div className="flex items-center justify-center">
-            <div className="size-24">
-              <Player
-                autoplay
-                loop
-                animationData={loginAnimation}
-                width={"100%"}
-                height={"100%"}
-              />
-            </div>
-          </div>
-        </div>
+      <div className="flex h-full min-h-[220px] flex-col items-center justify-center gap-3 px-6 py-8 text-center">
+        <h2 className="text-xl font-bold text-primary">Preparing today&apos;s plan</h2>
+        <p className="max-w-md text-sm text-secondary-text">
+          Log a class topic, or mark chapters you have already studied.
+        </p>
       </div>
     );
   }
 
-  const dailyTopics = [
-    ...quizData.continuousRevisionTopics.map((item) => ({
-      ...item,
-      isSubtopic: false as const,
-    })),
-    ...quizData.continuousRevisionSubTopics.map((item) => ({
-      ...item,
-      isSubtopic: true as const,
-    })),
-  ];
+  const questionsFor = (item: DailyPlanItem) =>
+    asQuestions(plan?.questions?.[item.topicName] || plan?.questions?.[item.topicName.toLowerCase()]);
+
+  const openQuiz = (item: DailyPlanItem) => {
+    const questions = questionsFor(item);
+    if (!questions.length) {
+      setEmptyTopics((current) => (current.includes(item.id) ? current : [...current, item.id]));
+      return;
+    }
+    setActive({ name: item.topicName, id: item.topicId, questions });
+  };
+
+  const visible = plan.items.filter(
+    (item) => item.status !== "SKIPPED" && item.status !== "EXPIRED"
+  );
 
   return (
-    <>
-      {hasTopics ? (
-        <>
-          <div className="flex items-center justify-between lg:mb-3">
-            <div className="w-full flex justify-between items-center gap-2">
-              <h4 className="text-lg font-semibold text-dark-primary">
-                Today&apos;s to-do
-              </h4>
+    <div className="flex h-full flex-col">
+      <div className="mb-3 flex items-center justify-between">
+        <h4 className="text-lg font-semibold text-dark-primary">Today&apos;s plan</h4>
+        <Link
+          href="/planner"
+          className="rounded-full bg-[#F4F1FB] px-4 py-2 text-sm font-semibold text-primary"
+        >
+          Full Planner
+        </Link>
+      </div>
+      {plan.capacity?.note ? (
+        <p className="mb-3 text-sm text-secondary-text">{plan.capacity.note}</p>
+      ) : null}
+      <div className="custom__scrollbar flex w-full flex-1 flex-col gap-5 overflow-y-auto">
+        {lanes.map((lane) => {
+          const rows = visible.filter((item) => item.lane === lane.id);
+          const bucket =
+            lane.id === "ACCURACY"
+              ? plan.capacity?.accuracy
+              : lane.id === "PAST_REVISION"
+                ? plan.capacity?.past
+                : null;
+          if (!rows.length && lane.id === "CURRENT_LEARNING") return null;
+          if (!rows.length && !bucket?.available) return null;
+          return (
+            <section key={lane.id}>
+              <div className="mb-2 flex items-center justify-between">
+                <h4 className="text-base font-semibold text-dark-primary">{lane.label}</h4>
+                <span className="text-sm text-secondary-text">
+                  {bucket ? `${bucket.used}/${bucket.available}` : rows.length}
+                </span>
+              </div>
+              {rows.length === 0 ? (
+                <div className="rounded-[22px] bg-[#F6F3FB] px-4 py-4 text-center text-sm text-secondary-text">
+                  {lane.empty}
+                </div>
+              ) : (
+                <ul className="flex flex-col gap-2">
+                  {rows.map((item, index) => {
+                    const questions = questionsFor(item);
+                    const progress = dailyQuizzes.find((quiz) => quiz.topicName === item.topicName);
+                    const answered = progress?.attemptedQuestions?.length || 0;
+                    const finished = questions.length > 0 && answered >= questions.length;
+                    const missing = emptyTopics.includes(item.id);
+                    const showChapter =
+                      index === 0 || rows[index - 1]?.chapterId !== item.chapterId;
+                    return (
+                      <li key={item.id}>
+                        {showChapter ? (
+                          <p className="mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                            <span className="capitalize">{item.subject}</span>
+                            {item.chapterName ? ` — ${item.chapterName}` : ""}
+                          </p>
+                        ) : null}
+                        <button
+                          type="button"
+                          onClick={() => openQuiz(item)}
+                          className={cn(
+                            "flex w-full cursor-pointer items-center justify-between rounded-[22px] bg-[#F6F3FB] px-4 py-3.5 text-left",
+                            finished || missing ? "pointer-events-none opacity-70" : ""
+                          )}
+                        >
+                          <div className="flex w-full items-start gap-x-2 py-1">
+                            {answered > 0 && !finished ? (
+                              <span className="text-xs font-medium text-[#B87A07]">
+                                <span className="text-lg font-semibold">{answered}</span>/{questions.length}
+                              </span>
+                            ) : (
+                              <span
+                                className={cn(
+                                  "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[#C4B5FD] p-1 text-white",
+                                  finished || missing ? "border-none bg-[#0FD679]/80" : ""
+                                )}
+                              >
+                                {finished || missing ? <Check className="h-4 w-4" /> : null}
+                              </span>
+                            )}
+                            <div className="flex-1 capitalize">
+                              <p className="text-sm font-medium leading-tight md:text-base">{item.topicName}</p>
+                              {answered > 0 && !finished ? (
+                                <Progress
+                                  value={(answered / questions.length) * 100}
+                                  className="mt-1 h-[6px]"
+                                  indicatorClassName="bg-[#B87A07]"
+                                />
+                              ) : null}
+                            </div>
+                          </div>
+                          <ChevronRightIcon className="size-4" />
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </section>
+          );
+        })}
+        {plan.quizzes?.weekly || plan.quizzes?.chapter?.length ? (
+          <section className="border-t border-[#EFEAF8] pt-3">
+            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-primary">
+              Quizzes
+            </h4>
+            {plan.quizzes.weekly ? (
               <Link
-                href="/planner"
-                className="rounded-full bg-[#F4F1FB] px-4 py-2 text-sm font-semibold text-primary"
+                href={`/quiz/${plan.quizzes.weekly.id}/attempt`}
+                className="block text-sm font-medium text-dark-primary"
               >
-                Full Planner
+                Weekly quiz
               </Link>
-            </div>
-          </div>
-
-          <div className="custom__scrollbar flex w-full flex-1 flex-col gap-5 overflow-y-auto">
-            <Section
-              title="Daily revision"
-              count={dailyTopics.length}
-              empty="No topics for today"
-            >
-              {dailyTopics.map((topicItem, index) => (
-                <ToDoListButton
-                  key={topicItem._id}
-                  index={index}
-                  setTopic={setTopic}
-                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                  topic={topicItem}
-                  completedTopics={quizData.completedTopics}
-                  incompleteTopics={quizData.incompletedTopics}
-                  topicsLength={dailyTopics.length}
-                  quizData={quizData}
-                />
-              ))}
-            </Section>
-
-            <Section
-              title="Pending revision"
-              count={quizData.backRevisionTopics.length}
-              empty="No past topics available"
-            >
-              {quizData.backRevisionTopics.map((topicItem, index) => (
-                <ToDoListButton
-                  key={topicItem._id}
-                  index={index}
-                  setTopic={setTopic}
-                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                  topic={topicItem}
-                  completedTopics={quizData.completedTopics}
-                  incompleteTopics={quizData.incompletedTopics}
-                  topicsLength={quizData.backRevisionTopics.length}
-                  quizData={quizData}
-                />
-              ))}
-            </Section>
-
-            <Section
-              title="Accuracy based revision"
-              count={quizData.lowAccuracyTopics?.length ?? 0}
-              empty="No low accuracy topics available"
-            >
-              {(quizData.lowAccuracyTopics ?? []).map((topicItem, index) => (
-                <ToDoListButton
-                  key={topicItem._id}
-                  index={index}
-                  setTopic={setTopic}
-                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                  topic={topicItem}
-                  completedTopics={quizData.completedTopics}
-                  incompleteTopics={quizData.incompletedTopics}
-                  topicsLength={quizData.lowAccuracyTopics.length}
-                  quizData={quizData}
-                />
-              ))}
-            </Section>
-          </div>
-        </>
-      ) : (
-        <div className="w-full h-full text-start space-y-3 px-6 bg-primary/[0.12] flex flex-col justify-center rounded-xl">
-          <h2 className="text-2xl text-primary font-bold mt-4 md:mt-4 sm:mt-2">
-            Please hold on...
-          </h2>
-          <p className="text-sm text-gray-600 pr-8">
-            While your plan is being generated, your itinerary will be ready
-            shortly.
-          </p>
-          <div className="flex items-center justify-center">
-            <Player
-              autoplay
-              loop
-              animationData={loginAnimation}
-              style={{
-                width: 100,
-                height: 120,
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {openQuestionDialogBox && topic && (
+            ) : null}
+            {plan.quizzes.chapter.map((quiz) => (
+              <Link
+                key={quiz.id}
+                href={`/quiz/${quiz.id}/attempt`}
+                className="block text-sm font-medium text-dark-primary"
+              >
+                {quiz.name} chapter quiz
+              </Link>
+            ))}
+          </section>
+        ) : null}
+      </div>
+      {active ? (
         <Suspense fallback={<Loader />}>
           <QuestionDialogBox
-            openQuestionDialogBox={openQuestionDialogBox}
-            setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-            questions={quizData.questions[topic.name] || []}
-            topic={topic}
+            openQuestionDialogBox
+            setOpenQuestionDialogBox={(open) => {
+              if (!open) setActive(null);
+            }}
+            questions={active.questions}
+            topic={{ name: active.name, _id: active.id, isSubtopic: false }}
           />
         </Suspense>
-      )}
-    </>
+      ) : null}
+    </div>
   );
 };
 

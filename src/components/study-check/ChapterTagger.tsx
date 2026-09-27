@@ -29,6 +29,16 @@ type ChapterRow = {
   standard: number;
 };
 
+const savedChapterSignatures = new Map<string, string>();
+
+const chapterSignature = (
+  chapters: Array<{ chapterId: string; status: string; standard?: number }>
+) =>
+  chapters
+    .map((item) => `${item.chapterId}:${item.status}:${item.standard ?? ""}`)
+    .sort()
+    .join("|");
+
 type ChapterTaggerProps = {
   chapters: Record<string, TaggedChapter>;
   onChaptersChange: (
@@ -149,18 +159,26 @@ const ChapterTagger = ({
         standard: chapter.standard,
       }));
     if (!selected.length) return;
+    const cacheKey = `${user._id}:${currentSubject.toLowerCase()}`;
+    const signature = chapterSignature(selected);
+    if (savedChapterSignatures.get(cacheKey) === signature) return;
     await saveTaggedChapters({
       tag: "unrevised_topic",
       subject: currentSubject,
       standard: user.academic.standard,
       chapters: selected,
     });
+    savedChapterSignatures.set(cacheKey, signature);
+  };
+
+  const syncPlanner = async () => {
+    if (!user) return;
     if (!user.planner) {
       await createPlanner();
       dispatch(userData({ ...user, planner: true }));
-    } else {
-      await allocateBackTopics();
+      return;
     }
+    await allocateBackTopics();
   };
 
   const handleNext = async () => {
@@ -168,11 +186,13 @@ const ChapterTagger = ({
     setBusy(true);
     try {
       await persistAndSync();
-      if (currentIndex < subjects.length - 1) {
+      const isLastSubject = currentIndex >= subjects.length - 1;
+      if (!isLastSubject) {
         setActiveSubject(subjects[currentIndex + 1].name);
         setExpandedId(null);
         return;
       }
+      await syncPlanner();
       await onComplete();
     } catch (error) {
       toast.error(

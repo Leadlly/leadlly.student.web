@@ -1,24 +1,13 @@
 "use client";
 
 import React from "react";
-import { getFormattedDate, getFormattedDateForProd } from "@/helpers/utils";
 import DesktopUI from "./DesktopUI";
 import MobileUI from "./MobileUI";
 import TabletUI from "./TabletUI";
 import { useMediaQuery } from "usehooks-ts";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPlanner } from "@/actions/planner_actions";
-import { TDayProps } from "@/helpers/types";
 import FreeMeetingBanner from "./FreeMeetingBanner";
-
-const todaysQuiz = (days?: TDayProps[]) =>
-  (days ?? []).filter((item) =>
-    process.env.NODE_ENV === "development"
-      ? getFormattedDate(new Date(item.date)) ===
-        getFormattedDate(new Date(Date.now()))
-      : getFormattedDateForProd(new Date(item.date)) ===
-        getFormattedDateForProd(new Date(Date.now()))
-  )[0];
 
 const Wrapper = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -33,9 +22,7 @@ const Wrapper = () => {
     return (
       <div className="h-full">
         <FreeMeetingBanner />
-        <MobileUI
-          quizTopics={todaysQuiz(data?.data?.days)}
-        />
+        <MobileUI plan={data?.data} />
       </div>
     );
   }
@@ -44,9 +31,7 @@ const Wrapper = () => {
     return (
       <div className="h-full pb-4">
         <FreeMeetingBanner />
-        <TabletUI
-          quizTopics={todaysQuiz(data?.data?.days)}
-        />
+        <TabletUI plan={data?.data} />
       </div>
     );
   }
@@ -54,9 +39,7 @@ const Wrapper = () => {
   return (
     <div className="h-full">
       <FreeMeetingBanner />
-      <DesktopUI
-        quizTopics={todaysQuiz(data?.data?.days)}
-      />
+      <DesktopUI plan={data?.data} />
     </div>
   );
 };

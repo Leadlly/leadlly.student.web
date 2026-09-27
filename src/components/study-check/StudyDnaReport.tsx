@@ -133,13 +133,23 @@ const StudyDnaReport = ({
   finishLabel?: string;
   finishing?: boolean;
 }) => {
-  const pages = ["hero", "week", "prep", "signals", "strengths", "routine", "tests", "close"] as const;
+  const pages = ["hero", "week", "prep", "signals", "strengths", "tests", "close"] as const;
   const [page, setPage] = useState(0);
   const last = page === pages.length - 1;
   const hero = pages[page] === "hero";
 
   return (
-    <div className={cn("flex h-full min-h-0 flex-col", hero ? "bg-[#FAADD4]" : "bg-white")}>
+    <div
+      className={cn("flex h-full min-h-0 flex-col", hero ? "" : "bg-white")}
+      style={
+        hero
+          ? {
+              background:
+                "linear-gradient(180deg, #FAADD4 0%, #F7C8E4 55%, #FDF3C8 100%)",
+            }
+          : undefined
+      }
+    >
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <button
           type="button"
@@ -178,7 +188,6 @@ const StudyDnaReport = ({
           {pages[page] === "prep" ? <Prep profile={profile} /> : null}
           {pages[page] === "signals" ? <Signals profile={profile} /> : null}
           {pages[page] === "strengths" ? <Strengths profile={profile} /> : null}
-          {pages[page] === "routine" ? <Routine profile={profile} /> : null}
           {pages[page] === "tests" ? <Tests profile={profile} /> : null}
           {pages[page] === "close" ? <Close profile={profile} /> : null}
         </div>
@@ -218,10 +227,7 @@ const Hero = ({ profile }: { profile: StudyDnaProfile }) => {
     revision: { bg: "#FFE7D6", color: "#EA580C" },
   };
   return (
-    <div
-      className="min-h-full bg-cover bg-center px-4 pb-10"
-      style={{ backgroundImage: "url(/assets/images/onboarding/study-dna-hero-bg.png)", backgroundColor: "#FAADD4" }}
-    >
+    <div className="min-h-full px-4 pb-10">
       <p className="text-center text-xs font-bold uppercase tracking-[0.16em] text-[#141118]">
         Your Study DNA
       </p>
@@ -541,48 +547,6 @@ const Strengths = ({ profile }: { profile: StudyDnaProfile }) => (
   </div>
 );
 
-const Routine = ({ profile }: { profile: StudyDnaProfile }) => {
-  const colors: Record<string, string> = {
-    muted: "#E5E7EB",
-    class: PASTEL.purple,
-    study: PASTEL.mint,
-    revise: PASTEL.orange,
-  };
-  return (
-    <div>
-      <Eyebrow>Your routine</Eyebrow>
-      <h2 className="mt-1 text-[28px] font-bold text-dark-primary">Your typical day</h2>
-      <div className="mt-8">
-        {profile.routine.events.map((event, index) => (
-          <div key={`${event.time}-${event.label}-${index}`} className="flex min-h-[46px]">
-            <span className="w-[86px] pt-0.5 text-right text-[13px] text-[#9CA3AF]">{event.time}</span>
-            <span className="relative mx-3 w-4">
-              {index < profile.routine.events.length - 1 ? (
-                <span className="absolute bottom-[-6px] left-[7px] top-2.5 w-px bg-[#EDE9FE]" />
-              ) : null}
-              <span
-                className="mt-1.5 block h-3 w-3 rounded-full"
-                style={{ backgroundColor: colors[event.tone] || colors.muted }}
-              />
-            </span>
-            <span className="flex-1 pt-0.5 font-semibold text-dark-primary">{event.label}</span>
-          </div>
-        ))}
-      </div>
-      <div className="mt-4 rounded-[24px] bg-[#F7F5FB] px-5 py-4">
-        <Eyebrow>Study window</Eyebrow>
-        <p className="mt-1 text-[32px] font-bold leading-none text-dark-primary">
-          {profile.routine.studyWindowLabel}{" "}
-          <span className="text-[13px] font-medium text-secondary-text">of self study on a typical day</span>
-        </p>
-      </div>
-      <div className="mt-4 rounded-[22px] bg-[#EDE9FE] px-5 py-4 text-base font-bold text-dark-primary">
-        We&apos;ll build your plan around this routine - not against it.
-      </div>
-    </div>
-  );
-};
-
 const Tests = ({ profile }: { profile: StudyDnaProfile }) => (
   <div>
     <Eyebrow>What&apos;s coming up</Eyebrow>
@@ -663,7 +627,7 @@ const Close = ({ profile }: { profile: StudyDnaProfile }) => (
   </div>
 );
 
-const PAGE_COUNT = 8;
+const PAGE_COUNT = 7;
 
 export const StudyDnaDialog = ({
   open,
@@ -704,7 +668,6 @@ export const StudyDnaDialog = ({
         <Prep key="prep" profile={profile} />,
         <Signals key="signals" profile={profile} />,
         <Strengths key="strengths" profile={profile} />,
-        <Routine key="routine" profile={profile} />,
         <Tests key="tests" profile={profile} />,
         <Close key="close" profile={profile} />,
       ]

@@ -1,22 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { TDayProps } from "@/helpers/types";
-import WeeklyPlan from "./WeeklyPlan";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPlanner } from "@/actions/planner_actions";
+import TodaysPlan from "../../(dashboard)/_components/TodaysPlan";
 
 const ClientWrapper = () => {
-  const [, setTodaysData] = useState<TDayProps | null>(null);
-
   const { data } = useSuspenseQuery({
     queryKey: ["plannerData"],
     queryFn: getPlanner,
   });
 
   return (
-    <div className="h-full min-h-0">
-      <WeeklyPlan data={data?.data} setData={setTodaysData} />
+    <div className="h-full min-h-0 overflow-y-auto rounded-[28px] border border-[#EFEAF8] bg-white p-4">
+      <TodaysPlan plan={data?.data} />
     </div>
   );
 };

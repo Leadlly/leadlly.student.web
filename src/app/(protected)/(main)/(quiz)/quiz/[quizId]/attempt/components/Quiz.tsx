@@ -103,7 +103,13 @@ const Quiz = ({
         </Link>
         <div className="text-center">
           <h1 className="text-base font-bold text-dark-primary">
-            {quizType === "mock" ? "Full syllabus mock" : "Weekly Quiz"}
+            {quizType === "mock"
+              ? "Full syllabus mock"
+              : quizType === "revision"
+                ? "Revision quiz"
+                : quizType === "chapter"
+                  ? "Chapter quiz"
+                  : "Weekly Quiz"}
           </h1>
           <p className="text-sm text-secondary-text">
             {getMonthDate(new Date(startDate))} - {getMonthDate(new Date(endDate))}
