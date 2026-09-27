@@ -1,30 +1,21 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 const InitialTodoBox = () => {
   return (
-    <div className="h-full border rounded-xl p-6 bg-gradient-to-b from-white/15 to-primary/15 flex flex-col items-center justify-center gap-4">
-      <div className="w-full text-center space-y-4">
-        <h4 className="text-2xl text-primary font-bold">
-          Help us create your plan
-        </h4>
-
-        <p className="text-sm text-gray-600">
-          Please provide an update on the topics you’ve completed in class so
-          far. This will help us tailor the sessions to your needs.
-        </p>
-      </div>
-
-      <div className="w-full flex items-center justify-center">
-        <Link href="/manage-account?tab=study-progress">
-          <Button className="px-8 py-3 w-full sm:w-auto text-white text-sm font-mada-semibold leading-tight rounded-md transition-all duration-300">
-            Start
-          </Button>
-        </Link>
-      </div>
+    <div className="flex h-full min-h-[220px] flex-col items-center justify-center gap-4 rounded-xl bg-primary/5 px-6 py-8 text-center">
+      <h4 className="text-xl font-bold text-primary">Your planner is waiting on you</h4>
+      <p className="max-w-md text-sm text-secondary-text">
+        Mark the chapters you&apos;ve already finished in class so we can build
+        today&apos;s revision plan.
+      </p>
+      <Link
+        href="/profile/mark-chapters"
+        className="inline-flex h-11 min-w-[220px] items-center justify-center rounded-full bg-leadlly px-5 text-sm font-semibold text-white"
+      >
+        Mark chapters for revision
+      </Link>
     </div>
   );
 };

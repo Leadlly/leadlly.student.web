@@ -8,12 +8,12 @@ import ProgressAnalytics from "./ProgressAnalytics";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
-import { TDayProps } from "@/helpers/types";
+import { DailyPlan } from "@/lib/planner/types";
 import InitialTodoBox from "./InitailTodoBox";
 import { useAppSelector } from "@/redux/hooks";
 import Institute from "./institute";
 
-const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
+const MobileUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const user = useAppSelector((state) => state.user.user);
   const { institute } = useAppSelector((state) => state.institute);
 
@@ -35,7 +35,7 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
           {user && user.planner === false ? (
             <InitialTodoBox />
           ) : (
-            <TodaysPlan quizData={quizTopics} />
+            <TodaysPlan plan={plan} />
           )}
         </Suspense>
       </div>

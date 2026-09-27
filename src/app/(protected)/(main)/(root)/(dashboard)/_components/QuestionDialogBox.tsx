@@ -38,11 +38,13 @@ const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
   questions,
   topic,
+  onPlannerSubmit,
 }: {
   openQuestionDialogBox: boolean;
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
   questions: TQuizQuestionProps[];
   topic: { name: string; _id: string; isSubtopic: boolean } | null;
+  onPlannerSubmit?: (answers: TQuizAnswerProps[]) => Promise<void>;
 }) => {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
@@ -106,13 +108,23 @@ const QuestionDialogBox = ({
     setIsSubmitting(true);
 
     try {
+      const answers = dailyQuizCurrentTopic?.attemptedQuestions || [];
+      if (onPlannerSubmit) {
+        if (!answers.length) {
+          toast.error("Answer at least one question before submitting.");
+          return;
+        }
+        await onPlannerSubmit(answers);
+        setOpenQuestionDialogBox(false);
+        return;
+      }
       const res = await saveDailyQuiz({
         data: {
           name: topic?.name!,
           _id: topic?._id!,
           isSubtopic: topic?.isSubtopic!,
         },
-        questions: dailyQuizCurrentTopic?.attemptedQuestions!,
+        questions: answers,
       });
 
       if (res.success) {
@@ -159,15 +171,15 @@ const QuestionDialogBox = ({
     <Modal setOpenDialogBox={setOpenQuestionDialogBox}>
       {questions && questions.length > 0 && questions[activeQuestion] ? (
         <>
-          <div className="h-20 bg-primary/[0.2] rounded-b-xl flex items-center justify-between gap-5 md:gap-28 px-5 md:px-12">
+          <div className="flex items-center gap-3 bg-primary/[0.2] px-4 py-3 md:px-6">
             <div
-              className="w-6 h-6 md:w-10 md:h-10 rounded-md bg-white flex items-center justify-center border border-gray-300 cursor-pointer"
+              className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-white"
               onClick={handleBackSubmit}
             >
-              <ArrowLeft className="w-4 h-4 md:w-6 md:h-6" />
+              <ArrowLeft className="h-4 w-4" />
             </div>
 
-            <div className="flex-1 flex items-center gap-2 md:gap-5">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
               <Progress
                 value={
                   (dailyQuizCurrentTopic
@@ -177,7 +189,7 @@ const QuestionDialogBox = ({
                 }
                 className="h-2"
               />
-              <p className="text-xs md:text-lg font-bold">
+              <p className="shrink-0 text-sm font-bold md:text-base">
                 {dailyQuizCurrentTopic
                   ? dailyQuizCurrentTopic?.attemptedQuestions?.length
                   : 0}
@@ -186,7 +198,7 @@ const QuestionDialogBox = ({
             </div>
 
             <Button
-              className="w-20 md:w-28 h-8 md:h-11 bg-gradient-to-b from-primary to-[#913AE8] px-3 md:px-6 rounded-md md:rounded-xl text-base md:text-lg font-semibold"
+              className="h-9 shrink-0 rounded-full bg-gradient-to-b from-primary to-[#913AE8] px-4 text-sm font-semibold md:h-11 md:px-6 md:text-base"
               onClick={onHandleSubmit}
               disabled={isSubmitting}
             >
@@ -206,13 +218,13 @@ const QuestionDialogBox = ({
                 Quiz on <span className="capitalize">{topic?.name}</span>
               </DialogTitle>
 
-              <div className="flex items-center justify-center w-full">
-                <ul className="flex items-center gap-2 rounded-full border p-1">
+              <div className="flex w-full justify-center px-2">
+                <ul className="flex max-w-full flex-wrap items-center justify-center gap-1.5 rounded-3xl border p-1.5">
                   {questions.map((ques, index) => (
                     <li
                       key={ques._id}
                       className={cn(
-                        "relative cursor-pointer rounded-full px-4 py-1 text-base font-medium md:text-lg",
+                        "relative cursor-pointer rounded-full px-2.5 py-1 text-sm font-medium",
                         activeQuestion === index && "text-white",
                         dailyQuizCurrentTopic?.attemptedQuestions.some(
                           (quiz) => quiz.question === ques._id
@@ -241,8 +253,8 @@ const QuestionDialogBox = ({
                 </ul>
               </div>
 
-              <div className="md:px-7">
-                <p className="text-base md:text-xl text-black font-medium mb-2 flex gap-2.5">
+              <div className="min-w-0 md:px-7">
+                <p className="mb-2 flex gap-2.5 overflow-x-auto text-base font-medium text-black md:text-xl">
                   <span>{activeQuestion + 1}. </span>
                   <span
                     dangerouslySetInnerHTML={{

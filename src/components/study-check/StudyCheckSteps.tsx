@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Aperture, Layers, RefreshCw, Target, Zap } from "lucide-react";
+import {
+  Aperture,
+  BookOpen,
+  Calendar,
+  ChevronRight,
+  Layers,
+  RefreshCw,
+  Target,
+  Zap,
+} from "lucide-react";
 import { toast } from "sonner";
 import { studentPersonalInfo } from "@/actions/user_actions";
 import {
@@ -535,38 +544,93 @@ export const TestsListStep = () => {
       }
     >
       <ScreenTitle>Add your upcoming tests</ScreenTitle>
+      <p className="mt-2 text-sm text-secondary-text">
+        Type the test name, then tap the date and syllabus to choose them.
+      </p>
+      <p className="mb-1.5 mt-5 text-xs font-semibold uppercase tracking-wide text-primary">
+        Test name
+      </p>
       <input
         value={draft.name}
         onChange={(event) =>
           patch({ draftTest: { ...draft, name: event.target.value } })
         }
-        placeholder="Test name, e.g. Physics + Chemistry"
-        className="mt-5 w-full rounded-[18px] bg-[#F7F2FE] px-4 py-3 font-medium text-dark-primary outline-none"
+        placeholder="e.g. Physics + Chemistry"
+        className="w-full rounded-[20px] border border-[#EDE9FE] bg-[#F7F2FE] px-4 py-4 font-semibold text-dark-primary outline-none"
       />
-      <input
-        type="date"
-        value={draft.date ? draft.date.slice(0, 10) : ""}
-        onChange={(event) =>
-          patch({
-            draftTest: {
-              ...draft,
-              date: event.target.value
-                ? new Date(event.target.value).toISOString()
-                : null,
-            },
-          })
-        }
-        className="mt-3 w-full rounded-[18px] bg-[#F7F2FE] px-4 py-3 font-medium text-dark-primary outline-none"
-      />
+      <label className="relative mt-3 flex cursor-pointer items-center rounded-[20px] border border-[#EDE9FE] bg-[#F7F2FE] px-4 py-4">
+        <span className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-primary">
+          <Calendar className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1 pr-2">
+          <span className="block text-xs font-semibold uppercase tracking-wide text-primary">
+            Test date
+          </span>
+          <span
+            className={cn(
+              "mt-0.5 block text-base font-bold",
+              draft.date ? "text-dark-primary" : "text-tab-item-gray"
+            )}
+          >
+            {draft.date ? format(new Date(draft.date), "d MMMM yyyy") : "Tap to pick a date"}
+          </span>
+        </span>
+        <ChevronRight className="h-[18px] w-[18px] shrink-0 text-primary" />
+        <input
+          type="date"
+          value={draft.date ? draft.date.slice(0, 10) : ""}
+          onChange={(event) =>
+            patch({
+              draftTest: {
+                ...draft,
+                date: event.target.value
+                  ? new Date(event.target.value).toISOString()
+                  : null,
+              },
+            })
+          }
+          className="absolute inset-0 cursor-pointer opacity-0"
+        />
+      </label>
       <button
         type="button"
-        onClick={() => setSyllabusOpen(true)}
-        className={cn(
-          "mt-3 w-full rounded-[18px] bg-[#F7F2FE] px-4 py-3 text-left font-medium",
-          syllabusLabel ? "text-dark-primary" : "text-tab-item-gray"
-        )}
+        onClick={() => {
+          if (!user?.academic?.standard) {
+            toast.error("Add your class before selecting a syllabus.");
+            return;
+          }
+          setSyllabusOpen(true);
+        }}
+        className="mt-3 flex w-full items-center rounded-[20px] border border-[#EDE9FE] bg-[#F7F2FE] px-4 py-4 text-left"
       >
-        {syllabusLabel || "Select syllabus"}
+        <span className="mr-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-primary">
+          <BookOpen className="h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1 pr-2">
+          <span className="block text-xs font-semibold uppercase tracking-wide text-primary">
+            Syllabus
+          </span>
+          <span
+            className={cn(
+              "mt-0.5 block text-base font-bold",
+              (draft.syllabusPicks ?? []).length
+                ? "text-dark-primary"
+                : "text-tab-item-gray"
+            )}
+          >
+            {(draft.syllabusPicks ?? []).length
+              ? `${(draft.syllabusPicks ?? []).length} chapter${
+                  (draft.syllabusPicks ?? []).length === 1 ? "" : "s"
+                } selected`
+              : "Tap to choose chapters"}
+          </span>
+          {syllabusLabel ? (
+            <span className="mt-0.5 block truncate text-xs font-medium text-secondary-text">
+              {syllabusLabel}
+            </span>
+          ) : null}
+        </span>
+        <ChevronRight className="h-[18px] w-[18px] shrink-0 text-primary" />
       </button>
       {user?.academic?.standard ? (
         <TestSyllabusPicker
@@ -583,7 +647,10 @@ export const TestsListStep = () => {
           }
         />
       ) : null}
-      <div className="mt-3 flex flex-wrap gap-2">
+      <p className="mb-2 mt-5 text-xs font-semibold uppercase tracking-wide text-primary">
+        Test type
+      </p>
+      <div className="flex flex-wrap gap-2">
         {TEST_TYPE_OPTIONS.map((item) => (
           <button
             key={item.value}

@@ -34,7 +34,10 @@ const ControlPanelFormSchema = z.object({
     required_error: "Please select number of questions!",
   }),
   backRevisionTopics: z.number({
-    required_error: "Please select number of back revision topics!",
+    required_error: "Please select number of past revision topics!",
+  }),
+  accuracyRevisionTopics: z.number({
+    required_error: "Please select number of accuracy revision topics!",
   }),
   includeSunday: z.boolean(),
 });
@@ -46,6 +49,12 @@ const CustomizePlanner = () => {
   const dispatch = useAppDispatch();
 
   const steps = [3, 5, 7, 10];
+  const revisionSteps = [1, 2, 3, 4, 5];
+  const fitRevision = (value: number | undefined, fallback: number) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(5, Math.max(1, Math.round(n)));
+  };
 
   const form = useForm<z.infer<typeof ControlPanelFormSchema>>({
     resolver: zodResolver(ControlPanelFormSchema),
@@ -58,10 +67,8 @@ const CustomizePlanner = () => {
         user && user.preferences.dailyQuestions
           ? user.preferences.dailyQuestions
           : 3,
-      backRevisionTopics:
-        user && user.preferences.backRevisionTopics
-          ? user.preferences.backRevisionTopics
-          : 3,
+      backRevisionTopics: fitRevision(user?.preferences?.backRevisionTopics, 3),
+      accuracyRevisionTopics: fitRevision(user?.preferences?.accuracyRevisionTopics, 2),
       includeSunday: user?.preferences?.includeSunday !== false,
     },
   });
@@ -70,7 +77,9 @@ const CustomizePlanner = () => {
   const dailyQuestionIndex = steps.findIndex((v) => v === dailyQuestionValue);
 
   const backRevisionValue = form.watch("backRevisionTopics");
-  const backRevisionIndex = steps.findIndex((v) => v === backRevisionValue);
+  const backRevisionIndex = revisionSteps.findIndex((v) => v === backRevisionValue);
+  const accuracyRevisionValue = form.watch("accuracyRevisionTopics");
+  const accuracyRevisionIndex = revisionSteps.findIndex((v) => v === accuracyRevisionValue);
 
   const handleSubmit = async (data: z.infer<typeof ControlPanelFormSchema>) => {
     try {
@@ -195,35 +204,64 @@ const CustomizePlanner = () => {
 
             <FormField
               control={form.control}
+              name="accuracyRevisionTopics"
+              render={({ field }) => (
+                <FormItem className="space-y-5">
+                  <FormLabel className="flex flex-col gap-1">
+                    <span className="font-semibold text-lg">Accuracy revision</span>
+                    <span className="text-muted-foreground">
+                      Apart from class, how many weak topics can you work on in a day?
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="space-y-2">
+                      <Slider
+                        min={0}
+                        max={revisionSteps.length - 1}
+                        step={1}
+                        value={[Math.max(accuracyRevisionIndex, 0)]}
+                        onValueChange={(index) => {
+                          field.onChange(revisionSteps[index[0]]);
+                        }}
+                      />
+                      <ul className="flex items-center justify-between">
+                        {revisionSteps.map((val) => (
+                          <li key={val} className="font-semibold">
+                            {val}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="backRevisionTopics"
               render={({ field }) => (
                 <FormItem className="space-y-5">
                   <FormLabel className="flex flex-col gap-1">
-                    <span className="font-semibold text-lg">
-                      Past topics revision
-                    </span>
+                    <span className="font-semibold text-lg">Past revision</span>
                     <span className="text-muted-foreground">
-                      Number of older topics you want to revise daily.
+                      How many previously studied topics can you revise in a day?
                     </span>
                   </FormLabel>
-
                   <FormControl>
                     <div className="space-y-2">
                       <Slider
-                        defaultValue={[backRevisionIndex]}
                         min={0}
-                        max={steps.length - 1}
+                        max={revisionSteps.length - 1}
                         step={1}
-                        value={[backRevisionIndex]}
+                        value={[Math.max(backRevisionIndex, 0)]}
                         onValueChange={(index) => {
-                          const realValue = steps[index[0]];
-                          field.onChange(realValue);
+                          field.onChange(revisionSteps[index[0]]);
                         }}
                       />
-
                       <ul className="flex items-center justify-between">
-                        {steps.map((val, index) => (
-                          <li key={index} className="font-semibold">
+                        {revisionSteps.map((val) => (
+                          <li key={val} className="font-semibold">
                             {val}
                           </li>
                         ))}

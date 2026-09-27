@@ -12,12 +12,12 @@ import ProgressAnalytics from "./ProgressAnalytics";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
-import { TDayProps } from "@/helpers/types";
+import { DailyPlan } from "@/lib/planner/types";
 import { useAppSelector } from "@/redux/hooks";
 import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
 
-const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
+const TabletUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const user = useAppSelector((state) => state.user.user);
   const { institute } = useAppSelector((state) => state.institute);
 
@@ -45,7 +45,7 @@ const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
                 {user && user.planner === false ? (
                   <InitialTodoBox />
                 ) : (
-                  <TodaysPlan quizData={quizTopics} />
+                  <TodaysPlan plan={plan} />
                 )}
               </Suspense>
             </div>

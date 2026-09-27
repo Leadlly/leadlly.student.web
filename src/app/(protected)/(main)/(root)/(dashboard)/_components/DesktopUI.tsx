@@ -14,11 +14,11 @@ import PointsBox from "./PointsBox";
 import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
 import Loader from "@/components/shared/Loader";
-import { TDayProps } from "@/helpers/types";
+import { DailyPlan } from "@/lib/planner/types";
 import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
 
-const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
+const DesktopUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const { user } = useAppSelector((state) => state.user);
   const { institute } = useAppSelector((state) => state.institute);
 
@@ -47,7 +47,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
                 {user && user.planner === false ? (
                   <InitialTodoBox />
                 ) : (
-                  <TodaysPlan quizData={quizTopics} />
+                  <TodaysPlan plan={plan} />
                 )}
               </Suspense>
             </div>

@@ -222,10 +222,12 @@ export type UserDataProps = {
     claimedAt?: string | null;
     meetingId?: string;
   };
+  cohortJoinedAt?: string | null;
   preferences: {
     continuousData: { nextDay: boolean }; // to decide continuous topic placing in planner
     dailyQuestions: number;
     backRevisionTopics: number;
+    accuracyRevisionTopics?: number;
     includeSunday?: boolean;
   };
   parent: {

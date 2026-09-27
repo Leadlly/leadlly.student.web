@@ -2,20 +2,19 @@
 
 import { revalidateTag } from "next/cache";
 import apiClient from "@/apiClient/apiClient";
-import { PlannerDataProps } from "@/helpers/types";
+import { DailyPlan } from "@/lib/planner/types";
 
 export const getPlanner = async () => {
   try {
     const res = await apiClient.get(`/api/planner/get`, {
-      cache: "force-cache",
-      next: {
-        tags: ["plannerData"],
-      },
+      cache: "no-store",
     });
 
-    const responseData: { success: boolean; data: PlannerDataProps } = res.data;
-
-    return responseData;
+    const responseData = res.data as { success: boolean; data: DailyPlan | null };
+    return {
+      success: responseData.success,
+      data: responseData.data,
+    };
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log(`Error fetching planner data: ${error.message}`);
@@ -59,6 +58,18 @@ export const updatePlanner = async () => {
       throw new Error("An unknown error occurred while creating planner!");
     }
   }
+};
+
+export const completePlannerItem = async (itemId: string) => {
+  const res = await apiClient.post(`/api/planner/items/${itemId}/complete`);
+  revalidateTag("plannerData");
+  return res.data as { success: boolean; quizId: string; questionCount?: number };
+};
+
+export const skipPlannerItem = async (itemId: string) => {
+  const res = await apiClient.post(`/api/planner/items/${itemId}/skip`);
+  revalidateTag("plannerData");
+  return res.data as { success: boolean };
 };
 
 export const allocateBackTopics = async () => {
