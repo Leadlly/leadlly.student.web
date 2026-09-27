@@ -7,15 +7,17 @@ import { useState } from "react";
 import ContinuousRevisionForm from "./ContinuousRevisionForm";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChevronRightIcon, NotebookTextIcon } from "lucide-react";
+import { ChevronRightIcon, NotebookTextIcon, X } from "lucide-react";
 
 const ContinuousRevision = () => {
+  const [open, setOpen] = useState(false);
   const [activeSubject, setActiveSubject] = useState("");
 
   const user = useAppSelector((state) => state.user.user);
@@ -29,7 +31,7 @@ const ContinuousRevision = () => {
   );
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
@@ -53,18 +55,26 @@ const ContinuousRevision = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>What did you learn today?</DialogTitle>
-          <DialogDescription className="sr-only">
-            Add topics to your planner
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="rounded-[28px] p-5">
+        <div className="flex items-start justify-between gap-3">
+          <DialogHeader className="text-left">
+            <DialogTitle className="text-xl font-bold text-dark-primary">
+              Revise a chapter
+            </DialogTitle>
+            <DialogDescription className="text-[15px] font-medium text-secondary-text">
+              Pick what you finished in class today.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogClose className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white text-secondary-text shadow">
+            <X className="size-4" />
+          </DialogClose>
+        </div>
         <ContinuousRevisionForm
           activeSubject={activeSubject}
           setActiveSubject={setActiveSubject}
           userStandard={userStandard!}
           userSubjects={userSubjects!}
+          onComplete={() => setOpen(false)}
         />
       </DialogContent>
     </Dialog>

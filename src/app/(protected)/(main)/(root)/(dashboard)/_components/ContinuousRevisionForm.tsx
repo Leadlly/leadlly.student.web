@@ -27,7 +27,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { LeftArrowIcon } from "@/components";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { ISubject, Item } from "@/helpers/types";
@@ -35,7 +34,6 @@ import { saveStudyData } from "@/actions/studyData_actions";
 import { updatePlanner } from "@/actions/planner_actions";
 import { NestedMultiSelect } from "@/components/ui/nested-multi-select";
 import { getChapters, getTopicsWithSubtopic } from "@/actions/question_actions";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { useQueryClient } from "@tanstack/react-query";
 
 const ContinuousRevisionForm = ({
@@ -43,11 +41,13 @@ const ContinuousRevisionForm = ({
   userStandard,
   setActiveSubject,
   userSubjects,
+  onComplete,
 }: {
   activeSubject: string;
   setActiveSubject: (activeSubject: string) => void;
   userStandard: number;
   userSubjects: ISubject[];
+  onComplete?: () => void;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
@@ -146,6 +146,14 @@ const ContinuousRevisionForm = ({
         topicNames: [],
       });
       setSelectedValues([]);
+
+      const currentIndex = userSubjects.findIndex((subject) => subject.name === activeSubject);
+      const nextSubject = userSubjects[currentIndex + 1];
+      if (nextSubject) {
+        setActiveSubject(nextSubject.name);
+      } else {
+        onComplete?.();
+      }
     } catch (error: any) {
       toast.error(error?.message);
     } finally {
@@ -155,21 +163,21 @@ const ContinuousRevisionForm = ({
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full space-y-3">
-      <div className="flex items-center justify-between w-full">
+      <div className="flex w-full rounded-full bg-[#E8E4F0] p-1">
         {userSubjects.map((subject) => (
-          <Button
+          <button
             key={subject.name}
-            variant={"outline"}
-            size={"sm"}
+            type="button"
             onClick={() => setActiveSubject(subject.name)}
             className={cn(
-              "capitalize",
-              activeSubject === subject.name &&
-                "border-primary bg-primary/10 text-primary font-semibold hover:text-primary hover:bg-primary/15"
+              "h-9 flex-1 rounded-full text-sm font-bold capitalize",
+              activeSubject === subject.name
+                ? "bg-white text-primary shadow-sm"
+                : "text-secondary-text"
             )}
           >
             {subject.name}
-          </Button>
+          </button>
         ))}
       </div>
       <Form {...form}>
@@ -182,6 +190,7 @@ const ContinuousRevisionForm = ({
             name="chapterName"
             render={({ field }) => (
               <FormItem>
+                <p className="ml-1 text-sm font-bold">Chapter</p>
                 <Popover
                   open={chapterPopoverOpen}
                   onOpenChange={setChapterPopoverOpen}
@@ -192,7 +201,7 @@ const ContinuousRevisionForm = ({
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-full justify-between text-left",
+                          "h-11 w-full justify-between rounded-xl text-left",
                           !field.value && "text-muted-foreground"
                         )}
                       >
@@ -259,6 +268,7 @@ const ContinuousRevisionForm = ({
             name="topicNames"
             render={({ field }) => (
               <FormItem>
+                <p className="ml-1 text-sm font-bold">Topics</p>
                 <FormControl>
                   <NestedMultiSelect
                     options={
@@ -281,33 +291,19 @@ const ContinuousRevisionForm = ({
             )}
           />
 
-          <DialogFooter className="flex items-center sm:justify-between w-full">
-            <DialogClose asChild>
-              <Button
-                type="button"
-                variant={"outline"}
-                className="gap-x-2"
-                onClick={() => {
-                  setActiveSubject("");
-                  form.setValue("chapterName", null);
-                  form.setValue("topicNames", []);
-                }}
-              >
-                <LeftArrowIcon className="w-2 h-2" />
-                Back
-              </Button>
-            </DialogClose>
-
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <span className="flex items-center text-sm">
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting
-                </span>
-              ) : (
-                "Submit"
-              )}
-            </Button>
-          </DialogFooter>
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="h-11 w-full rounded-full text-sm font-semibold"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center text-sm">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting
+              </span>
+            ) : (
+              "Submit"
+            )}
+          </Button>
         </form>
       </Form>
     </div>

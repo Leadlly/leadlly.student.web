@@ -1,32 +1,30 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 import Question from "./Question";
 import Options from "./Options";
-import Pagination from "./Pagination";
 import SubmitDialog from "./SubmitDialog";
-import {
-  TQuizAnswerProps,
-  TQuizQuestionOptionsProps,
-  TQuizQuestionProps,
-} from "@/helpers/types";
+import { TQuizQuestionOptionsProps, TQuizQuestionProps } from "@/helpers/types";
 import { getMonthDate } from "@/helpers/utils";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { saveWeeklyQuizQuestion } from "@/actions/weekly_quiz_actions";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { weeklyQuizData } from "@/redux/slices/weeklyQuizSlice";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, ChevronLeft, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Quiz = ({
   quizId,
   questions,
   startDate,
   endDate,
+  quizType,
 }: {
   quizId: string;
   questions: TQuizQuestionProps[];
   startDate: string;
   endDate: string;
+  quizType?: string;
 }) => {
   const weekly_quiz_data = useAppSelector(
     (state) => state.weeklyQuizzes.quizzes
@@ -41,17 +39,6 @@ const Quiz = ({
   const [isSaving, setIsSaving] = useState<string | null>(null);
 
   const dispatch = useAppDispatch();
-
-  const questionIds = questions.map((ques) => ques._id);
-
-  const storedQuestionIds = weekly_quiz_data.map(
-    (data: {
-      questionId: string;
-      quizId: string;
-      topic: { name: string };
-      question: TQuizAnswerProps;
-    }) => data.questionId
-  );
 
   const attemptedQuestionAnswers = weekly_quiz_data.find(
     (ques: any) => ques.questionId === questions[currentQuestion]?._id
@@ -89,87 +76,116 @@ const Quiz = ({
     setSelectedOption(option);
   };
 
+  const isLast = currentQuestion === questions.length - 1;
+  const progress =
+    questions.length > 0 ? weekly_quiz_data.length / questions.length : 0;
+
   const handleNextQuestion = async () => {
     if (selectedOption) {
       await quizData();
       setSelectedOption(null);
     }
-    setCurrentQuestion((prev: any) => Math.min(prev + 1, questions.length - 1));
+    if (!isLast) {
+      setCurrentQuestion((prev: number) => Math.min(prev + 1, questions.length - 1));
+    }
   };
 
   const handlePrevQuestion = () => {
-    setCurrentQuestion((prev: any) => Math.max(prev - 1, 0));
-  };
-
-  const handlePageChange = async (pageNumber: number) => {
-    setCurrentQuestion(pageNumber);
+    setSelectedOption(null);
+    setCurrentQuestion((prev: number) => Math.max(prev - 1, 0));
   };
 
   return (
-    <>
-      <div className="flex flex-col justify-center gap-3 sm:gap-7 items-center px-5">
-        <div className="w-full flex flex-col justify-center items-center gap-4">
-          <h1 className="text-3xl md:text-4xl lg:text-page-title font-semibold">
-            Weekly Quiz
+    <div className="flex h-full flex-col bg-white">
+      <div className="flex items-center justify-between px-5 py-4">
+        <Link href="/quizzes" className="flex flex-1 text-secondary-text">
+          <ArrowLeft className="size-6" />
+        </Link>
+        <div className="text-center">
+          <h1 className="text-base font-bold text-dark-primary">
+            {quizType === "mock" ? "Full syllabus mock" : "Weekly Quiz"}
           </h1>
-          <h2 className="text-[#737373] text-xl md:text-2xl">
-            {getMonthDate(new Date(startDate))} -{" "}
-            {getMonthDate(new Date(endDate))}
-          </h2>
+          <p className="text-sm text-secondary-text">
+            {getMonthDate(new Date(startDate))} - {getMonthDate(new Date(endDate))}
+          </p>
         </div>
-        <div className="bg-primary/10 rounded-[10px] p-4 w-full flex justify-between items-center">
-          <span className="font-semibold text-[#636363] text-base md:text-2xl">
-            Answered:{" "}
-            <span className="text-primary">{weekly_quiz_data.length}</span>/
-            {questions.length}
-          </span>
+        <div className="flex flex-1 justify-end">
           <SubmitDialog quizId={quizId} />
         </div>
-        <Pagination
-          totalQuestions={questions.length}
-          currentQuestion={currentQuestion}
-          onPageChange={handlePageChange}
-          questionIds={questionIds}
-          storedQuestionIds={storedQuestionIds}
-          currentQuestionId={questions[currentQuestion]?._id}
-          loading={isSaving}
-        />
-        <div className="w-full sm:border-2 sm:border-[#CFCFCF] rounded-[10px] mb-5">
-          <div className="sm:p-7">
-            <h4 className="text-[#7C7C7C] font-medium text-xl">
-              Question {currentQuestion + 1} :
-            </h4>
-            <div className="p-5">
-              <Question question={questions[currentQuestion]} />
-              <Options
-                options={questions[currentQuestion]?.options}
-                selectedOption={selectedOption}
-                handleOptionChange={handleOptionChange}
-                attemptedOption={attemptedQuestionAnswers}
-              />
-            </div>
-          </div>
-          <div className="sm:bg-[#9654F40F] flex justify-center items-center gap-20 py-3">
-            <Button variant={"outline"} onClick={handlePrevQuestion}>
-              Prev
-            </Button>
-            <Button
-              onClick={handleNextQuestion}
-              disabled={
-                isSaving === questions[currentQuestion]?._id ||
-                currentQuestion === questions.length - 1
-              }
-            >
-              {isSaving === questions[currentQuestion]?._id ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
-              ) : (
-                <>{selectedOption ? "Save & Next" : "Next"}</>
-              )}
-            </Button>
-          </div>
-        </div>
       </div>
-    </>
+
+      <div className="mb-3 flex items-center gap-3 px-5">
+        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#E0E0E0]">
+          <div
+            className="h-full rounded-full bg-primary"
+            style={{ width: `${Math.min(progress, 1) * 100}%` }}
+          />
+        </div>
+        {isSaving === questions[currentQuestion]?._id ? (
+          <Loader2 className="size-4 animate-spin text-primary" />
+        ) : (
+          <span className="text-sm font-bold">
+            {weekly_quiz_data.length} / {questions.length}
+          </span>
+        )}
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
+        <p className="mb-3 text-sm font-semibold text-secondary-text">
+          Question {currentQuestion + 1} of {questions.length}:
+        </p>
+        {questions[currentQuestion] ? (
+          <>
+            <Question question={questions[currentQuestion]} />
+            <Options
+              options={questions[currentQuestion]?.options}
+              selectedOption={selectedOption}
+              handleOptionChange={handleOptionChange}
+              attemptedOption={attemptedQuestionAnswers}
+            />
+          </>
+        ) : (
+          <div className="flex min-h-48 flex-col items-center justify-center text-center text-sm text-secondary-text">
+            <p>No Question Available!!</p>
+            <p>Please try the next question.</p>
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center justify-between bg-primary/20 p-4">
+        <button
+          type="button"
+          onClick={handlePrevQuestion}
+          disabled={currentQuestion === 0 || isSaving === questions[currentQuestion]?._id}
+          className={cn(
+            "flex items-center rounded-lg border-2 border-[#E6E1F0] bg-white px-3 py-2 text-sm font-semibold text-secondary-text",
+            currentQuestion === 0 && "opacity-70"
+          )}
+        >
+          <ChevronLeft className="mr-1 size-3" />
+          Previous
+        </button>
+        <button
+          type="button"
+          onClick={handleNextQuestion}
+          disabled={
+            isSaving === questions[currentQuestion]?._id ||
+            (!selectedOption && isLast)
+          }
+          className="min-w-[100px] rounded-lg bg-leadlly px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+        >
+          {isSaving === questions[currentQuestion]?._id ? (
+            <Loader2 className="mx-auto size-4 animate-spin" />
+          ) : isLast ? (
+            "Save"
+          ) : selectedOption ? (
+            "Save & Next"
+          ) : (
+            "Next"
+          )}
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -1,22 +1,20 @@
 "use client";
-import React, { useMemo, useState } from "react";
+
+import { useMemo, useState } from "react";
+import Image from "next/image";
 import UnattemptedChapterQuiz from "./UnattemptedChapterQuiz";
 import { UnattemptedChapterQuizProps } from "@/helpers/types";
 import { useAppSelector } from "@/redux/hooks";
-
-type UnattemptedChapterWiseQuizzesProps = {
-  quizzes: UnattemptedChapterQuizProps[];
-};
+import { cn } from "@/lib/utils";
 
 const UnattemptedChapterWiseQuizzes = ({
   quizzes,
-}: UnattemptedChapterWiseQuizzesProps) => {
-  const [selectedSubject, setSelectedSubject] = useState<string>("All");
-
-  const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
-  );
-  const subjects = ["All", ...userSubjects?.map((subject) => subject.name)!];
+}: {
+  quizzes: UnattemptedChapterQuizProps[];
+}) => {
+  const [selectedSubject, setSelectedSubject] = useState("All");
+  const userSubjects = useAppSelector((state) => state.user.user?.academic.subjects);
+  const subjects = ["All", ...(userSubjects?.map((subject) => subject.name) ?? [])];
 
   const filteredQuizzes = useMemo(() => {
     return selectedSubject === "All"
@@ -26,32 +24,46 @@ const UnattemptedChapterWiseQuizzes = ({
 
   return (
     <div>
-      <div className="flex justify-around md:justify-start gap-2 md:pl-[10%] py-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         {subjects.map((subject) => (
           <button
             key={subject}
+            type="button"
             onClick={() => setSelectedSubject(subject)}
-            className={`md:px-6 md:py-1 py-1 px-3 rounded-[7px] font-medium text-xs md:text-sm border-[2px] capitalize  ${
+            className={cn(
+              "rounded-full px-4 py-1.5 text-sm font-semibold capitalize",
               selectedSubject === subject
-                ? "border-[#575757]  bg-[#FBFBFB]"
-                : "bg-[#F3F3F3] text-[#919191] border-transparent "
-            }`}
+                ? "bg-primary/10 text-primary"
+                : "bg-[#F4F1FB] text-secondary-text"
+            )}
           >
             {subject}
           </button>
         ))}
       </div>
-      <div className="\ flex-col w-full  min-h-20 flex gap-4 ">
-        {filteredQuizzes.length > 0 ? (
-          filteredQuizzes.map((quiz, index) => (
+      {filteredQuizzes.length ? (
+        <div className="flex flex-col gap-3">
+          {filteredQuizzes.map((quiz) => (
             <UnattemptedChapterQuiz key={quiz.id} quiz={quiz} />
-          ))
-        ) : (
-          <div className="text-center w-full font-medium text-lg text-gray-500">
-            No Quizzes
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center px-6 py-16 text-center">
+          <Image
+            src="/assets/images/typing_laptop.png"
+            alt=""
+            width={160}
+            height={160}
+            className="h-40 w-40 object-contain"
+          />
+          <p className="mt-8 text-2xl font-semibold text-dark-primary">
+            No Chapter Quizzes, yet!
+          </p>
+          <p className="mt-2 max-w-xs text-sm text-secondary-text">
+            No Quizzes in your inbox, yet! Start your journey to create quizzes
+          </p>
+        </div>
+      )}
     </div>
   );
 };

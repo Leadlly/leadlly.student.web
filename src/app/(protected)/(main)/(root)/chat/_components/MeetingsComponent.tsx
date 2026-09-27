@@ -28,8 +28,8 @@ const MeetingsComponent = ({
   return (
     <div className="flex flex-col lg:flex-row lg:gap-5">
       {/* Upcoming meetings */}
-      <div className="py-3 border-2 rounded-xl flex-1 h-full">
-        <ul className="flex justify-around">
+      <div className="h-full flex-1 rounded-[34px] bg-white py-3">
+        <ul className="mx-4 flex items-center rounded-full bg-[#F4F1FB] p-1">
           {meetingTabs.map((tab) => (
             <TabNavItem
               key={tab.id}
@@ -38,15 +38,13 @@ const MeetingsComponent = ({
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               layoutIdPrefix="meetings"
-              className="text-base md:text-lg lg:text-xl text-black font-medium leading-none capitalize px-6 py-2.5"
-              activeTabClassName="h-full inset-0 rounded-full bg-primary/25"
+              className="flex-1 rounded-full px-6 py-2 text-center text-sm font-semibold capitalize text-black md:text-base"
+              activeTabClassName="h-full inset-0 rounded-full bg-white"
             />
           ))}
         </ul>
 
-        <hr className="border-gray-300 my-3" />
-
-        <div className="max-h-[470px] lg:max-h-[700px] xl:max-h-[470px] h-full overflow-y-auto custom__scrollbar">
+        <div className="mt-3 h-full max-h-[470px] overflow-y-auto custom__scrollbar lg:max-h-[700px] xl:max-h-[470px]">
           {/* Upcoming Meetings Tab */}
           <div
             className="flex flex-col justify-start gap-3 h-full "
@@ -56,7 +54,7 @@ const MeetingsComponent = ({
               upcomingMeetings.map((meeting, index) => (
                 <div
                   key={meeting._id}
-                  className="min-h-28 flex gap-3 mx-2 md:mx-4 p-2 rounded-xl border-2 shadow-lg"
+                  className="mx-2 flex min-h-28 gap-3 rounded-[28px] border border-[#E6E1F0] p-3 md:mx-4"
                 >
                   <div className="bg-[#56CFE1]/[0.2] rounded-lg w-28 flex flex-col justify-center items-center">
                     <h2 className="text-lg font-semibold">

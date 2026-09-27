@@ -15,17 +15,17 @@ const ChapterCard: React.FC<ChapterCardProps> = ({
 }) => {
   return (
     <Link href={`/errorBook/chapter/${title}/erroredQuestions`}>
-      <div className="border flex items-center justify-between bg-[#ffffff] rounded-lg px-8 py-2 mb-4 border-[#0000000A] shadow-sm">
-        <div className="flex justify-start items-center gap-10">
-          <div className="text-2xl font-medium">
+      <div className="mb-3 flex items-center justify-between rounded-2xl border border-[#E6E1F0] bg-white px-4 py-3">
+        <div className="flex min-w-0 items-center gap-4">
+          <span className="text-base font-medium text-secondary-text">
             {String(number).padStart(2, "0")}
-          </div>
-          <div>
-            <div className="text-xl  font-medium leading-none">{title}</div>
-            <div className="text-gray-500">{questions} Questions</div>
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-base font-medium capitalize">{title}</p>
+            <p className="text-xs text-gray-500">{questions} Questions</p>
           </div>
         </div>
-        <ChevronRight color="#4F4F4F" />
+        <ChevronRight className="size-5 shrink-0 text-[#8A8A8A]" />
       </div>
     </Link>
   );

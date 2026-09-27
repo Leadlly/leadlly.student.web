@@ -16,24 +16,24 @@ const ErrorBook = async () => {
   const res = await getErrorBook();
 
   return (
-    <div className="max-h-screen">
+    <div className="flex h-full flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold py-4 text-center md:text-left">
-          Error Book
-        </h1>
+        <h1 className="text-2xl font-semibold text-dark-primary md:text-3xl">Error Book</h1>
         <Link
-          href={"/error-book/mobile-error-notes"}
-          className="flex gap-2 rounded-lg lg:hidden bg-[#9654F4] text-white items-center p-1 px-2"
+          href="/error-book/mobile-error-notes"
+          className="flex items-center gap-2 rounded-full bg-leadlly px-4 py-2 text-sm font-semibold text-white lg:hidden"
         >
           <Pencil className="size-4" />
           Notes
         </Link>
       </div>
 
-      <ErrorBookContainer
-        errorBook={res?.errorBook}
-        errorNotes={res?.errorNotes}
-      />
+      <div className="min-h-0 flex-1 overflow-hidden rounded-[34px] bg-white p-4">
+        <ErrorBookContainer
+          errorBook={res?.errorBook}
+          errorNotes={res?.errorNotes}
+        />
+      </div>
     </div>
   );
 };

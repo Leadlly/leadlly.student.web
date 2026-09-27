@@ -15,7 +15,7 @@ type Props = { quizId: string };
 const SubmitDialog = ({ quizId }: Props) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="font-normal md:font-semibold px-3 py-1  text-base md:text-xl bg-leadlly text-white rounded-[6px]">
+      <AlertDialogTrigger className="rounded-xl bg-leadlly px-4 py-2 text-sm font-bold text-white">
         Submit
       </AlertDialogTrigger>
       <AlertDialogContent className="max-md:max-w-56 rounded-2xl">

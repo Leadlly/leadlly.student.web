@@ -54,21 +54,23 @@ const TrackerPage = () => {
         titleClassName="text-2xl md:text-3xl lg:text-page-title"
       />
 
-      <ul className="flex items-center gap-3 overflow-x-auto">
-        {userSubjects?.map((tab, i) => (
-          <Link key={i} href={`/tracker?subject=${encodeURIComponent(tab.name)}`}>
-            <li
-              className={cn(
-                "whitespace-nowrap rounded-full px-5 py-2 text-base font-semibold capitalize",
-                activeSubject === tab.name
-                  ? "bg-primary/15 text-primary"
-                  : "text-dark-primary"
-              )}
-            >
-              {tab.name}
+      <ul className="flex w-full items-center rounded-full bg-white p-1.5">
+        {userSubjects?.map((tab) => {
+          const active = activeSubject === tab.name;
+          return (
+            <li key={tab.name} className="flex-1">
+              <Link
+                href={`/tracker?subject=${encodeURIComponent(tab.name)}`}
+                className={cn(
+                  "flex h-11 items-center justify-center rounded-full text-base font-semibold capitalize",
+                  active ? "bg-primary/10 text-primary" : "text-black"
+                )}
+              >
+                {tab.name}
+              </Link>
             </li>
-          </Link>
-        ))}
+          );
+        })}
       </ul>
 
       <div className="h-full overflow-y-auto custom__scrollbar pr-3 mb-16 md:mb-0">

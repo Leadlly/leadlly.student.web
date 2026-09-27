@@ -20,6 +20,7 @@ const page = async (props: Props) => {
         questions={weeklyQuestions.data.weeklyQuestions}
         startDate={weeklyQuestions.data.startDate}
         endDate={weeklyQuestions.data.endDate}
+        quizType={weeklyQuestions.data.quizType}
       />
     </>
   );
