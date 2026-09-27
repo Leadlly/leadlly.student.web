@@ -22,7 +22,7 @@ const Unattempted = ({
 
   return (
     <div className="flex h-full flex-col">
-      <ul className="flex gap-2 p-4">
+      <ul className="mx-4 mt-4 flex items-center rounded-full border border-[#E4DFF0] bg-white p-1">
         {unattemptedTabs.map((tab) => (
           <li key={tab.id} className="flex-1">
             <button

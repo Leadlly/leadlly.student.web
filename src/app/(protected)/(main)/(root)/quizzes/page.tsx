@@ -32,7 +32,7 @@ const Quizzes = async (props: {
     <div className="flex h-full flex-col gap-4">
       <h1 className="text-2xl font-semibold text-dark-primary md:text-3xl">Quizzes</h1>
 
-      <ul className="flex w-full items-center rounded-full bg-white p-1.5">
+      <ul className="flex w-full items-center rounded-full border border-[#E4DFF0] bg-white p-1.5">
         {quizPageTabs.map((tab) => {
           const active = activeQuizTab === tab.id;
           return (
