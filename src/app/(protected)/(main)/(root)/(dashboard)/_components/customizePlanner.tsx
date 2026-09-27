@@ -100,7 +100,7 @@ const CustomizePlanner = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent className="!inset-auto !bottom-4 !left-4 !right-4 !top-4 !h-auto !max-h-none !w-auto !max-w-none !translate-x-0 !translate-y-0 md:!left-24 xl:!left-[277px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 md:gap-4">
             <DialogClose>

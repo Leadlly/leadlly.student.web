@@ -1,131 +1,55 @@
 "use client";
 
-import { RadialBarChart } from "@/components";
-import BarChartSkeleton from "@/components/charts/_skeletons/BarChartSkeleton";
 import { formatDate } from "@/helpers/utils";
 import { useAppSelector } from "@/redux/hooks";
-import dynamic from "next/dynamic";
-
-const Charts = dynamic(() => import("react-apexcharts"), {
-  ssr: false,
-});
 
 const DailyReport = () => {
-  const userDetails = useAppSelector((state) => state.user.user?.details);
+  const daily = useAppSelector((state) => state.user.user?.details?.report?.dailyReport);
+  const isToday =
+    !!daily?.date && formatDate(daily.date) === formatDate(new Date(Date.now()));
+  const topics = isToday ? Number(daily?.session || 0) : 0;
+  const accuracy = isToday ? Number(daily?.quiz || 0) : 0;
+  const lastDate = daily?.date ? formatDate(new Date(daily.date)) : "";
+
   return (
-    <div className="px-3 py-2">
-      <h4 className="text-xs md:text-sm font-bold">Today</h4>
-      <div className="flex items-center justify-center">
-        <div className="flex-1 flex flex-col gap-3">
-          <div className="flex flex-col">
-            <span className="text-xl md:text-2xl font-semibold">
-              {userDetails?.report?.dailyReport?.date &&
-              formatDate(userDetails?.report?.dailyReport?.date!) ===
-                formatDate(new Date(Date.now()))
-                ? userDetails?.report?.dailyReport?.session!
-                : 0}
-              %
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="size-3 rounded bg-primary"></div>
-              <span className="text-base md:text-lg font-medium">
-                Topics Revised
-              </span>
-            </div>
+    <div className="px-5 py-4">
+      <div className="flex items-start justify-between gap-3">
+        <h4 className="text-lg font-semibold text-dark-primary">Today&apos;s daily report</h4>
+        {lastDate ? (
+          <p className="shrink-0 text-xs text-secondary-text">Last {lastDate}</p>
+        ) : null}
+      </div>
+      <div className="mt-4 flex items-center gap-6">
+        <div className="flex flex-col gap-4">
+          <div>
+            <p className="text-3xl font-semibold text-dark-primary">{Math.round(topics)}%</p>
+            <p className="mt-1 flex items-center gap-2 text-sm text-secondary-text">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#8B5CF6]" />
+              Topics revised
+            </p>
           </div>
-          <div className="flex flex-col">
-            <span className="text-xl md:text-2xl font-semibold">
-              {userDetails?.report?.dailyReport?.date &&
-              formatDate(userDetails?.report?.dailyReport?.date!) ===
-                formatDate(new Date(Date.now()))
-                ? userDetails?.report?.dailyReport?.quiz!
-                : 0}
-              %
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="size-3 rounded bg-[#56CFE1]"></div>
-              <span className="text-base md:text-lg font-medium">
-                Revision Accuracy
-              </span>
-            </div>
+          <div>
+            <p className="text-3xl font-semibold text-dark-primary">{Math.round(accuracy)}%</p>
+            <p className="mt-1 flex items-center gap-2 text-sm text-secondary-text">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#56CFE1]" />
+              Revision accuracy
+            </p>
           </div>
         </div>
-
-        <div>
-          <Charts
-            type="bar"
-            width={"50%"}
-            height={"100%"}
-            series={[
-              {
-                data: [
-                  {
-                    x: "S",
-                    y:
-                      userDetails?.report?.dailyReport?.date &&
-                      formatDate(userDetails?.report?.dailyReport?.date!) ===
-                        formatDate(new Date(Date.now()))
-                        ? userDetails?.report?.dailyReport?.session!
-                        : 0,
-                    fillColor: "#9654F4",
-                  },
-                  {
-                    x: "Q",
-                    y:
-                      userDetails?.report?.dailyReport?.date &&
-                      formatDate(userDetails?.report?.dailyReport?.date!) ===
-                        formatDate(new Date(Date.now()))
-                        ? userDetails?.report?.dailyReport?.quiz!
-                        : 0,
-                    fillColor: "#56CFE1",
-                  },
-                ],
-              },
-            ]}
-            options={{
-              chart: {
-                type: "bar",
-                height: "100%",
-                toolbar: {
-                  show: false,
-                },
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: 20,
-                  borderRadius: 1.5,
-                },
-              },
-              dataLabels: {
-                enabled: false,
-              },
-              stroke: {
-                show: true,
-                width: 3,
-                colors: ["transparent"],
-              },
-              xaxis: {
-                axisBorder: {
-                  show: true,
-                },
-                labels: {
-                  show: false,
-                },
-              },
-              yaxis: {
-                labels: {
-                  show: false,
-                },
-              },
-              grid: {
-                show: false,
-              },
-              legend: {
-                show: false,
-              },
-            }}
-          />
+        <div className="flex h-28 flex-1 items-end justify-center gap-6 rounded-[22px] bg-[#F7F5FB] px-6">
+          {[
+            { value: topics, color: "#8B5CF6" },
+            { value: accuracy, color: "#56CFE1" },
+          ].map((bar) => (
+            <div
+              key={bar.color}
+              className="w-8 rounded-t-2xl"
+              style={{
+                height: `${Math.max(8, Math.min(bar.value, 100))}%`,
+                backgroundColor: bar.color,
+              }}
+            />
+          ))}
         </div>
       </div>
     </div>

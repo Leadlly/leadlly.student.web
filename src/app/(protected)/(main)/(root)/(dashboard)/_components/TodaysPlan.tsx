@@ -102,14 +102,14 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
         <>
           <div className="flex items-center justify-between lg:mb-3">
             <div className="w-full flex justify-between items-center gap-2">
-              <h4 className="text-base md:text-xl font-semibold">
-                Today&apos;s Planner
+              <h4 className="text-lg font-semibold text-dark-primary">
+                Today&apos;s to-do
               </h4>
               <Link
-                href={"/planner"}
-                className="text-sm font-semibold text-primary"
+                href="/planner"
+                className="rounded-full bg-[#F4F1FB] px-4 py-2 text-sm font-semibold text-primary"
               >
-                Full Planner &gt;
+                Full Planner
               </Link>
             </div>
           </div>

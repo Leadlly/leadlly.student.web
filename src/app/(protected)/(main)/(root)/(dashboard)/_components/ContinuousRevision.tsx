@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
 import { Button } from "@/components/ui/button";
@@ -34,20 +33,22 @@ const ContinuousRevision = () => {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="w-full border-0 h-full bg-transparent"
+          className="h-auto w-full rounded-[28px] border-0 bg-transparent px-5 py-4"
           onClick={() => setActiveSubject(userSubjects?.[0].name || "")}
         >
-          <span className="flex items-center justify-between w-full">
-            <span className="flex items-center gap-2">
-              <NotebookTextIcon className="size-7" />
-              <span className="flex-1">
-                <p className="text-lg font-semibold text-left">What did you learn today?</p>
-                <p className="text-xs text-left text-dark-primary-active">
-                  Add what you covered in class today to your Daily Revision.
+          <span className="flex w-full items-center justify-between gap-3">
+            <span className="flex min-w-0 items-center gap-3">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F5F3FF] text-primary">
+                <NotebookTextIcon className="size-6" />
+              </span>
+              <span className="min-w-0 flex-1 text-left">
+                <p className="text-lg font-semibold text-dark-primary">What did you learn today?</p>
+                <p className="text-sm text-secondary-text">
+                  Add what you covered in class today.
                 </p>
               </span>
             </span>
-            <ChevronRightIcon className="size-5" />
+            <ChevronRightIcon className="size-5 shrink-0 text-secondary-text" />
           </span>
         </Button>
       </DialogTrigger>

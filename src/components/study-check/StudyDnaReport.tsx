@@ -718,9 +718,9 @@ export const StudyDnaDialog = ({
         aria-label="Close DNA report"
         onClick={onClose}
       />
-      <div className="absolute inset-3 flex items-center justify-center sm:inset-5">
+      <div className="absolute inset-4 flex md:left-24 xl:left-[277px]">
         <div
-          className="flex h-full min-h-0 w-full max-h-full max-w-lg flex-col overflow-hidden rounded-[24px] bg-white shadow-2xl sm:max-h-[860px] sm:rounded-[28px]"
+          className="flex h-full min-h-0 w-full max-h-full flex-col overflow-hidden rounded-[24px] bg-white shadow-2xl sm:rounded-[28px]"
           onClick={(event) => event.stopPropagation()}
         >
           <div className="flex shrink-0 items-center gap-3 px-3 py-2.5 sm:px-4 sm:py-3">

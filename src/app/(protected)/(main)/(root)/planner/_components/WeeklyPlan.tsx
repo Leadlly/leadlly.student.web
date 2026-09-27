@@ -76,54 +76,62 @@ const WeeklyPlan = ({
         )}
       </div>
 
-      <div className="w-full flex-1 overflow-hidden md:px-5">
-        <ul className="w-full flex flex-col justify-start gap-3 h-full overflow-x-hidden overflow-y-auto custom__scrollbar px-3 md:px-2">
-          {data?.days.map((plan: TDayProps) => (
-            <li
-              key={plan._id}
-              className={cn(
-                "w-full rounded-xl md:text-center border-2 cursor-pointer",
-                getFormattedDate(new Date(plan.date)) ===
-                  getTodaysFormattedDate()
-                  ? "bg-primary text-white"
-                  : "bg-white text-black",
-                getFormattedDate(new Date(plan.date)) !==
-                  getTodaysFormattedDate() &&
-                  selectedPlan === plan._id &&
-                  "border-primary"
-              )}
-              onClick={async () => {
-                await setData(null);
-                await setData(plan);
-                setSelectedPlan(plan._id);
-              }}
-            >
-              <p className="py-2 border-b border-b-slate-300 text-sm md:text-xl flex items-center justify-between md:justify-center gap-4 px-4">
-                <span className="font-semibold">{plan.day}</span>
-                <span>{getFormattedDate(new Date(plan.date))}</span>
-              </p>
-              <p className="w-full py-2 text-xs md:text-base px-4 truncate overflow-hidden">
-                {plan.backRevisionTopics.length > 0 ||
-                plan.continuousRevisionTopics.length > 0 ? (
-                  <>
-                    {plan.backRevisionTopics
-                      .map((topics: TRevisionProps) =>
-                        capitalizeFirstLetter(topics.topic.name)
-                      )
-                      .join(" / ")}
-                    {plan.backRevisionTopics.length > 0 && "/"}
-                    {plan.continuousRevisionTopics
-                      .map((topics: TRevisionProps) =>
-                        capitalizeFirstLetter(topics.topic.name)
-                      )
-                      .join(" / ")}
-                  </>
-                ) : (
-                  <>No topics</>
-                )}
-              </p>
-            </li>
-          ))}
+      <div className="w-full flex-1 overflow-hidden px-3 md:px-5">
+        <ul className="custom__scrollbar flex h-full w-full flex-col gap-3 overflow-x-hidden overflow-y-auto">
+          {data?.days.map((plan: TDayProps) => {
+            const isToday =
+              getFormattedDate(new Date(plan.date)) === getTodaysFormattedDate();
+            const names = [
+              ...plan.continuousRevisionTopics,
+              ...plan.continuousRevisionSubTopics,
+              ...plan.backRevisionTopics,
+            ].map((topic: TRevisionProps) =>
+              capitalizeFirstLetter(
+                topic.subtopic?.name && topic.subtopic.name !== topic.topic?.name
+                  ? topic.subtopic.name
+                  : topic.topic.name
+              )
+            );
+            return (
+              <li key={plan._id}>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await setData(null);
+                    await setData(plan);
+                    setSelectedPlan(plan._id);
+                  }}
+                  className={cn(
+                    "w-full rounded-[22px] px-5 py-4 text-left",
+                    isToday
+                      ? "bg-leadlly text-white"
+                      : "bg-[#F6F3FB] text-dark-primary",
+                    !isToday && selectedPlan === plan._id && "ring-2 ring-primary"
+                  )}
+                >
+                  <span className="flex items-start justify-between gap-3">
+                    <span className="text-base font-semibold">
+                      {plan.day}{" "}
+                      <span className={cn("font-medium", isToday ? "text-white/80" : "text-secondary-text")}>
+                        {getFormattedDate(new Date(plan.date))}
+                      </span>
+                    </span>
+                    <span className={cn("shrink-0 text-sm", isToday ? "text-white/80" : "text-secondary-text")}>
+                      {names.length} topics
+                    </span>
+                  </span>
+                  <span
+                    className={cn(
+                      "mt-1 block truncate text-sm",
+                      isToday ? "text-white/85" : "text-secondary-text"
+                    )}
+                  >
+                    {names.length ? names.join(" / ") : "No topics"}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

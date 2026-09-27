@@ -1,10 +1,37 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SemiRadialChart, TabContent, TabNavItem } from "@/components";
+import { TabNavItem } from "@/components";
 import { getUserTracker } from "@/actions/tracker_actions";
 import { subjectsForExam } from "@/lib/subjects";
 import { useAppSelector } from "@/redux/hooks";
+
+const Ring = ({
+  value,
+  color,
+  label,
+}: {
+  value: number;
+  color: string;
+  label: string;
+}) => {
+  const percent = Math.min(100, Math.max(0, value));
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="grid h-28 w-28 place-items-center rounded-full"
+        style={{
+          background: `conic-gradient(${color} ${percent * 3.6}deg, #EFEAF8 0deg)`,
+        }}
+      >
+        <div className="grid h-[88px] w-[88px] place-items-center rounded-full bg-white text-lg font-semibold text-dark-primary">
+          {Math.round(percent)}%
+        </div>
+      </div>
+      <p className="mt-3 text-sm text-secondary-text">{label}</p>
+    </div>
+  );
+};
 
 const SubjectProgress = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -47,10 +74,10 @@ const SubjectProgress = () => {
   }, [activeTab, subject?.overall_efficiency, subject?.overall_progress]);
 
   return (
-    <div className="h-full py-2">
-      <div className="flex items-center justify-between gap-2 px-3">
-        <h4 className="text-xs font-bold md:text-sm">Subject Progress</h4>
-        <ul className="flex items-center gap-1 overflow-x-auto rounded-full border p-1">
+    <div className="h-full px-5 py-4">
+      <div className="flex items-center justify-between gap-2">
+        <h4 className="text-lg font-semibold text-dark-primary">Subject progress</h4>
+        <ul className="flex items-center gap-1 overflow-x-auto rounded-full bg-[#F4F1FB] p-1">
           {userSubjects?.map((tab) => (
             <TabNavItem
               key={tab.name}
@@ -65,21 +92,9 @@ const SubjectProgress = () => {
           ))}
         </ul>
       </div>
-      <div className="h-full w-full overflow-hidden">
-        <TabContent id={activeTab} activeTab={activeTab}>
-          <div className="mt-3 grid h-full grid-cols-2 place-items-center">
-            <SemiRadialChart
-              series={[stats.revision]}
-              colors={["#8B5CF6"]}
-              chartLabel="revision"
-            />
-            <SemiRadialChart
-              series={[stats.efficiency]}
-              colors={["#56CFE1"]}
-              chartLabel="efficiency"
-            />
-          </div>
-        </TabContent>
+      <div className="mt-6 grid grid-cols-2 place-items-center">
+        <Ring value={stats.revision} color="#8B5CF6" label="Revisions" />
+        <Ring value={stats.efficiency} color="#56CFE1" label="Revision accuracy" />
       </div>
     </div>
   );

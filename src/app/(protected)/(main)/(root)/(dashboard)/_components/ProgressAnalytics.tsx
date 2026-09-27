@@ -53,10 +53,10 @@ const ProgressAnalytics = () => {
     });
 
   return (
-    <div className="px-3 py-2">
-      <div className="flex items-center justify-between">
-        <h4 className="text-xs md:text-sm font-bold">Progress Analytics</h4>
-        <ul className="flex items-center gap-1 border p-[2px] rounded-md">
+    <div className="px-5 py-4">
+      <div className="flex items-center justify-between gap-3">
+        <h4 className="text-lg font-semibold text-dark-primary">Progress analytics</h4>
+        <ul className="flex items-center gap-1 rounded-full bg-[#F4F1FB] p-1">
           {progressAnalyticsMenus.map((tab) => (
             <TabNavItem
               key={tab.id}
@@ -65,7 +65,8 @@ const ProgressAnalytics = () => {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               layoutIdPrefix="progress_analytics"
-              activeTabClassName="h-full inset-0"
+              activeTabClassName="inset-0 h-full rounded-full"
+              className="rounded-full px-3 py-1"
             />
           ))}
         </ul>

@@ -13,7 +13,7 @@ const ProfileHub = () => {
   const name = [user?.firstname, user?.lastname].filter(Boolean).join(" ");
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-lg flex-col gap-4 overflow-y-auto py-4">
+    <div className="flex h-full w-full flex-col gap-4 overflow-y-auto py-4 pr-2">
       <Link
         href="/"
         className="flex h-10 w-10 items-center justify-center rounded-full border border-[#EFEAF8] bg-white"

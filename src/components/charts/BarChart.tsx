@@ -89,12 +89,12 @@ const BarChart = ({
 
       <div className="w-36 hidden md:block">
         <div className="flex items-center gap-2">
-          <span className=" block w-3 h-3 rounded bg-primary"></span>
-          <span className="text-xs capitalize">Revision Sessions</span>
+          <span className="block h-2.5 w-2.5 rounded-full bg-[#8B5CF6]"></span>
+          <span className="text-xs">Topics revised</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className=" block w-3 h-3 rounded bg-[#72EFDD]"></span>
-          <span className="text-xs capitalize">Quizzes</span>
+          <span className="block h-2.5 w-2.5 rounded-full bg-[#56CFE1]"></span>
+          <span className="text-xs">Revision accuracy</span>
         </div>
       </div>
     </>
