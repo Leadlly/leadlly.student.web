@@ -16,9 +16,7 @@ import { useAppSelector } from "@/redux/hooks";
 import Loader from "@/components/shared/Loader";
 import { TDayProps } from "@/helpers/types";
 import InitialTodoBox from "./InitailTodoBox";
-import ReferAndEarn from "./referAndEarn";
 import Institute from "./institute";
-import CustomizePlanner from "./customizePlanner";
 
 const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const { user } = useAppSelector((state) => state.user);
@@ -33,7 +31,7 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
         <div className="flex items-center gap-3">
           <PointsBox />
           <Link
-            href="/manage-account"
+            href="/profile"
             className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
           >
             Profile
@@ -41,22 +39,10 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <div className="min-w-[220px] flex-1 rounded-3xl border border-[#F7F2FE]">
-          <ContinuousRevision />
-        </div>
-        <div className="min-w-[220px] flex-1">
-          <CustomizePlanner />
-        </div>
-        <div className="min-w-[220px] flex-1">
-          <ReferAndEarn />
-        </div>
-      </div>
-
       <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
         <section className="h-full flex w-full flex-col justify-start gap-4 py-2">
           <div className="w-full grid grid-cols-2 gap-4">
-            <div className="max-h-[550px] min-w-80 relative flex flex-col justify-start overflow-hidden">
+            <div className="relative flex min-w-80 max-h-[550px] flex-col justify-start overflow-hidden rounded-[28px] border border-[#EFEAF8] bg-white p-4">
               <Suspense fallback={<Loader />}>
                 {user && user.planner === false ? (
                   <InitialTodoBox />
@@ -66,22 +52,24 @@ const DesktopUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
               </Suspense>
             </div>
 
-            <div className="w-full flex flex-col gap-4">
-                <div className="rounded-3xl border border-[#F7F2FE]">
+            <div className="flex w-full flex-col gap-4">
+              <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
+                <ContinuousRevision />
+              </div>
+              <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
                 <SubjectProgress />
               </div>
-
-              <div className="border rounded-xl">
+              <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
                 <DailyReport />
               </div>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#F7F2FE]">
+          <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
             <ProgressAnalytics />
           </div>
           {institute && institute._id ? (
-            <div className="rounded-3xl border border-[#F7F2FE] p-4">
+            <div className="rounded-[28px] border border-[#EFEAF8] bg-white p-4">
               <h4 className="mb-2 text-lg font-semibold">Your Institute</h4>
               <Institute />
             </div>

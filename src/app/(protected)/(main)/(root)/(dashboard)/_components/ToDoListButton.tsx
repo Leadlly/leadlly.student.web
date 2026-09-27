@@ -71,9 +71,7 @@ const ToDoListButton = ({
         )
       }
       className={cn(
-        "flex items-start justify-between bg-primary/5 p-2 rounded-sm cursor-pointer",
-        index === 0 && "rounded-t-lg",
-        index === topicsLength - 1 && "rounded-b-lg",
+        "flex cursor-pointer items-center justify-between rounded-[22px] bg-[#F6F3FB] px-4 py-3.5",
         (completedTopics &&
           completedTopics?.length &&
           completedTopics?.includes(
@@ -102,7 +100,7 @@ const ToDoListButton = ({
         ) : (
           <span
             className={cn(
-              "h-4 w-4 md:h-[18px] md:w-[18px] p-1 text-white border-2 rounded border-[#787878] flex items-center justify-center",
+              "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-[#C4B5FD] p-1 text-white",
               (completedTopics &&
                 completedTopics.length > 0 &&
                 completedTopics.includes(

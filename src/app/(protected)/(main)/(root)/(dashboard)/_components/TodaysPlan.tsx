@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { Suspense, useEffect, useState } from "react";
 import { TDayProps } from "@/helpers/types";
@@ -9,14 +10,33 @@ import ToDoListButton from "./ToDoListButton";
 // import Player from "lottie-react";
 import loginAnimation from "../../../../../../../public/assets/todo_pending_animation.json";
 import Link from "next/link";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-
 const Player = dynamic(() => import("lottie-react"), { ssr: false });
+
+const Section = ({
+  title,
+  count,
+  empty,
+  children,
+}: {
+  title: string;
+  count: number;
+  empty: string;
+  children: ReactNode;
+}) => (
+  <section className="px-1">
+    <div className="mb-2 flex items-center justify-between">
+      <h4 className="text-base font-semibold text-dark-primary">{title}</h4>
+      <span className="text-sm text-secondary-text">{count}</span>
+    </div>
+    {count === 0 ? (
+      <div className="rounded-[22px] bg-[#F6F3FB] px-4 py-4 text-center text-sm text-secondary-text">
+        {empty}
+      </div>
+    ) : (
+      <ul className="flex flex-col gap-2">{children}</ul>
+    )}
+  </section>
+);
 
 const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
   const [openQuestionDialogBox, setOpenQuestionDialogBox] = useState(false);
@@ -65,6 +85,17 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
     );
   }
 
+  const dailyTopics = [
+    ...quizData.continuousRevisionTopics.map((item) => ({
+      ...item,
+      isSubtopic: false as const,
+    })),
+    ...quizData.continuousRevisionSubTopics.map((item) => ({
+      ...item,
+      isSubtopic: true as const,
+    })),
+  ];
+
   return (
     <>
       {hasTopics ? (
@@ -83,132 +114,66 @@ const TodaysPlan = ({ quizData }: { quizData: TDayProps | undefined }) => {
             </div>
           </div>
 
-          <div className="w-full flex-1 border rounded-xl overflow-y-auto custom__scrollbar">
-            <div>
-              <h4 className="text-base font-medium text-[#787878] mb-2 p-4 pb-1">
-                Daily revision
-              </h4>
-              <ul className="w-full h-full flex flex-col justify-start gap-1 max-h-52 overflow-y-auto custom__scrollbar px-4">
-                {[
-                  ...quizData.continuousRevisionTopics.map((item) => ({
-                    ...item,
-                    isSubtopic: false,
-                  })),
-                  ...quizData.continuousRevisionSubTopics.map((item) => ({
-                    ...item,
-                    isSubtopic: true,
-                  })),
-                ].map((topicItem, index) => (
-                  <ToDoListButton
-                    key={topicItem._id}
-                    index={index}
-                    setTopic={setTopic}
-                    setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                    topic={topicItem}
-                    completedTopics={quizData.completedTopics}
-                    incompleteTopics={quizData.incompletedTopics}
-                    topicsLength={
-                      quizData.backRevisionTopics.length +
-                      quizData.continuousRevisionTopics.length
-                    }
-                    quizData={quizData}
-                  />
-                ))}
-              </ul>
-            </div>
-
-            <Accordion
-              defaultValue={
-                quizData.backRevisionTopics.length > 0 ? "item-1" : ""
-              }
-              type="single"
-              collapsible
+          <div className="custom__scrollbar flex w-full flex-1 flex-col gap-5 overflow-y-auto">
+            <Section
+              title="Daily revision"
+              count={dailyTopics.length}
+              empty="No topics for today"
             >
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="px-4">
-                  <h4 className="text-base font-medium text-[#787878] mb-2">
-                    Pending revision
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="w-full h-full flex flex-col justify-start gap-2 md:gap-5 xl:gap-1 max-h-96 overflow-y-auto custom__scrollbar p-4 pt-0">
-                    {quizData &&
-                    quizData.backRevisionTopics &&
-                    quizData.backRevisionTopics.length > 0 ? (
-                      quizData.backRevisionTopics.map((topicItem, index) => (
-                        <ToDoListButton
-                          key={topicItem._id}
-                          index={index}
-                          setTopic={setTopic}
-                          setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                          topic={topicItem}
-                          completedTopics={quizData.completedTopics}
-                          incompleteTopics={quizData.incompletedTopics}
-                          topicsLength={
-                            quizData.backRevisionTopics.length +
-                            quizData.continuousRevisionTopics.length
-                          }
-                          quizData={quizData}
-                        />
-                      ))
-                    ) : (
-                      <li className="text-center text-sm text-muted-foreground">
-                        No past topics available
-                      </li>
-                    )}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+              {dailyTopics.map((topicItem, index) => (
+                <ToDoListButton
+                  key={topicItem._id}
+                  index={index}
+                  setTopic={setTopic}
+                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                  topic={topicItem}
+                  completedTopics={quizData.completedTopics}
+                  incompleteTopics={quizData.incompletedTopics}
+                  topicsLength={dailyTopics.length}
+                  quizData={quizData}
+                />
+              ))}
+            </Section>
 
-            <Accordion
-              defaultValue={
-                quizData &&
-                quizData.lowAccuracyTopics &&
-                quizData.lowAccuracyTopics.length > 0
-                  ? "item-2"
-                  : ""
-              }
-              type="single"
-              collapsible
+            <Section
+              title="Pending revision"
+              count={quizData.backRevisionTopics.length}
+              empty="No past topics available"
             >
-              <AccordionItem value="item-2">
-                <AccordionTrigger className="px-4">
-                  <h4 className="text-base font-medium text-[#787878] mb-2">
-                    Accuracy based revision
-                  </h4>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="w-full h-full flex flex-col justify-start gap-2 md:gap-5 xl:gap-1 max-h-96 overflow-y-auto custom__scrollbar p-4 pt-0">
-                    {quizData &&
-                    quizData.lowAccuracyTopics &&
-                    quizData.lowAccuracyTopics.length > 0 ? (
-                      quizData.lowAccuracyTopics.map((topicItem, index) => (
-                        <ToDoListButton
-                          key={topicItem._id}
-                          index={index}
-                          setTopic={setTopic}
-                          setOpenQuestionDialogBox={setOpenQuestionDialogBox}
-                          topic={topicItem}
-                          completedTopics={quizData.completedTopics}
-                          incompleteTopics={quizData.incompletedTopics}
-                          topicsLength={
-                            quizData.lowAccuracyTopics.length > 0
-                              ? quizData.lowAccuracyTopics.length
-                              : 0
-                          }
-                          quizData={quizData}
-                        />
-                      ))
-                    ) : (
-                      <li className="text-center text-sm text-muted-foreground">
-                        No low accuracy topics available
-                      </li>
-                    )}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+              {quizData.backRevisionTopics.map((topicItem, index) => (
+                <ToDoListButton
+                  key={topicItem._id}
+                  index={index}
+                  setTopic={setTopic}
+                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                  topic={topicItem}
+                  completedTopics={quizData.completedTopics}
+                  incompleteTopics={quizData.incompletedTopics}
+                  topicsLength={quizData.backRevisionTopics.length}
+                  quizData={quizData}
+                />
+              ))}
+            </Section>
+
+            <Section
+              title="Accuracy based revision"
+              count={quizData.lowAccuracyTopics?.length ?? 0}
+              empty="No low accuracy topics available"
+            >
+              {(quizData.lowAccuracyTopics ?? []).map((topicItem, index) => (
+                <ToDoListButton
+                  key={topicItem._id}
+                  index={index}
+                  setTopic={setTopic}
+                  setOpenQuestionDialogBox={setOpenQuestionDialogBox}
+                  topic={topicItem}
+                  completedTopics={quizData.completedTopics}
+                  incompleteTopics={quizData.incompletedTopics}
+                  topicsLength={quizData.lowAccuracyTopics.length}
+                  quizData={quizData}
+                />
+              ))}
+            </Section>
           </div>
         </>
       ) : (

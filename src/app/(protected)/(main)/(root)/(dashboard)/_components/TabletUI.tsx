@@ -16,8 +16,6 @@ import { TDayProps } from "@/helpers/types";
 import { useAppSelector } from "@/redux/hooks";
 import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
-import ReferAndEarn from "./referAndEarn";
-import CustomizePlanner from "./customizePlanner";
 
 const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
   const user = useAppSelector((state) => state.user.user);
@@ -30,7 +28,7 @@ const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
         <div className="flex items-center gap-3">
           <PointsBox />
           <Link
-            href="/manage-account"
+            href="/profile"
             className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
           >
             Profile
@@ -79,9 +77,6 @@ const TabletUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
               </div>
             )}
 
-            <CustomizePlanner />
-
-            <ReferAndEarn />
           </div>
         </div>
 

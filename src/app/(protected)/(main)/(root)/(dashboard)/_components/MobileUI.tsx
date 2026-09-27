@@ -24,7 +24,7 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
         <DashboardGreeting />
         <div className="flex items-center gap-2">
           <Link
-            href="/manage-account"
+            href="/profile"
             className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
           >
             Profile
@@ -44,7 +44,7 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
         </Suspense>
       </div>
 
-      <div className="border rounded-xl px-3 py-2">
+      <div className="rounded-[28px] border border-[#EFEAF8] bg-white px-3 py-2">
         <ContinuousRevision />
       </div>
 
@@ -57,15 +57,15 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
         </div>
       )}
 
-      <div className="border rounded-xl">
+      <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
         <DailyReport />
       </div>
 
-      <div className="border rounded-xl">
+      <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
         <ProgressAnalytics />
       </div>
 
-      <div className="border rounded-xl mb-20">
+      <div className="mb-20 rounded-[28px] border border-[#EFEAF8] bg-white">
         <SubjectProgress />
       </div>
     </div>

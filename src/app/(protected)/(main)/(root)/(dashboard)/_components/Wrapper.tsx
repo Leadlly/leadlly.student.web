@@ -8,7 +8,17 @@ import TabletUI from "./TabletUI";
 import { useMediaQuery } from "usehooks-ts";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPlanner } from "@/actions/planner_actions";
+import { TDayProps } from "@/helpers/types";
 import FreeMeetingBanner from "./FreeMeetingBanner";
+
+const todaysQuiz = (days?: TDayProps[]) =>
+  (days ?? []).filter((item) =>
+    process.env.NODE_ENV === "development"
+      ? getFormattedDate(new Date(item.date)) ===
+        getFormattedDate(new Date(Date.now()))
+      : getFormattedDateForProd(new Date(item.date)) ===
+        getFormattedDateForProd(new Date(Date.now()))
+  )[0];
 
 const Wrapper = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -24,15 +34,7 @@ const Wrapper = () => {
       <div className="h-full">
         <FreeMeetingBanner />
         <MobileUI
-          quizTopics={
-            data?.data?.days.filter((item) =>
-              process.env.NODE_ENV === "development"
-                ? getFormattedDate(new Date(item.date)) ===
-                  getFormattedDate(new Date(Date.now()))
-                : getFormattedDateForProd(new Date(item.date)) ===
-                  getFormattedDateForProd(new Date(Date.now()))
-            )[0]
-          }
+          quizTopics={todaysQuiz(data?.data?.days)}
         />
       </div>
     );
@@ -43,15 +45,7 @@ const Wrapper = () => {
       <div className="h-full pb-4">
         <FreeMeetingBanner />
         <TabletUI
-          quizTopics={
-            data?.data?.days.filter((item) =>
-              process.env.NODE_ENV === "development"
-                ? getFormattedDate(new Date(item.date)) ===
-                  getFormattedDate(new Date(Date.now()))
-                : getFormattedDateForProd(new Date(item.date)) ===
-                  getFormattedDateForProd(new Date(Date.now()))
-            )[0]
-          }
+          quizTopics={todaysQuiz(data?.data?.days)}
         />
       </div>
     );
@@ -61,15 +55,7 @@ const Wrapper = () => {
     <div className="h-full">
       <FreeMeetingBanner />
       <DesktopUI
-        quizTopics={
-          data?.data?.days.filter((item) =>
-            process.env.NODE_ENV === "development"
-              ? getFormattedDate(new Date(item.date)) ===
-                getFormattedDate(new Date(Date.now()))
-              : getFormattedDateForProd(new Date(item.date)) ===
-                getFormattedDateForProd(new Date(Date.now()))
-          )[0]
-        }
+        quizTopics={todaysQuiz(data?.data?.days)}
       />
     </div>
   );
