@@ -275,9 +275,9 @@ export const meetingTabs = [
 ];
 
 export const referralTerms = [
-  "Only applicable on 6 months and full plan.",
-  "You receive 10% of each subscription purchased with your referral code.",
-  "Your friend gets a 20% discount when they use your code.",
+  "Applicable on all plans.",
+  "You'll receive ₹400 of each subscription purchased with your referral code.",
+  "Your friend gets a 15% discount when they use your code.",
   "Referral rewards are credited after your friend’s payment is confirmed.",
 ];
 

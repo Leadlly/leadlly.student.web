@@ -10,6 +10,11 @@ export const getUserReferralStats = async () => {
       message: string;
       success: boolean;
       stats: TReferralStats;
+      content?: {
+        rewardPerReferral: number;
+        friendDiscountPercent: number;
+        terms: string[];
+      };
     }>("/api/refer/stats");
     return res.data;
   } catch (error) {
@@ -45,12 +50,12 @@ export const generateReferralCode = async (data: {
   }
 };
 
-export const requestCashOut = async () => {
+export const requestCashOut = async (data: { upiId: string }) => {
   try {
     const res = await apiClient.post<{
       success: boolean;
       message: string;
-    }>("/api/refer/cashout");
+    }>("/api/refer/cashout", data);
 
     return res.data;
   } catch (error) {

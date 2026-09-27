@@ -48,13 +48,13 @@ const TrackerPage = () => {
   }, [activeSubject]);
 
   return (
-    <div className="h-full flex flex-col gap-y-4">
+    <div className="flex h-full flex-col gap-y-6">
       <Header
         title="Tracker"
         titleClassName="text-2xl md:text-3xl lg:text-page-title"
       />
 
-      <ul className="flex w-full items-center rounded-full bg-white p-1.5">
+      <ul className="flex w-full items-center rounded-full border border-[#E4DFF0] bg-white p-1.5">
         {userSubjects?.map((tab) => {
           const active = activeSubject === tab.name;
           return (

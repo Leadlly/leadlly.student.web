@@ -22,7 +22,7 @@ const Unattempted = ({
 
   return (
     <div className="flex h-full flex-col">
-      <ul className="mx-4 mt-4 flex items-center rounded-full border border-[#E4DFF0] bg-white p-1">
+      <ul className="mx-4 mt-5 flex items-center rounded-full border border-[#E4DFF0] bg-white p-1">
         {unattemptedTabs.map((tab) => (
           <li key={tab.id} className="flex-1">
             <button
@@ -41,7 +41,7 @@ const Unattempted = ({
         ))}
       </ul>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-6 custom__scrollbar">
+      <div className="mt-5 min-h-0 flex-1 overflow-y-auto px-4 pb-6 custom__scrollbar">
         {activeTab === "weeklyQuiz" && (
           <UnattemptedWeeklyQuizzes quizzes={weeklyQuizzes} />
         )}

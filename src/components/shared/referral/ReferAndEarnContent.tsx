@@ -59,9 +59,33 @@ const ReferAndEarnContent = () => {
     }
   };
 
+  const handleShareCode = async () => {
+    if (!referral?.code) return;
+    const appLink = "https://play.google.com/store/apps/details?id=com.leadlly.app";
+    const message = `Hey !!
+I know how stressful and confusing JEE/NEET prep can get sometimes — I've been through it too.
+That's why I wanted to share something that could actually make your preparation smoother.
+
+Check out LEADLLY — it helps you manage your self-study, track your revision, and stay consistent. Just like having your own study mentor.
+
+I've got a special code for you: ${referral.code}
+
+This gives you ${referral.discountValue}% off on the subscription.
+
+Download the app here: ${appLink}
+Use the code when checking out and start managing your self-study better!`;
+
+    if (navigator.share) {
+      await navigator.share({ title: "Referral Code", text: message });
+      return;
+    }
+    await navigator.clipboard.writeText(message);
+    toast.success("Referral message copied");
+  };
+
   return (
     <DialogContent className="custom__scrollbar !inset-auto !bottom-4 !left-4 !right-4 !top-4 !h-auto !max-h-none !w-auto !max-w-none !translate-x-0 !translate-y-0 overflow-y-auto p-0 pb-6 md:!left-24 xl:!left-[277px]">
-      <DialogHeader className="bg-primary rounded-b-3xl sm:rounded-lg sm:rounded-b-3xl p-4 pb-12 text-left">
+        <DialogHeader className="rounded-b-3xl bg-leadlly p-4 pb-12 text-left sm:rounded-lg sm:rounded-b-3xl">
         <DialogClose asChild>
           <Button variant={"ghost"} size={"icon"} className="text-white">
             <ArrowLeft />
@@ -134,54 +158,18 @@ const ReferAndEarnContent = () => {
       </div>
 
       <div className="px-4 sm:px-8">
-        <div>
-          <Card className="rounded-2xl">
-            <CardContent className="py-4">
-              <p className="text-dark-primary-active font-medium text-base">
-                Total Referrals
+        <Card className="rounded-[20px] border-primary/10">
+          <CardContent className="py-4">
+            <p className="text-base font-medium text-dark-primary-active">Total Referrals</p>
+            {isLoading ? (
+              <Skeleton className="mt-2 h-10 w-full max-w-24 rounded-2xl" />
+            ) : (
+              <p className="text-[32px] font-semibold text-primary">
+                {data?.stats.totalReferrals ?? 0}
               </p>
-              {isLoading ? (
-                <Skeleton className="max-w-24 w-full h-10 rounded-2xl" />
-              ) : (
-                <p className="text-[32px] font-semibold text-primary">
-                  {data?.stats.totalReferrals}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between gap-4">
-          <Card className="rounded-2xl flex-1">
-            <CardContent className="py-4">
-              <p className="text-dark-primary-active font-medium text-base">
-                Pro Purchase
-              </p>
-              {isLoading ? (
-                <Skeleton className="max-w-24 w-full h-10 rounded-2xl" />
-              ) : (
-                <p className="text-[32px] font-semibold text-[#BF7C00]">
-                  {data?.stats.proReferrals}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-2xl flex-1">
-            <CardContent className="py-4">
-              <p className="text-dark-primary-active font-medium text-base">
-                Premium Purchase
-              </p>
-              {isLoading ? (
-                <Skeleton className="max-w-24 w-full h-10 rounded-2xl" />
-              ) : (
-                <p className="text-[32px] font-semibold text-[#0F8C04]">
-                  {data?.stats.premiumReferrals}
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       <div className="px-4 sm:px-8">
@@ -189,8 +177,8 @@ const ReferAndEarnContent = () => {
           How it works
         </p>
 
-        <Card>
-          <CardContent className="pb-0 py-3 flex items-center justify-between gap-1">
+        <Card className="rounded-[20px] border-primary/10">
+          <CardContent className="flex items-center justify-between gap-1 py-4">
             <div className="flex flex-col items-center gap-1">
               <Share2Icon className="size-6" />
               <span className="font-medium text-dark-primary text-base text-center">
@@ -225,19 +213,41 @@ const ReferAndEarnContent = () => {
         </p>
 
         <div className="space-y-1">
-          {referralTerms.map((item, i) => (
-            <div
-              key={i}
-              className={cn(
-                "px-4 py-5 bg-white border border-input-border rounded-[4px]",
-                i === 0 && "rounded-t-2xl",
-                referralTerms.length - 1 === i && "rounded-b-2xl"
-              )}
-            >
-              <p className="text-base text-dark-primary">{item}</p>
-            </div>
-          ))}
+          {(data?.content?.terms?.length ? data.content.terms : referralTerms).map(
+            (item: string, i: number, terms: string[]) => (
+              <div
+                key={i}
+                className={cn(
+                  "rounded-[4px] border border-input-border bg-white px-4 py-5",
+                  i === 0 && "rounded-t-2xl",
+                  terms.length - 1 === i && "rounded-b-2xl"
+                )}
+              >
+                <p className="text-base text-dark-primary">{item}</p>
+              </div>
+            )
+          )}
         </div>
+      </div>
+
+      <div className="sticky bottom-0 flex items-center gap-4 bg-white px-4 py-3 sm:px-8">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleCopyToClipboard}
+          className="h-12 flex-1 rounded-2xl border-[1.5px] border-primary text-base font-medium text-primary"
+        >
+          Copy
+          <CopyIcon className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          onClick={handleShareCode}
+          className="h-12 flex-1 rounded-2xl text-base font-medium"
+        >
+          Share
+          <Share2Icon className="size-4" />
+        </Button>
       </div>
     </DialogContent>
   );

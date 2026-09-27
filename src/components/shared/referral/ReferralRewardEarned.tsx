@@ -3,6 +3,7 @@ import { Skeleton } from "../../ui/skeleton";
 import { currency_formatter } from "@/lib/utils";
 import { Card, CardContent, CardFooter } from "../../ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { requestCashOut } from "@/actions/referral_actions";
 import { Loader2Icon } from "lucide-react";
@@ -16,15 +17,20 @@ const ReferralRewardEarned = ({
 }) => {
   const [requestMessage, setRequestMessage] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const [cashOutOpen, setCashOutOpen] = useState(false);
+  const [upiId, setUpiId] = useState("");
 
   const handleCashOut = async () => {
+    if (!upiId.trim()) return;
     setRequestMessage("");
     setIsPending(true);
     try {
-      const res = await requestCashOut();
+      const res = await requestCashOut({ upiId: upiId.trim() });
       setRequestMessage(
-        `${res.message}.\nYour Request will be reviewed shortly and our team will contact you. For any query contact support@leadlly.in`
+        `${res.message}. Your request will be reviewed shortly and our team will contact you. For any query contact support@leadlly.in`
       );
+      setCashOutOpen(false);
+      setUpiId("");
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -55,17 +61,31 @@ const ReferralRewardEarned = ({
         </div>
 
         <Button
-          onClick={handleCashOut}
-          disabled={isPending || !totalRewardsEarned}
-          className="font-semibold max-w-20 w-full h-8"
+          onClick={() => setCashOutOpen(true)}
+          disabled={!totalRewardsEarned}
+          className="h-8 w-full max-w-20 rounded-xl font-semibold"
         >
-          {isPending ? (
-            <Loader2Icon className="size-4 animate-spin text-white" />
-          ) : (
-            "Cash Out"
-          )}
+          Cash Out
         </Button>
       </CardContent>
+
+      {cashOutOpen ? (
+        <CardFooter className="flex flex-col items-stretch gap-2">
+          <p className="text-base font-semibold">Enter your UPI Id</p>
+          <Input
+            value={upiId}
+            onChange={(event) => setUpiId(event.target.value)}
+            placeholder="Your UPI Id"
+          />
+          <Button
+            onClick={handleCashOut}
+            disabled={!upiId.trim() || isPending}
+            className="h-11 w-full rounded-lg"
+          >
+            {isPending ? <Loader2Icon className="size-4 animate-spin" /> : "Submit"}
+          </Button>
+        </CardFooter>
+      ) : null}
 
       {requestMessage ? (
         <CardFooter className="text-sm font-medium text-green-500">
