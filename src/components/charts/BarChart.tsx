@@ -59,8 +59,9 @@ const BarChart = ({
             plotOptions: {
               bar: {
                 horizontal: false,
-                columnWidth: 14,
-                borderRadius: 1.5,
+                columnWidth: "72%",
+                borderRadius: 4,
+                borderRadiusApplication: "end",
               },
             },
             dataLabels: {
@@ -68,7 +69,7 @@ const BarChart = ({
             },
             stroke: {
               show: true,
-              width: 3,
+              width: 6,
               colors: ["transparent"],
             },
             xaxis: {
@@ -90,8 +91,9 @@ const BarChart = ({
               borderColor: "#F3F0F8",
               strokeDashArray: 0,
             },
+            colors: ["#8B5CF6", "#5CDBE8"],
             fill: {
-              colors: ["#8B5CF6", "#5EEAD4"],
+              colors: ["#8B5CF6", "#5CDBE8"],
             },
             legend: {
               show: false,
