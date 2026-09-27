@@ -48,7 +48,7 @@ const MarkChapters = () => {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col">
       <h2 className="text-2xl font-bold text-dark-primary">
         Mark chapters for revision
       </h2>

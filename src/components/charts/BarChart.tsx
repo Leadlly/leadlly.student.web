@@ -29,7 +29,7 @@ const BarChart = ({
     : [];
   return (
     <>
-      <div className="flex-1">
+      <div className="h-full w-full">
         <Charts
           type="bar"
           width={"100%"}
@@ -76,26 +76,28 @@ const BarChart = ({
                 days && days.length
                   ? days
                   : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+              axisBorder: { show: false },
+              axisTicks: { show: false },
+            },
+            yaxis: {
+              min: 0,
+              tickAmount: 2,
+              labels: {
+                style: { colors: "#9CA3AF", fontSize: "12px" },
+              },
+            },
+            grid: {
+              borderColor: "#F3F0F8",
+              strokeDashArray: 0,
             },
             fill: {
-              colors: ["#9654F4", "#56CFE1"],
+              colors: ["#8B5CF6", "#5EEAD4"],
             },
             legend: {
               show: false,
             },
           }}
         />
-      </div>
-
-      <div className="w-36 hidden md:block">
-        <div className="flex items-center gap-2">
-          <span className="block h-2.5 w-2.5 rounded-full bg-[#8B5CF6]"></span>
-          <span className="text-xs">Topics revised</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="block h-2.5 w-2.5 rounded-full bg-[#56CFE1]"></span>
-          <span className="text-xs">Revision accuracy</span>
-        </div>
       </div>
     </>
   );

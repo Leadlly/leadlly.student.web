@@ -5,7 +5,6 @@ import ContinuousRevision from "./ContinuousRevision";
 import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
-import UserProfileSheet from "./UserProfileSheet";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loader from "@/components/shared/Loader";
@@ -22,15 +21,12 @@ const MobileUI = ({ quizTopics }: { quizTopics?: TDayProps }) => {
     <div className="flex flex-col justify-start gap-3">
       <div className="flex items-center justify-between">
         <DashboardGreeting />
-        <div className="flex items-center gap-2">
-          <Link
-            href="/profile"
-            className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
-          >
-            Profile
-          </Link>
-          <UserProfileSheet />
-        </div>
+        <Link
+          href="/profile"
+          className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
+        >
+          Profile
+        </Link>
       </div>
 
       <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-full">

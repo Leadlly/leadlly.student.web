@@ -6,7 +6,7 @@ import MarkChapters from "@/app/(protected)/(main)/(student-account)/manage-acco
 
 const MarkChaptersPage = () => {
   return (
-    <div className="flex h-full w-full flex-col overflow-y-auto py-4 pr-2">
+    <div className="flex h-full min-h-0 w-full flex-col py-4 pr-2">
       <Link
         href="/profile"
         className="mb-4 flex h-10 w-10 items-center justify-center rounded-full border border-[#EFEAF8] bg-white"

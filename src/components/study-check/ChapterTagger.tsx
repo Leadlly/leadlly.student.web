@@ -204,9 +204,10 @@ const ChapterTagger = ({
     if (!list.length) return null;
     return (
       <div className="mt-4">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-primary">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary">
           {title}
         </p>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
         {list.map((chapter) => {
           const status = chapters[chapter._id]?.status ?? "not_started";
           const meta = CHAPTER_STATUS_OPTIONS.find((item) => item.value === status);
@@ -262,6 +263,7 @@ const ChapterTagger = ({
             </div>
           );
         })}
+        </div>
       </div>
     );
   };
@@ -275,7 +277,7 @@ const ChapterTagger = ({
   }
 
   return (
-    <div>
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col">
       <div className="flex gap-2 overflow-x-auto pb-2">
         {subjects.map((subject) => (
           <button
@@ -296,11 +298,11 @@ const ChapterTagger = ({
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-16">
+        <div className="flex flex-1 items-center justify-center py-16">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
       ) : (
-        <>
+        <div className="min-h-0 flex-1 overflow-y-auto pr-1">
           {renderGroup("Class 11", grouped.class11)}
           {renderGroup("Class 12", grouped.class12)}
           {renderGroup("Other", grouped.other)}
@@ -309,10 +311,10 @@ const ChapterTagger = ({
               No chapters found for this subject.
             </p>
           ) : null}
-        </>
+        </div>
       )}
 
-      <div className="sticky bottom-0 mt-4 bg-white pt-2">
+      <div className="shrink-0 bg-white pt-3">
         <NextButton
           label={
             currentIndex < subjects.length - 1
