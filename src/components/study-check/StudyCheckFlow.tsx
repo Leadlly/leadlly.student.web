@@ -127,7 +127,7 @@ const StudyCheckFlow = () => {
             saved.studyCheck.stepId === ("coachingHours" as StepId)
               ? "coachingWhen"
               : saved.studyCheck.stepId;
-          setStepId(!hasIdentity && restoredStep !== "opening" ? "phone" : restoredStep);
+          setStepId(!hasIdentity ? "phone" : restoredStep);
         }
       } catch {
         // A new student simply starts at the opening screen.
