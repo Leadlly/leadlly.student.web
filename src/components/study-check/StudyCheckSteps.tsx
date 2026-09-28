@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import {
   Aperture,
@@ -13,6 +14,8 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
+import { createPlanner } from "@/actions/planner_actions";
+import { completeStudyCheck, getStudyDnaProfile } from "@/actions/study_check_actions";
 import { studentPersonalInfo } from "@/actions/user_actions";
 import {
   BEHAVIOR_QUESTIONS,
@@ -42,8 +45,10 @@ import {
   TestType,
 } from "@/lib/study-check/types";
 import { subjectsForExam } from "@/lib/subjects";
+import { StudyDnaProfile } from "@/lib/study-check/dna";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
+import StudyDnaReport from "./StudyDnaReport";
 import { cn } from "@/lib/utils";
 import { useStudyCheck } from "./context";
 import {
@@ -72,23 +77,56 @@ const SLOT_PRESETS = [
   { label: "Night", start: "21:00", end: "23:00" },
 ];
 
+const GENDER_OPTIONS = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
+];
+
+const displayName = (first?: string | null, last?: string | null) =>
+  [first, last]
+    .filter(Boolean)
+    .join(" ")
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+
 export const PhoneStep = () => {
   const { answers, patch, next, busy, setBusy } = useStudyCheck();
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
-  const valid = isValidPhone(answers.phone);
+  const [name, setName] = useState(displayName(user?.firstname, user?.lastname));
+  const [gender, setGender] = useState(String(user?.about?.gender || "").toLowerCase());
+  const phoneValid = isValidPhone(answers.phone);
+  const nameValid = name.trim().length > 0;
+  const genderValid = GENDER_OPTIONS.some((item) => item.value === gender);
+  const valid = phoneValid && nameValid && genderValid;
 
   const saveAndNext = async () => {
     if (!valid || !user) return;
+    const parts = name.trim().replace(/\s+/g, " ").split(" ");
+    const firstName = parts[0];
+    const lastName = parts.slice(1).join(" ");
     setBusy(true);
     try {
       const saveResponse = await studentPersonalInfo({
         phone: Number(answers.phone),
+        firstName,
+        lastName,
+        gender,
       });
       dispatch(
         userData({
           ...user,
           ...(saveResponse.user || {}),
+          firstname: saveResponse.user?.firstname || firstName,
+          lastname: saveResponse.user?.lastname || lastName,
+          about: {
+            ...(user.about || { gender }),
+            ...(saveResponse.user?.about || {}),
+            gender,
+          },
           phone: {
             ...(user.phone || {}),
             ...(saveResponse.user?.phone || {}),
@@ -99,7 +137,7 @@ export const PhoneStep = () => {
       next();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Could not save your phone number."
+        error instanceof Error ? error.message : "Could not save your details."
       );
     } finally {
       setBusy(false);
@@ -125,6 +163,35 @@ export const PhoneStep = () => {
           placeholder="10-digit mobile number"
           className="h-full w-full bg-transparent text-base font-medium text-dark-primary outline-none"
         />
+      </div>
+      <p className="mt-6 text-base font-semibold text-dark-primary">Your name</p>
+      <p className="mt-1 text-[13px] text-secondary-text">
+        Filled from your Google account. Edit it if it isn&apos;t right.
+      </p>
+      <input
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        placeholder="Your name"
+        className="mt-3 h-14 w-full rounded-[20px] border-2 border-[#EDE9FE] bg-[#F7F2FE] px-4 text-base font-medium text-dark-primary outline-none"
+      />
+      <p className="mt-6 text-base font-semibold text-dark-primary">Gender</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {GENDER_OPTIONS.map((item) => {
+          const selected = gender === item.value;
+          return (
+            <button
+              key={item.value}
+              type="button"
+              onClick={() => setGender(item.value)}
+              className={cn(
+                "rounded-full px-4 py-2.5 text-sm font-semibold",
+                selected ? "bg-primary text-white" : "bg-[#F7F2FE] text-dark-primary"
+              )}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </div>
     </StepLayout>
   );
@@ -703,6 +770,137 @@ export const TestsListStep = () => {
         </div>
       ))}
     </StepLayout>
+  );
+};
+
+export const ProfileStep = () => {
+  const { answers, back, busy, setBusy } = useStudyCheck();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.user.user);
+  const finishingRef = useRef(false);
+  const [stepsCompleted, setStepsCompleted] = useState(false);
+  const [completeError, setCompleteError] = useState("");
+  const [profile, setProfile] = useState<StudyDnaProfile | null>(null);
+  const [profileError, setProfileError] = useState("");
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [profileAttempt, setProfileAttempt] = useState(0);
+
+  const finishSteps = async () => {
+    if (finishingRef.current) return;
+    finishingRef.current = true;
+    setCompleteError("");
+    try {
+      await completeStudyCheck({
+        stepId: "profile",
+        answers,
+      });
+      setStepsCompleted(true);
+    } catch (error) {
+      finishingRef.current = false;
+      setCompleteError(
+        error instanceof Error
+          ? error.message
+          : "Could not complete your Study Check. Please try again."
+      );
+    }
+  };
+
+  useEffect(() => {
+    finishSteps();
+    // Complete the check once, then show Study DNA before the plan is built.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!stepsCompleted) return;
+    let cancelled = false;
+    setLoadingProfile(true);
+    setProfileError("");
+    getStudyDnaProfile()
+      .then((response) => {
+        if (!cancelled) setProfile(response.profile);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setProfileError(
+            error instanceof Error ? error.message : "Could not load your Study DNA."
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingProfile(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [profileAttempt, stepsCompleted]);
+
+  const buildPlan = async () => {
+    if (!user) return;
+    setBusy(true);
+    try {
+      if (!user.planner) {
+        await createPlanner();
+      }
+      dispatch(userData({ ...user, onboard: true, planner: true }));
+      router.replace("/");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Could not build your plan. Please try again."
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (!stepsCompleted || loadingProfile) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center bg-white px-8 text-center">
+        {completeError ? (
+          <>
+            <p className="font-semibold text-dark-primary">{completeError}</p>
+            <button
+              type="button"
+              onClick={finishSteps}
+              className="mt-4 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white"
+            >
+              Try again
+            </button>
+          </>
+        ) : (
+          <p className="text-sm font-medium text-secondary-text">
+            {stepsCompleted ? "Building your Study DNA…" : "Saving your Study Check…"}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  if (profileError || !profile) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center bg-white px-8 text-center">
+        <p className="font-semibold text-dark-primary">
+          {profileError || "Could not load your Study DNA."}
+        </p>
+        <button
+          type="button"
+          onClick={() => setProfileAttempt((attempt) => attempt + 1)}
+          className="mt-4 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <StudyDnaReport
+      profile={profile}
+      onExit={back}
+      onFinish={buildPlan}
+      finishing={busy}
+    />
   );
 };
 

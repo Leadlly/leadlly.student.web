@@ -197,19 +197,6 @@ const QuestionDialogBox = ({
               </p>
             </div>
 
-            <Button
-              className="h-9 shrink-0 rounded-full bg-gradient-to-b from-primary to-[#913AE8] px-4 text-sm font-semibold md:h-11 md:px-6 md:text-base"
-              onClick={onHandleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                </>
-              ) : (
-                "Submit"
-              )}
-            </Button>
           </div>
 
           <div className="px-3 md:px-14 flex flex-col md:flex-row items-start gap-3">
@@ -327,26 +314,30 @@ const QuestionDialogBox = ({
                   ))}
                 </ul>
               </div>
-              <div className="mb-6 flex w-full items-center justify-center gap-3 md:mb-0 md:justify-end">
+              <div className="mb-6 flex w-full items-center justify-center md:mb-0 md:justify-end">
                 <Button
                   type="button"
-                  className="h-10 rounded-full px-6 text-base font-semibold"
-                  disabled={activeQuestion === questions.length - 1}
-                  onClick={handleNextQuestion}
+                  className="h-10 w-full rounded-full px-6 text-base font-semibold md:w-auto"
+                  disabled={
+                    activeQuestion === questions.length - 1 &&
+                    (!dailyQuizCurrentTopic?.attemptedQuestions?.length || isSubmitting)
+                  }
+                  onClick={
+                    activeQuestion === questions.length - 1
+                      ? onHandleSubmit
+                      : handleNextQuestion
+                  }
                 >
-                  Next
+                  {activeQuestion === questions.length - 1 ? (
+                    isSubmitting ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      "Submit"
+                    )
+                  ) : (
+                    "Next"
+                  )}
                 </Button>
-                {dailyQuizCurrentTopic?.attemptedQuestions?.length ===
-                questions.length ? (
-                  <Button
-                    type="button"
-                    className="h-10 rounded-full px-6 text-base font-semibold"
-                    onClick={onHandleSubmit}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Submit"}
-                  </Button>
-                ) : null}
               </div>
             </div>
           </div>

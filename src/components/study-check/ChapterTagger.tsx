@@ -87,6 +87,9 @@ const ChapterTagger = ({
         subjects.map(async (subject) => {
           try {
             const data = await getChapters(subject.name, standard);
+            if (data.error) {
+              toast.error("Error fetching chapters", { description: data.error });
+            }
             next[subject.name] = (data?.chapters ?? [])
               .filter((chapter: ChapterRow) => {
                 if (!chapter.subjectName) return true;

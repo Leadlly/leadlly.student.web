@@ -3,6 +3,7 @@
 import apiClient from "@/apiClient/apiClient";
 import { revalidateTag } from "next/cache";
 import {
+  CoachingTest,
   StepId,
   StudyCheckAnswers,
 } from "@/lib/study-check/types";
@@ -34,6 +35,26 @@ export const completeStudyCheck = async (data: StudyCheckPayload) => {
   const res = await apiClient.post("/api/user/study-check/complete", data);
   revalidateTag("userData");
   return res.data;
+};
+
+export const saveUpcomingTests = async (tests: CoachingTest[]) => {
+  try {
+    const res = await apiClient.put("/api/user/study-check/tests", { tests });
+    const data = res.data as {
+      success?: boolean;
+      message?: string;
+      tests?: CoachingTest[];
+    };
+    return {
+      success: true as const,
+      tests: data.tests || tests,
+      message: data.message || "Saved",
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Could not save your tests.";
+    return { success: false as const, tests, message };
+  }
 };
 
 export const getStudyDnaProfile = async () => {
