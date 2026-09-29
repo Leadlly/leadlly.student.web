@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "leadlly-questions-options.s3.ap-south-1.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "leadlly-questions-options-new.s3.ap-south-1.amazonaws.com",
+      },
     ],
   },
 };
