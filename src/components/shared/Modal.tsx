@@ -6,11 +6,15 @@ import { Dialog, DialogContent } from "../ui/dialog";
 const Modal = ({
   children,
   setOpenDialogBox,
+  beforeClose,
 }: {
   children: React.ReactNode;
   setOpenDialogBox: (openDialogBox: boolean) => void;
+  beforeClose?: () => void | Promise<void>;
 }) => {
-  const handleOpenChange = () => {
+  const handleOpenChange = async (open: boolean) => {
+    if (open) return;
+    await beforeClose?.();
     setOpenDialogBox(false);
   };
   return (

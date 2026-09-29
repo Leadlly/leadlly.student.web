@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { TQuizAnswerProps, TQuizQuestionProps } from "@/helpers/types";
 
 import { ArrowLeft, Check, Loader2, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MotionDiv } from "@/components/shared/MotionDiv";
 import Modal from "@/components/shared/Modal";
 
@@ -16,23 +16,18 @@ import { sanitizedHtml } from "@/helpers/utils";
 import { toast } from "sonner";
 import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
 import { getUser } from "@/actions/user_actions";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
-import {
-  getMonthlyReport,
-  getOverallReport,
-  getWeeklyReport,
-} from "@/actions/student_report_actions";
-import { weeklyData } from "@/redux/slices/weeklyReportSlice";
-import { monthlyData } from "@/redux/slices/monthlyReportSlice";
-import { overallData } from "@/redux/slices/overallReportSlice";
-import {
-  dailyQuizAttemptedQuestions,
-  filterCompletedTopics,
-} from "@/redux/slices/dailyQuizSlice";
+import { dailyQuizAttemptedQuestions } from "@/redux/slices/dailyQuizSlice";
 import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import { DialogTitle } from "@/components/ui/dialog";
+import {
+  markTopicQuizSynced,
+  questionIdOf,
+  readTopicQuiz,
+  saveTopicQuiz,
+} from "@/lib/planner/dailyQuizProgress";
 
 const QuestionDialogBox = ({
   setOpenQuestionDialogBox,
@@ -48,195 +43,205 @@ const QuestionDialogBox = ({
 }) => {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
+  const stored = topic ? readTopicQuiz(topic._id, topic.name) : null;
+  const quizQuestions =
+    stored?.questions?.length && !stored.completed ? stored.questions : questions;
 
-  const { dailyQuizzes } = useAppSelector((state) => state.dailyQuizzes);
-
-  const dailyQuizCurrentTopic = dailyQuizzes.find(
-    (quiz) => quiz.topicName === topic?.name
-  );
-
-  const [activeQuestion, setActiveQuestion] = useState(
-    dailyQuizCurrentTopic ? dailyQuizCurrentTopic?.attemptedQuestions.length : 0
-  );
-
+  const answersRef = useRef<TQuizAnswerProps[]>(stored?.answers || []);
+  const [answers, setAnswers] = useState<TQuizAnswerProps[]>(stored?.answers || []);
+  const [activeQuestion, setActiveQuestion] = useState(() => {
+    const firstOpen = quizQuestions.findIndex(
+      (question) => !answersRef.current.some((answer) => answer.question === questionIdOf(question._id))
+    );
+    return firstOpen === -1 ? Math.max(quizQuestions.length - 1, 0) : firstOpen;
+  });
   const [selectedAnswer, setSelectedAnswer] = useState("");
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
-    null
-  );
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [optionSelected, setOptionSelected] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const persistingRef = useRef(false);
+  const startedSaveRef = useRef(false);
+
+  const activeId = questionIdOf(quizQuestions[activeQuestion]?._id);
+  const savedAnswer = answers.find((answer) => answer.question === activeId);
+  const locked = Boolean(savedAnswer);
+
+  useEffect(() => {
+    if (!savedAnswer) return;
+    const index = quizQuestions[activeQuestion]?.options.findIndex(
+      (option) => option.name === savedAnswer.studentAnswer
+    );
+    setSelectedAnswer(savedAnswer.studentAnswer);
+    setSelectedAnswerIndex(index >= 0 ? index : null);
+    setOptionSelected(true);
+  }, [activeQuestion, quizQuestions, savedAnswer]);
+
+  const remember = (nextAnswers: TQuizAnswerProps[], completed = false) => {
+    answersRef.current = nextAnswers;
+    setAnswers(nextAnswers);
+    if (!topic) return;
+    saveTopicQuiz({
+      topicId: topic._id,
+      topicName: topic.name,
+      questions: quizQuestions,
+      answers: nextAnswers,
+      completed,
+      synced: false,
+    });
+  };
 
   const onAnswerSelect = (answer: string, optionTag: string, index: number) => {
+    if (locked || !activeId) return;
     setSelectedAnswerIndex(index);
-
     setSelectedAnswer(answer);
     setOptionSelected(true);
 
     const formattedData: TQuizAnswerProps = {
-      question: questions[activeQuestion]?._id,
+      question: activeId,
       studentAnswer: answer,
       isCorrect: optionTag === "Correct",
       tag: "daily_quiz",
     };
-
-    if (
-      !dailyQuizCurrentTopic?.attemptedQuestions.some(
-        (quiz) => quiz.question === formattedData.question
-      )
-    ) {
-      dispatch(
-        dailyQuizAttemptedQuestions({
-          topicName: topic?.name!,
-          attemptedQuestions: [formattedData],
-          date: new Date(Date.now()).getDate(),
-        })
-      );
-    }
+    if (answersRef.current.some((item) => item.question === activeId)) return;
+    const nextAnswers = [...answersRef.current, formattedData];
+    remember(nextAnswers, nextAnswers.length >= quizQuestions.length);
+    dispatch(
+      dailyQuizAttemptedQuestions({
+        topicName: topic?.name || "",
+        attemptedQuestions: [formattedData],
+        date: new Date().getDate(),
+      })
+    );
   };
 
   const handleNextQuestion = () => {
     setSelectedAnswerIndex(null);
     setSelectedAnswer("");
     setOptionSelected(false);
-
-    if (activeQuestion !== questions.length - 1) {
+    if (activeQuestion !== quizQuestions.length - 1) {
       setActiveQuestion((prev) => prev + 1);
     }
   };
 
-  const onHandleSubmit = async () => {
+  const persist = async () => {
+    if (persistingRef.current || startedSaveRef.current || !topic) return;
+    startedSaveRef.current = true;
+    const currentAnswers = answersRef.current;
+    if (!currentAnswers.length) return;
+    persistingRef.current = true;
     setIsSubmitting(true);
-
+    const completed = currentAnswers.length >= quizQuestions.length;
+    remember(currentAnswers, completed);
     try {
-      const answers = dailyQuizCurrentTopic?.attemptedQuestions || [];
       if (onPlannerSubmit) {
-        if (!answers.length) {
-          toast.error("Answer at least one question before submitting.");
-          return;
-        }
-        await onPlannerSubmit(answers);
-        setOpenQuestionDialogBox(false);
+        await onPlannerSubmit(currentAnswers);
+        markTopicQuizSynced(topic._id, topic.name, completed);
         return;
       }
       const res = await saveDailyQuiz({
         data: {
-          name: topic?.name!,
-          _id: topic?._id!,
-          isSubtopic: topic?.isSubtopic!,
+          name: topic.name,
+          _id: topic._id,
+          isSubtopic: topic.isSubtopic,
         },
-        questions: answers,
+        questions: currentAnswers,
+        questionCount: quizQuestions.length,
       });
-
-      if (res.success) {
-        queryClient.invalidateQueries({ queryKey: ["plannerData"] });
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+      markTopicQuizSynced(topic._id, topic.name, completed);
+      if (completed) {
+        await queryClient.invalidateQueries({ queryKey: ["plannerData"] });
         const userInfo = await getUser();
-        dispatch(userData(userInfo.user));
+        if (userInfo?.user) dispatch(userData(userInfo.user));
         queryClient.invalidateQueries({ queryKey: ["weeklyReport"] });
         queryClient.invalidateQueries({ queryKey: ["monthlyReport"] });
         queryClient.invalidateQueries({ queryKey: ["overallReport"] });
-
-        if (
-          dailyQuizCurrentTopic &&
-          dailyQuizCurrentTopic.attemptedQuestions.length === questions.length
-        ) {
-          dispatch(filterCompletedTopics({ topicName: topic?.name! }));
-        }
         toast.success(res.message);
-
-        setOpenQuestionDialogBox(false);
-      } else {
-        toast.error(res.message);
       }
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save this quiz.");
     } finally {
+      persistingRef.current = false;
       setIsSubmitting(false);
     }
   };
 
-  const handleBackSubmit = async () => {
-    if (
-      questions &&
-      questions.length > 0 &&
-      dailyQuizCurrentTopic &&
-      dailyQuizCurrentTopic?.attemptedQuestions?.length > 0
-    ) {
-      await onHandleSubmit();
-    } else {
-      setOpenQuestionDialogBox(false);
-    }
+  const closeQuiz = async () => {
+    await persist();
+    setOpenQuestionDialogBox(false);
   };
 
+  const isLastQuestion = activeQuestion === quizQuestions.length - 1;
+  const currentAnswered = answers.some((answer) => answer.question === activeId);
+
   return (
-    <Modal setOpenDialogBox={setOpenQuestionDialogBox}>
-      {questions && questions.length > 0 && questions[activeQuestion] ? (
+    <Modal setOpenDialogBox={setOpenQuestionDialogBox} beforeClose={persist}>
+      {quizQuestions.length > 0 && quizQuestions[activeQuestion] ? (
         <>
           <div className="flex items-center gap-3 bg-primary/[0.2] px-4 py-3 md:px-6">
             <div
               className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-white"
-              onClick={handleBackSubmit}
+              onClick={closeQuiz}
             >
               <ArrowLeft className="h-4 w-4" />
             </div>
 
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <Progress
-                value={
-                  (dailyQuizCurrentTopic
-                    ? dailyQuizCurrentTopic?.attemptedQuestions?.length /
-                      questions?.length
-                    : 0) * 100
-                }
+                value={(answers.length / quizQuestions.length) * 100}
                 className="h-2"
               />
               <p className="shrink-0 text-sm font-bold md:text-base">
-                {dailyQuizCurrentTopic
-                  ? dailyQuizCurrentTopic?.attemptedQuestions?.length
-                  : 0}
-                /{questions.length}
+                {answers.length}/{quizQuestions.length}
               </p>
             </div>
-
           </div>
 
-          <div className="px-3 md:px-14 flex flex-col md:flex-row items-start gap-3">
+          <div className="flex flex-col items-start gap-3 px-3 md:flex-row md:px-14">
             <div className="w-full space-y-5 pb-5">
-              <DialogTitle className="text-center text-xl md:text-3xl font-semibold text-black">
+              <DialogTitle className="text-center text-xl font-semibold text-black md:text-3xl">
                 Quiz on <span className="capitalize">{topic?.name}</span>
               </DialogTitle>
 
               <div className="flex w-full justify-center px-2">
                 <ul className="flex max-w-full flex-wrap items-center justify-center gap-1.5 rounded-3xl border p-1.5">
-                  {questions.map((ques, index) => (
-                    <li
-                      key={ques._id}
-                      className={cn(
-                        "relative cursor-pointer rounded-full px-2.5 py-1 text-sm font-medium",
-                        activeQuestion === index && "text-white",
-                        dailyQuizCurrentTopic?.attemptedQuestions.some(
-                          (quiz) => quiz.question === ques._id
-                        ) && "pointer-events-none opacity-30"
-                      )}
-                      onClick={() => {
-                        setSelectedAnswerIndex(null);
-                        setSelectedAnswer("");
-                        setOptionSelected(false);
-                        setActiveQuestion(index);
-                      }}
-                    >
-                      Q{index + 1}
-                      {activeQuestion === index && (
-                        <MotionDiv
-                          layoutId="quiz_questions"
-                          transition={{
-                            type: "spring",
-                            duration: 0.6,
-                          }}
-                          className="absolute inset-0 -z-10 h-full w-full rounded-full bg-primary"
-                        />
-                      )}
-                    </li>
-                  ))}
+                  {quizQuestions.map((ques, index) => {
+                    const answered = answers.some(
+                      (answer) => answer.question === questionIdOf(ques._id)
+                    );
+                    return (
+                      <li
+                        key={questionIdOf(ques._id) || index}
+                        className={cn(
+                          "relative cursor-pointer rounded-full px-2.5 py-1 text-sm font-medium",
+                          activeQuestion === index && "text-white",
+                          answered && "pointer-events-none opacity-30"
+                        )}
+                        onClick={() => {
+                          if (answered) return;
+                          setSelectedAnswerIndex(null);
+                          setSelectedAnswer("");
+                          setOptionSelected(false);
+                          setActiveQuestion(index);
+                        }}
+                      >
+                        Q{index + 1}
+                        {activeQuestion === index && (
+                          <MotionDiv
+                            layoutId="quiz_questions"
+                            transition={{
+                              type: "spring",
+                              duration: 0.6,
+                            }}
+                            className="absolute inset-0 -z-10 h-full w-full rounded-full bg-primary"
+                          />
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
@@ -245,15 +250,15 @@ const QuestionDialogBox = ({
                   <span>{activeQuestion + 1}. </span>
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: sanitizedHtml(questions[activeQuestion].question),
+                      __html: sanitizedHtml(quizQuestions[activeQuestion].question),
                     }}
                   />
                 </p>
 
-                {questions[activeQuestion].images.length > 0 ? (
+                {quizQuestions[activeQuestion].images.length > 0 ? (
                   <div className="gap-y-2">
-                    {questions[activeQuestion].images.map((image) => (
-                      <div key={image._id} className="relative w-full h-32">
+                    {quizQuestions[activeQuestion].images.map((image) => (
+                      <div key={questionIdOf(image._id) || image.url} className="relative h-32 w-full">
                         <Image
                           src={image.url}
                           alt="Question Images"
@@ -266,69 +271,60 @@ const QuestionDialogBox = ({
                 ) : null}
 
                 <ul className="flex flex-col justify-start gap-2 px-3 md:px-5">
-                  {questions[activeQuestion].options.map((option, index) => (
-                    <li
-                      key={option._id}
-                      className={cn(
-                        "flex items-center gap-6 text-base md:text-xl text-black font-normal border rounded-xl px-4 py-2 cursor-pointer",
-                        optionSelected && option.tag === "Correct"
-                          ? "border-primary bg-primary/10"
-                          : selectedAnswerIndex === index &&
-                              option.tag === "Incorrect"
-                            ? "border-[#ff2e2e] bg-[#ff2e2e]/10"
-                            : "",
-                        optionSelected &&
-                          selectedAnswer !== option.name &&
-                          "pointer-events-none opacity-50"
-                      )}
-                      onClick={() =>
-                        onAnswerSelect(option.name, option.tag, index)
-                      }
-                    >
-                      <div
+                  {quizQuestions[activeQuestion].options.map((option, index) => {
+                    const chosen = locked
+                      ? option.name === savedAnswer?.studentAnswer
+                      : selectedAnswerIndex === index;
+                    const showCorrect = (locked || optionSelected) && option.tag === "Correct";
+                    const showWrong = chosen && option.tag !== "Correct";
+                    return (
+                      <li
+                        key={questionIdOf(option._id) || index}
                         className={cn(
-                          "w-4 h-4 rounded-full border border-black cursor-pointer flex items-center justify-center",
-                          optionSelected && option.tag === "Correct"
-                            ? "bg-primary border-none"
-                            : selectedAnswerIndex === index &&
-                                option.tag === "Incorrect"
-                              ? "bg-[#ff2e2e] border-none"
-                              : ""
+                          "flex cursor-pointer items-center gap-6 rounded-xl border px-4 py-2 text-base font-normal text-black md:text-xl",
+                          showCorrect
+                            ? "border-primary bg-primary/10"
+                            : showWrong
+                              ? "border-[#ff2e2e] bg-[#ff2e2e]/10"
+                              : "",
+                          (locked || optionSelected) && !chosen && option.tag !== "Correct"
+                            ? "pointer-events-none opacity-50"
+                            : "",
+                          locked && "pointer-events-none"
                         )}
+                        onClick={() => onAnswerSelect(option.name, option.tag, index)}
                       >
-                        {optionSelected && option.tag === "Correct" && (
-                          <Check className="w-3 h-3 text-white font-medium" />
-                        )}
-
-                        {selectedAnswerIndex === index &&
-                          option.tag === "Incorrect" && (
-                            <X className="w-3 h-3 text-white font-medium" />
+                        <div
+                          className={cn(
+                            "flex h-4 w-4 cursor-pointer items-center justify-center rounded-full border border-black",
+                            showCorrect
+                              ? "border-none bg-primary"
+                              : showWrong
+                                ? "border-none bg-[#ff2e2e]"
+                                : ""
                           )}
-                      </div>
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: sanitizedHtml(option.name),
-                        }}
-                      />
-                    </li>
-                  ))}
+                        >
+                          {showCorrect ? <Check className="h-3 w-3 font-medium text-white" /> : null}
+                          {showWrong ? <X className="h-3 w-3 font-medium text-white" /> : null}
+                        </div>
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizedHtml(option.name),
+                          }}
+                        />
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
               <div className="mb-6 flex w-full items-center justify-center md:mb-0 md:justify-end">
                 <Button
                   type="button"
                   className="h-10 w-full rounded-full px-6 text-base font-semibold md:w-auto"
-                  disabled={
-                    activeQuestion === questions.length - 1 &&
-                    (!dailyQuizCurrentTopic?.attemptedQuestions?.length || isSubmitting)
-                  }
-                  onClick={
-                    activeQuestion === questions.length - 1
-                      ? onHandleSubmit
-                      : handleNextQuestion
-                  }
+                  disabled={isSubmitting || (isLastQuestion && !currentAnswered)}
+                  onClick={isLastQuestion ? closeQuiz : handleNextQuestion}
                 >
-                  {activeQuestion === questions.length - 1 ? (
+                  {isLastQuestion ? (
                     isSubmitting ? (
                       <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
@@ -343,14 +339,9 @@ const QuestionDialogBox = ({
           </div>
         </>
       ) : (
-        <div className="w-full min-h-96 h-full flex flex-col items-center justify-center space-y-4">
-          <p className="text-lg text-muted-foreground font-medium">
-            No questions yet!
-          </p>
-          <Button
-            variant={"outline"}
-            onClick={() => setOpenQuestionDialogBox(false)}
-          >
+        <div className="flex h-full min-h-96 w-full flex-col items-center justify-center space-y-4">
+          <p className="text-lg font-medium text-muted-foreground">No questions yet!</p>
+          <Button variant={"outline"} onClick={() => setOpenQuestionDialogBox(false)}>
             Go Back
           </Button>
         </div>
