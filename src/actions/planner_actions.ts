@@ -28,19 +28,29 @@ export const getPlanner = async () => {
   }
 };
 
+const plannerMessage = (error: unknown, fallback: string) => {
+  if (error && typeof error === "object" && "response" in error) {
+    const data = (error as { response?: { data?: { message?: string } } }).response?.data;
+    if (typeof data?.message === "string" && data.message) return data.message;
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+};
+
 export const createPlanner = async () => {
   try {
     const res = await apiClient.get(`/api/planner/create`);
-
-    const responseData = await res.data;
-    revalidateTag("plannerData");
-    return responseData;
+    const message =
+      typeof res.data?.message === "string" && res.data.message
+        ? res.data.message
+        : "Planner created";
+    return { success: true as const, message };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Error creating planner: ${error.message}`);
-    } else {
-      throw new Error("An unknown error occurred while creating planner!");
-    }
+    console.error("Error creating planner:", error);
+    return {
+      success: false as const,
+      message: plannerMessage(error, "Could not create your planner."),
+    };
   }
 };
 
@@ -76,16 +86,16 @@ export const skipPlannerItem = async (itemId: string) => {
 export const allocateBackTopics = async () => {
   try {
     const res = await apiClient.get(`/api/planner/allocateTopics`);
-
-    const responseData = await res.data;
-    revalidateTag("plannerData");
-
-    return responseData;
+    const message =
+      typeof res.data?.message === "string" && res.data.message
+        ? res.data.message
+        : "Planner updated";
+    return { success: true as const, message };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Error creating planner: ${error.message}`);
-    } else {
-      throw new Error("An unknown error occurred while creating planner!");
-    }
+    console.error("Error allocating planner topics:", error);
+    return {
+      success: false as const,
+      message: plannerMessage(error, "Could not update your planner."),
+    };
   }
 };

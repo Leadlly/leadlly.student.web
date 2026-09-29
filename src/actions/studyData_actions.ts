@@ -62,14 +62,20 @@ export const saveTaggedChapters = async (data: {
   }>;
 }) => {
   try {
-    const res = await apiClient.post(`/api/user/unrevisedtopics/save`, data);
-    revalidateTag("unrevised_topics");
-    return res.data;
+    await apiClient.post(`/api/user/unrevisedtopics/save`, data);
+    return { success: true as const, message: "Saved" };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Error saving chapters: ${error.message}`);
-    }
-    throw new Error("An unknown error occurred while saving chapters!");
+    console.error("Error saving chapters:", error);
+    const responseMessage =
+      error && typeof error === "object" && "response" in error
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+        : undefined;
+    return {
+      success: false as const,
+      message:
+        responseMessage ||
+        (error instanceof Error ? error.message : "Could not save your syllabus."),
+    };
   }
 };
 

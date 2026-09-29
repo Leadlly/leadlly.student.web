@@ -165,23 +165,27 @@ const ChapterTagger = ({
     const cacheKey = `${user._id}:${currentSubject.toLowerCase()}`;
     const signature = chapterSignature(selected);
     if (savedChapterSignatures.get(cacheKey) === signature) return;
-    await saveTaggedChapters({
+    const saved = await saveTaggedChapters({
       tag: "unrevised_topic",
       subject: currentSubject,
       standard: user.academic.standard,
       chapters: selected,
     });
+    if (!saved.success) {
+      throw new Error(saved.message);
+    }
     savedChapterSignatures.set(cacheKey, signature);
   };
 
   const syncPlanner = async () => {
     if (!user) return;
-    if (!user.planner) {
-      await createPlanner();
-      dispatch(userData({ ...user, planner: true }));
-      return;
+    const planner = user.planner ? await allocateBackTopics() : await createPlanner();
+    if (!planner.success) {
+      throw new Error(planner.message);
     }
-    await allocateBackTopics();
+    if (!user.planner) {
+      dispatch(userData({ ...user, planner: true }));
+    }
   };
 
   const handleNext = async () => {
@@ -195,7 +199,13 @@ const ChapterTagger = ({
         setExpandedId(null);
         return;
       }
-      await syncPlanner();
+      try {
+        await syncPlanner();
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Could not refresh your planner."
+        );
+      }
       await onComplete();
     } catch (error) {
       toast.error(

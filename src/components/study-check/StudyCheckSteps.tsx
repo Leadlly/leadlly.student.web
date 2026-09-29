@@ -841,7 +841,11 @@ export const ProfileStep = () => {
     setBusy(true);
     try {
       if (!user.planner) {
-        await createPlanner();
+        const planner = await createPlanner();
+        if (!planner.success) {
+          toast.error(planner.message);
+          return;
+        }
       }
       dispatch(userData({ ...user, onboard: true, planner: true }));
       router.replace("/");

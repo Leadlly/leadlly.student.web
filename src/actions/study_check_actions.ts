@@ -27,8 +27,13 @@ export const getStudyCheck = async () => {
 };
 
 export const saveStudyCheck = async (data: StudyCheckPayload) => {
-  const res = await apiClient.put("/api/user/study-check", data);
-  return res.data;
+  try {
+    await apiClient.put("/api/user/study-check", data);
+    return { success: true as const };
+  } catch (error) {
+    console.error("Error saving study check:", error);
+    return { success: false as const };
+  }
 };
 
 export const completeStudyCheck = async (data: StudyCheckPayload) => {
