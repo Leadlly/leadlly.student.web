@@ -37,6 +37,7 @@ export type DailyPlan = {
   };
   items: DailyPlanItem[];
   questions?: Record<string, unknown[]>;
+  answeredQuestions?: Record<string, string[]>;
   quizzes: {
     weekly: { id: string; endDate: string; attempted: boolean } | null;
     chapter: { id: string; name: string; subject: string; endDate: string }[];

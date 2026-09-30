@@ -51,6 +51,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
     name: string;
     id: string;
     questions: TQuizQuestionProps[];
+    answeredIds: string[];
   } | null>(null);
   const [emptyTopics, setEmptyTopics] = useState<string[]>([]);
 
@@ -74,7 +75,16 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
       setEmptyTopics((current) => (current.includes(item.id) ? current : [...current, item.id]));
       return;
     }
-    setActive({ name: item.topicName, id: item.topicId, questions });
+    setActive({
+      name: item.topicName,
+      id: item.topicId,
+      questions,
+      answeredIds: (
+        plan.answeredQuestions?.[item.topicName] ||
+        plan.answeredQuestions?.[item.topicName.toLowerCase()] ||
+        []
+      ).map(String),
+    });
   };
 
   const visible = plan.items.filter(
@@ -123,8 +133,24 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                   {rows.map((item, index) => {
                     const questions = questionsFor(item);
                     const progress = dailyQuizzes.find((quiz) => quiz.topicName === item.topicName);
-                    const answered = progress?.attemptedQuestions?.length || 0;
-                    const finished = questions.length > 0 && answered >= questions.length;
+                    const serverAnswered = new Set(
+                      (
+                        plan.answeredQuestions?.[item.topicName] ||
+                        plan.answeredQuestions?.[item.topicName.toLowerCase()] ||
+                        []
+                      ).map(String)
+                    );
+                    const localAnswered = new Set(
+                      (progress?.attemptedQuestions || []).map((answer) => String(answer.question))
+                    );
+                    const answered = questions.filter(
+                      (question) =>
+                        serverAnswered.has(String(question._id)) ||
+                        localAnswered.has(String(question._id))
+                    ).length;
+                    const finished =
+                      item.status === "COMPLETED" ||
+                      (questions.length > 0 && answered >= questions.length);
                     const missing = emptyTopics.includes(item.id);
                     const showChapter =
                       index === 0 || rows[index - 1]?.chapterId !== item.chapterId;
@@ -213,6 +239,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
               if (!open) setActive(null);
             }}
             questions={active.questions}
+            answeredQuestionIds={active.answeredIds}
             topic={{ name: active.name, _id: active.id, isSubtopic: false }}
           />
         </Suspense>

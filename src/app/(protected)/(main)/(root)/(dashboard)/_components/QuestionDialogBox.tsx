@@ -39,12 +39,14 @@ const QuestionDialogBox = ({
   questions,
   topic,
   onPlannerSubmit,
+  answeredQuestionIds = [],
 }: {
   openQuestionDialogBox: boolean;
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
   questions: TQuizQuestionProps[];
   topic: { name: string; _id: string; isSubtopic: boolean } | null;
   onPlannerSubmit?: (answers: TQuizAnswerProps[]) => Promise<void>;
+  answeredQuestionIds?: string[];
 }) => {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
@@ -54,9 +56,22 @@ const QuestionDialogBox = ({
   const dailyQuizCurrentTopic = dailyQuizzes.find(
     (quiz) => quiz.topicName === topic?.name
   );
+  const quizQuestions = questions || [];
+  const answeredIds = new Set([
+    ...answeredQuestionIds.map((id) => String(id)),
+    ...(dailyQuizCurrentTopic?.attemptedQuestions || []).map((answer) =>
+      String(answer.question)
+    ),
+  ]);
+  const answeredCount = quizQuestions.filter((question) =>
+    answeredIds.has(String(question._id))
+  ).length;
+  const firstUnanswered = quizQuestions.findIndex(
+    (question) => !answeredIds.has(String(question._id))
+  );
 
   const [activeQuestion, setActiveQuestion] = useState(
-    dailyQuizCurrentTopic ? dailyQuizCurrentTopic?.attemptedQuestions.length : 0
+    firstUnanswered === -1 ? 0 : firstUnanswered
   );
 
   const [selectedAnswer, setSelectedAnswer] = useState("");
@@ -73,7 +88,7 @@ const QuestionDialogBox = ({
     setOptionSelected(true);
 
     const formattedData: TQuizAnswerProps = {
-      question: questions[activeQuestion]?._id,
+      question: quizQuestions[activeQuestion]?._id,
       studentAnswer: answer,
       isCorrect: optionTag === "Correct",
       tag: "daily_quiz",
@@ -99,7 +114,7 @@ const QuestionDialogBox = ({
     setSelectedAnswer("");
     setOptionSelected(false);
 
-    if (activeQuestion !== questions.length - 1) {
+    if (activeQuestion !== quizQuestions.length - 1) {
       setActiveQuestion((prev) => prev + 1);
     }
   };
@@ -135,10 +150,7 @@ const QuestionDialogBox = ({
         queryClient.invalidateQueries({ queryKey: ["monthlyReport"] });
         queryClient.invalidateQueries({ queryKey: ["overallReport"] });
 
-        if (
-          dailyQuizCurrentTopic &&
-          dailyQuizCurrentTopic.attemptedQuestions.length === questions.length
-        ) {
+        if (quizQuestions.length > 0 && answeredCount >= quizQuestions.length) {
           dispatch(filterCompletedTopics({ topicName: topic?.name! }));
         }
         toast.success(res.message);
@@ -169,7 +181,7 @@ const QuestionDialogBox = ({
 
   return (
     <Modal setOpenDialogBox={setOpenQuestionDialogBox}>
-      {questions && questions.length > 0 && questions[activeQuestion] ? (
+      {quizQuestions.length > 0 && quizQuestions[activeQuestion] ? (
         <>
           <div className="flex items-center gap-3 bg-primary/[0.2] px-4 py-3 md:px-6">
             <div
@@ -182,18 +194,12 @@ const QuestionDialogBox = ({
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <Progress
                 value={
-                  (dailyQuizCurrentTopic
-                    ? dailyQuizCurrentTopic?.attemptedQuestions?.length /
-                      questions?.length
-                    : 0) * 100
+                  (quizQuestions.length ? answeredCount / quizQuestions.length : 0) * 100
                 }
                 className="h-2"
               />
               <p className="shrink-0 text-sm font-bold md:text-base">
-                {dailyQuizCurrentTopic
-                  ? dailyQuizCurrentTopic?.attemptedQuestions?.length
-                  : 0}
-                /{questions.length}
+                {answeredCount}/{quizQuestions.length}
               </p>
             </div>
 
@@ -220,15 +226,13 @@ const QuestionDialogBox = ({
 
               <div className="flex w-full justify-center px-2">
                 <ul className="flex max-w-full flex-wrap items-center justify-center gap-1.5 rounded-3xl border p-1.5">
-                  {questions.map((ques, index) => (
+                  {quizQuestions.map((ques, index) => (
                     <li
                       key={ques._id}
                       className={cn(
                         "relative cursor-pointer rounded-full px-2.5 py-1 text-sm font-medium",
                         activeQuestion === index && "text-white",
-                        dailyQuizCurrentTopic?.attemptedQuestions.some(
-                          (quiz) => quiz.question === ques._id
-                        ) && "pointer-events-none opacity-30"
+                        answeredIds.has(String(ques._id)) && "pointer-events-none opacity-30"
                       )}
                       onClick={() => {
                         setSelectedAnswerIndex(null);
@@ -258,14 +262,14 @@ const QuestionDialogBox = ({
                   <span>{activeQuestion + 1}. </span>
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: sanitizedHtml(questions[activeQuestion].question),
+                      __html: sanitizedHtml(quizQuestions[activeQuestion].question),
                     }}
                   />
                 </p>
 
-                {questions[activeQuestion].images.length > 0 ? (
+                {(quizQuestions[activeQuestion].images || []).length > 0 ? (
                   <div className="gap-y-2">
-                    {questions[activeQuestion].images.map((image) => (
+                    {(quizQuestions[activeQuestion].images || []).map((image) => (
                       <div key={image._id} className="relative w-full h-32">
                         <Image
                           src={image.url}
@@ -279,7 +283,7 @@ const QuestionDialogBox = ({
                 ) : null}
 
                 <ul className="flex flex-col justify-start gap-2 px-3 md:px-5">
-                  {questions[activeQuestion].options.map((option, index) => (
+                  {(quizQuestions[activeQuestion].options || []).map((option, index) => (
                     <li
                       key={option._id}
                       className={cn(
@@ -331,13 +335,12 @@ const QuestionDialogBox = ({
                 <Button
                   type="button"
                   className="h-10 rounded-full px-6 text-base font-semibold"
-                  disabled={activeQuestion === questions.length - 1}
+                  disabled={activeQuestion === quizQuestions.length - 1}
                   onClick={handleNextQuestion}
                 >
                   Next
                 </Button>
-                {dailyQuizCurrentTopic?.attemptedQuestions?.length ===
-                questions.length ? (
+                {quizQuestions.length > 0 && answeredCount >= quizQuestions.length ? (
                   <Button
                     type="button"
                     className="h-10 rounded-full px-6 text-base font-semibold"
