@@ -52,6 +52,9 @@ const AccountSubjectForm = ({
         setIsLoading(true);
         try {
           const data = await getChapters(activeSubject, userStandard);
+          if (data.error) {
+            toast.error("Error fetching chapters", { description: data.error });
+          }
           setSubjectChapters(data);
         } catch (error: any) {
           toast.error("Error fetching chapters", {

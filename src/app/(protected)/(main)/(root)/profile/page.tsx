@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Sparkles } from "lucide-react";
+import { ArrowLeft, BookOpen, Calendar, Sparkles } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ViewDnaReportButton from "@/components/study-check/ViewDnaReportButton";
 import { useAppSelector } from "@/redux/hooks";
@@ -49,6 +49,22 @@ const ProfileHub = () => {
       </section>
 
       <section className="flex flex-col gap-3">
+        <Link
+          href="/profile/upcoming-tests"
+          className="flex items-center gap-3 rounded-[20px] border border-[#EFEAF8] bg-white px-4 py-4 text-left shadow-sm"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F5F3FF] text-primary">
+            <Calendar className="h-5 w-5" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-lg font-semibold text-dark-primary">
+              Add your upcoming test
+            </span>
+            <span className="block text-sm text-secondary-text">
+              Add the test name, date, and syllabus. Edit it anytime.
+            </span>
+          </span>
+        </Link>
         <CustomizePlanner />
         <ReferAndEarn />
         <Link

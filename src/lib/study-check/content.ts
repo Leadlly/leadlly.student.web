@@ -193,14 +193,9 @@ export const BEHAVIOR_QUESTIONS: Record<
     icon: "target",
     options: [
       {
-        value: "clear_plan",
-        label: "Clear plan",
-        quote: '"I already know what I need to study."',
-      },
-      {
-        value: "rough_idea",
-        label: "Rough idea",
-        quote: '"I have a sense of what to do, but it is not fully set."',
+        value: "no_plan",
+        label: "No plan",
+        quote: '"I usually just start with whatever is in front of me."',
       },
       {
         value: "decide_as_i_go",
@@ -208,9 +203,14 @@ export const BEHAVIOR_QUESTIONS: Record<
         quote: '"I figure it out once I sit down."',
       },
       {
-        value: "no_plan",
-        label: "No plan",
-        quote: '"I usually just start with whatever is in front of me."',
+        value: "rough_idea",
+        label: "Rough idea",
+        quote: '"I have a sense of what to do, but it is not fully set."',
+      },
+      {
+        value: "clear_plan",
+        label: "Clear plan",
+        quote: '"I already know what I need to study."',
       },
     ],
   },
@@ -220,14 +220,9 @@ export const BEHAVIOR_QUESTIONS: Record<
     icon: "zap",
     options: [
       {
-        value: "almost_always",
-        label: "Almost always",
-        quote: '"I follow it almost every day."',
-      },
-      {
-        value: "most_days",
-        label: "Most days",
-        quote: '"I get most of it done."',
+        value: "rarely",
+        label: "Rarely",
+        quote: '"The plan often does not happen."',
       },
       {
         value: "some_days",
@@ -235,9 +230,14 @@ export const BEHAVIOR_QUESTIONS: Record<
         quote: '"It happens on some days, not others."',
       },
       {
-        value: "rarely",
-        label: "Rarely",
-        quote: '"The plan often does not happen."',
+        value: "most_days",
+        label: "Most days",
+        quote: '"I get most of it done."',
+      },
+      {
+        value: "almost_always",
+        label: "Almost always",
+        quote: '"I follow it almost every day."',
       },
     ],
   },
@@ -247,14 +247,9 @@ export const BEHAVIOR_QUESTIONS: Record<
     icon: "refresh-cw",
     options: [
       {
-        value: "revision_cycle",
-        label: "Revision cycle",
-        quote: '"I put it into a regular revision cycle."',
-      },
-      {
-        value: "revise_soon",
-        label: "Revise soon",
-        quote: '"I come back to it soon after."',
+        value: "rarely_revisit",
+        label: "Rarely revisit",
+        quote: '"I often don\'t come back to it."',
       },
       {
         value: "before_test",
@@ -262,9 +257,14 @@ export const BEHAVIOR_QUESTIONS: Record<
         quote: '"I wait and revisit it before a test."',
       },
       {
-        value: "rarely_revisit",
-        label: "Rarely revisit",
-        quote: '"I often don\'t come back to it."',
+        value: "revise_soon",
+        label: "Revise soon",
+        quote: '"I come back to it soon after."',
+      },
+      {
+        value: "revision_cycle",
+        label: "Revision cycle",
+        quote: '"I put it into a regular revision cycle."',
       },
     ],
   },
@@ -274,14 +274,9 @@ export const BEHAVIOR_QUESTIONS: Record<
     icon: "refresh-cw",
     options: [
       {
-        value: "fixed_cycle",
-        label: "Revision cycle",
-        quote: '"I put it into a regular revision cycle."',
-      },
-      {
-        value: "when_time",
-        label: "Revise soon",
-        quote: '"I come back to it soon after."',
+        value: "no_system",
+        label: "Rarely revisit",
+        quote: '"I often don\'t come back to it."',
       },
       {
         value: "before_tests",
@@ -289,9 +284,14 @@ export const BEHAVIOR_QUESTIONS: Record<
         quote: '"I wait and revisit it before a test."',
       },
       {
-        value: "no_system",
-        label: "Rarely revisit",
-        quote: '"I often don\'t come back to it."',
+        value: "when_time",
+        label: "Revise soon",
+        quote: '"I come back to it soon after."',
+      },
+      {
+        value: "fixed_cycle",
+        label: "Revision cycle",
+        quote: '"I put it into a regular revision cycle."',
       },
     ],
   },
@@ -301,9 +301,14 @@ export const BEHAVIOR_QUESTIONS: Record<
     icon: "aperture",
     options: [
       {
-        value: "fix_it",
-        label: "Fix it",
-        quote: '"I go back and correct it right away."',
+        value: "move_on",
+        label: "Move on",
+        quote: '"I move on and don\'t sit with it."',
+      },
+      {
+        value: "mark_it",
+        label: "Mark it",
+        quote: '"I mark it so I can come back later."',
       },
       {
         value: "understand",
@@ -312,14 +317,9 @@ export const BEHAVIOR_QUESTIONS: Record<
         quote: '"I check the solution and understand the concept."',
       },
       {
-        value: "mark_it",
-        label: "Mark it",
-        quote: '"I mark it so I can come back later."',
-      },
-      {
-        value: "move_on",
-        label: "Move on",
-        quote: '"I move on and don\'t sit with it."',
+        value: "fix_it",
+        label: "Fix it",
+        quote: '"I go back and correct it right away."',
       },
     ],
   },
@@ -329,14 +329,9 @@ export const BEHAVIOR_QUESTIONS: Record<
     icon: "layers",
     options: [
       {
-        value: "adjust",
-        label: "Adjust",
-        quote: '"I adjust today\'s plan and keep going."',
-      },
-      {
-        value: "catch_up",
-        label: "Catch up",
-        quote: '"I try to catch up the missed part first."',
+        value: "piles_up",
+        label: "Piles up",
+        quote: '"It usually piles up."',
       },
       {
         value: "push_forward",
@@ -345,9 +340,14 @@ export const BEHAVIOR_QUESTIONS: Record<
         quote: '"I keep carrying it into the next day."',
       },
       {
-        value: "piles_up",
-        label: "Piles up",
-        quote: '"It usually piles up."',
+        value: "catch_up",
+        label: "Catch up",
+        quote: '"I try to catch up the missed part first."',
+      },
+      {
+        value: "adjust",
+        label: "Adjust",
+        quote: '"I adjust today\'s plan and keep going."',
       },
     ],
   },
@@ -508,7 +508,7 @@ export const buildStepSequence = (answers: StudyCheckAnswers): StepId[] => {
     steps.push("testsList");
   }
 
-  steps.push("problems");
+  steps.push("problems", "profile");
   return steps;
 };
 

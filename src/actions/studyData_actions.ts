@@ -23,21 +23,31 @@ type StudyDataProps = {
   standard: number;
 };
 
+const actionErrorMessage = (error: unknown, fallback: string) => {
+  if (error && typeof error === "object" && "response" in error) {
+    const data = (error as { response?: { data?: { message?: string } } }).response
+      ?.data;
+    if (typeof data?.message === "string" && data.message) return data.message;
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+};
+
 export const saveStudyData = async (data: StudyDataProps) => {
   try {
     const res = await apiClient.post(`/api/user/progress/save`, data);
+    const message =
+      typeof res.data?.message === "string" && res.data.message
+        ? res.data.message
+        : "Saved";
 
-    const responseData = await res.data;
-
-    revalidateTag("unrevised_topics");
-
-    return responseData;
+    return { success: true as const, message };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Error saving study data: ${error.message}`);
-    } else {
-      throw new Error("An unknown error occurred saving study data!");
-    }
+    console.error("Error saving study data:", error);
+    return {
+      success: false as const,
+      message: actionErrorMessage(error, "Could not save this topic."),
+    };
   }
 };
 
@@ -52,14 +62,20 @@ export const saveTaggedChapters = async (data: {
   }>;
 }) => {
   try {
-    const res = await apiClient.post(`/api/user/unrevisedtopics/save`, data);
-    revalidateTag("unrevised_topics");
-    return res.data;
+    await apiClient.post(`/api/user/unrevisedtopics/save`, data);
+    return { success: true as const, message: "Saved" };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Error saving chapters: ${error.message}`);
-    }
-    throw new Error("An unknown error occurred while saving chapters!");
+    console.error("Error saving chapters:", error);
+    const responseMessage =
+      error && typeof error === "object" && "response" in error
+        ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
+        : undefined;
+    return {
+      success: false as const,
+      message:
+        responseMessage ||
+        (error instanceof Error ? error.message : "Could not save your syllabus."),
+    };
   }
 };
 
@@ -91,10 +107,7 @@ export const setUnrevisedTopics = async (data: {
 export const getUnrevisedTopics = async () => {
   try {
     const res = await apiClient.get(`/api/user/topics/get`, {
-      cache: "force-cache",
-      next: {
-        tags: ["unrevised_topics"],
-      },
+      cache: "no-store",
     });
 
     const responseData = await res.data;

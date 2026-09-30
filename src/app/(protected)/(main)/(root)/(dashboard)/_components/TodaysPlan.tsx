@@ -1,13 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Check, ChevronRightIcon } from "lucide-react";
-import { useAppSelector } from "@/redux/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { TQuizQuestionProps } from "@/helpers/types";
 import { DailyPlan, DailyPlanItem } from "@/lib/planner/types";
+import { saveDailyQuiz } from "@/actions/daily_quiz_actions";
+import {
+  markTopicQuizSynced,
+  pendingQuizSync,
+  questionIdOf,
+  readQuizProgress,
+  readTopicQuiz,
+  saveTopicQuiz,
+  StoredQuizTopic,
+} from "@/lib/planner/dailyQuizProgress";
 import QuestionDialogBox from "./QuestionDialogBox";
 import Loader from "@/components/shared/Loader";
 
@@ -38,15 +48,26 @@ const asQuestions = (raw: unknown[] | undefined): TQuizQuestionProps[] =>
     const question = entry as TQuizQuestionProps;
     return {
       ...question,
-      _id: String(question._id),
+      _id: questionIdOf(question._id),
       images: question.images || [],
-      options: question.options || [],
+      options: (question.options || []).map((option) => ({
+        ...option,
+        _id: questionIdOf(option._id),
+      })),
       topics: question.topics || [],
     };
   });
 
+const serverAnsweredIds = (plan: DailyPlan, topicName: string) =>
+  (
+    plan.answeredQuestions?.[topicName] ||
+    plan.answeredQuestions?.[topicName.toLowerCase()] ||
+    []
+  ).map(String);
+
 const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
-  const { dailyQuizzes } = useAppSelector((state) => state.dailyQuizzes);
+  const queryClient = useQueryClient();
+  const [storedTopics, setStoredTopics] = useState<StoredQuizTopic[]>([]);
   const [active, setActive] = useState<{
     name: string;
     id: string;
@@ -54,6 +75,33 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
     answeredIds: string[];
   } | null>(null);
   const [emptyTopics, setEmptyTopics] = useState<string[]>([]);
+
+  const refreshStored = () => setStoredTopics(readQuizProgress());
+
+  useEffect(() => {
+    refreshStored();
+    const pending = pendingQuizSync();
+    if (!pending.length) return;
+    let cancelled = false;
+    (async () => {
+      for (const topic of pending) {
+        const result = await saveDailyQuiz({
+          data: { name: topic.topicName, _id: topic.topicId, isSubtopic: false },
+          questions: topic.answers,
+          questionCount: topic.questions.length || topic.answers.length,
+        });
+        if (!result.success || cancelled) continue;
+        markTopicQuizSynced(topic.topicId, topic.topicName, topic.completed);
+      }
+      if (!cancelled) {
+        refreshStored();
+        await queryClient.invalidateQueries({ queryKey: ["plannerData"] });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [queryClient]);
 
   if (!plan) {
     return (
@@ -66,24 +114,48 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
     );
   }
 
-  const questionsFor = (item: DailyPlanItem) =>
-    asQuestions(plan?.questions?.[item.topicName] || plan?.questions?.[item.topicName.toLowerCase()]);
+  const storedFor = (item: DailyPlanItem) =>
+    storedTopics.find(
+      (topic) =>
+        topic.topicId === item.topicId ||
+        topic.topicName.trim().toLowerCase() === item.topicName.trim().toLowerCase()
+    ) || readTopicQuiz(item.topicId, item.topicName);
+
+  const questionsFor = (item: DailyPlanItem) => {
+    const stored = storedFor(item);
+    if (stored?.questions?.length && !stored.completed) return stored.questions;
+    return asQuestions(
+      plan?.questions?.[item.topicName] || plan?.questions?.[item.topicName.toLowerCase()]
+    );
+  };
 
   const openQuiz = (item: DailyPlanItem) => {
+    if (item.status === "COMPLETED" || storedFor(item)?.completed) return;
     const questions = questionsFor(item);
     if (!questions.length) {
       setEmptyTopics((current) => (current.includes(item.id) ? current : [...current, item.id]));
       return;
     }
+    const existing = storedFor(item);
+    if (!existing?.questions?.length) {
+      saveTopicQuiz({
+        topicId: item.topicId,
+        topicName: item.topicName,
+        questions,
+        answers: existing?.answers || [],
+        completed: false,
+        synced: !existing?.answers?.length,
+      });
+      refreshStored();
+    }
+    const localAnswered = (existing?.answers || []).map((answer) => String(answer.question));
     setActive({
       name: item.topicName,
       id: item.topicId,
       questions,
-      answeredIds: (
-        plan.answeredQuestions?.[item.topicName] ||
-        plan.answeredQuestions?.[item.topicName.toLowerCase()] ||
-        []
-      ).map(String),
+      answeredIds: Array.from(
+        new Set([...serverAnsweredIds(plan, item.topicName), ...localAnswered])
+      ),
     });
   };
 
@@ -132,24 +204,18 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                 <ul className="flex flex-col gap-2">
                   {rows.map((item, index) => {
                     const questions = questionsFor(item);
-                    const progress = dailyQuizzes.find((quiz) => quiz.topicName === item.topicName);
-                    const serverAnswered = new Set(
-                      (
-                        plan.answeredQuestions?.[item.topicName] ||
-                        plan.answeredQuestions?.[item.topicName.toLowerCase()] ||
-                        []
-                      ).map(String)
-                    );
+                    const stored = storedFor(item);
+                    const serverAnswered = new Set(serverAnsweredIds(plan, item.topicName));
                     const localAnswered = new Set(
-                      (progress?.attemptedQuestions || []).map((answer) => String(answer.question))
+                      (stored?.answers || []).map((answer) => String(answer.question))
                     );
-                    const answered = questions.filter(
-                      (question) =>
-                        serverAnswered.has(String(question._id)) ||
-                        localAnswered.has(String(question._id))
-                    ).length;
+                    const answered = questions.filter((question) => {
+                      const id = questionIdOf(question._id);
+                      return serverAnswered.has(id) || localAnswered.has(id);
+                    }).length;
                     const finished =
                       item.status === "COMPLETED" ||
+                      Boolean(stored?.completed) ||
                       (questions.length > 0 && answered >= questions.length);
                     const missing = emptyTopics.includes(item.id);
                     const showChapter =
@@ -173,7 +239,8 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                           <div className="flex w-full items-start gap-x-2 py-1">
                             {answered > 0 && !finished ? (
                               <span className="text-xs font-medium text-[#B87A07]">
-                                <span className="text-lg font-semibold">{answered}</span>/{questions.length}
+                                <span className="text-lg font-semibold">{answered}</span>/
+                                {questions.length}
                               </span>
                             ) : (
                               <span
@@ -186,7 +253,9 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                               </span>
                             )}
                             <div className="flex-1 capitalize">
-                              <p className="text-sm font-medium leading-tight md:text-base">{item.topicName}</p>
+                              <p className="text-sm font-medium leading-tight md:text-base">
+                                {item.topicName}
+                              </p>
                               {answered > 0 && !finished ? (
                                 <Progress
                                   value={(answered / questions.length) * 100}
@@ -236,7 +305,10 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
           <QuestionDialogBox
             openQuestionDialogBox
             setOpenQuestionDialogBox={(open) => {
-              if (!open) setActive(null);
+              if (!open) {
+                refreshStored();
+                setActive(null);
+              }
             }}
             questions={active.questions}
             answeredQuestionIds={active.answeredIds}

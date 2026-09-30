@@ -31,7 +31,6 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { ISubject, Item } from "@/helpers/types";
 import { saveStudyData } from "@/actions/studyData_actions";
-import { updatePlanner } from "@/actions/planner_actions";
 import { NestedMultiSelect } from "@/components/ui/nested-multi-select";
 import { getChapters, getTopicsWithSubtopic } from "@/actions/question_actions";
 import { useQueryClient } from "@tanstack/react-query";
@@ -70,6 +69,9 @@ const ContinuousRevisionForm = ({
         setIsLoading(true);
         try {
           const data = await getChapters(activeSubject, userStandard);
+          if (data?.error) {
+            toast.error("Error fetching chapters", { description: data.error });
+          }
           const chapters = (data?.chapters ?? []).filter((chapter: { subjectName?: string }) => {
             if (!chapter.subjectName) return true;
             return chapter.subjectName.toLowerCase() === activeSubject.toLowerCase();
@@ -97,6 +99,9 @@ const ContinuousRevisionForm = ({
             userStandard,
             selectedChapter._id
           );
+          if (data?.error) {
+            toast.error("Error fetching topics", { description: data.error });
+          }
           setTopics(data);
         } catch (error: any) {
           toast.error("Error fetching topics", {
@@ -124,7 +129,9 @@ const ContinuousRevisionForm = ({
       topics: data.topicNames.map((topic) => ({
         _id: topic._id,
         name: topic.name,
-        subtopics: topic.subItems,
+        subtopics: (topic.subItems || [])
+          .filter((subtopic) => subtopic?._id && subtopic?.name)
+          .map((subtopic) => ({ _id: subtopic._id, name: subtopic.name })),
       })),
       chapter: {
         _id: data?.chapterName?._id,
@@ -136,9 +143,12 @@ const ContinuousRevisionForm = ({
 
     try {
       const responseData = await saveStudyData(formattedData);
+      if (!responseData.success) {
+        toast.error(responseData.message);
+        return;
+      }
 
-      await updatePlanner();
-      queryClient.invalidateQueries({ queryKey: ["plannerData"] });
+      await queryClient.invalidateQueries({ queryKey: ["plannerData"] });
       toast.success(responseData.message);
 
       form.reset({

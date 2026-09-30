@@ -196,6 +196,14 @@ export interface IAcademic {
   coachingAddress?: string | null;
   schoolOrCollegeName?: string | null;
   schoolOrCollegeAddress?: string | null;
+  tests?: Array<{
+    id: string;
+    name: string;
+    date: string;
+    type: string;
+    syllabus: string;
+    chapters?: unknown[];
+  }>;
 }
 
 export type UserDataProps = {

@@ -53,17 +53,30 @@ export const getChapterTopics = async (
 };
 
 //====== Fetching Chapters with React Query replacement ======//
+const plain = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
+
+const fetchError = (error: unknown, fallback: string) => {
+  if (error && typeof error === "object" && "response" in error) {
+    const data = (error as { response?: { data?: { message?: string } } }).response
+      ?.data;
+    if (typeof data?.message === "string" && data.message) return data.message;
+  }
+  if (error instanceof Error && error.message) return error.message;
+  return fallback;
+};
+
 export const getChapters = async (
   activeSubject: string,
   userStandard: number
-) => {
+): Promise<{ chapters: any[]; error?: string }> => {
   try {
     const res = await apiClient.get<{ chapters: any[] }>(
       `/api/questionbank/chapter?subjectName=${activeSubject}&standard=${userStandard}`
     );
-    return res.data;
-  } catch (error: any) {
-    throw new Error(`${error.message}`);
+    return plain(res.data ?? { chapters: [] });
+  } catch (error: unknown) {
+    console.error("Error fetching chapters:", error);
+    return { chapters: [], error: fetchError(error, "Could not load chapters.") };
   }
 };
 
@@ -72,13 +85,14 @@ export const getTopicsWithSubtopic = async (
   activeSubject: string,
   userStandard: number,
   selectedChapter: string
-) => {
+): Promise<{ topics: any[]; error?: string }> => {
   try {
     const res = await apiClient.get<{ topics: any[] }>(
       `/api/questionbank/topicwithsubtopic?subjectName=${activeSubject}&chapterId=${selectedChapter}&standard=${userStandard}`
     );
-    return res.data;
-  } catch (error: any) {
-    throw new Error(`${error.message}`);
+    return plain(res.data ?? { topics: [] });
+  } catch (error: unknown) {
+    console.error("Error fetching topics:", error);
+    return { topics: [], error: fetchError(error, "Could not load topics.") };
   }
 };

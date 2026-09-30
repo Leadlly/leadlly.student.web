@@ -519,30 +519,42 @@ const Strengths = ({ profile }: { profile: StudyDnaProfile }) => (
     <Eyebrow color="#34D399">What&apos;s working</Eyebrow>
     <h2 className="mt-1 text-[28px] font-bold text-dark-primary">Your three strengths</h2>
     <div className="mt-5 space-y-3">
-      {profile.strengths.map((item) => (
-        <div key={item.title} className="flex items-start gap-3 rounded-[22px] bg-[#D1FAE5] px-4 py-4">
-          <Activity className="mt-0.5 h-5 w-5 text-[#34D399]" />
-          <div>
-            <p className="font-bold text-dark-primary">{item.title}</p>
-            <p className="text-[13px] text-secondary-text">{item.body}</p>
+      {profile.strengths.length ? (
+        profile.strengths.map((item) => (
+          <div key={item.title} className="flex items-start gap-3 rounded-[22px] bg-[#D1FAE5] px-4 py-4">
+            <Activity className="mt-0.5 h-5 w-5 text-[#34D399]" />
+            <div>
+              <p className="font-bold text-dark-primary">{item.title}</p>
+              <p className="text-[13px] text-secondary-text">{item.body}</p>
+            </div>
           </div>
+        ))
+      ) : (
+        <div className="rounded-[22px] bg-[#EDE9FE] px-4 py-4 text-sm text-secondary-text">
+          No strong signals yet. That&apos;s from your current tags and habits, not a placeholder score.
         </div>
-      ))}
+      )}
     </div>
     <div className="mt-6">
       <Eyebrow color={PASTEL.rose}>The honest part</Eyebrow>
       <h2 className="mt-1 text-[28px] font-bold text-dark-primary">Where you&apos;re leaking</h2>
     </div>
     <div className="mt-4 space-y-3">
-      {profile.leaks.map((item) => (
-        <div key={item.index} className="flex items-start gap-3 rounded-[22px] bg-[#FFE4E6] px-4 py-4">
-          <span className="font-bold text-[#FDA4AF]">{item.index}</span>
-          <div>
-            <p className="font-bold text-dark-primary">{item.title}</p>
-            <p className="text-[13px] text-secondary-text">{item.body}</p>
+      {profile.leaks.length ? (
+        profile.leaks.map((item) => (
+          <div key={item.index} className="flex items-start gap-3 rounded-[22px] bg-[#FFE4E6] px-4 py-4">
+            <span className="font-bold text-[#FDA4AF]">{item.index}</span>
+            <div>
+              <p className="font-bold text-dark-primary">{item.title}</p>
+              <p className="text-[13px] text-secondary-text">{item.body}</p>
+            </div>
           </div>
+        ))
+      ) : (
+        <div className="rounded-[22px] bg-[#EDE9FE] px-4 py-4 text-sm text-secondary-text">
+          No leak from your current tags or habit answers.
         </div>
-      ))}
+      )}
     </div>
   </div>
 );
@@ -552,18 +564,24 @@ const Tests = ({ profile }: { profile: StudyDnaProfile }) => (
     <Eyebrow>What&apos;s coming up</Eyebrow>
     <h2 className="mt-1 text-[28px] font-bold text-dark-primary">Your upcoming tests</h2>
     <div className="mt-5 space-y-3">
-      {profile.tests.map((test) => (
-        <div key={`${test.day}-${test.name}`} className="flex gap-4 rounded-[22px] bg-[#F7F5FB] px-4 py-4">
-          <div className="w-12 text-center">
-            <p className="text-[26px] font-bold leading-none text-[#A78BFA]">{test.day}</p>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-secondary-text">{test.month}</p>
+      {profile.tests.length ? (
+        profile.tests.map((test) => (
+          <div key={`${test.day}-${test.name}`} className="flex gap-4 rounded-[22px] bg-[#F7F5FB] px-4 py-4">
+            <div className="w-12 text-center">
+              <p className="text-[26px] font-bold leading-none text-[#A78BFA]">{test.day}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-secondary-text">{test.month}</p>
+            </div>
+            <div>
+              <p className="font-bold text-dark-primary">{test.name}</p>
+              {test.syllabus ? <p className="text-[13px] text-secondary-text">{test.syllabus}</p> : null}
+            </div>
           </div>
-          <div>
-            <p className="font-bold text-dark-primary">{test.name}</p>
-            {test.syllabus ? <p className="text-[13px] text-secondary-text">{test.syllabus}</p> : null}
-          </div>
+        ))
+      ) : (
+        <div className="rounded-[22px] bg-[#EDE9FE] px-4 py-4 text-sm text-secondary-text">
+          No upcoming tests added. You can add them later. We&apos;ll weave them into your plan.
         </div>
-      ))}
+      )}
     </div>
     <p className="mt-2 text-[13px] text-secondary-text">
       Leadlly prepares you for these without letting your regular revision fall behind.
@@ -575,7 +593,7 @@ const Tests = ({ profile }: { profile: StudyDnaProfile }) => (
       </h2>
     </div>
     <div className="mt-4 space-y-2">
-      {profile.weekFocus.map((item) => (
+      {profile.weekFocus.length ? profile.weekFocus.map((item) => (
         <div key={item.index} className="rounded-[18px] bg-[#EDE9FE] px-4 py-3">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-[#A78BFA]">{item.index}</span>
@@ -593,14 +611,16 @@ const Tests = ({ profile }: { profile: StudyDnaProfile }) => (
             </div>
           ) : null}
         </div>
-      ))}
+      )) : (
+        <div className="rounded-[18px] bg-[#EDE9FE] px-4 py-3 text-sm text-secondary-text">
+          Tag chapters or add a test to get a real weekly focus list.
+        </div>
+      )}
     </div>
-    {profile.weekGoal ? (
-      <div className="mt-3 rounded-[22px] bg-[#D1FAE5] px-5 py-4">
-        <Eyebrow color="#34D399">Your goal</Eyebrow>
-        <p className="mt-2 font-bold text-dark-primary">{profile.weekGoal}</p>
-      </div>
-    ) : null}
+    <div className="mt-3 rounded-[22px] bg-[#D1FAE5] px-5 py-4">
+      <Eyebrow color="#34D399">Your goal</Eyebrow>
+      <p className="mt-2 font-bold text-dark-primary">{profile.weekGoal}</p>
+    </div>
   </div>
 );
 

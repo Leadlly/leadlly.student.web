@@ -2,12 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { createPlanner } from "@/actions/planner_actions";
 import {
-  completeStudyCheck,
   getStudyCheck,
   saveStudyCheck,
 } from "@/actions/study_check_actions";
@@ -39,6 +36,7 @@ import {
   HasTestsStep,
   PhoneStep,
   ProblemsStep,
+  ProfileStep,
   SelfStudyStep,
   SleepStep,
   StageStep,
@@ -74,7 +72,6 @@ const OpeningStep = ({ onStart }: { onStart: () => void }) => (
 );
 
 const StudyCheckFlow = () => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
   const [answers, setAnswers] = useState<StudyCheckAnswers>(defaultStudyCheckAnswers);
@@ -104,6 +101,11 @@ const StudyCheckFlow = () => {
         const existingPhone = user?.phone?.personal
           ? String(user.phone.personal)
           : null;
+        const savedGender = String(user?.about?.gender || "").toLowerCase();
+        const hasIdentity =
+          Boolean(existingPhone) &&
+          Boolean(user?.firstname?.trim()) &&
+          ["male", "female", "other"].includes(savedGender);
         if (saved?.studyCheck?.answers) {
           const restored = saved.studyCheck.answers;
           setAnswers({
@@ -115,7 +117,7 @@ const StudyCheckFlow = () => {
               ...restored.draftTest,
               syllabusPicks: restored.draftTest?.syllabusPicks ?? [],
             },
-            phone: existingPhone ?? restored.phone,
+            phone: existingPhone,
           });
         } else if (existingPhone) {
           setAnswers({ ...defaultStudyCheckAnswers(), phone: existingPhone });
@@ -124,10 +126,8 @@ const StudyCheckFlow = () => {
           const restoredStep =
             saved.studyCheck.stepId === ("coachingHours" as StepId)
               ? "coachingWhen"
-              : saved.studyCheck.stepId === "profile"
-                ? "problems"
-                : saved.studyCheck.stepId;
-          setStepId(existingPhone ? restoredStep : "phone");
+              : saved.studyCheck.stepId;
+          setStepId(!hasIdentity ? "phone" : restoredStep);
         }
       } catch {
         // A new student simply starts at the opening screen.
@@ -207,6 +207,10 @@ const StudyCheckFlow = () => {
             ...(user.academic || {}),
             ...(saveResponse.user?.academic || {}),
             ...(trialUser?.academic || {}),
+            subjects:
+              (trialUser?.academic?.subjects?.length ?? 0) > 0
+                ? trialUser?.academic?.subjects
+                : saveResponse.user?.academic?.subjects || user.academic?.subjects,
           },
         })
       );
@@ -223,36 +227,6 @@ const StudyCheckFlow = () => {
     }
   }, [dispatch, user]);
 
-  const finishingRef = useRef(false);
-  const finishFlow = useCallback(async () => {
-    if (finishingRef.current) return;
-    finishingRef.current = true;
-    setBusy(true);
-    try {
-      await completeStudyCheck({
-        stepId: "problems",
-        answers: answersRef.current,
-      });
-      if (!user?.planner) {
-        await createPlanner();
-      }
-      if (user) {
-        dispatch(userData({ ...user, onboard: true, planner: true }));
-      }
-      router.replace("/?dna=1");
-      router.refresh();
-    } catch (error) {
-      finishingRef.current = false;
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Could not finish your Study Check. Please try again."
-      );
-    } finally {
-      setBusy(false);
-    }
-  }, [dispatch, router, user]);
-
   const goTo = useCallback(
     async (direction: 1 | -1) => {
       const currentAnswers = answersRef.current;
@@ -263,10 +237,6 @@ const StudyCheckFlow = () => {
         return;
       }
       if (direction === 1 && !canAdvance(stepId, currentAnswers)) return;
-      if (direction === 1 && currentIndex === currentSequence.length - 1) {
-        await finishFlow();
-        return;
-      }
       const nextIndex = Math.min(
         currentSequence.length - 1,
         Math.max(0, currentIndex + direction)
@@ -287,7 +257,7 @@ const StudyCheckFlow = () => {
       setStepId(nextStep);
       persist(currentAnswers, nextStep);
     },
-    [ensureAcademic, finishFlow, persist, stepId]
+    [ensureAcademic, persist, stepId]
   );
 
   const next = useCallback(() => {
@@ -362,6 +332,8 @@ const StudyCheckFlow = () => {
         return <TestsListStep />;
       case "problems":
         return <ProblemsStep />;
+      case "profile":
+        return <ProfileStep />;
       default:
         return <ScreenTitle>Study Check</ScreenTitle>;
     }
@@ -372,7 +344,7 @@ const StudyCheckFlow = () => {
       value={{ answers, patch, patchAndNext, next, back, stepId, busy, setBusy }}
     >
       <div className="relative h-full bg-white">
-        {stepId === "opening" ? (
+        {stepId === "opening" || stepId === "profile" ? (
           body
         ) : (
           <div className="flex h-full flex-col">

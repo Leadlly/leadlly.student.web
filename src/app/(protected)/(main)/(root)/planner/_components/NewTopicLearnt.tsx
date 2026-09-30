@@ -37,8 +37,7 @@ import { ISubject, Item } from "@/helpers/types";
 
 import { toast } from "sonner";
 import { saveStudyData } from "@/actions/studyData_actions";
-import { updatePlanner } from "@/actions/planner_actions";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { NewTopicLearntSchema } from "@/schemas/newTopicLearntSchema";
 import {
   getChapters,
@@ -63,7 +62,7 @@ const NewTopicLearnt = ({
   const [topics, setTopics] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof NewTopicLearntSchema>>({
     resolver: zodResolver(NewTopicLearntSchema),
@@ -77,6 +76,9 @@ const NewTopicLearnt = ({
         setIsLoading(true);
         try {
           const data = await getChapters(activeSubject, userStandard);
+          if (data?.error) {
+            toast.error("Error fetching chapters", { description: data.error });
+          }
           setActiveTabChapters(data);
         } catch (error: any) {
           toast.error("Error fetching chapters", {
@@ -96,6 +98,9 @@ const NewTopicLearnt = ({
       if (activeSubject && userStandard && selectedChapter?._id) {
         try {
           const data = await getTopicsWithSubtopic(activeSubject, userStandard, selectedChapter._id);
+          if (data?.error) {
+            toast.error("Error fetching topics", { description: data.error });
+          }
           setTopics(data);
         } catch (error: any) {
           toast.error("Error fetching topics", {
@@ -123,7 +128,9 @@ const NewTopicLearnt = ({
       topics: data.topicNames.map((topic) => ({
         _id: topic._id,
         name: topic.name,
-        subtopics: topic.subItems,
+        subtopics: (topic.subItems || [])
+          .filter((subtopic) => subtopic?._id && subtopic?.name)
+          .map((subtopic) => ({ _id: subtopic._id, name: subtopic.name })),
       })),
       chapter: {
         _id: data?.chapterName?._id,
@@ -135,13 +142,15 @@ const NewTopicLearnt = ({
 
     try {
       const responseData = await saveStudyData(formattedData);
+      if (!responseData.success) {
+        toast.error(responseData.message);
+        return;
+      }
 
-      await updatePlanner();
+      await queryClient.invalidateQueries({ queryKey: ["plannerData"] });
       toast.success(responseData.message);
 
       form.reset();
-
-      router.refresh();
     } catch (error: any) {
       toast.error(error?.message);
     } finally {

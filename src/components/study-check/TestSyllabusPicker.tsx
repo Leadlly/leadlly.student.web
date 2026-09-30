@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Check, Loader2, X } from "lucide-react";
+import { toast } from "sonner";
 import { getChapters } from "@/actions/question_actions";
 import { capitalizeSubject } from "@/lib/study-check/content";
 import { TestSyllabusPick } from "@/lib/study-check/types";
@@ -85,6 +86,9 @@ const TestSyllabusPicker = ({
     getChapters(activeSubject, standard)
       .then((data) => {
         if (cancelled) return;
+        if (data.error) {
+          toast.error("Error fetching chapters", { description: data.error });
+        }
         setChapters(
           (data?.chapters ?? []).map((chapter: ChapterRow) => ({
             _id: String(chapter._id),
