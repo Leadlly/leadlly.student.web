@@ -694,6 +694,7 @@ export interface Plan {
   exam: string[];
   discountPercentage: number;
   initialPrice: number;
+  label?: string;
 }
 
 export interface ExistingPlan {

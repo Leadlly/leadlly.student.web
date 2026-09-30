@@ -19,6 +19,7 @@ import { Slider } from "@/components/ui/slider";
 import { revisionPreferenceTabs } from "@/helpers/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
+import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, CalendarDaysIcon, Loader2Icon } from "lucide-react";
 import React, { useState } from "react";
@@ -44,6 +45,7 @@ const ControlPanelFormSchema = z.object({
 
 const CustomizePlanner = () => {
   const [isPending, setIsPending] = useState(false);
+  const queryClient = useQueryClient();
 
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
@@ -67,8 +69,8 @@ const CustomizePlanner = () => {
         user && user.preferences.dailyQuestions
           ? user.preferences.dailyQuestions
           : 3,
-      backRevisionTopics: fitRevision(user?.preferences?.backRevisionTopics, 3),
-      accuracyRevisionTopics: fitRevision(user?.preferences?.accuracyRevisionTopics, 2),
+      backRevisionTopics: fitRevision(user?.preferences?.backRevisionTopics, 2),
+      accuracyRevisionTopics: fitRevision(user?.preferences?.accuracyRevisionTopics, 1),
       includeSunday: user?.preferences?.includeSunday !== false,
     },
   });
@@ -87,6 +89,7 @@ const CustomizePlanner = () => {
       const res = await studentPersonalInfo(data);
 
       dispatch(userData({ ...user, ...res.user }));
+      await queryClient.invalidateQueries({ queryKey: ["plannerData"] });
       toast.success("Preference updated successfully.");
     } catch (error) {
       toast.error("Preference update failed.");

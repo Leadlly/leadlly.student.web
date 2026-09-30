@@ -34,12 +34,14 @@ const QuestionDialogBox = ({
   questions,
   topic,
   onPlannerSubmit,
+  answeredQuestionIds = [],
 }: {
   openQuestionDialogBox: boolean;
   setOpenQuestionDialogBox: (openQuestionDialogBox: boolean) => void;
   questions: TQuizQuestionProps[];
   topic: { name: string; _id: string; isSubtopic: boolean } | null;
   onPlannerSubmit?: (answers: TQuizAnswerProps[]) => Promise<void>;
+  answeredQuestionIds?: string[];
 }) => {
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
@@ -47,11 +49,29 @@ const QuestionDialogBox = ({
   const quizQuestions =
     stored?.questions?.length && !stored.completed ? stored.questions : questions;
 
-  const answersRef = useRef<TQuizAnswerProps[]>(stored?.answers || []);
-  const [answers, setAnswers] = useState<TQuizAnswerProps[]>(stored?.answers || []);
+  const initialAnswers = (() => {
+    const fromStore = stored?.answers || [];
+    const known = new Set(fromStore.map((answer) => String(answer.question)));
+    const placeholders = answeredQuestionIds
+      .map(String)
+      .filter((id) => id && !known.has(id))
+      .map(
+        (id): TQuizAnswerProps => ({
+          question: id,
+          studentAnswer: "",
+          isCorrect: false,
+          tag: "daily_quiz",
+        })
+      );
+    return [...fromStore, ...placeholders];
+  })();
+
+  const answersRef = useRef<TQuizAnswerProps[]>(initialAnswers);
+  const [answers, setAnswers] = useState<TQuizAnswerProps[]>(initialAnswers);
   const [activeQuestion, setActiveQuestion] = useState(() => {
+    const answeredIds = new Set(initialAnswers.map((answer) => String(answer.question)));
     const firstOpen = quizQuestions.findIndex(
-      (question) => !answersRef.current.some((answer) => answer.question === questionIdOf(question._id))
+      (question) => !answeredIds.has(questionIdOf(question._id))
     );
     return firstOpen === -1 ? Math.max(quizQuestions.length - 1, 0) : firstOpen;
   });
@@ -67,7 +87,12 @@ const QuestionDialogBox = ({
   const locked = Boolean(savedAnswer);
 
   useEffect(() => {
-    if (!savedAnswer) return;
+    if (!savedAnswer) {
+      setSelectedAnswer("");
+      setSelectedAnswerIndex(null);
+      setOptionSelected(false);
+      return;
+    }
     const index = quizQuestions[activeQuestion]?.options.findIndex(
       (option) => option.name === savedAnswer.studentAnswer
     );
@@ -126,8 +151,11 @@ const QuestionDialogBox = ({
   const persist = async () => {
     if (persistingRef.current || startedSaveRef.current || !topic) return;
     startedSaveRef.current = true;
-    const currentAnswers = answersRef.current;
-    if (!currentAnswers.length) return;
+    const currentAnswers = answersRef.current.filter((answer) => answer.studentAnswer);
+    if (!currentAnswers.length) {
+      startedSaveRef.current = false;
+      return;
+    }
     persistingRef.current = true;
     setIsSubmitting(true);
     const completed = currentAnswers.length >= quizQuestions.length;
@@ -166,6 +194,7 @@ const QuestionDialogBox = ({
     } finally {
       persistingRef.current = false;
       setIsSubmitting(false);
+      startedSaveRef.current = false;
     }
   };
 
@@ -176,6 +205,9 @@ const QuestionDialogBox = ({
 
   const isLastQuestion = activeQuestion === quizQuestions.length - 1;
   const currentAnswered = answers.some((answer) => answer.question === activeId);
+  const answeredCount = quizQuestions.filter((question) =>
+    answers.some((answer) => answer.question === questionIdOf(question._id))
+  ).length;
 
   return (
     <Modal setOpenDialogBox={setOpenQuestionDialogBox} beforeClose={persist}>
@@ -191,11 +223,11 @@ const QuestionDialogBox = ({
 
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <Progress
-                value={(answers.length / quizQuestions.length) * 100}
+                value={(answeredCount / quizQuestions.length) * 100}
                 className="h-2"
               />
               <p className="shrink-0 text-sm font-bold md:text-base">
-                {answers.length}/{quizQuestions.length}
+                {answeredCount}/{quizQuestions.length}
               </p>
             </div>
           </div>
@@ -255,10 +287,13 @@ const QuestionDialogBox = ({
                   />
                 </p>
 
-                {quizQuestions[activeQuestion].images.length > 0 ? (
+                {(quizQuestions[activeQuestion].images || []).length > 0 ? (
                   <div className="gap-y-2">
-                    {quizQuestions[activeQuestion].images.map((image) => (
-                      <div key={questionIdOf(image._id) || image.url} className="relative h-32 w-full">
+                    {(quizQuestions[activeQuestion].images || []).map((image) => (
+                      <div
+                        key={questionIdOf(image._id) || image.url}
+                        className="relative h-32 w-full"
+                      >
                         <Image
                           src={image.url}
                           alt="Question Images"
@@ -271,12 +306,18 @@ const QuestionDialogBox = ({
                 ) : null}
 
                 <ul className="flex flex-col justify-start gap-2 px-3 md:px-5">
-                  {quizQuestions[activeQuestion].options.map((option, index) => {
+                  {(quizQuestions[activeQuestion].options || []).map((option, index) => {
                     const chosen = locked
                       ? option.name === savedAnswer?.studentAnswer
                       : selectedAnswerIndex === index;
-                    const showCorrect = (locked || optionSelected) && option.tag === "Correct";
-                    const showWrong = chosen && option.tag !== "Correct";
+                    const showCorrect =
+                      (locked || optionSelected) &&
+                      Boolean(savedAnswer?.studentAnswer) &&
+                      option.tag === "Correct";
+                    const showWrong =
+                      chosen &&
+                      Boolean(savedAnswer?.studentAnswer || selectedAnswer) &&
+                      option.tag !== "Correct";
                     return (
                       <li
                         key={questionIdOf(option._id) || index}
@@ -304,7 +345,9 @@ const QuestionDialogBox = ({
                                 : ""
                           )}
                         >
-                          {showCorrect ? <Check className="h-3 w-3 font-medium text-white" /> : null}
+                          {showCorrect ? (
+                            <Check className="h-3 w-3 font-medium text-white" />
+                          ) : null}
                           {showWrong ? <X className="h-3 w-3 font-medium text-white" /> : null}
                         </div>
                         <span

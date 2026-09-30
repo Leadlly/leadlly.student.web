@@ -60,29 +60,20 @@ const PlanPriceBox = ({ className, plan }: PlanPriceProps) => {
         ) : null}
 
         <p className="capitalize text-xl lg:text-2xl font-semibold text-[#626262]">
-          {plan["duration(months)"] < 12
-            ? `${plan["duration(months)"]} month${plan["duration(months)"] > 1 ? "s" : ""}`
-            : `Till ${user?.academic.competitiveExam?.toUpperCase()} ${new Date().getFullYear() + 1}`}
+          {plan.label
+            ? plan.label
+            : plan["duration(months)"] < 12
+              ? `${plan["duration(months)"]} month${plan["duration(months)"] > 1 ? "s" : ""}`
+              : `Till ${user?.academic.competitiveExam?.toUpperCase()} ${new Date().getFullYear() + 1}`}
         </p>
 
-        <div>
-          <span className="font-mada-semibold text-lg sm:text-xl">
-            ₹
-            {Math.round(
-              Number(plan?.amount) / Number(plan?.["duration(months)"])
-            )}{" "}
-            <span className="font-mada-medium text-base">
-              {plan["duration(months)"] <= 1 ? "for a month" : "/ month"}
-            </span>
-          </span>
-          <div className="flex justify-end gap-x-2">
-            <p className="text-base sm:text-lg text-neutral-500 font-medium line-through capitalize">
-              ₹{Math.round(Number(plan?.initialPrice))}
+        <div className="text-right">
+          <p className="font-mada-semibold text-lg sm:text-xl">₹{plan?.amount}</p>
+          {plan?.initialPrice ? (
+            <p className="text-base sm:text-lg text-neutral-500 font-medium line-through">
+              ₹{Math.round(Number(plan.initialPrice))}
             </p>
-            <p className="text-base sm:text-lg font-medium text-[#6d6a6a]">
-              ₹{plan?.amount}
-            </p>
-          </div>
+          ) : null}
         </div>
       </CardContent>
     </Card>

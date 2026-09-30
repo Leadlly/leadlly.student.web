@@ -58,6 +58,13 @@ const asQuestions = (raw: unknown[] | undefined): TQuizQuestionProps[] =>
     };
   });
 
+const serverAnsweredIds = (plan: DailyPlan, topicName: string) =>
+  (
+    plan.answeredQuestions?.[topicName] ||
+    plan.answeredQuestions?.[topicName.toLowerCase()] ||
+    []
+  ).map(String);
+
 const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
   const queryClient = useQueryClient();
   const [storedTopics, setStoredTopics] = useState<StoredQuizTopic[]>([]);
@@ -65,6 +72,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
     name: string;
     id: string;
     questions: TQuizQuestionProps[];
+    answeredIds: string[];
   } | null>(null);
   const [emptyTopics, setEmptyTopics] = useState<string[]>([]);
 
@@ -140,7 +148,15 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
       });
       refreshStored();
     }
-    setActive({ name: item.topicName, id: item.topicId, questions });
+    const localAnswered = (existing?.answers || []).map((answer) => String(answer.question));
+    setActive({
+      name: item.topicName,
+      id: item.topicId,
+      questions,
+      answeredIds: Array.from(
+        new Set([...serverAnsweredIds(plan, item.topicName), ...localAnswered])
+      ),
+    });
   };
 
   const visible = plan.items.filter(
@@ -189,10 +205,14 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                   {rows.map((item, index) => {
                     const questions = questionsFor(item);
                     const stored = storedFor(item);
-                    const answeredIds = new Set((stored?.answers || []).map((answer) => answer.question));
-                    const answered = questions.filter((question) =>
-                      answeredIds.has(questionIdOf(question._id))
-                    ).length;
+                    const serverAnswered = new Set(serverAnsweredIds(plan, item.topicName));
+                    const localAnswered = new Set(
+                      (stored?.answers || []).map((answer) => String(answer.question))
+                    );
+                    const answered = questions.filter((question) => {
+                      const id = questionIdOf(question._id);
+                      return serverAnswered.has(id) || localAnswered.has(id);
+                    }).length;
                     const finished =
                       item.status === "COMPLETED" ||
                       Boolean(stored?.completed) ||
@@ -219,7 +239,8 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                           <div className="flex w-full items-start gap-x-2 py-1">
                             {answered > 0 && !finished ? (
                               <span className="text-xs font-medium text-[#B87A07]">
-                                <span className="text-lg font-semibold">{answered}</span>/{questions.length}
+                                <span className="text-lg font-semibold">{answered}</span>/
+                                {questions.length}
                               </span>
                             ) : (
                               <span
@@ -232,7 +253,9 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                               </span>
                             )}
                             <div className="flex-1 capitalize">
-                              <p className="text-sm font-medium leading-tight md:text-base">{item.topicName}</p>
+                              <p className="text-sm font-medium leading-tight md:text-base">
+                                {item.topicName}
+                              </p>
                               {answered > 0 && !finished ? (
                                 <Progress
                                   value={(answered / questions.length) * 100}
@@ -288,6 +311,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
               }
             }}
             questions={active.questions}
+            answeredQuestionIds={active.answeredIds}
             topic={{ name: active.name, _id: active.id, isSubtopic: false }}
           />
         </Suspense>
