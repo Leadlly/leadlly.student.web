@@ -28,7 +28,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion";
-import { ScrollArea } from "./scroll-area";
 import { Item, SubItem } from "@/helpers/types";
 
 const multiSelectVariants = cva(
@@ -400,8 +399,8 @@ export const NestedMultiSelect = React.forwardRef<
                             <p className="flex-1 text-left">{option?.name}</p>
                           </CommandItem>
                         </AccordionTrigger>
-                        <AccordionContent className="pb-0 p-2 bg-primary/10">
-                          <ScrollArea>
+                        <AccordionContent className="bg-primary/10 p-2 pb-0">
+                          <div className="max-h-40 space-y-0.5 overflow-y-auto overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch]">
                             {option.subItems && option.subItems.length > 0 ? (
                               option.subItems.map((subItem) => {
                                 return (
@@ -429,7 +428,7 @@ export const NestedMultiSelect = React.forwardRef<
                             ) : (
                               <CommandEmpty>No Subtopic available</CommandEmpty>
                             )}
-                          </ScrollArea>
+                          </div>
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
