@@ -15,6 +15,23 @@ interface OptionsProps {
   };
 }
 
+const optionImageSrc = (images: unknown): string | null => {
+  if (typeof images === "string" && images.trim()) return images;
+  if (Array.isArray(images)) {
+    const first = images[0];
+    if (typeof first === "string" && first.trim()) return first;
+    if (first && typeof first === "object" && "url" in first) {
+      const url = (first as { url?: unknown }).url;
+      return typeof url === "string" && url.trim() ? url : null;
+    }
+  }
+  if (images && typeof images === "object" && "url" in images) {
+    const url = (images as { url?: unknown }).url;
+    return typeof url === "string" && url.trim() ? url : null;
+  }
+  return null;
+};
+
 const Options = ({
   options,
   selectedOption,
@@ -23,14 +40,15 @@ const Options = ({
 }: OptionsProps) => {
   return (
     <div className="mt-4 flex flex-col gap-4">
-      {options?.map((option) => {
+      {(options || []).map((option, index) => {
         const selected =
           selectedOption?.name === option.name ||
           (!selectedOption &&
             attemptedOption?.question.studentAnswer === option.name);
+        const imageSrc = optionImageSrc(option.images);
         return (
           <button
-            key={option._id}
+            key={option._id || `${option.name}-${index}`}
             type="button"
             onClick={() => handleOptionChange(option)}
             className={cn(
@@ -49,11 +67,13 @@ const Options = ({
             <span className="min-w-0 flex-1">
               <span
                 className="text-sm font-semibold"
-                dangerouslySetInnerHTML={{ __html: sanitizedHtml(option.name) }}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizedHtml(option.name || ""),
+                }}
               />
-              {option.images ? (
+              {imageSrc ? (
                 <Image
-                  src={option.images}
+                  src={imageSrc}
                   alt=""
                   width={300}
                   height={180}

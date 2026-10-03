@@ -20,12 +20,13 @@ const Quizzes = async (props: {
   const activeQuizTab = searchParams["tab"] ?? "unattempted";
 
   const emptyWeekly = { success: true, weeklyQuiz: [] as [] };
+  const emptyChapters = { success: true as const, chapterQuizzes: [] };
   const [unattemptedQuiz, attemptedQuiz, unattemptedChapters, attemptedChapters] =
     await Promise.all([
       getWeeklyQuiz("unattempted").catch(() => emptyWeekly),
       getWeeklyQuiz("attempted").catch(() => emptyWeekly),
-      getChapterQuizzes("unattempted").catch(() => ({ chapterQuizzes: [] })),
-      getChapterQuizzes("attempted").catch(() => ({ chapterQuizzes: [] })),
+      getChapterQuizzes("unattempted").catch(() => emptyChapters),
+      getChapterQuizzes("attempted").catch(() => emptyChapters),
     ]);
 
   return (
@@ -54,22 +55,18 @@ const Quizzes = async (props: {
       <div className="min-h-0 flex-1 overflow-hidden rounded-[34px] bg-white">
         {activeQuizTab === "unattempted" && (
           <Unattempted
-            weeklyQuizzes={unattemptedQuiz.weeklyQuiz}
+            weeklyQuizzes={unattemptedQuiz?.weeklyQuiz ?? []}
             chapterQuizzes={
-              (unattemptedChapters.chapterQuizzes ??
+              (unattemptedChapters?.chapterQuizzes ??
                 []) as UnattemptedChapterQuizProps[]
             }
           />
         )}
         {activeQuizTab === "attempted" && (
           <Attempted
-            weeklyQuizzes={attemptedQuiz.weeklyQuiz}
+            weeklyQuizzes={attemptedQuiz?.weeklyQuiz ?? []}
             chapterQuizzes={
-              (attemptedChapters.chapterQuizzes ?? []).map((quiz) => ({
-                ...quiz,
-                completedDate: quiz.completedDate ?? "",
-                efficiency: quiz.efficiency ?? 0,
-              })) as AttemptedQuizProps[]
+              (attemptedChapters?.chapterQuizzes ?? []) as AttemptedQuizProps[]
             }
           />
         )}

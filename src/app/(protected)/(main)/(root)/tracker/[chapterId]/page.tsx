@@ -40,8 +40,8 @@ const ChapterDetail = () => {
     );
   }
 
-  const efficiency = item.chapter.overall_efficiency || 0;
-  const progress = item.chapter.overall_progress || 0;
+  const efficiency = item.chapter?.overall_efficiency || 0;
+  const progress = item.chapter?.overall_progress || 0;
   const tone = accuracyColor(efficiency);
 
   return (
@@ -50,13 +50,15 @@ const ChapterDetail = () => {
         <button type="button" onClick={() => router.back()} aria-label="Back">
           <ArrowLeft className="h-6 w-6" />
         </button>
-        <h1 className="truncate text-2xl font-semibold capitalize">{item.chapter.name}</h1>
+        <h1 className="truncate text-2xl font-semibold capitalize">
+          {item.chapter?.name || "Chapter"}
+        </h1>
       </div>
 
       <div className="rounded-2xl border border-[#F7F2FE] p-4">
         <p className="mb-4 text-base text-secondary-text">
           <span className="text-3xl font-semibold text-black">
-            {item.chapter.total_questions_solved?.number ?? 0}
+            {item.chapter?.total_questions_solved?.number ?? 0}
           </span>{" "}
           questions solved
         </p>

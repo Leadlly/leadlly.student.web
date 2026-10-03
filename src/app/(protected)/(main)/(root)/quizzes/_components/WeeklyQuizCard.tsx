@@ -42,13 +42,25 @@ const WeeklyQuizCard = ({
   mode: "unattempted" | "attempted";
 }) => {
   const [open, setOpen] = useState(false);
-  const daysLeft = calculateDaysLeft(new Date(quiz.endDate));
+  const end = quiz.endDate ? new Date(quiz.endDate) : null;
+  const start = quiz.createdAt || quiz.startDate
+    ? new Date(quiz.createdAt || quiz.startDate)
+    : null;
+  const daysLeft =
+    end && !Number.isNaN(end.getTime()) ? calculateDaysLeft(end) : 0;
   const totalQuestions = useMemo(
     () => Object.values(quiz.questions ?? {}).flat().length,
     [quiz]
   );
-  const dateRange = `${formatDate(new Date(quiz.createdAt || quiz.startDate))} - ${formatDate(new Date(quiz.endDate))}`;
+  const dateRange =
+    start &&
+    end &&
+    !Number.isNaN(start.getTime()) &&
+    !Number.isNaN(end.getTime())
+      ? `${formatDate(start)} - ${formatDate(end)}`
+      : "Quiz window unavailable";
   const topics = topicsBySubject(quiz);
+  const quizId = quiz?._id ? String(quiz._id) : "";
 
   return (
     <article className="rounded-[34px] border border-[#E6E1F0] p-4">
@@ -88,9 +100,9 @@ const WeeklyQuizCard = ({
         </p>
       ) : null}
 
-      {mode === "unattempted" && daysLeft > 0 ? (
+      {mode === "unattempted" && daysLeft > 0 && quizId ? (
         <Link
-          href={`/quiz/${quiz._id}/attempt`}
+          href={`/quiz/${quizId}/attempt`}
           className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-leadlly text-base font-bold text-white"
         >
           Start Now
@@ -98,10 +110,10 @@ const WeeklyQuizCard = ({
         </Link>
       ) : null}
 
-      {mode === "attempted" ? (
+      {mode === "attempted" && quizId ? (
         <div className="mt-4 flex gap-3">
           <Link
-            href={`/quiz/${quiz._id}/report`}
+            href={`/quiz/${quizId}/report`}
             className="flex flex-1 items-center justify-center gap-1 rounded-[20px] border border-primary/10 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary"
           >
             Report
@@ -109,7 +121,7 @@ const WeeklyQuizCard = ({
           </Link>
           {daysLeft > 0 ? (
             <Link
-              href={`/quiz/${quiz._id}/attempt`}
+              href={`/quiz/${quizId}/attempt`}
               className="flex flex-1 items-center justify-center gap-1 rounded-[20px] border border-primary px-3 py-2 text-sm font-semibold text-primary"
             >
               Reattempt

@@ -18,7 +18,12 @@ const QuizReportView = ({ quizId }: { quizId: string }) => {
     getQuizReport(quizId)
       .catch(() => submitQuiz(quizId))
       .then((data) => {
-        if (!cancelled) setReport(data.report);
+        if (cancelled) return;
+        if (!data?.report) {
+          setError("Report data is missing for this quiz.");
+          return;
+        }
+        setReport(data.report);
       })
       .catch((err: unknown) => {
         if (!cancelled) {

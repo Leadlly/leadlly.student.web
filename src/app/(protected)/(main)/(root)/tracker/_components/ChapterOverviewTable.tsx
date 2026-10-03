@@ -36,7 +36,7 @@ const ChapterOverviewTable = ({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="hidden lg:table-cell sticky top-0 z-30 lg:w-64 xl:w-80 rounded-tl-xl bg-white capitalize text-primary text-2xl leading-none text-left font-semibold py-2.5 lg:py-5 px-1.5 lg:px-3 whitespace-nowrap truncate">
-                      {chapterData.chapter.name}
+                      {chapterData?.chapter?.name || "Chapter"}
                     </TableHead>
                     <TableHead className="lg:hidden md:w-56 sticky top-0 z-30 w-28 rounded-tl-xl bg-white text-black capitalize text-sm md:text-2xl leading-none text-center font-semibold py-2.5 lg:py-5 px-1.5 lg:px-3">
                       Topics
@@ -54,7 +54,7 @@ const ChapterOverviewTable = ({
                 </TableHeader>
 
                 <TableBody>
-                  {chapterData && chapterData.topics.length ? (
+                  {chapterData?.topics?.length ? (
                     chapterData.topics.map((item) => (
                       <TableRow key={item.name} className="border-none">
                         <TableHead className="text-xs md:text-base">
@@ -64,9 +64,13 @@ const ChapterOverviewTable = ({
                           {item.plannerFrequency}
                         </TableHead>
                         <TableHead className="text-center min-w-20 text-[10px] md:text-base font-semibold">
-                          {convertDateString(
-                            item.studiedAt[item.studiedAt.length - 1].date!
-                          )}
+                          {(() => {
+                            const lastDate =
+                              item.studiedAt?.[item.studiedAt.length - 1]?.date;
+                            return lastDate
+                              ? convertDateString(new Date(lastDate))
+                              : "—";
+                          })()}
                         </TableHead>
                         <TableHead>
                           <span className="w-full flex items-center justify-between text-[7px] md:text-xs font-semibold">
@@ -158,7 +162,7 @@ const ChapterOverviewTable = ({
 
           <div className="lg:hidden pt-5 flex items-center justify-between">
             <p className="text-primary text-lg leading-none font-semibold capitalize whitespace-nowrap truncate">
-              {chapterData.chapter.name}
+              {chapterData?.chapter?.name || "Chapter"}
             </p>
 
             <Button

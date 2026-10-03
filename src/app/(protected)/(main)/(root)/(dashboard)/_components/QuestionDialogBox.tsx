@@ -93,7 +93,7 @@ const QuestionDialogBox = ({
       setOptionSelected(false);
       return;
     }
-    const index = quizQuestions[activeQuestion]?.options.findIndex(
+    const index = (quizQuestions[activeQuestion]?.options || []).findIndex(
       (option) => option.name === savedAnswer.studentAnswer
     );
     setSelectedAnswer(savedAnswer.studentAnswer);

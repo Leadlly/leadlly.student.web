@@ -17,9 +17,10 @@ const UnattemptedChapterWiseQuizzes = ({
   const subjects = ["All", ...(userSubjects?.map((subject) => subject.name) ?? [])];
 
   const filteredQuizzes = useMemo(() => {
+    const list = Array.isArray(quizzes) ? quizzes : [];
     return selectedSubject === "All"
-      ? quizzes
-      : quizzes.filter((quiz) => quiz.subject === selectedSubject);
+      ? list
+      : list.filter((quiz) => quiz.subject === selectedSubject);
   }, [selectedSubject, quizzes]);
 
   return (

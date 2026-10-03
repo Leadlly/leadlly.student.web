@@ -58,8 +58,10 @@ const TrackerComponent = ({
       <h2 className="text-2xl font-semibold text-dark-primary">Chapters Report</h2>
       {trackerData?.length ? (
         trackerData.map((item) => {
-          const efficiency = item.chapter.overall_efficiency || 0;
-          const progress = item.chapter.overall_progress || 0;
+          const chapter = item?.chapter;
+          if (!chapter) return null;
+          const efficiency = chapter.overall_efficiency || 0;
+          const progress = chapter.overall_progress || 0;
           const tone = accuracyColor(efficiency);
           return (
             <button
@@ -70,13 +72,13 @@ const TrackerComponent = ({
             >
               <div className="mb-2 flex items-start justify-between gap-3">
                 <p className="text-xl font-semibold capitalize text-dark-primary">
-                  {item.chapter.name}
+                  {chapter.name || "Chapter"}
                 </p>
                 <span className="shrink-0 text-sm font-semibold text-primary">Full Report</span>
               </div>
               <p className="mb-3 text-base text-secondary-text">
                 <span className="text-2xl font-semibold text-black">
-                  {item.chapter.total_questions_solved?.number ?? 0}
+                  {chapter.total_questions_solved?.number ?? 0}
                 </span>{" "}
                 questions solved
               </p>

@@ -553,7 +553,7 @@ export interface AttemptedQuizProps {
   id: number | string;
   chapterName: string;
   description: string;
-  subject: Subject;
+  subject: string;
   questions: number;
   completedDate: string;
   efficiency: number;
@@ -594,7 +594,7 @@ export type UnattemptedChapterQuizProps = {
   id: number | string;
   chapterName: string;
   description: string;
-  subject: Subject;
+  subject: string;
   questions: number;
 };
 

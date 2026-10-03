@@ -29,10 +29,12 @@ const Quiz = ({
   const weekly_quiz_data = useAppSelector(
     (state) => state.weeklyQuizzes.quizzes
   );
+  const safeQuestions = Array.isArray(questions) ? questions : [];
 
-  const [currentQuestion, setCurrentQuestion] = useState(
-    weekly_quiz_data.length > 0 ? weekly_quiz_data.length : 0
-  );
+  const [currentQuestion, setCurrentQuestion] = useState(() => {
+    if (!safeQuestions.length) return 0;
+    return Math.min(weekly_quiz_data.length, safeQuestions.length - 1);
+  });
   const [selectedOption, setSelectedOption] =
     useState<TQuizQuestionOptionsProps | null>(null);
 
@@ -41,32 +43,40 @@ const Quiz = ({
   const dispatch = useAppDispatch();
 
   const attemptedQuestionAnswers = weekly_quiz_data.find(
-    (ques: any) => ques.questionId === questions[currentQuestion]?._id
+    (ques: any) => ques.questionId === safeQuestions[currentQuestion]?._id
   );
 
   const quizData = async () => {
+    const current = safeQuestions[currentQuestion];
+    if (!current?._id || !selectedOption) return;
+
+    const topicName =
+      (Array.isArray(current.topics) && current.topics[0]) ||
+      current.subject ||
+      "General";
+
     const formattedData = {
       quizId,
-      topic: { name: questions[currentQuestion].topics[0] },
+      topic: { name: String(topicName) },
       question: {
-        question: questions[currentQuestion]._id,
-        studentAnswer: selectedOption?.name!,
-        isCorrect: selectedOption?.tag === "Correct",
+        question: current._id,
+        studentAnswer: selectedOption.name,
+        isCorrect: selectedOption.tag === "Correct",
         tag: "weekly_quiz",
       },
     };
-    setIsSaving(questions[currentQuestion]._id);
+    setIsSaving(current._id);
     try {
       const res = await saveWeeklyQuizQuestion(formattedData);
       dispatch(
         weeklyQuizData({
-          questionId: questions[currentQuestion]._id,
+          questionId: current._id,
           ...formattedData,
         })
       );
-      toast.success(res.message);
+      toast.success(res?.message || "Answer saved");
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error?.message || "Could not save answer");
     } finally {
       setIsSaving(null);
     }
@@ -76,17 +86,22 @@ const Quiz = ({
     setSelectedOption(option);
   };
 
-  const isLast = currentQuestion === questions.length - 1;
+  const isLast =
+    safeQuestions.length === 0 || currentQuestion >= safeQuestions.length - 1;
   const progress =
-    questions.length > 0 ? weekly_quiz_data.length / questions.length : 0;
+    safeQuestions.length > 0
+      ? weekly_quiz_data.length / safeQuestions.length
+      : 0;
 
   const handleNextQuestion = async () => {
-    if (selectedOption) {
+    if (selectedOption && safeQuestions[currentQuestion]) {
       await quizData();
       setSelectedOption(null);
     }
     if (!isLast) {
-      setCurrentQuestion((prev: number) => Math.min(prev + 1, questions.length - 1));
+      setCurrentQuestion((prev: number) =>
+        Math.min(prev + 1, Math.max(safeQuestions.length - 1, 0))
+      );
     }
   };
 
@@ -112,7 +127,9 @@ const Quiz = ({
                   : "Weekly Quiz"}
           </h1>
           <p className="text-sm text-secondary-text">
-            {getMonthDate(new Date(startDate))} - {getMonthDate(new Date(endDate))}
+            {startDate && endDate
+              ? `${getMonthDate(new Date(startDate))} - ${getMonthDate(new Date(endDate))}`
+              : "Practice quiz"}
           </p>
         </div>
         <div className="flex flex-1 justify-end">
@@ -127,24 +144,25 @@ const Quiz = ({
             style={{ width: `${Math.min(progress, 1) * 100}%` }}
           />
         </div>
-        {isSaving === questions[currentQuestion]?._id ? (
+        {isSaving === safeQuestions[currentQuestion]?._id ? (
           <Loader2 className="size-4 animate-spin text-primary" />
         ) : (
           <span className="text-sm font-bold">
-            {weekly_quiz_data.length} / {questions.length}
+            {weekly_quiz_data.length} / {safeQuestions.length}
           </span>
         )}
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-6">
         <p className="mb-3 text-sm font-semibold text-secondary-text">
-          Question {currentQuestion + 1} of {questions.length}:
+          Question {Math.min(currentQuestion + 1, safeQuestions.length)} of{" "}
+          {safeQuestions.length}:
         </p>
-        {questions[currentQuestion] ? (
+        {safeQuestions[currentQuestion] ? (
           <>
-            <Question question={questions[currentQuestion]} />
+            <Question question={safeQuestions[currentQuestion]} />
             <Options
-              options={questions[currentQuestion]?.options}
+              options={safeQuestions[currentQuestion]?.options || []}
               selectedOption={selectedOption}
               handleOptionChange={handleOptionChange}
               attemptedOption={attemptedQuestionAnswers}
@@ -162,7 +180,10 @@ const Quiz = ({
         <button
           type="button"
           onClick={handlePrevQuestion}
-          disabled={currentQuestion === 0 || isSaving === questions[currentQuestion]?._id}
+          disabled={
+            currentQuestion === 0 ||
+            isSaving === safeQuestions[currentQuestion]?._id
+          }
           className={cn(
             "flex items-center rounded-lg border-2 border-[#E6E1F0] bg-white px-3 py-2 text-sm font-semibold text-secondary-text",
             currentQuestion === 0 && "opacity-70"
@@ -175,12 +196,12 @@ const Quiz = ({
           type="button"
           onClick={handleNextQuestion}
           disabled={
-            isSaving === questions[currentQuestion]?._id ||
+            isSaving === safeQuestions[currentQuestion]?._id ||
             (!selectedOption && isLast)
           }
           className="min-w-[100px] rounded-lg bg-leadlly px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
         >
-          {isSaving === questions[currentQuestion]?._id ? (
+          {isSaving === safeQuestions[currentQuestion]?._id ? (
             <Loader2 className="mx-auto size-4 animate-spin" />
           ) : isLast ? (
             "Save"

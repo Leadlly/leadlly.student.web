@@ -28,19 +28,22 @@ const AccountChaptersList = ({
 
   const mergedChapterData: ChapterData[] | undefined = unrevisedTopics?.reduce(
     (acc: ChapterData[], curr: TRevisionProps) => {
-      const existingChapter = acc.find((ch) => ch.name === curr.chapter.name);
+      const chapter = curr?.chapter;
+      if (!chapter?.name) return acc;
+
+      const existingChapter = acc.find((ch) => ch.name === chapter.name);
 
       if (existingChapter) {
-        existingChapter.topics.push(curr.topic);
+        if (curr.topic) existingChapter.topics.push(curr.topic);
       } else {
         acc.push({
-          name: curr.chapter.name,
-          topics: [curr.topic],
-          studiedAt: curr.chapter.studiedAt,
-          level: curr.chapter.level,
-          overall_efficiency: curr.chapter.overall_efficiency,
-          plannerFrequency: curr.chapter.plannerFrequency,
-          total_questions_solved: curr.chapter.total_questions_solved,
+          name: chapter.name,
+          topics: curr.topic ? [curr.topic] : [],
+          studiedAt: chapter.studiedAt,
+          level: chapter.level,
+          overall_efficiency: chapter.overall_efficiency,
+          plannerFrequency: chapter.plannerFrequency,
+          total_questions_solved: chapter.total_questions_solved,
         });
       }
 

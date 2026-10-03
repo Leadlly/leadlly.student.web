@@ -34,6 +34,9 @@ export function getTodaysDay() {
 }
 
 export function getMonthDate(date: Date): string {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    return "—";
+  }
   const dayOfMonth: string = String(date.getDate()).padStart(2, "0");
   const month: string = monthsOfYear[date.getMonth()];
 
@@ -149,8 +152,8 @@ export const formatTime = (seconds: number) => {
 };
 
 export const sanitizedHtml = (htmlString: string) => {
-  DOMPurify.sanitize(htmlString);
-  return htmlString;
+  if (typeof htmlString !== "string") return "";
+  return DOMPurify.sanitize(htmlString);
 };
 
 export const getColorBySubject = (subject: Subject): string => {

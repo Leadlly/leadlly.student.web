@@ -36,12 +36,12 @@ const ChapterRevisionDateTable = ({
       </Button>
 
       <p className="lg:hidden capitalize w-full text-center text-lg md:text-xl leading-tight font-semibold">
-        {chapterData.chapter.name}
+        {chapterData?.chapter?.name || "Chapter"}
       </p>
 
       <div className="hidden lg:flex items-center p-4">
         <div className="w-96 text-[28px] font-semibold leading-tight capitalize whitespace-nowrap truncate pl-4">
-          <p>{chapterData.chapter.name}</p>
+          <p>{chapterData?.chapter?.name || "Chapter"}</p>
         </div>
         <div className="relative flex-grow text-center text-xl font-medium leading-tight">
           <p>Last Revision Date and Efficiency</p>

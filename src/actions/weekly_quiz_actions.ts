@@ -1,7 +1,57 @@
 "use server";
 
 import apiClient from "@/apiClient/apiClient";
-import { TQuizAnswerProps } from "@/helpers/types";
+import { AttemptedQuizProps, TQuizAnswerProps, UnattemptedChapterQuizProps } from "@/helpers/types";
+
+type RawChapterQuiz = {
+  _id?: string;
+  id?: string | number;
+  chapterName?: string;
+  description?: string;
+  subject?: string;
+  questions?: number | Record<string, unknown[] | unknown>;
+  chapter?: { name?: string; subject?: string };
+  topicsBySubject?: Record<string, string[]>;
+  completedDate?: string;
+  efficiency?: number;
+  endDate?: string;
+  updatedAt?: string;
+};
+
+const countChapterQuestions = (
+  questions?: number | Record<string, unknown[] | unknown>
+) => {
+  if (typeof questions === "number") return questions;
+  if (!questions || typeof questions !== "object") return 0;
+  return Object.values(questions).reduce<number>((sum, value) => {
+    return sum + (Array.isArray(value) ? value.length : 0);
+  }, 0);
+};
+
+const normalizeChapterQuiz = (
+  quiz: RawChapterQuiz
+): UnattemptedChapterQuizProps & Pick<AttemptedQuizProps, "completedDate" | "efficiency"> => {
+  const questionCount = countChapterQuestions(quiz.questions);
+  const subject =
+    (typeof quiz.subject === "string" && quiz.subject) ||
+    quiz.chapter?.subject ||
+    Object.keys(quiz.topicsBySubject ?? {})[0] ||
+    "General";
+
+  return {
+    id: String(quiz.id ?? quiz._id ?? ""),
+    chapterName: quiz.chapterName || quiz.chapter?.name || "Chapter quiz",
+    description:
+      quiz.description ||
+      (questionCount > 0
+        ? `${questionCount} questions from this chapter`
+        : "Chapter practice quiz"),
+    subject,
+    questions: questionCount,
+    completedDate: quiz.completedDate || quiz.endDate || quiz.updatedAt || "",
+    efficiency: quiz.efficiency ?? 0,
+  };
+};
 
 export const getWeeklyQuiz = async (query: string) => {
   try {
@@ -31,14 +81,45 @@ export const getWeeklyQuiz = async (query: string) => {
 
 export const getWeeklyQuizQuestions = async (quizId: string) => {
   try {
+    if (!quizId || quizId === "undefined" || quizId === "null") {
+      return {
+        success: false,
+        data: null,
+        message: "Invalid quiz id",
+      };
+    }
+
     const res = await apiClient.get(
       `/api/quiz/weekly/questions/get?quizId=${quizId}`
     );
 
     const responseData = await res.data;
+    const data = responseData?.data ?? null;
 
-    return responseData;
+    return {
+      success: Boolean(responseData?.success ?? data),
+      data: data
+        ? {
+            weeklyQuestions: Array.isArray(data.weeklyQuestions)
+              ? data.weeklyQuestions
+              : [],
+            startDate: data.startDate ?? data.createdAt ?? null,
+            endDate: data.endDate ?? null,
+            quizType: data.quizType ?? "weekly",
+          }
+        : null,
+      message: responseData?.message,
+    };
   } catch (error) {
+    const status = (error as { response?: { status?: number } })?.response
+      ?.status;
+    if (status === 404) {
+      return {
+        success: false,
+        data: null,
+        message: "Quiz not found",
+      };
+    }
     if (error instanceof Error) {
       throw new Error(
         `Error in fetching weekly quiz questions: ${error.message}`
@@ -76,18 +157,19 @@ export const saveWeeklyQuizQuestion = async (data: {
 export const getChapterQuizzes = async (query: string) => {
   try {
     const res = await apiClient.get(`/api/quiz/chapter/get?attempted=${query}`);
-    return res.data as {
-      chapterQuizzes?: Array<{
-        id: string | number;
-        chapterName: string;
-        description: string;
-        subject: string;
-        questions: number;
-        completedDate?: string;
-        efficiency?: number;
-      }>;
+    const raw = (res.data?.chapterQuizzes ?? []) as RawChapterQuiz[];
+    return {
+      success: true as const,
+      chapterQuizzes: raw
+        .map(normalizeChapterQuiz)
+        .filter((quiz) => Boolean(quiz.id)),
     };
   } catch (error) {
+    const status = (error as { response?: { status?: number } })?.response
+      ?.status;
+    if (status === 404) {
+      return { success: true as const, chapterQuizzes: [] };
+    }
     if (error instanceof Error) {
       throw new Error(`Error in fetching chapter quizzes: ${error.message}`);
     }

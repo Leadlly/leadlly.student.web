@@ -159,7 +159,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
     });
   };
 
-  const visible = plan.items.filter(
+  const visible = (plan.items || []).filter(
     (item) => item.status !== "SKIPPED" && item.status !== "EXPIRED"
   );
 
@@ -280,7 +280,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
             <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-primary">
               Quizzes
             </h4>
-            {plan.quizzes.weekly ? (
+            {plan.quizzes?.weekly?.id ? (
               <Link
                 href={`/quiz/${plan.quizzes.weekly.id}/attempt`}
                 className="block text-sm font-medium text-dark-primary"
@@ -288,15 +288,17 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                 Weekly quiz
               </Link>
             ) : null}
-            {plan.quizzes.chapter.map((quiz) => (
-              <Link
-                key={quiz.id}
-                href={`/quiz/${quiz.id}/attempt`}
-                className="block text-sm font-medium text-dark-primary"
-              >
-                {quiz.name} chapter quiz
-              </Link>
-            ))}
+            {(plan.quizzes?.chapter ?? [])
+              .filter((quiz) => quiz?.id)
+              .map((quiz) => (
+                <Link
+                  key={quiz.id}
+                  href={`/quiz/${quiz.id}/attempt`}
+                  className="block text-sm font-medium text-dark-primary"
+                >
+                  {quiz.name || "Chapter"} chapter quiz
+                </Link>
+              ))}
           </section>
         ) : null}
       </div>
