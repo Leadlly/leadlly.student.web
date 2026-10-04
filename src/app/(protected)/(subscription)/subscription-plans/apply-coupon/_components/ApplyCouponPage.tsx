@@ -101,24 +101,30 @@ const ApplyCouponPage = ({
 
   useEffect(() => {
     const fetchCoupons = async () => {
-      if (selectedPlan?.category) {
-        setIsLoading(true);
-        try {
-          const result = await getCoupon({
-            plan: selectedPlan.category,
-            category: "listed",
-          });
-          setData(result);
-        } catch (error: any) {
-          console.error("Error fetching coupons:", error);
-        } finally {
-          setIsLoading(false);
-        }
+      if (!selectedPlan?.planId) return;
+      setIsLoading(true);
+      try {
+        // Match mobile: filter listed coupons by planId, not plan category.
+        const result = await getCoupon({
+          plan: selectedPlan.planId,
+          category: "listed",
+        });
+        setData({
+          ...result,
+          coupons: (result?.coupons || []).filter(
+            (coupon: ICoupon) => coupon.usageLimit > 0
+          ),
+        });
+      } catch (error: any) {
+        console.error("Error fetching coupons:", error);
+        setData({ success: false, coupons: [] });
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchCoupons();
-  }, [selectedPlan?.category]);
+  }, [selectedPlan?.planId]);
 
   const openRazorpayPopUp = useCallback(() => {
     const options = {
@@ -225,6 +231,7 @@ const ApplyCouponPage = ({
               <div className="px-8 mt-3">
                 <CustomCouponForm
                   form={form}
+                  planId={selectedPlan?.planId || ""}
                   setIsCustomCouponValid={setIsCustomCouponValid}
                   setSelectedCoupon={setSelectedCoupon}
                 />

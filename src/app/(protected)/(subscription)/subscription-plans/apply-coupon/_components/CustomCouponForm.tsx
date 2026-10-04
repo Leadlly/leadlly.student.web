@@ -20,12 +20,14 @@ import { cn } from "@/lib/utils";
 
 const CustomCouponForm = ({
   form,
+  planId,
   setIsCustomCouponValid,
   setSelectedCoupon,
 }: {
   form: UseFormReturn<{
     code: string;
   }>;
+  planId: string;
   setSelectedCoupon: React.Dispatch<React.SetStateAction<ICoupon | null>>;
   setIsCustomCouponValid: React.Dispatch<React.SetStateAction<boolean | null>>;
 }) => {
@@ -41,14 +43,25 @@ const CustomCouponForm = ({
   useEffect(() => {
     const checkForValidCustomCoupon = async () => {
       if (customCouponCode.length > 0) {
+        if (!planId) {
+          setSelectedCoupon(null);
+          setIsCustomCouponValid(false);
+          setCustomCouponMessage("Select a plan before applying a coupon");
+          return;
+        }
+
         setIsValidatingCustomCoupon(true);
         try {
-          const res = await validateCustomCoupon({ code: customCouponCode });
+          // Same payload as mobile: { code, plan: planId }
+          const res = await validateCustomCoupon({
+            code: customCouponCode.trim(),
+            plan: planId,
+          });
 
           if (!res.success) {
             setSelectedCoupon(null);
             setIsCustomCouponValid(false);
-            setCustomCouponMessage(res.message);
+            setCustomCouponMessage(res.message || "Invalid coupon!");
           } else {
             setSelectedCoupon(res.coupon);
             setIsCustomCouponValid(true);
@@ -57,19 +70,21 @@ const CustomCouponForm = ({
         } catch (error) {
           setSelectedCoupon(null);
           setIsCustomCouponValid(false);
-          setCustomCouponMessage("Invalid coupon!");
+          setCustomCouponMessage(
+            error instanceof Error ? error.message : "Invalid coupon!"
+          );
         } finally {
           setIsValidatingCustomCoupon(false);
         }
       } else {
         setSelectedCoupon(null);
-        setIsCustomCouponValid(false);
+        setIsCustomCouponValid(null);
         setCustomCouponMessage(null);
       }
     };
 
     checkForValidCustomCoupon();
-  }, [customCouponCode, setIsCustomCouponValid, setSelectedCoupon]);
+  }, [customCouponCode, planId, setIsCustomCouponValid, setSelectedCoupon]);
 
   return (
     <Form {...form}>

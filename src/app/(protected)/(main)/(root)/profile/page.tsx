@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, BookOpen, Calendar, Sparkles } from "lucide-react";
+import { ArrowLeft, BookOpen, Calendar } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UpgradePlanBanner from "@/components/shared/UpgradePlanBanner";
 import ViewDnaReportButton from "@/components/study-check/ViewDnaReportButton";
+import { hasActiveSubscription } from "@/lib/subscription";
 import { useAppSelector } from "@/redux/hooks";
 import CustomizePlanner from "../(dashboard)/_components/customizePlanner";
 import ReferAndEarn from "../(dashboard)/_components/referAndEarn";
@@ -11,6 +13,7 @@ import ReferAndEarn from "../(dashboard)/_components/referAndEarn";
 const ProfileHub = () => {
   const user = useAppSelector((state) => state.user.user);
   const name = [user?.firstname, user?.lastname].filter(Boolean).join(" ");
+  const isFreeUser = !hasActiveSubscription(user);
 
   return (
     <div className="flex h-full w-full flex-col gap-4 overflow-y-auto py-4 pr-2">
@@ -76,15 +79,7 @@ const ProfileHub = () => {
           </span>
           Mark chapters for revision
         </Link>
-        <Link
-          href="/subscription-plans"
-          className="flex h-16 items-center gap-3 rounded-full border border-[#EFEAF8] bg-white px-4 text-lg font-semibold text-dark-primary"
-        >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F5F3FF] text-primary">
-            <Sparkles className="h-5 w-5" />
-          </span>
-          Upgrade to premium
-        </Link>
+        {isFreeUser ? <UpgradePlanBanner /> : null}
       </section>
     </div>
   );

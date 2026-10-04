@@ -116,7 +116,10 @@ export const getCoupon = async (data: {
   }
 };
 
-export const validateCustomCoupon = async (data: { code: string }) => {
+export const validateCustomCoupon = async (data: {
+  code: string;
+  plan: string;
+}) => {
   try {
     const res = await apiClient.post(`/api/subscription/coupons/check`, data, {
       cache: "no-store",
@@ -125,13 +128,15 @@ export const validateCustomCoupon = async (data: { code: string }) => {
     const responseData = await res.data;
     return responseData;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Error validating custom coupon: ${error.message}`);
-    } else {
-      throw new Error(
-        "An unknown error occurred while validating custom coupon!"
-      );
-    }
+    const apiMessage = (
+      error as { response?: { data?: { message?: string } } }
+    )?.response?.data?.message;
+    throw new Error(
+      apiMessage ||
+        (error instanceof Error
+          ? error.message
+          : "An unknown error occurred while validating custom coupon!")
+    );
   }
 };
 
