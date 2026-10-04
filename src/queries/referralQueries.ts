@@ -11,6 +11,11 @@ export const useGetUserReferralStats = () => {
           message: string;
           success: boolean;
           stats: TReferralStats;
+          content?: {
+            rewardPerReferral: number;
+            friendDiscountPercent: number;
+            terms: string[];
+          };
         }>("/api/refer/stats");
         return res.data;
       } catch (error) {

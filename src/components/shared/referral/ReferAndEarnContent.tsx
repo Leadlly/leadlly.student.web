@@ -27,7 +27,6 @@ import { getUserReferralStats } from "@/actions/referral_actions";
 import ReferralRewardEarned from "./ReferralRewardEarned";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { referralTerms } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
 
 const ReferAndEarnContent = () => {
@@ -213,8 +212,10 @@ Use the code when checking out and start managing your self-study better!`;
         </p>
 
         <div className="space-y-1">
-          {(data?.content?.terms?.length ? data.content.terms : referralTerms).map(
-            (item: string, i: number, terms: string[]) => (
+          {isLoading ? (
+            <Skeleton className="h-24 w-full rounded-2xl" />
+          ) : (data?.content?.terms ?? []).length ? (
+            (data.content.terms as string[]).map((item, i, terms) => (
               <div
                 key={i}
                 className={cn(
@@ -225,7 +226,11 @@ Use the code when checking out and start managing your self-study better!`;
               >
                 <p className="text-base text-dark-primary">{item}</p>
               </div>
-            )
+            ))
+          ) : (
+            <p className="text-sm text-secondary-text">
+              Terms will appear once referral details load.
+            </p>
           )}
         </div>
       </div>
