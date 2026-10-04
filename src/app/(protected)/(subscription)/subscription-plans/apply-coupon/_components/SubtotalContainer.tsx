@@ -147,10 +147,12 @@ const SubtotalContainer = ({
           <div className="flex items-center justify-between my-3 px-5">
             <p className="text-sm font-medium text-secondary-foreground">
               Discount{" "}
-              {selectedCoupon.discountType === "percentage"
-                ? `${selectedCoupon.discountValue}% Off`
-                : `₹ ${selectedCoupon.discountValue} Off`}{" "}
-              :
+              <span className="font-bold">
+                {selectedCoupon.discountType === "percentage"
+                  ? `${selectedCoupon.discountValue}%`
+                  : `₹ ${selectedCoupon.discountValue}`}
+              </span>{" "}
+              Off :
             </p>
             <p className="text-sm font-medium text-primary">
               - ₹ {Math.round(discountValue)}/-
