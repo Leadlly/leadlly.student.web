@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
-import { ArrowLeft, BookOpen, Calendar, ChevronRight, Trash2 } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronRight, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { getStudyCheck, saveUpcomingTests } from "@/actions/study_check_actions";
+import TestDateField from "@/components/study-check/TestDateField";
 import TestSyllabusPicker, {
   formatSyllabusPicks,
 } from "@/components/study-check/TestSyllabusPicker";
@@ -260,31 +261,11 @@ const UpcomingTestsPage = () => {
         />
       </label>
 
-      <label className="relative mt-1 flex cursor-pointer items-center rounded-[20px] border border-[#EDE9FE] bg-[#F7F2FE] px-4 py-4">
-        <span className="mr-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-primary">
-          <Calendar className="h-5 w-5" />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-xs font-semibold uppercase tracking-wide text-primary">
-            Test date
-          </span>
-          <span className={cn("mt-0.5 block text-base font-bold", draft.date ? "text-dark-primary" : "text-secondary-text")}>
-            {draft.date ? format(new Date(draft.date), "d MMMM yyyy") : "Tap to pick a date"}
-          </span>
-        </span>
-        <ChevronRight className="h-[18px] w-[18px] text-primary" />
-        <input
-          type="date"
-          value={draft.date ? draft.date.slice(0, 10) : ""}
-          onChange={(event) =>
-            setDraft((current) => ({
-              ...current,
-              date: event.target.value ? new Date(`${event.target.value}T12:00:00`).toISOString() : null,
-            }))
-          }
-          className="absolute inset-0 cursor-pointer opacity-0"
-        />
-      </label>
+      <TestDateField
+        className="mt-1"
+        value={draft.date}
+        onChange={(date) => setDraft((current) => ({ ...current, date }))}
+      />
 
       <button
         type="button"
