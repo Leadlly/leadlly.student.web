@@ -16,7 +16,7 @@ const ProfileHub = () => {
   const isFreeUser = !hasActiveSubscription(user);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 overflow-y-auto py-4 pr-2">
+    <div className="flex h-full w-full flex-col gap-4 overflow-y-auto py-4 pb-28 pr-2 md:pb-4">
       <Link
         href="/"
         className="flex h-10 w-10 items-center justify-center rounded-full border border-[#EFEAF8] bg-white"
@@ -79,7 +79,7 @@ const ProfileHub = () => {
           </span>
           Mark chapters for revision
         </Link>
-        {isFreeUser ? <UpgradePlanBanner /> : null}
+        {isFreeUser ? <UpgradePlanBanner className="mb-4" /> : null}
       </section>
     </div>
   );

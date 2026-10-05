@@ -18,7 +18,7 @@ const MobileUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const { institute } = useAppSelector((state) => state.institute);
 
   return (
-    <div className="flex flex-col justify-start gap-3">
+    <div className="flex flex-col justify-start gap-3 pb-6">
       <div className="flex items-center justify-between">
         <DashboardGreeting />
         <Link
@@ -29,7 +29,7 @@ const MobileUI = ({ plan }: { plan?: DailyPlan | null }) => {
         </Link>
       </div>
 
-      <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-full">
+      <div className="flex flex-col justify-start gap-3">
         <Suspense fallback={<Loader />}>
           {/* <TodaysPlan quizData={quizTopics} /> */}
           {user && user.planner === false ? (
@@ -61,7 +61,7 @@ const MobileUI = ({ plan }: { plan?: DailyPlan | null }) => {
         <ProgressAnalytics />
       </div>
 
-      <div className="mb-20 rounded-[28px] border border-[#EFEAF8] bg-white">
+      <div className="rounded-[28px] border border-[#EFEAF8] bg-white">
         <SubjectProgress />
       </div>
     </div>
