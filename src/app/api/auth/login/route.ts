@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import apiClient from '@/apiClient/apiClient';
+import { AUTH_TOKEN_COOKIE, authCookieOptions } from '@/lib/auth-cookie';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,12 +15,7 @@ export async function POST(req: NextRequest) {
     
     const res = NextResponse.json(userData);
     
-    res.cookies.set('token', token, {
-      httpOnly: true,
-      path: '/',
-      sameSite: 'strict',
-      expires: new Date('9999-12-31T23:59:59Z')
-    });
+    res.cookies.set(AUTH_TOKEN_COOKIE, token, authCookieOptions);
     
     return res;
   } catch (error: any) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { verifyAuthToken } from "./actions/user_actions";
+import { AUTH_TOKEN_COOKIE, authCookieOptions } from "./lib/auth-cookie";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -18,12 +19,7 @@ export async function middleware(request: NextRequest) {
       if (token && response.isValidToken) {
         const response = NextResponse.next();
 
-        response.cookies.set("token", token, {
-          httpOnly: true,
-          path: "/",
-          sameSite: "strict",
-          expires: new Date("9999-12-31T23:59:59Z"),
-        });
+        response.cookies.set(AUTH_TOKEN_COOKIE, token, authCookieOptions);
 
         return response;
       } else {
@@ -57,7 +53,7 @@ export async function middleware(request: NextRequest) {
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
-  const token = cookies.get("token")?.value;
+  const token = cookies.get(AUTH_TOKEN_COOKIE)?.value;
   return token;
 }
 
