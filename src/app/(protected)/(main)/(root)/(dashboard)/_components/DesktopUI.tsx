@@ -42,7 +42,7 @@ const DesktopUI = ({ plan }: { plan?: DailyPlan | null }) => {
       <div className="flex-1 flex items-start gap-4 lg:overflow-y-auto custom__scrollbar pr-2">
         <section className="h-full flex w-full flex-col justify-start gap-4 py-2">
           <div className="w-full grid grid-cols-2 gap-4">
-            <div className="relative flex min-w-80 max-h-[550px] flex-col justify-start overflow-hidden rounded-[28px] border border-[#EFEAF8] bg-white p-4">
+            <div className="relative flex min-w-80 max-h-[550px] flex-col justify-start overflow-hidden rounded-[28px] border border-[#EFEAF8] bg-white py-4 pl-4 pr-1">
               <Suspense fallback={<Loader />}>
                 {user && user.planner === false ? (
                   <InitialTodoBox />

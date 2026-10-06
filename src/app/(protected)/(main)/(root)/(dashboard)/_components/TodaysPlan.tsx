@@ -164,7 +164,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
   );
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col md:h-full">
       <div className="mb-3 flex items-center justify-between">
         <h4 className="text-lg font-semibold text-dark-primary">Today&apos;s plan</h4>
         <Link
@@ -177,7 +177,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
       {plan.capacity?.note ? (
         <p className="mb-3 text-sm text-secondary-text">{plan.capacity.note}</p>
       ) : null}
-      <div className="custom__scrollbar flex w-full flex-1 flex-col gap-5 overflow-y-auto">
+      <div className="custom__scrollbar flex w-full flex-col gap-5 [scrollbar-gutter:stable] md:min-h-0 md:flex-1 md:overflow-y-auto md:pr-1">
         {lanes.map((lane) => {
           const rows = visible.filter((item) => item.lane === lane.id);
           const bucket =
