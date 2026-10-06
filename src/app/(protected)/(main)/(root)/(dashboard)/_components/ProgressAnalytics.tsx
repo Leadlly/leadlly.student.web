@@ -35,7 +35,7 @@ const formatRange = (start?: string, end?: string) => {
     const date = new Date(value);
     return `${date.getDate()} ${date.toLocaleString("en", { month: "short" })} ${date.getFullYear()}`;
   };
-  return `${label(start)} – ${label(end)}`;
+  return `${label(start)} - ${label(end)}`;
 };
 
 const ChangeStat = ({ label, value }: { label: string; value: number }) => {

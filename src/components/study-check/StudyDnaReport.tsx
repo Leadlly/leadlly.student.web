@@ -62,7 +62,7 @@ const PREP_ROWS = [
 ] as const;
 
 const splitHours = (label: string) => {
-  if (!label || label === "-" || label === "—") return { value: label || "-", unit: "" };
+  if (!label || label === "-") return { value: label || "-", unit: "" };
   const match = label.match(/^([\d.]+)\s+(.*)$/);
   if (!match) return { value: label, unit: "" };
   return { value: match[1], unit: match[2] };

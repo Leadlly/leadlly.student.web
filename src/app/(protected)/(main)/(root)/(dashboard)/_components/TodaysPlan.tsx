@@ -225,7 +225,7 @@ const TodaysPlan = ({ plan }: { plan?: DailyPlan | null }) => {
                         {showChapter ? (
                           <p className="mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-primary">
                             <span className="capitalize">{item.subject}</span>
-                            {item.chapterName ? ` — ${item.chapterName}` : ""}
+                            {item.chapterName ? ` - ${item.chapterName}` : ""}
                           </p>
                         ) : null}
                         <button

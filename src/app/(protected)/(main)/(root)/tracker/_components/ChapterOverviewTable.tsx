@@ -69,7 +69,7 @@ const ChapterOverviewTable = ({
                               item.studiedAt?.[item.studiedAt.length - 1]?.date;
                             return lastDate
                               ? convertDateString(new Date(lastDate))
-                              : "—";
+                              : "-";
                           })()}
                         </TableHead>
                         <TableHead>

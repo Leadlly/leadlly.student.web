@@ -73,7 +73,7 @@ const QuizReportView = ({ quizId }: { quizId: string }) => {
         <div className="mt-3 flex flex-wrap gap-4 text-sm font-semibold text-secondary-text">
           <span className="inline-flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            {report.createdAt ? format(new Date(report.createdAt), "d MMM yyyy") : "—"}
+            {report.createdAt ? format(new Date(report.createdAt), "d MMM yyyy") : "-"}
           </span>
           {report.timeTaken ? (
             <span className="inline-flex items-center gap-2">
@@ -109,7 +109,7 @@ const QuizReportView = ({ quizId }: { quizId: string }) => {
               <div key={subject} className="rounded-xl border border-[#E6E1F0] px-3 py-2">
                 <p className="text-sm font-semibold capitalize">{subject}</p>
                 <p className="text-xs text-secondary-text">
-                  {Object.keys(value.topics ?? {}).join(", ") || "—"}
+                  {Object.keys(value.topics ?? {}).join(", ") || "-"}
                 </p>
               </div>
             ))
@@ -143,15 +143,15 @@ const QuizReportView = ({ quizId }: { quizId: string }) => {
           <div className="space-y-2 text-sm">
             <p>
               <span className="mr-2 inline-block h-3 w-3 rounded-full bg-leadlly-green" />
-              Correct — {report.correctCount}
+              Correct - {report.correctCount}
             </p>
             <p>
               <span className="mr-2 inline-block h-3 w-3 rounded-full bg-leadlly-red" />
-              Incorrect — {report.incorrectCount}
+              Incorrect - {report.incorrectCount}
             </p>
             <p>
               <span className="mr-2 inline-block h-3 w-3 rounded-full bg-[#D1D5DB]" />
-              Not attempted — {report.unattemptedCount}
+              Not attempted - {report.unattemptedCount}
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ const QuizReportView = ({ quizId }: { quizId: string }) => {
                 {index + 1}. {item.question?.question || "Question"}
               </p>
               <p className="mt-1 text-xs text-secondary-text">
-                Your answer: {item.studentAnswer || "—"} ·{" "}
+                Your answer: {item.studentAnswer || "-"} ·{" "}
                 {item.isCorrect ? "Correct" : "Incorrect"}
               </p>
             </div>
