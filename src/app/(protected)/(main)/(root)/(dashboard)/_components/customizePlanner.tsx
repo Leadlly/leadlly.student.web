@@ -61,14 +61,8 @@ const CustomizePlanner = () => {
   const form = useForm<z.infer<typeof ControlPanelFormSchema>>({
     resolver: zodResolver(ControlPanelFormSchema),
     defaultValues: {
-      nextDay:
-        user && user.preferences.continuousData.nextDay
-          ? user.preferences.continuousData.nextDay
-          : true,
-      dailyQuestions:
-        user && user.preferences.dailyQuestions
-          ? user.preferences.dailyQuestions
-          : 3,
+      nextDay: user?.preferences?.continuousData?.nextDay ?? true,
+      dailyQuestions: user?.preferences?.dailyQuestions ?? 3,
       backRevisionTopics: fitRevision(user?.preferences?.backRevisionTopics, 2),
       accuracyRevisionTopics: fitRevision(user?.preferences?.accuracyRevisionTopics, 1),
       includeSunday: user?.preferences?.includeSunday !== false,

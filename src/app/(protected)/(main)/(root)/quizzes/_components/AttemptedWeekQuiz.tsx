@@ -17,7 +17,7 @@ import Link from "next/link";
 type Props = { quiz: WeeklyQuizProps };
 const AttemptedWeekQuiz = ({ quiz }: Props) => {
   const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
+    (state) => state.user.user?.academic?.subjects
   );
 
   return (

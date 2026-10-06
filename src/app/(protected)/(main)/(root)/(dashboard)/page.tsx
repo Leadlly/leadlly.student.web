@@ -24,7 +24,7 @@ const Dashboard = async (props: {
 
   const queryClient = new QueryClient();
 
-  await Promise.all([
+  await Promise.allSettled([
     queryClient.prefetchQuery({
       queryKey: ["plannerData"],
       queryFn: getPlanner,

@@ -97,17 +97,13 @@ export const getUser = async () => {
   try {
     const res = await apiClient.get<{ user: UserDataProps }>(`/api/auth/user`);
 
-    const data = res.data;
-
-    return data;
+    return { user: res.data?.user ?? null };
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(`Error in fetching logged in user: ${error.message}`);
-    } else {
-      throw new Error(
-        "An unknown error occurred while fetching logged in user"
-      );
-    }
+    console.error(
+      "Error in fetching logged in user:",
+      error instanceof Error ? error.message : error
+    );
+    return { user: null };
   }
 };
 

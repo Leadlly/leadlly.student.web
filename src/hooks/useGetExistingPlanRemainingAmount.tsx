@@ -40,7 +40,7 @@ const useGetExistingPlanRemainingAmount = () => {
         setFetchingExistingPLanPrice(true);
 
         const data = await getSubscriptionPricingByPlanId(
-          user?.subscription.planId || ""
+          user?.subscription?.planId || ""
         );
 
         setExistingPlanPrice(data.pricing);
@@ -55,10 +55,10 @@ const useGetExistingPlanRemainingAmount = () => {
   }, [user]);
 
   useEffect(() => {
-    if (existingPlanPrice && user?.subscription.status === "active") {
+    if (existingPlanPrice && user?.subscription?.status === "active") {
       // Calculate the remaining value of the current subscription
       const currentDate = new Date();
-      const deactivationDate = new Date(user?.subscription.dateOfDeactivation!);
+      const deactivationDate = new Date(user?.subscription?.dateOfDeactivation!);
       const timeRemaining =
         (deactivationDate.getTime() - currentDate.getTime()) /
         (1000 * 60 * 60 * 24); // Remaining days
@@ -72,7 +72,7 @@ const useGetExistingPlanRemainingAmount = () => {
     } else {
       setExistingRemainingAmount(0);
     }
-  }, [existingPlanPrice, user, user?.subscription.dateOfDeactivation]);
+  }, [existingPlanPrice, user, user?.subscription?.dateOfDeactivation]);
 
   return { existingRemainingAmount, fetchingExistingPlanPrice };
 };

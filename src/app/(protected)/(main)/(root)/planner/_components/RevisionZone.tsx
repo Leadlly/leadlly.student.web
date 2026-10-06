@@ -16,10 +16,10 @@ const RevisionZone = () => {
 
   const userData = useAppSelector((state) => state.user.user);
   const userSubjects = subjectsForExam(
-    userData?.academic.subjects,
-    userData?.academic.competitiveExam
+    userData?.academic?.subjects,
+    userData?.academic?.competitiveExam
   );
-  const userStandard = userData?.academic.standard;
+  const userStandard = userData?.academic?.standard;
 
   return (
     <>

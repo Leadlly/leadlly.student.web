@@ -9,12 +9,25 @@ const Provider = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const userData = getUser();
-  const referralData = generateReferralCode({});
+  let user = null;
+  let referral = null;
 
-  const [user, referral] = await Promise.all([userData, referralData]);
+  try {
+    const userResult = await getUser();
+    user = userResult?.user ?? null;
+  } catch (error) {
+    console.error("Failed to load user:", error);
+  }
+
+  try {
+    const referralResult = await generateReferralCode({});
+    referral = referralResult?.referralCode ?? null;
+  } catch (error) {
+    console.error("Failed to load referral code:", error);
+  }
+
   return (
-    <StoreProvider user={user?.user} referral={referral.referralCode}>
+    <StoreProvider user={user} referral={referral}>
       {children}
     </StoreProvider>
   );

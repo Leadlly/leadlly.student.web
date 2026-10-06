@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
     
     const res = NextResponse.json(userData);
     
-    res.cookies.set(AUTH_TOKEN_COOKIE, token, authCookieOptions);
+    if (token) {
+      res.cookies.set(AUTH_TOKEN_COOKIE, token, authCookieOptions);
+    }
     
     return res;
   } catch (error: any) {

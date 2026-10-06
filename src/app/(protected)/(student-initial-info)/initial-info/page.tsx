@@ -3,7 +3,14 @@ import StudyCheckFlow from "@/components/study-check/StudyCheckFlow";
 import { redirect } from "next/navigation";
 
 const StudentInitialInfoFormPage = async () => {
-  const { user } = await getUser();
+  let user = null;
+  try {
+    const data = await getUser();
+    user = data?.user ?? null;
+  } catch (error) {
+    console.error("Failed to load user for initial info:", error);
+  }
+
   if (user?.onboard === true) {
     redirect("/");
   }

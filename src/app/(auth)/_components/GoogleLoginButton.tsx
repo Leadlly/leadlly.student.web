@@ -29,7 +29,14 @@ const GoogleLoginButton = () => {
           },
         });
 
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          toast.error("Google login failed!", {
+            description: data?.message || "Please try again.",
+          });
+          return;
+        }
 
         toast.success("Login success", {
           description: data.message,
