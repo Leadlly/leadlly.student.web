@@ -11,5 +11,9 @@ export default function SubscriptionLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-main-height">{children}</div>;
+  return (
+    <div className="h-main-height w-full overflow-y-auto custom__scrollbar">
+      {children}
+    </div>
+  );
 }

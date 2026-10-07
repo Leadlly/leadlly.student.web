@@ -16,7 +16,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
-import { revisionPreferenceTabs } from "@/helpers/constants";
+// import { revisionPreferenceTabs } from "@/helpers/constants";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { useQueryClient } from "@tanstack/react-query";
@@ -50,7 +50,7 @@ const CustomizePlanner = () => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
 
-  const steps = [3, 5, 7, 10];
+  // const steps = [3, 5, 7, 10]; // Questions per topic — hidden for now
   const revisionSteps = [1, 2, 3, 4, 5];
   const fitRevision = (value: number | undefined, fallback: number) => {
     const n = Number(value);
@@ -69,8 +69,9 @@ const CustomizePlanner = () => {
     },
   });
 
-  const dailyQuestionValue = form.watch("dailyQuestions");
-  const dailyQuestionIndex = steps.findIndex((v) => v === dailyQuestionValue);
+  // Hidden for now — Revision Preference / Questions per topic UI
+  // const dailyQuestionValue = form.watch("dailyQuestions");
+  // const dailyQuestionIndex = steps.findIndex((v) => v === dailyQuestionValue);
 
   const backRevisionValue = form.watch("backRevisionTopics");
   const backRevisionIndex = revisionSteps.findIndex((v) => v === backRevisionValue);
@@ -83,8 +84,11 @@ const CustomizePlanner = () => {
       const res = await studentPersonalInfo(data);
 
       dispatch(userData({ ...user, ...res.user }));
-      await queryClient.invalidateQueries({ queryKey: ["plannerData"] });
-      toast.success("Preference updated successfully.");
+      // Toast before query invalidation so Dialog remounts don't swallow it
+      toast.success(res?.message || "Preference updated successfully.", {
+        position: "top-center",
+      });
+      void queryClient.invalidateQueries({ queryKey: ["plannerData"] });
     } catch (error) {
       toast.error("Preference update failed.");
     } finally {
@@ -123,6 +127,7 @@ const CustomizePlanner = () => {
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-10"
           >
+            {/* Revision Preference — hidden for now
             <FormField
               control={form.control}
               name="nextDay"
@@ -157,7 +162,9 @@ const CustomizePlanner = () => {
                 </FormItem>
               )}
             />
+            */}
 
+            {/* Questions per topic — hidden for now
             <FormField
               control={form.control}
               name="dailyQuestions"
@@ -198,6 +205,7 @@ const CustomizePlanner = () => {
                 </FormItem>
               )}
             />
+            */}
 
             <FormField
               control={form.control}

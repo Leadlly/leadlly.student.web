@@ -9,9 +9,11 @@ import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components";
 import UpgradePlanBanner from "@/components/shared/UpgradePlanBanner";
 import { TSidebarLink } from "@/helpers/types";
+import { useFreeTrialLock } from "@/hooks/useFreeTrialLock";
 import { hasActiveSubscription } from "@/lib/subscription";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/redux/hooks";
+import { formatTime } from "@/helpers/utils";
 
 const SidebarDesktop = ({
   sidebar,
@@ -23,6 +25,7 @@ const SidebarDesktop = ({
   const pathname = usePathname();
   const user = useAppSelector((state) => state.user.user);
   const isFreeUser = !hasActiveSubscription(user);
+  const { shouldShowUpgradeCta, remainingSeconds, config } = useFreeTrialLock();
 
   return (
     <aside className="bg-sidebar-background flex h-full w-full flex-col overflow-y-hidden shadow-xl md:h-main-height md:w-20 md:rounded-xl xl:w-sidebar">
@@ -95,7 +98,26 @@ const SidebarDesktop = ({
         })}
       </ul>
 
-      {isFreeUser ? (
+      {shouldShowUpgradeCta ? (
+        <div className="shrink-0 border-t border-[#EFEAF8] p-3 md:px-2 xl:px-4 xl:pb-4">
+          <Link
+            href="/subscription-plans"
+            className="flex w-full flex-col items-center justify-center gap-0.5 rounded-2xl bg-primary px-3 py-2.5 text-white transition hover:opacity-95"
+            aria-label={config?.upgradeButtonLabel || "Upgrade"}
+            title={config?.upgradeButtonLabel || "Upgrade"}
+          >
+            <span className="hidden text-sm font-bold xl:inline">
+              {config?.upgradeButtonLabel || "Upgrade"}
+            </span>
+            <ArrowUpRight className="h-5 w-5 xl:hidden" />
+            {remainingSeconds > 0 ? (
+              <span className="text-[10px] font-medium leading-tight">
+                {formatTime(remainingSeconds)}
+              </span>
+            ) : null}
+          </Link>
+        </div>
+      ) : isFreeUser ? (
         <div className="shrink-0 border-t border-[#EFEAF8] p-3 md:px-2 xl:px-4 xl:pb-4">
           <div className="hidden xl:block">
             <UpgradePlanBanner compact />

@@ -29,7 +29,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-const ReferAndEarnContent = () => {
+const ReferAndEarnContent = ({ className }: { className?: string }) => {
   const [toggleCodeInput, setToggleCodeInput] = useState(false);
   const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +83,12 @@ Use the code when checking out and start managing your self-study better!`;
   };
 
   return (
-    <DialogContent className="custom__scrollbar !inset-auto !bottom-4 !left-4 !right-4 !top-4 !h-auto !max-h-none !w-auto !max-w-none !translate-x-0 !translate-y-0 overflow-y-auto p-0 pb-6 md:!left-24 xl:!left-[277px]">
+    <DialogContent
+      className={cn(
+        "custom__scrollbar !inset-auto !bottom-4 !left-4 !right-4 !top-4 !h-auto !max-h-none !w-auto !max-w-none !translate-x-0 !translate-y-0 overflow-y-auto p-0 pb-6 md:!left-24 xl:!left-[277px]",
+        className
+      )}
+    >
         <DialogHeader className="rounded-b-3xl bg-leadlly p-4 pb-12 text-left sm:rounded-lg sm:rounded-b-3xl">
         <DialogClose asChild>
           <Button variant={"ghost"} size={"icon"} className="text-white">

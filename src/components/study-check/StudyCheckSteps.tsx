@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { createPlanner } from "@/actions/planner_actions";
 import { completeStudyCheck, getStudyDnaProfile } from "@/actions/study_check_actions";
+import { getFreeTrialActive } from "@/actions/subscription_actions";
 import { studentPersonalInfo } from "@/actions/user_actions";
 import TestDateField from "@/components/study-check/TestDateField";
 import {
@@ -766,6 +767,17 @@ export const ProfileStep = () => {
         stepId: "profile",
         answers,
       });
+
+      // Activate free trial when Study DNA report is generated
+      try {
+        const trialResponse = await getFreeTrialActive();
+        if (trialResponse?.user && user) {
+          dispatch(userData({ ...user, ...trialResponse.user }));
+        }
+      } catch {
+        // Trial may already be active.
+      }
+
       setStepsCompleted(true);
     } catch (error) {
       finishingRef.current = false;

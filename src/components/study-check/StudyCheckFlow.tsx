@@ -8,7 +8,6 @@ import {
   getStudyCheck,
   saveStudyCheck,
 } from "@/actions/study_check_actions";
-import { getFreeTrialActive } from "@/actions/subscription_actions";
 import { studentPersonalInfo } from "@/actions/user_actions";
 import {
   buildStepSequence,
@@ -190,27 +189,17 @@ const StudyCheckFlow = () => {
         phone: current.phone ? Number(current.phone) : undefined,
       });
 
-      let trialUser = saveResponse.user;
-      try {
-        const trialResponse = await getFreeTrialActive();
-        trialUser = trialResponse.user ?? trialUser;
-      } catch {
-        // Trial may already be active.
-      }
-
       dispatch(
         userData({
           ...user,
           ...saveResponse.user,
-          ...trialUser,
           academic: {
             ...(user.academic || {}),
             ...(saveResponse.user?.academic || {}),
-            ...(trialUser?.academic || {}),
             subjects:
-              (trialUser?.academic?.subjects?.length ?? 0) > 0
-                ? trialUser?.academic?.subjects
-                : saveResponse.user?.academic?.subjects || user.academic?.subjects,
+              (saveResponse.user?.academic?.subjects?.length ?? 0) > 0
+                ? saveResponse.user?.academic?.subjects
+                : user.academic?.subjects,
           },
         })
       );
