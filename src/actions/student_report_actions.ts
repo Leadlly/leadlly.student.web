@@ -10,17 +10,12 @@ import {
 export const getWeeklyReport = async () => {
   try {
     const res = await apiClient.get(`/api/user/report/week`);
-    const data: { success: boolean; weeklyReport: TStudentReportProps } =
+    const data: { success: boolean; weeklyReport: TStudentReportProps | null } =
       res.data;
-    return data;
+    return { success: Boolean(data?.success), weeklyReport: data?.weeklyReport ?? null };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`${error.message}`);
-    } else {
-      throw new Error(
-        "An unknown error occurred while fetching student weekly report"
-      );
-    }
+    console.error("Error fetching weekly report:", error);
+    return { success: false, weeklyReport: null };
   }
 };
 
@@ -28,17 +23,12 @@ export const getWeeklyReport = async () => {
 export const getMonthlyReport = async () => {
   try {
     const res = await apiClient.get(`/api/user/report/month`);
-    const data: { success: boolean; monthlyReport: TStudentReportProps } =
+    const data: { success: boolean; monthlyReport: TStudentReportProps | null } =
       res.data;
-    return data;
+    return { success: Boolean(data?.success), monthlyReport: data?.monthlyReport ?? null };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`${error.message}`);
-    } else {
-      throw new Error(
-        "An unknown error occurred while fetching student monthly report"
-      );
-    }
+    console.error("Error fetching monthly report:", error);
+    return { success: false, monthlyReport: null };
   }
 };
 
@@ -50,14 +40,12 @@ export const getOverallReport = async () => {
       success: boolean;
       overallReport: TStudentOverallReportProps[];
     } = res.data;
-    return data;
+    return {
+      success: Boolean(data?.success),
+      overallReport: Array.isArray(data?.overallReport) ? data.overallReport : [],
+    };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`${error.message}`);
-    } else {
-      throw new Error(
-        "An unknown error occurred while fetching student overall report"
-      );
-    }
+    console.error("Error fetching overall report:", error);
+    return { success: false, overallReport: [] };
   }
 };

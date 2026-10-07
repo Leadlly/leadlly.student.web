@@ -168,7 +168,7 @@ const ChapterTagger = ({
     const saved = await saveTaggedChapters({
       tag: "unrevised_topic",
       subject: currentSubject,
-      standard: user.academic.standard,
+      standard: user.academic?.standard,
       chapters: selected,
     });
     if (!saved.success) {

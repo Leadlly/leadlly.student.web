@@ -35,7 +35,7 @@ export default function StoreProvider({
   }, []);
 
   useEffect(() => {
-    if (user?.institute._id && (!institute || !institute._id)) {
+    if (user?.institute?._id && (!institute || !institute._id)) {
       const setUserInstitute = async () => {
         try {
           const res = await getUserInstitute();

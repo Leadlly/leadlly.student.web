@@ -62,10 +62,10 @@ const ReferAndEarnContent = ({ className }: { className?: string }) => {
     if (!referral?.code) return;
     const appLink = "https://play.google.com/store/apps/details?id=com.leadlly.app";
     const message = `Hey !!
-I know how stressful and confusing JEE/NEET prep can get sometimes — I've been through it too.
+I know how stressful and confusing JEE/NEET prep can get sometimes - I've been through it too.
 That's why I wanted to share something that could actually make your preparation smoother.
 
-Check out LEADLLY — it helps you manage your self-study, track your revision, and stay consistent. Just like having your own study mentor.
+Check out LEADLLY - it helps you manage your self-study, track your revision, and stay consistent. Just like having your own study mentor.
 
 I've got a special code for you: ${referral.code}
 

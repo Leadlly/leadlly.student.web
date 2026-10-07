@@ -420,7 +420,7 @@ export const StudySlotsStep = () => {
                   {slot.label}
                 </span>
                 <span className="text-sm text-secondary-text">
-                  {formatClock(slot.start)} – {formatClock(slot.end)}
+                  {formatClock(slot.start)} - {formatClock(slot.end)}
                 </span>
               </span>
             </button>

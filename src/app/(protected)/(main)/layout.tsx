@@ -7,7 +7,13 @@ export default async function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { user } = await getUser();
+  let user = null;
+  try {
+    const data = await getUser();
+    user = data?.user ?? null;
+  } catch (error) {
+    console.error("Failed to load user in main layout:", error);
+  }
 
   if (user && user.onboard !== true) {
     return redirect("/initial-info");

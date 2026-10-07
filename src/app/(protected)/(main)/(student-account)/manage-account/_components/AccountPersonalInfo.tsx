@@ -46,26 +46,26 @@ const AccountPersonalInfo = () => {
       lastName: user?.lastname ? user.lastname : "",
       phone: user?.phone?.personal ? String(user.phone.personal) : "",
       email: user?.email ? user.email : "",
-      parentName: user?.parent.name ? user.parent.name : "",
-      parentsPhone: user?.parent.phone ? String(user.parent.phone) : "",
-      address: user?.address.addressLine ? user.address.addressLine : "",
-      pinCode: user?.address.pincode ? String(user.address.pincode) : "",
-      schoolOrCollegeName: user?.academic.schoolOrCollegeName
+      parentName: user?.parent?.name ? user.parent.name : "",
+      parentsPhone: user?.parent?.phone ? String(user.parent.phone) : "",
+      address: user?.address?.addressLine ? user.address.addressLine : "",
+      pinCode: user?.address?.pincode ? String(user.address.pincode) : "",
+      schoolOrCollegeName: user?.academic?.schoolOrCollegeName
         ? user.academic.schoolOrCollegeName
         : "",
-      schoolOrCollegeAddress: user?.academic.schoolOrCollegeAddress
+      schoolOrCollegeAddress: user?.academic?.schoolOrCollegeAddress
         ? user.academic.schoolOrCollegeAddress
         : "",
-      coachingName: user?.academic.coachingName
+      coachingName: user?.academic?.coachingName
         ? user.academic.coachingName
         : "",
-      coachingAddress: user?.academic.coachingAddress
+      coachingAddress: user?.academic?.coachingAddress
         ? user.academic.coachingAddress
         : "",
-      gender: user?.about.gender ? user?.about.gender : "",
-      class: user?.academic.standard ? String(user?.academic.standard) : "",
-      studentSchedule: user?.academic.schedule ? user.academic.schedule : "",
-      country: user?.address.country ? user.address.country : "",
+      gender: user?.about?.gender ? user?.about?.gender : "",
+      class: user?.academic?.standard ? String(user?.academic?.standard) : "",
+      studentSchedule: user?.academic?.schedule ? user.academic.schedule : "",
+      country: user?.address?.country ? user.address.country : "",
     },
   });
 
@@ -330,7 +330,7 @@ const AccountPersonalInfo = () => {
                       <FormControl>
                         <CalendarDatePicker
                           date={
-                            user?.about.dateOfBirth
+                            user?.about?.dateOfBirth
                               ? { from: new Date(user.about.dateOfBirth) }
                               : field.value
                           }
@@ -491,7 +491,7 @@ const AccountPersonalInfo = () => {
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={
-                            user?.academic.competitiveExam
+                            user?.academic?.competitiveExam
                               ? user.academic.competitiveExam
                               : field.value
                           }
@@ -500,13 +500,13 @@ const AccountPersonalInfo = () => {
                           <FormItem className="space-y-0 mt-1 flex items-center gap-2">
                             <FormControl>
                               <RadioGroupItem
-                                value={user?.academic.competitiveExam!}
+                                value={user?.academic?.competitiveExam!}
                                 className="lg:w-5 lg:h-5"
                                 circleClassName="lg:w-3 lg:h-3"
                               />
                             </FormControl>
                             <FormLabel className="text-base lg:text-lg font-medium">
-                              {user?.academic.competitiveExam?.toUpperCase()}
+                              {user?.academic?.competitiveExam?.toUpperCase()}
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -651,7 +651,7 @@ const AccountPersonalInfo = () => {
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={
-                            user?.academic.coachingMode
+                            user?.academic?.coachingMode
                               ? user.academic.coachingMode
                               : field.value
                           }

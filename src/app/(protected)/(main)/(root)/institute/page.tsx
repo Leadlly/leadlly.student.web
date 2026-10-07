@@ -233,7 +233,7 @@ const InstituteHub = () => {
                 ].map(([label, value]) => (
                   <div key={String(label)} className="rounded-2xl bg-[#F5F3FF] p-3">
                     <p className="text-xs text-secondary-text">{label}</p>
-                    <p className="text-xl font-bold text-dark-primary">{value ?? "—"}</p>
+                    <p className="text-xl font-bold text-dark-primary">{value ?? "-"}</p>
                   </div>
                 ))}
               </div>

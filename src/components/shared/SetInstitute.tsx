@@ -21,10 +21,10 @@ const SetInstitute = () => {
       }
     };
 
-    if (user?.institute._id && (!institute || !institute._id)) {
+    if (user?.institute?._id && (!institute || !institute._id)) {
       setUserInstitute();
     }
-  }, [dispatch, institute, user?.institute._id]);
+  }, [dispatch, institute, user?.institute?._id]);
   return null;
 };
 

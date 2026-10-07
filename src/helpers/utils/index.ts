@@ -35,7 +35,7 @@ export function getTodaysDay() {
 
 export function getMonthDate(date: Date): string {
   if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
-    return "—";
+    return "-";
   }
   const dayOfMonth: string = String(date.getDate()).padStart(2, "0");
   const month: string = monthsOfYear[date.getMonth()];

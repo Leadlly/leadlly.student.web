@@ -13,7 +13,7 @@ const AttemptedChapterWiseQuizzes = ({
   quizzes: AttemptedQuizProps[];
 }) => {
   const [selectedSubject, setSelectedSubject] = useState("All");
-  const userSubjects = useAppSelector((state) => state.user.user?.academic.subjects);
+  const userSubjects = useAppSelector((state) => state.user.user?.academic?.subjects);
   const subjects = ["All", ...(userSubjects?.map((subject) => subject.name) ?? [])];
   const list = Array.isArray(quizzes) ? quizzes : [];
   const filteredQuizzes =

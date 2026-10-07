@@ -28,7 +28,7 @@ export default async function MainLayout({
         <div className="hidden md:block md:fixed md:top-3">
           <Sidebar meetingsLength={inCompleteMeetingsLength} />
         </div>
-        <div className="md:ml-20 xl:ml-[261px] h-main-height pl-4 pr-4 md:pr-2">
+        <div className="h-main-height min-h-0 overflow-y-auto pl-4 pr-4 pb-24 md:ml-20 md:overflow-visible md:pb-0 md:pr-2 xl:ml-[261px]">
           {children}
         </div>
       </section>

@@ -33,8 +33,8 @@ const PlanPriceBox = ({ className, plan }: PlanPriceProps) => {
         className={cn(
           "relative bg-white px-4 py-5 rounded-lg flex items-center justify-between",
           user &&
-            user.subscription.status === "active" &&
-            user?.subscription.planId === plan?.planId
+            user.subscription?.status === "active" &&
+            user?.subscription?.planId === plan?.planId
             ? "border-2 border-primary"
             : ""
         )}
@@ -52,8 +52,8 @@ const PlanPriceBox = ({ className, plan }: PlanPriceProps) => {
         )}
 
         {user &&
-        user.subscription.status === "active" &&
-        user.subscription.planId === plan?.planId ? (
+        user.subscription?.status === "active" &&
+        user.subscription?.planId === plan?.planId ? (
           <div className="absolute -top-4 left-3 z-20 bg-gradient-to-r from-primary to-[#BB76B2] text-white text-sm font-semibold capitalize text-center px-3 py-1 rounded-full">
             <p>Active Plan</p>
           </div>
@@ -64,7 +64,7 @@ const PlanPriceBox = ({ className, plan }: PlanPriceProps) => {
             ? plan.label
             : plan["duration(months)"] < 12
               ? `${plan["duration(months)"]} month${plan["duration(months)"] > 1 ? "s" : ""}`
-              : `Till ${user?.academic.competitiveExam?.toUpperCase()} ${new Date().getFullYear() + 1}`}
+              : `Till ${user?.academic?.competitiveExam?.toUpperCase()} ${new Date().getFullYear() + 1}`}
         </p>
 
         <div className="text-right">

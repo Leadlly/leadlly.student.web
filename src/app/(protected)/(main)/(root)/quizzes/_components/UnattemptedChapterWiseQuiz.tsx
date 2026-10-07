@@ -13,7 +13,7 @@ const UnattemptedChapterWiseQuizzes = ({
   quizzes: UnattemptedChapterQuizProps[];
 }) => {
   const [selectedSubject, setSelectedSubject] = useState("All");
-  const userSubjects = useAppSelector((state) => state.user.user?.academic.subjects);
+  const userSubjects = useAppSelector((state) => state.user.user?.academic?.subjects);
   const subjects = ["All", ...(userSubjects?.map((subject) => subject.name) ?? [])];
 
   const filteredQuizzes = useMemo(() => {

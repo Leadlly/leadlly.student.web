@@ -27,7 +27,7 @@ const ContinuousRevision = () => {
   );
 
   const userStandard = useAppSelector(
-    (state) => state.user.user?.academic.standard
+    (state) => state.user.user?.academic?.standard
   );
 
   return (
@@ -36,7 +36,7 @@ const ContinuousRevision = () => {
         <Button
           variant={"outline"}
           className="h-auto w-full rounded-[28px] border-0 bg-transparent px-5 py-4"
-          onClick={() => setActiveSubject(userSubjects?.[0].name || "")}
+          onClick={() => setActiveSubject(userSubjects?.[0]?.name || "")}
         >
           <span className="flex w-full items-center justify-between gap-3">
             <span className="flex min-w-0 items-center gap-3">

@@ -14,7 +14,7 @@ const AttemptedCustomizedQuizzes = ({
   const [selectedSubject, setSelectedSubject] = useState<string>("All");
 
   const userSubjects = useAppSelector(
-    (state) => state.user.user?.academic.subjects
+    (state) => state.user.user?.academic?.subjects
   );
   const subjects = ["All", ...(userSubjects?.map((subject) => subject.name) ?? [])];
 

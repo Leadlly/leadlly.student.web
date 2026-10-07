@@ -12,9 +12,9 @@ const AccountUserProfile = () => {
       <Avatar className="w-20 h-20 lg:w-32 lg:h-32">
         <AvatarImage src={user?.avatar?.url} />
         <AvatarFallback className="text-3xl font-semibold capitalize">
-          {user?.firstname[0]}
+          {user?.firstname?.[0]}
           <span className="capitalize">
-            {user?.lastname ? user.lastname[0] : ""}
+            {user?.lastname?.[0] ?? ""}
           </span>
         </AvatarFallback>
       </Avatar>

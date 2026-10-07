@@ -15,7 +15,7 @@ import {
 } from "@/actions/student_report_actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const average = (values: number[]) =>
   values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
@@ -35,7 +35,7 @@ const formatRange = (start?: string, end?: string) => {
     const date = new Date(value);
     return `${date.getDate()} ${date.toLocaleString("en", { month: "short" })} ${date.getFullYear()}`;
   };
-  return `${label(start)} – ${label(end)}`;
+  return `${label(start)} - ${label(end)}`;
 };
 
 const ChangeStat = ({ label, value }: { label: string; value: number }) => {
@@ -85,19 +85,19 @@ const ProgressAnalytics = () => {
   const [activeTab, setActiveTab] = useState("weekly");
 
   const { data: weeklyReportData, isLoading: weeklyReportLoading } =
-    useSuspenseQuery({
+    useQuery({
       queryKey: ["weeklyReport"],
       queryFn: getWeeklyReport,
     });
 
   const { data: monthlyReportData, isLoading: monthlyReportLoading } =
-    useSuspenseQuery({
+    useQuery({
       queryKey: ["monthlyReport"],
       queryFn: getMonthlyReport,
     });
 
   const { data: overallReportData, isLoading: overallReportLoading } =
-    useSuspenseQuery({
+    useQuery({
       queryKey: ["overallReport"],
       queryFn: getOverallReport,
     });

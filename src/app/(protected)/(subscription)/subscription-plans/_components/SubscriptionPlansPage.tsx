@@ -64,7 +64,7 @@ const SubscriptionPlansPage = () => {
     }
   }, [pricingData, fetchingPricing, dispatch]);
 
-  const examType = user?.academic.competitiveExam!;
+  const examType = user?.academic?.competitiveExam!;
 
   const mentorWord = mentorWordMap[examType as keyof typeof mentorWordMap];
 
