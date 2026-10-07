@@ -17,6 +17,7 @@ import Loader from "@/components/shared/Loader";
 import { DailyPlan } from "@/lib/planner/types";
 import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
+import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
 const DesktopUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const { user } = useAppSelector((state) => state.user);
@@ -29,6 +30,7 @@ const DesktopUI = ({ plan }: { plan?: DailyPlan | null }) => {
           <DashboardGreeting />
         </div>
         <div className="flex items-center gap-3">
+          <UpgradeSubscriptionButton />
           <PointsBox />
           <Link
             href="/profile"

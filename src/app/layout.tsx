@@ -37,7 +37,12 @@ export default function RootLayout({
           <Container className="py-3">
             <main className="h-main-height">{children}</main>
           </Container>
-          <Toaster richColors position="top-center" />
+          <Toaster
+            richColors
+            position="top-center"
+            style={{ zIndex: 99999 }}
+            toastOptions={{ style: { zIndex: 99999 } }}
+          />
         </GoogleOAuthProvider>
       </body>
     </html>

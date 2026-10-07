@@ -12,6 +12,7 @@ import { DailyPlan } from "@/lib/planner/types";
 import InitialTodoBox from "./InitailTodoBox";
 import { useAppSelector } from "@/redux/hooks";
 import Institute from "./institute";
+import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
 const MobileUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const user = useAppSelector((state) => state.user.user);
@@ -19,14 +20,17 @@ const MobileUI = ({ plan }: { plan?: DailyPlan | null }) => {
 
   return (
     <div className="flex flex-col justify-start gap-3">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <DashboardGreeting />
-        <Link
-          href="/profile"
-          className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
-        >
-          Profile
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <UpgradeSubscriptionButton />
+          <Link
+            href="/profile"
+            className="flex h-10 items-center rounded-full bg-[#F5F3FF] px-4 text-sm font-semibold text-primary"
+          >
+            Profile
+          </Link>
+        </div>
       </div>
 
       <div className="flex flex-col justify-start gap-3 overflow-hidden max-h-full">

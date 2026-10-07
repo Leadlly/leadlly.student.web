@@ -16,6 +16,7 @@ import { DailyPlan } from "@/lib/planner/types";
 import { useAppSelector } from "@/redux/hooks";
 import InitialTodoBox from "./InitailTodoBox";
 import Institute from "./institute";
+import UpgradeSubscriptionButton from "./UpgradeSubscriptionButton";
 
 const TabletUI = ({ plan }: { plan?: DailyPlan | null }) => {
   const user = useAppSelector((state) => state.user.user);
@@ -26,6 +27,7 @@ const TabletUI = ({ plan }: { plan?: DailyPlan | null }) => {
       <div className="flex items-center justify-between gap-3">
         <DashboardGreeting />
         <div className="flex items-center gap-3">
+          <UpgradeSubscriptionButton />
           <PointsBox />
           <Link
             href="/profile"
