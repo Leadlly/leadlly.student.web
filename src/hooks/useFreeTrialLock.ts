@@ -123,7 +123,11 @@ export function useFreeTrialLock() {
       nowMs
     );
     const isTrialActive = remainingSeconds > 0;
-    const isAppLocked = hasAvailedTrial && !isTrialActive;
+
+    // Only lock when activation date exists and the window has ended.
+    // Do not treat missing dateOfActivation as expired (false lock after onboard).
+    const isAppLocked =
+      hasAvailedTrial && Boolean(activationDate) && !isTrialActive;
 
     return {
       isLoading: false,

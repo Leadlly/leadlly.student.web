@@ -21,10 +21,16 @@ const FreeTrialLockGate = () => {
     useFreeTrialLock();
   const activatingRef = useRef(false);
 
-  // Only start trial for users who never availed it (no regrant / no date heal)
+  // Start / heal trial for onboarded users. Skip Study Check / DNA.
+  // Also heal availed-without-dateOfActivation (was false-locking to subscription-end).
   useEffect(() => {
     if (isLoading || !lockEnabled || !user || hasPaidSubscription) return;
-    if (user.freeTrial?.availed) return;
+    if (user.onboard !== true) return;
+    if (pathname.includes("initial-info")) return;
+
+    const needsTrial =
+      !user.freeTrial?.availed || !user.freeTrial?.dateOfActivation;
+    if (!needsTrial) return;
     if (activatingRef.current) return;
 
     activatingRef.current = true;
@@ -32,7 +38,13 @@ const FreeTrialLockGate = () => {
       try {
         const res = await getFreeTrialActive();
         if (res?.user) {
-          dispatch(userData({ ...user, ...res.user }));
+          dispatch(
+            userData({
+              ...user,
+              freeTrial: res.user.freeTrial ?? user.freeTrial,
+              category: res.user.category ?? user.category,
+            })
+          );
         }
       } catch (error) {
         console.log("FreeTrialLockGate activate:", error);
@@ -45,6 +57,7 @@ const FreeTrialLockGate = () => {
     lockEnabled,
     user,
     hasPaidSubscription,
+    pathname,
     dispatch,
   ]);
 
