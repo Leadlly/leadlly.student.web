@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
+import posthog from "posthog-js";
 import { makeStore, AppStore } from "@/redux/store";
 import { ICoupon, UserDataProps } from "@/helpers/types";
 import { userData } from "@/redux/slices/userSlice";
@@ -9,6 +10,7 @@ import { getUserInstitute } from "@/actions/institute_actions";
 import { setInstitute } from "@/redux/slices/instituteSlice";
 import { setReferral } from "@/redux/slices/referralSlice";
 import { clearDailyQuizWithDate } from "@/redux/slices/dailyQuizSlice";
+import { useAppSelector } from "@/redux/hooks";
 
 export default function StoreProvider({
   children,
@@ -50,5 +52,25 @@ export default function StoreProvider({
     }
   }, [institute, user?.institute]);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return (
+    <Provider store={storeRef.current}>
+      <IdentifyPostHogUser />
+      {children}
+    </Provider>
+  );
+}
+
+function IdentifyPostHogUser() {
+  const user = useAppSelector((state) => state.user.user);
+
+  useEffect(() => {
+    if (!user?._id || !user.email) return;
+
+    posthog.identify(user._id, {
+      email: user.email,
+      name: [user.firstname, user.lastname].filter(Boolean).join(" "),
+    });
+  }, [user?._id, user?.email, user?.firstname, user?.lastname]);
+
+  return null;
 }
