@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 import { Button } from "../ui/button";
 
+import posthog from "posthog-js";
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices/userSlice";
 import { clearInstitute } from "@/redux/slices/instituteSlice";
@@ -23,6 +24,7 @@ const LogoutButton = () => {
       const responseData = await response.json();
       dispatch(userData(null));
       dispatch(clearInstitute());
+      posthog.reset();
       toast.success(responseData.message);
       router.replace("/login");
     } catch (error: any) {
