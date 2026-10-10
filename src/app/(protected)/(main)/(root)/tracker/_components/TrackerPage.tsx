@@ -48,7 +48,7 @@ const TrackerPage = () => {
   }, [activeSubject]);
 
   return (
-    <div className="flex h-full flex-col gap-y-6">
+    <div className="flex flex-col gap-y-6 md:h-full">
       <Header
         title="Tracker"
         titleClassName="text-2xl md:text-3xl lg:text-page-title"
@@ -73,7 +73,7 @@ const TrackerPage = () => {
         })}
       </ul>
 
-      <div className="h-full overflow-y-auto custom__scrollbar pr-3 mb-16 md:mb-0">
+      <div className="custom__scrollbar md:min-h-0 md:flex-1 md:overflow-y-auto md:pr-3">
         {isTrackerLoading ? (
           <Loader />
         ) : (

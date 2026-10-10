@@ -36,8 +36,8 @@ const AccountStudyProgress = ({
   }, []);
 
   return (
-    <section className="border rounded-xl h-full shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">
-      <div className="bg-primary/15 px-3 py-2 flex items-center justify-between rounded-t-xl">
+    <section className="border rounded-xl shadow-[0_0_28.6px_-4px_rgba(150,84,244,0.16)] flex flex-col">
+      <div className="bg-primary/15 px-3 py-2 flex flex-wrap items-center justify-between gap-2 rounded-t-xl">
         <h3 className="text-lg lg:text-2xl font-semibold">
           Student Study Feedback
         </h3>

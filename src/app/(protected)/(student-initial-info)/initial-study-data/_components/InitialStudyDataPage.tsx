@@ -32,7 +32,7 @@ const InitialStudyDataPage = ({
   }, []);
 
   return (
-    <section className="flex flex-col w-full">
+    <section className="flex w-full flex-col lg:h-full">
       <div className="px-3 flex items-center justify-between">
         <Image
           src="/assets/images/leadlly_logo.svg"
@@ -43,7 +43,7 @@ const InitialStudyDataPage = ({
 
         <ProceedButton />
       </div>
-      <div className="w-full h-[calc(100dvh-52px)] px-3 py-10 sm:px-10 lg:p-6 space-y-3 flex flex-col">
+      <div className="flex w-full flex-col space-y-3 px-3 py-6 sm:px-10 lg:min-h-0 lg:flex-1 lg:p-6">
         <h1 className="max-w-md w-full mx-auto text-center text-xl md:text-3xl font-semibold">
           Tell us what you learnt till now
         </h1>
@@ -52,7 +52,7 @@ const InitialStudyDataPage = ({
         </p>
 
         <div className="flex justify-center">
-          <ul className="flex items-center gap-3 border-2 rounded-md p-1">
+          <ul className="flex flex-wrap items-center justify-center gap-2 border-2 rounded-md p-1 sm:gap-3">
             {userAcademic?.subjects?.map((subject) => (
               <li
                 key={subject.name}
@@ -87,7 +87,7 @@ const InitialStudyDataPage = ({
           onResetForm={handleResetForm}
         />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="custom__scrollbar lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
           <AccountChaptersList unrevisedTopics={unrevisedTopics!} />
         </div>
       </div>

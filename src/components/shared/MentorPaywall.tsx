@@ -95,7 +95,7 @@ const MentorPaywall = () => {
     : "/subscription-plans";
 
   return (
-    <div className="h-full overflow-y-auto bg-gradient-to-b from-white via-[#F8F5FF] to-[#D6C8F8] px-4 py-6 sm:px-8">
+    <div className="min-h-full bg-gradient-to-b from-white via-[#F8F5FF] to-[#D6C8F8] px-4 py-6 sm:px-8">
       <div className="mx-auto w-full max-w-lg pb-24">
         <Image
           src="/assets/images/mentor_crown.png"

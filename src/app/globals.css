@@ -79,7 +79,6 @@
 
 @layer utilities {
   .custom__scrollbar {
-    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
 

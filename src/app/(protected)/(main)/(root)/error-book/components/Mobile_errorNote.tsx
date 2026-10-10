@@ -31,7 +31,7 @@ const Mobile_errorNote = ({ errorNotes }: Props) => {
   const isSmallDevice = useIsSmallDevice();
   if (!isSmallDevice)
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-[60vh]">
         <h1 className="text-3xl font-bold">Page Not Found</h1>
       </div>
     );

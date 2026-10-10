@@ -21,7 +21,7 @@ const Planner = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="h-full min-h-0">
+      <div className="md:h-full md:min-h-0">
         <Suspense fallback={<Loader />}>
           <ClientWrapper />
         </Suspense>

@@ -28,11 +28,11 @@ export default async function MainLayout({
         <div className="hidden md:block md:fixed md:top-3">
           <Sidebar meetingsLength={inCompleteMeetingsLength} />
         </div>
-        <div className="h-main-height min-h-0 overflow-y-auto pl-4 pr-4 pb-24 md:ml-20 md:overflow-visible md:pb-0 md:pr-2 xl:ml-[261px]">
+        <div className="custom__scrollbar h-main-height min-h-0 overflow-y-auto overflow-x-hidden px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] md:ml-20 md:pb-0 md:pr-2 xl:ml-[261px]">
           {children}
         </div>
       </section>
-      <section className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white shadow-[0_-1px_2px_0_rgba(0,0,0,0.1)] overflow-hidden">
+      <section className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_2px_0_rgba(0,0,0,0.1)] overflow-hidden">
         <MobileMenu meetingsLength={inCompleteMeetingsLength} />
       </section>
     </>

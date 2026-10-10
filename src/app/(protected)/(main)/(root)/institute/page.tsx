@@ -109,7 +109,7 @@ const InstituteHub = () => {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 pb-8">
+    <div className="flex flex-col gap-4 pb-8">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-primary">Institute</p>
         <h1 className="text-2xl font-bold text-dark-primary sm:text-4xl">{institute.name}</h1>

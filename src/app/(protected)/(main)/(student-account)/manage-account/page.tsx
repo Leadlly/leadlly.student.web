@@ -25,8 +25,8 @@ const ManageAccount = async (
   const data = await getUnrevisedTopics();
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center gap-6 px-4 pt-2">
+    <div className="flex min-h-full flex-col">
+      <div className="flex items-center gap-4 px-4 pt-2 sm:gap-6">
         <Link
           href={"/"}
           className="border rounded-md w-8 h-8 flex items-center justify-center"
@@ -36,17 +36,17 @@ const ManageAccount = async (
         <h3 className="text-2xl font-semibold">Manage Account</h3>
       </div>
 
-      <section className="my-6 bg-primary/15 text-center lg:text-left lg:px-16 py-4 lg:py-8 flex flex-col lg:flex-row items-center justify-between">
+      <section className="my-6 bg-primary/15 text-center lg:text-left px-4 lg:px-16 py-4 lg:py-8 flex flex-col lg:flex-row items-center justify-between">
         <AccountUserProfile />
 
-        <div className="flex items-center gap-4 mt-5">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-5">
           <ViewDnaReportButton className="shrink-0 px-6 text-sm font-semibold" />
           <LogoutButton />
         </div>
       </section>
 
       <div className="border-b-2 px-2 lg:px-16">
-        <ul className="flex items-center justify-center lg:justify-normal gap-3 lg:gap-10 overflow-x-auto no-scrollbar">
+        <ul className="flex items-center justify-start sm:justify-center lg:justify-normal gap-3 lg:gap-10 overflow-x-auto no-scrollbar">
           {manageAccountTabs.map((tab) => (
             <Link
               key={tab.id}
@@ -78,7 +78,7 @@ const ManageAccount = async (
         </ul>
       </div>
 
-      <div className="flex-1 px-2 lg:px-16 py-6">
+      <div className="flex-1 px-2 pb-10 pt-6 lg:px-16">
         {activeManageAccountTab === "personal-info" && (
           <>
             <AccountPersonalInfo />

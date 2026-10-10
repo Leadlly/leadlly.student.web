@@ -33,7 +33,7 @@ const ErrorBookPaywall = () => {
   }, []);
 
   return (
-    <div className="flex h-full items-center justify-center overflow-y-auto bg-white px-4 py-8">
+    <div className="flex min-h-full items-center justify-center bg-white px-4 py-8">
       <div className="w-full max-w-sm text-center">
         <div className="mx-auto h-[210px] w-[210px]">
           {animation ? (

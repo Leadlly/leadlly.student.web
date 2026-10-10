@@ -30,7 +30,7 @@ const Quizzes = async (props: {
     ]);
 
   return (
-    <div className="flex h-full flex-col gap-6">
+    <div className="flex flex-col gap-6 md:h-full">
       <h1 className="text-2xl font-semibold text-dark-primary md:text-3xl">Quizzes</h1>
 
       <ul className="flex w-full items-center rounded-full border border-[#E4DFF0] bg-white p-1.5">
@@ -52,7 +52,7 @@ const Quizzes = async (props: {
         })}
       </ul>
 
-      <div className="min-h-0 flex-1 overflow-hidden rounded-[34px] bg-white">
+      <div className="rounded-[34px] bg-white md:min-h-0 md:flex-1 md:overflow-hidden">
         {activeQuizTab === "unattempted" && (
           <Unattempted
             weeklyQuizzes={unattemptedQuiz?.weeklyQuiz ?? []}

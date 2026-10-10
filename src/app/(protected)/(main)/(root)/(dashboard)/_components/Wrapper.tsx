@@ -27,7 +27,7 @@ const Wrapper = () => {
 
   if (isMobile) {
     return (
-      <div className="h-full min-h-0 overflow-y-auto">
+      <div>
         <FreeMeetingBanner />
         <MobileUI plan={plan} />
       </div>

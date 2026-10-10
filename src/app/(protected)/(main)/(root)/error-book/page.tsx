@@ -16,7 +16,7 @@ const ErrorBook = async () => {
   const res = await getErrorBook();
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex flex-col gap-4 md:h-full">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-dark-primary md:text-3xl">Error Book</h1>
         <Link
@@ -28,7 +28,7 @@ const ErrorBook = async () => {
         </Link>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-hidden rounded-[34px] bg-white p-4">
+      <div className="rounded-[34px] bg-white p-4 md:min-h-0 md:flex-1 md:overflow-hidden">
         <ErrorBookContainer
           errorBook={res?.errorBook}
           errorNotes={res?.errorNotes}

@@ -49,7 +49,7 @@ const ChatPage = async (
   }
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex flex-col gap-4 md:h-full">
       <h1 className="text-2xl font-semibold text-dark-primary md:text-3xl">Mentor</h1>
 
       <ul className="flex w-full items-center rounded-full bg-white p-1.5">
@@ -71,7 +71,7 @@ const ChatPage = async (
         })}
       </ul>
 
-      <div className="min-h-0 flex-1">
+      <div className="md:min-h-0 md:flex-1">
         {activeChatTab === "mentor" && <AIMentor />}
         {activeChatTab === "meetings" && (
           <MeetingsComponent

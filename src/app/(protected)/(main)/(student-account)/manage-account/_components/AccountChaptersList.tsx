@@ -66,7 +66,7 @@ const AccountChaptersList = ({
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto custom__scrollbar">
+    <div className="w-full">
       <Table>
         <TableHeader className="bg-[#f2f2f2] sticky top-0 z-30">
           <TableRow className="border-none">

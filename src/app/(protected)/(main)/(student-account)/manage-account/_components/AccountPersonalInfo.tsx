@@ -109,9 +109,9 @@ const AccountPersonalInfo = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="h-full flex flex-col gap-6"
+          className="flex flex-col gap-6"
         >
-          <div className="flex-1 overflow-y-auto custom__scrollbar space-y-7 px-3">
+          <div className="space-y-7 px-3">
             <div className="space-y-3">
               <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Basic Information

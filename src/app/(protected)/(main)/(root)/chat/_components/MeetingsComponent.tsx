@@ -28,7 +28,7 @@ const MeetingsComponent = ({
   return (
     <div className="flex flex-col lg:flex-row lg:gap-5">
       {/* Upcoming meetings */}
-      <div className="h-full flex-1 rounded-[34px] bg-white py-3">
+      <div className="flex-1 rounded-[34px] bg-white py-3">
         <ul className="mx-4 flex items-center rounded-full bg-[#F4F1FB] p-1">
           {meetingTabs.map((tab) => (
             <TabNavItem
@@ -44,10 +44,10 @@ const MeetingsComponent = ({
           ))}
         </ul>
 
-        <div className="mt-3 h-full max-h-[470px] overflow-y-auto custom__scrollbar lg:max-h-[700px] xl:max-h-[470px]">
+        <div className="custom__scrollbar mt-3 md:max-h-[470px] md:overflow-y-auto lg:max-h-[700px] xl:max-h-[470px]">
           {/* Upcoming Meetings Tab */}
           <div
-            className="flex flex-col justify-start gap-3 h-full "
+            className="flex flex-col justify-start gap-3"
             style={{ display: activeTab === "upcoming" ? "flex" : "none" }}
           >
             {upcomingMeetings && upcomingMeetings.length ? (

@@ -13,7 +13,7 @@ export default function ReferEarnPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-[100dvh] w-full bg-white">
+    <div className="min-h-full w-full bg-white">
       <Dialog
         open
         onOpenChange={(open) => {

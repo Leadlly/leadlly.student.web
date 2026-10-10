@@ -11,7 +11,7 @@ const ErrorBookContainer = ({ errorBook ,errorNotes}: ErrorBookProps) => {
   const [isMinimized, setIsMinimized] = useState(true);
 
   return (
-    <motion.div className="flex pt-4 overflow-y-auto">
+    <motion.div className="custom__scrollbar flex pt-4 md:h-full md:overflow-y-auto">
       {isMinimized && <ErrorList errorBook={errorBook} />}
 
       <div className={cn("hidden  lg:block", isMinimized ? "" : "w-full")}>

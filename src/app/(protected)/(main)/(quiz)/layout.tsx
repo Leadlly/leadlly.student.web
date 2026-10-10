@@ -10,5 +10,9 @@ export default function WeeklyQuizLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <section className="h-main-height">{children}</section>;
+  return (
+    <section className="custom__scrollbar h-main-height overflow-y-auto overflow-x-hidden">
+      {children}
+    </section>
+  );
 }

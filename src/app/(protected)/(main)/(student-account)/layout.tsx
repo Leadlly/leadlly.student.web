@@ -11,5 +11,9 @@ export default function ManageAccountLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-main-height">{children}</div>;
+  return (
+    <div className="custom__scrollbar h-main-height overflow-y-auto overflow-x-hidden">
+      {children}
+    </div>
+  );
 }

@@ -101,8 +101,8 @@ const AIMentor = () => {
   };
 
   return (
-    <div className="flex h-full min-h-[70vh] flex-col rounded-[34px] bg-white">
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+    <div className="flex h-[calc(100dvh-250px)] min-h-[380px] flex-col rounded-[34px] bg-white md:h-full md:min-h-0">
+      <div className="custom__scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-4">
         {loadingHistory ? (
           <div className="flex h-full flex-col items-center justify-center text-secondary-text">
             <Loader2 className="size-6 animate-spin text-primary" />
